@@ -1,5 +1,6 @@
 # tools settings folders
 /**/.*/**/*
+!.github/**/*
 !.well-known/
 
 # dependencies

@@ -1,0 +1,133 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - main
+      - dev
+env:
+  APP_NAME: mediature
+  CONTAINER_REGISTRY: ghcr.io
+  CONTAINER_IMAGE_FOLDER: ghcr.io/${{ github.repository }}
+jobs:
+  requirements:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    services:
+      docker-dind:
+        image: docker:18.09.7-dind # Stick to this version since new ones break the logic to force `2375` as port without TLS... (we tried to align with providing certs but it did not work) Ref: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4566
+        ports:
+          - 2375:2375
+    env:
+      DOCKER_HOST: tcp://127.0.0.1:2375
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.0
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7.16.0
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Build
+        run: make build
+
+      # - name: Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   run: npx semantic-release
+
+      # - name: Code Coverage
+      #   run: make coverage
+
+  build-and-push-images:
+    name: Build and push container images
+    if: github.ref_name == 'dev' || github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: '"main" image'
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./apps/main/Dockerfile
+          push: true
+          tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:latest
+
+      - name: '"docs" image'
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./apps/docs/Dockerfile
+          push: true
+          tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:latest
+
+  deploy-dev:
+    name: Deploy to development
+    if: github.ref_name == 'dev'
+    environment:
+      name: dev
+    needs: [requirements]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Deploy to development
+
+  deploy-prod:
+    name: Deploy to production
+    if: github.ref_name == 'main'
+    environment:
+      name: prod
+    needs: [requirements]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Deploy to production
+
+  # TODO: when building with Docker make sure to use build/build-dev appropriately
