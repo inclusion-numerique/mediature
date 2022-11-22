@@ -75,43 +75,6 @@ jobs:
       #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       #   run: npx semantic-release
 
-      # - name: Code Coverage
-      #   run: make coverage
-
-  build-and-push-images:
-    name: Build and push container images
-    if: github.ref_name == 'dev' || github.ref_name == 'main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.CONTAINER_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: '"main" image'
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./apps/main/Dockerfile
-          push: true
-          tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:latest
-
-      - name: '"docs" image'
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./apps/docs/Dockerfile
-          push: true
-          tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:latest
-
   publish-chromatic:
     name: Publish to Chromatic
     # if: github.ref_name == 'dev' || github.ref_name == 'prod'
@@ -170,24 +133,61 @@ jobs:
           onlyChanged: false # TODO: adjust in the future
           exitZeroOnChanges: true
 
-  deploy-dev:
-    name: Deploy to development
-    if: github.ref_name == 'dev'
-    environment:
-      name: dev
-    needs: [requirements]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo Deploy to development
+  #
+  # Note: since we use Scalingo we dropped the usage of Docker images. Commenting this section for now
+  # but the following could help deploying to another platform that accepts Docker images.
+  #
 
-  deploy-prod:
-    name: Deploy to production
-    if: github.ref_name == 'main'
-    environment:
-      name: prod
-    needs: [requirements]
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo Deploy to production
+  # build-and-push-images:
+  #   name: Build and push container images
+  #   if: github.ref_name == 'dev' || github.ref_name == 'main'
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-  # TODO: when building with Docker make sure to use build/build-dev appropriately
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ${{ env.CONTAINER_REGISTRY }}
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: '"main" image'
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./apps/main/Dockerfile
+  #         push: true
+  #         tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-${{ github.ref_name }}:latest
+
+  #     - name: '"docs" image'
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./apps/docs/Dockerfile
+  #         push: true
+  #         tags: ${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:${{ github.sha }},${{ env.CONTAINER_IMAGE_FOLDER }}/${{ env.APP_NAME }}-docs-${{ github.ref_name }}:latest
+
+  # deploy-dev:
+  #   name: Deploy to development
+  #   if: github.ref_name == 'dev'
+  #   environment:
+  #     name: dev
+  #   needs: [requirements]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo Should deploy the Docker image to development
+
+  # deploy-prod:
+  #   name: Deploy to production
+  #   if: github.ref_name == 'main'
+  #   environment:
+  #     name: prod
+  #   needs: [requirements]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - run: echo Should deploy the Docker image to production
