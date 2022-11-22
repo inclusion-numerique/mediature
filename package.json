@@ -6,7 +6,9 @@
     "dev": "turbo run dev --no-cache --parallel --continue",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "heroku-postbuild": "turbo run build --filter=\"${BUILD_APP_NAME}\"...",
+    "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run start"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
@@ -14,5 +16,12 @@
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@7.16.0"
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "packageManager": "pnpm@7.16.0",
+  "engines": {
+    "node": "16.15.0"
+  }
 }

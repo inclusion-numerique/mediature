@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "chromatic": "^6.11.4",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "ui": "workspace:*"
   },
   "devDependencies": {
