@@ -17,6 +17,12 @@
     },
     "clean": {
       "cache": false
+    },
+    "accessibility": {
+      "cache": false
+    },
+    "accessibility:open": {
+      "cache": false
     }
   }
 }

@@ -8,7 +8,9 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "heroku-postbuild": "turbo run build --filter=\"${BUILD_APP_NAME}\"...",
-    "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run start"
+    "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run start",
+    "accessibility": "turbo run accessibility",
+    "accessibility:open": "turbo run accessibility:open"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
@@ -17,6 +19,7 @@
     "turbo": "latest"
   },
   "peerDependencies": {
+    "@lhci/cli": "^0.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

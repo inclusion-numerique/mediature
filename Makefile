@@ -35,6 +35,12 @@ test:
 clean:
 	pnpm turbo clean
 
+accessibility:
+	pnpm turbo accessibility
+
+accessibility-open:
+	pnpm turbo accessibility:open
+
 deps:
 	pnpm install
 
