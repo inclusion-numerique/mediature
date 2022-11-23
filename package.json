@@ -1,5 +1,6 @@
 {
   "private": true,
+  "license": "AGPL-3.0",
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo run clean",
