@@ -1,12 +1,7 @@
 import { Player } from '@lottiefiles/react-lottie-player';
 
+import cakeAnimation from './animations/lottie_test.json';
+
 export const LottieTest = () => {
-  return (
-    <Player
-      autoplay
-      loop={false}
-      src="https://assets3.lottiefiles.com/packages/lf20_UJNc2t.json"
-      style={{ height: '300px', width: '300px' }}
-    ></Player>
-  );
+  return <Player autoplay loop={false} src={cakeAnimation} style={{ height: '300px', width: '300px' }}></Player>;
 };
