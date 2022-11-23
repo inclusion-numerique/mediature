@@ -22,6 +22,8 @@ module.exports = {
         'splash-screen': 'off',
         'themed-omnibox': 'off',
         'document-title': 'off',
+        'errors-in-console': 'off',
+        'unused-javascript': 'off',
       },
     },
   },
