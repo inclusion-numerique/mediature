@@ -44,5 +44,11 @@ accessibility-open:
 deps:
 	pnpm install
 
+tools-up:
+	docker-compose up -d
+
+tools-down:
+	docker-compose down
+
 format:
 	pnpm run format

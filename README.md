@@ -51,11 +51,18 @@ The default branch is `dev`.
 
 We enabled the Postgres addon and the "review apps" feature.
 
-### Postgres
+#### Postgres
 
-Extensions:
+##### Extensions
 
 - uuid-ossp
+
+##### Tooling
+
+When using Docker you will be able to use `pgAdmin 4`, and for your local workspace just choose the software that fits your need. Preferences for:
+
+- pgAdmin 4 (specific to Postgres)
+- DBeaver (RDBMS-agnostic)
 
 #### Environment variables
 
