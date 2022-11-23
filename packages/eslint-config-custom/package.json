@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "eslint": "7.32.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
     "next": "latest",
     "react": "18.2",
     "react-dom": "18.2",

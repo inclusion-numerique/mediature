@@ -13,15 +13,17 @@
     "accessibility:open": "turbo run accessibility:open"
   },
   "devDependencies": {
-    "eslint-config-custom": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
     "eslint": "7.32.0",
+    "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
   "peerDependencies": {
     "@lhci/cli": "^0.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "typescript": "^4.5.3"
   },
   "packageManager": "pnpm@7.16.0",
   "engines": {
