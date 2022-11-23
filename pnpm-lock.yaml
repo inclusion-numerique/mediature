@@ -150,6 +150,7 @@ importers:
 
   packages/ui:
     specifiers:
+      '@lottiefiles/react-lottie-player': ^3.4.9
       '@types/react': ^17.0.37
       '@types/react-dom': ^17.0.11
       eslint: ^7.32.0
@@ -160,6 +161,7 @@ importers:
     dependencies:
       react: 18.2.0
     devDependencies:
+      '@lottiefiles/react-lottie-player': 3.4.9_react@18.2.0
       '@types/react': 17.0.52
       '@types/react-dom': 17.0.18
       eslint: 7.32.0
@@ -3000,6 +3002,15 @@ packages:
 
   /@lit/reactive-element/1.4.2:
     resolution: {integrity: sha512-VMOxsWh/QDwrxPsgkSQnuZ+8mfNy1OTjzzUdLBvvZtpahwPTHTeVZ51RZRqO4xfKVrR+btIPA8D01IL3xeG66w==}
+    dev: true
+
+  /@lottiefiles/react-lottie-player/3.4.9_react@18.2.0:
+    resolution: {integrity: sha512-DDhXPGwn29bGZIJvajWNbVJNMr50esKS2nsxZ7j/tu47U+qdJ40qJMLuYFCd8gr4alYpOG1NrgACWvGW7HBrcg==}
+    peerDependencies:
+      react: 16 - 18
+    dependencies:
+      lottie-web: 5.9.6
+      react: 18.2.0
     dev: true
 
   /@mdx-js/mdx/1.6.22:
@@ -10447,6 +10458,10 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+
+  /lottie-web/5.9.6:
+    resolution: {integrity: sha512-JFs7KsHwflugH5qIXBpB4905yC1Sub2MZWtl/elvO/QC6qj1ApqbUZJyjzJseJUtVpgiDaXQLjBlIJGS7UUUXA==}
+    dev: true
 
   /loud-rejection/1.6.0:
     resolution: {integrity: sha512-RPNliZOFkqFumDhvYqOaNY4Uz9oJM2K9tC6JWsJJsNdhuONW4LQHRBpb0qf4pJApVffI5N39SwzWZJuEhfd7eQ==}
