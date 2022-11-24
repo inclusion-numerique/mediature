@@ -14,7 +14,7 @@
     "accessibility:open": "turbo run accessibility:open"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^3.4.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "eslint": "7.32.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",

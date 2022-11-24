@@ -4,13 +4,13 @@ importers:
 
   .:
     specifiers:
-      '@trivago/prettier-plugin-sort-imports': ^3.4.0
+      '@trivago/prettier-plugin-sort-imports': ^4.0.0
       eslint: 7.32.0
       eslint-config-custom: workspace:*
       prettier: ^2.5.1
       turbo: latest
     devDependencies:
-      '@trivago/prettier-plugin-sort-imports': 3.4.0_prettier@2.7.1
+      '@trivago/prettier-plugin-sort-imports': 4.0.0_prettier@2.7.1
       eslint: 7.32.0
       eslint-config-custom: link:packages/eslint-config-custom
       prettier: 2.7.1
@@ -5060,9 +5060,10 @@ packages:
     dependencies:
       tslib: 2.4.1
 
-  /@trivago/prettier-plugin-sort-imports/3.4.0_prettier@2.7.1:
-    resolution: {integrity: sha512-485Iailw8X5f7KetzRka20RF1kPBEINR5LJMNwlBZWY1gRAlVnv5dZzyNPnLxSP0Qcia8HETa9Cdd8LlX9o+pg==}
+  /@trivago/prettier-plugin-sort-imports/4.0.0_prettier@2.7.1:
+    resolution: {integrity: sha512-Tyuk5ZY4a0e2MNFLdluQO9F6d1awFQYXVVujEPFfvKPPXz8DADNHzz73NMhwCSXGSuGGZcA/rKOyZBrxVNMxaA==}
     peerDependencies:
+      '@vue/compiler-sfc': 3.x
       prettier: 2.x
     dependencies:
       '@babel/core': 7.17.8
@@ -5070,7 +5071,6 @@ packages:
       '@babel/parser': 7.18.9
       '@babel/traverse': 7.17.3
       '@babel/types': 7.17.0
-      '@vue/compiler-sfc': 3.2.45
       javascript-natural-sort: 0.7.1
       lodash: 4.17.21
       prettier: 2.7.1
@@ -5395,58 +5395,6 @@ packages:
       resolve: 1.22.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@vue/compiler-core/3.2.45:
-    resolution: {integrity: sha512-rcMj7H+PYe5wBV3iYeUgbCglC+pbpN8hBLTJvRiK2eKQiWqu+fG9F+8sW99JdL4LQi7Re178UOxn09puSXvn4A==}
-    dependencies:
-      '@babel/parser': 7.20.3
-      '@vue/shared': 3.2.45
-      estree-walker: 2.0.2
-      source-map: 0.6.1
-    dev: true
-
-  /@vue/compiler-dom/3.2.45:
-    resolution: {integrity: sha512-tyYeUEuKqqZO137WrZkpwfPCdiiIeXYCcJ8L4gWz9vqaxzIQRccTSwSWZ/Axx5YR2z+LvpUbmPNXxuBU45lyRw==}
-    dependencies:
-      '@vue/compiler-core': 3.2.45
-      '@vue/shared': 3.2.45
-    dev: true
-
-  /@vue/compiler-sfc/3.2.45:
-    resolution: {integrity: sha512-1jXDuWah1ggsnSAOGsec8cFjT/K6TMZ0sPL3o3d84Ft2AYZi2jWJgRMjw4iaK0rBfA89L5gw427H4n1RZQBu6Q==}
-    dependencies:
-      '@babel/parser': 7.20.3
-      '@vue/compiler-core': 3.2.45
-      '@vue/compiler-dom': 3.2.45
-      '@vue/compiler-ssr': 3.2.45
-      '@vue/reactivity-transform': 3.2.45
-      '@vue/shared': 3.2.45
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
-      postcss: 8.4.14
-      source-map: 0.6.1
-    dev: true
-
-  /@vue/compiler-ssr/3.2.45:
-    resolution: {integrity: sha512-6BRaggEGqhWht3lt24CrIbQSRD5O07MTmd+LjAn5fJj568+R9eUD2F7wMQJjX859seSlrYog7sUtrZSd7feqrQ==}
-    dependencies:
-      '@vue/compiler-dom': 3.2.45
-      '@vue/shared': 3.2.45
-    dev: true
-
-  /@vue/reactivity-transform/3.2.45:
-    resolution: {integrity: sha512-BHVmzYAvM7vcU5WmuYqXpwaBHjsS8T63jlKGWVtHxAHIoMIlmaMyurUSEs1Zcg46M4AYT5MtB1U274/2aNzjJQ==}
-    dependencies:
-      '@babel/parser': 7.20.3
-      '@vue/compiler-core': 3.2.45
-      '@vue/shared': 3.2.45
-      estree-walker: 2.0.2
-      magic-string: 0.25.9
-    dev: true
-
-  /@vue/shared/3.2.45:
-    resolution: {integrity: sha512-Ewzq5Yhimg7pSztDV+RH1UDKBzmtqieXQlpTVm2AwraoRL/Rks96mvd8Vgi7Lj+h+TH8dv7mXD3FRZR3TUvbSg==}
     dev: true
 
   /@webassemblyjs/ast/1.11.1:
@@ -10796,12 +10744,6 @@ packages:
   /lru_map/0.3.3:
     resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
     dev: false
-
-  /magic-string/0.25.9:
-    resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
-    dependencies:
-      sourcemap-codec: 1.4.8
-    dev: true
 
   /magic-string/0.26.7:
     resolution: {integrity: sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==}
