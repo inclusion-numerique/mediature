@@ -23,8 +23,14 @@ You must configure 2 environments in the CI/CD settings:
 
 #### Secrets
 
-- CHROMATIC_PROJECT_TOKEN: this must be a repository secret (not an environment one)
-- LHCI_GITHUB_APP_TOKEN: this must be a repository secret (not an environment one)
+The following ones must be repository secrets (not environment ones):
+
+- CHROMATIC_PROJECT_TOKEN: [SECRET]
+- LHCI_GITHUB_APP_TOKEN: [SECRET]
+- SENTRY_URL: [SECRET]
+- SENTRY_AUTH_TOKEN: [SECRET]
+- `SENTRY_ORG`: [SECRET]
+- `SENTRY_PROJECT`: [SECRET]
 
 #### Default branch
 
@@ -44,6 +50,17 @@ The default branch is `dev`.
     - Require linear history
     - Do not allow bypassing the above settings
     - Allow force pushes (+ "Specify who can force push" and leave for administrators)
+
+### Sentry
+
+#### Upload sourcemaps
+
+To upload sourcemaps to Sentry you need a specific "auth token", it must have these scopes:
+
+- project:releases
+- org:read
+
+You can create this token at https://${SENTRY_URL}/settings/account/api/auth-tokens/ ;)
 
 ### Scalingo
 
@@ -73,3 +90,4 @@ For each build and runtime (since they are shared), you should have set:
 - BUILDPACK_URL: `https://github.com/TheSecurityDev/heroku-buildpack-nodejs-pnpm`
 - BUILD_APP_NAME: `main` \*(it would be `docs` if you wanted to deploy the other app)
 - DATABASE_URL: `$SCALINGO_POSTGRESQL_URL` \*(filled by Scalingo automatically when adding a database)\_
+- NEXT_PUBLIC_SENTRY_DSN: [SECRET]

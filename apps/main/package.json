@@ -24,10 +24,12 @@
   },
   "devDependencies": {
     "@lhci/cli": "^0.10.0",
+    "@sentry/cli": "^2.9.0",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "eslint-config-custom": "workspace:*",
+    "git-rev-sync": "^3.0.2",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.3"
   }

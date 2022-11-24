@@ -67,6 +67,12 @@ jobs:
         run: make test
 
       - name: Build
+        env:
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_RELEASE_UPLOAD: true
         run: make build
 
       - name: Accessibility with Lighthouse
