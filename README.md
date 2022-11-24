@@ -17,18 +17,18 @@ This helps for DNS delegation (to configure domains, emails...).
 
 You must configure 2 environments in the CI/CD settings:
 
-- global (to restrict to `dev` and `main` branches only)
-- dev (to restrict to `dev` branch only)
-- prod (to restrict to `main` branch only)
+- `global` (to restrict to `dev` and `main` branches only)
+- `dev` (to restrict to `dev` branch only)
+- `prod` (to restrict to `main` branch only)
 
 #### Secrets
 
 The following ones must be repository secrets (not environment ones):
 
-- CHROMATIC_PROJECT_TOKEN: [SECRET]
-- LHCI_GITHUB_APP_TOKEN: [SECRET]
-- SENTRY_URL: [SECRET]
-- SENTRY_AUTH_TOKEN: [SECRET]
+- `CHROMATIC_PROJECT_TOKEN`: [SECRET]
+- `LHCI_GITHUB_APP_TOKEN`: [SECRET]
+- `SENTRY_URL`: [SECRET] _(format `https://xxx.yyy.zzz/`)_
+- `SENTRY_AUTH_TOKEN`: [SECRET]
 - `SENTRY_ORG`: [SECRET]
 - `SENTRY_PROJECT`: [SECRET]
 
@@ -57,8 +57,8 @@ The default branch is `dev`.
 
 To upload sourcemaps to Sentry you need a specific "auth token", it must have these scopes:
 
-- project:releases
-- org:read
+- `project:releases`
+- `org:read`
 
 You can create this token at https://${SENTRY_URL}/settings/account/api/auth-tokens/ ;)
 
@@ -85,9 +85,11 @@ When using Docker you will be able to use `pgAdmin 4`, and for your local worksp
 
 Scalingo is used as a PaaS to host our builds.
 
-For each build and runtime (since they are shared), you should have set:
+For each build and runtime (since they are shared), you should have set some environment variables.
 
-- BUILDPACK_URL: `https://github.com/TheSecurityDev/heroku-buildpack-nodejs-pnpm`
-- BUILD_APP_NAME: `main` \*(it would be `docs` if you wanted to deploy the other app)
-- DATABASE_URL: `$SCALINGO_POSTGRESQL_URL` \*(filled by Scalingo automatically when adding a database)\_
-- NEXT_PUBLIC_SENTRY_DSN: [SECRET]
+##### For the "main" app
+
+- `BUILDPACK_URL`: `https://github.com/TheSecurityDev/heroku-buildpack-nodejs-pnpm`
+- `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
+- `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
+- `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
