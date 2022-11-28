@@ -5,7 +5,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "test": {
+    "test:unit": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "test:unit:watch": {
       "outputs": ["coverage/**"],
       "dependsOn": []
     },

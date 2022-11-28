@@ -64,7 +64,7 @@ jobs:
         run: make lint
 
       - name: Test
-        run: make test
+        run: make test-unit
 
       - name: Build
         env:

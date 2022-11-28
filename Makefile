@@ -29,8 +29,11 @@ serve-dev:
 lint:
 	pnpm turbo lint
 
-test:
-	pnpm turbo test
+test-unit:
+	pnpm turbo test:unit
+
+test-unit-watch:
+	pnpm turbo test:unit:watch
 
 test-e2e:
 	pnpm turbo test:e2e:headless
