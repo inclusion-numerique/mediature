@@ -11,7 +11,7 @@
     "clean": "rm -rf .next && rm -rf .turbo && rm -rf node_modules",
     "accessibility": "next export && lhci autorun",
     "accessibility:open": "lhci open",
-    "test:unit": "jest --ci",
+    "test:unit": "jest --ci --passWithNoTests",
     "test:unit:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:e2e": "cross-env PORT=3000 start-server-and-test start http://localhost:3000 cy:open",
