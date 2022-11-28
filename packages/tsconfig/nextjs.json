@@ -13,7 +13,6 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "strict": false,
-    "baseUrl": ".",
     "types": [],
     "target": "es5"
   },

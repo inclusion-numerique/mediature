@@ -1,4 +1,4 @@
-import type {} from 'cypress';
+export {};
 
 describe('Home boundaries', () => {
   it('should visit', () => {

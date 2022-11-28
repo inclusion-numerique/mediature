@@ -2,6 +2,12 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@mediature/docs/*": ["../../apps/docs/*"],
+      "@mediature/main/*": ["../../apps/main/*"],
+      "@mediature/ui/*": ["../../packages/ui/*"]
+    },
     "composite": false,
     "declaration": true,
     "declarationMap": true,

@@ -1,4 +1,7 @@
+import webpackPreprocessor from '@cypress/webpack-preprocessor';
 import { defineConfig } from 'cypress';
+import path from 'path';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 export default defineConfig({
   video: false,
@@ -11,8 +14,26 @@ export default defineConfig({
     baseUrl: 'http://localhost:3000',
     supportFile: 'tests/support/e2e.{js,jsx,ts,tsx}',
     specPattern: 'tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
-    setupNodeEvents(on, config) {
-      // implement node event listeners here
+    setupNodeEvents(on: any, config) {
+      const preprocessorConfig = webpackPreprocessor.defaultOptions;
+
+      preprocessorConfig.webpackOptions.resolve = {
+        // plugins: [
+        //   new TsconfigPathsPlugin({
+        //     configFile: path.resolve(__dirname, '../../../packages/tsconfig/base.json'),
+        //   }),
+        // ],
+        // -----
+        // TODO: the above is supposed to work... but it's not, so hardcoding paths for now (we could use the same than we did with Jest + Array.map)
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+        alias: {
+          '@mediature/docs': path.resolve(__dirname, '../../apps/docs/'),
+          '@mediature/main': path.resolve(__dirname, '../../apps/main/'),
+          '@mediature/ui': path.resolve(__dirname, '../../apps/ui/'),
+        },
+      };
+
+      on('file:preprocessor', webpackPreprocessor(preprocessorConfig));
     },
   },
 

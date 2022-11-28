@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-import Home from './page';
+import Home from '@mediature/main/app/page';
 
 describe('Home', () => {
   it('renders', () => {

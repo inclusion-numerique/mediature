@@ -1,8 +1,0 @@
-{
-  "extends": "tsconfig/nextjs.json",
-  "include": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "types": []
-  }
-}

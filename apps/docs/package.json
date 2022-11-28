@@ -11,10 +11,11 @@
     "chromatic": "npx chromatic --auto-accept-changes --exit-zero-on-changes"
   },
   "dependencies": {
+    "@mediature/main": "workspace:main@*",
+    "@mediature/ui": "workspace:ui@*",
     "chromatic": "^6.11.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "ui": "workspace:*"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@mdx-js/react": "1.6.22",
@@ -48,6 +49,7 @@
     "storybook-dark-mode": "^1.1.2",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.4",
-    "vite": "^2.9.9"
+    "vite": "^2.9.9",
+    "vite-tsconfig-paths": "^3.6.0"
   }
 }

@@ -1,8 +1,11 @@
 {
   "extends": "tsconfig/nextjs.json",
-  "include": [".next/types/**/*.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx"],
-  "compilerOptions": {
-    "types": []
-  }
+  "include": [
+    "app", // For whatever reason it's needed otherwise the scope inside `*.spec.tsx` files are polluted by Cypress and we end in the IDE with the error: Property 'toBeInTheDocument' does not exist on type 'Assertion'. We tried to use a specific `tsconfig.spec.json` but it broke importing with `paths` alias...
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
 }

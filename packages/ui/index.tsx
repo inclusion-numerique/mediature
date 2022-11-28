@@ -1,3 +1,3 @@
 import * as React from 'react';
 
-export * from './src/Button';
+export { Button } from '@mediature/ui/src/Button';

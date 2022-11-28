@@ -14,7 +14,7 @@ const moduleExports = {
   experimental: {
     appDir: true,
     outputFileTracingRoot: path.join(__dirname, '../../'),
-    transpilePackages: ['ui'],
+    transpilePackages: ['@mediature/ui'],
   },
   sentry: {
     hideSourceMaps: mode === 'prod', // Do not serve sourcemaps in `prod`

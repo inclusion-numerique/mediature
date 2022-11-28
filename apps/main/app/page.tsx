@@ -1,5 +1,5 @@
-import { Button } from 'ui';
-import { LottieTest } from 'ui/src/LottieTest';
+import { Button } from '@mediature/ui';
+import { LottieTest } from '@mediature/ui/src/LottieTest';
 
 export default function Web() {
   return (

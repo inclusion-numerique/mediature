@@ -1,4 +1,4 @@
-import type {} from 'cypress';
+export {};
 
 // ***********************************************
 // This example commands.ts shows you how to
