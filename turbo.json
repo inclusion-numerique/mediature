@@ -9,6 +9,10 @@
       "outputs": ["coverage/**"],
       "dependsOn": []
     },
+    "test:e2e:headless": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
     "lint": {
       "outputs": []
     },

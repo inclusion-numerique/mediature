@@ -32,6 +32,9 @@ lint:
 test:
 	pnpm turbo test
 
+test-e2e:
+	pnpm turbo test:e2e:headless
+
 clean:
 	pnpm turbo clean
 

@@ -8,6 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:e2e:headless": "turbo run test:e2e:headless",
     "heroku-postbuild": "turbo run build --filter=\"${BUILD_APP_NAME}\"...",
     "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run start",
     "accessibility": "turbo run accessibility",

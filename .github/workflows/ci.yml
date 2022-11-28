@@ -75,6 +75,9 @@ jobs:
           SENTRY_RELEASE_UPLOAD: true
         run: make build
 
+      - name: Test end-to-end
+        run: make test-e2e
+
       - name: Accessibility with Lighthouse
         run: make accessibility
         env:
