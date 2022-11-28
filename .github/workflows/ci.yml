@@ -10,6 +10,7 @@ env:
   CONTAINER_IMAGE_FOLDER: ghcr.io/${{ github.repository }}
   NODE_VERSION: 16.15.0
   PNPM_VERSION: 7.16.0
+  CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
 jobs:
   requirements:
     name: Continuous Integration
@@ -43,21 +44,22 @@ jobs:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
+      - name: Export pnpm store directory as an environment variable
         shell: bash
         run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
 
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        env:
+          CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
         run: make deps
 
       - name: Lint
@@ -79,6 +81,8 @@ jobs:
         run: make build
 
       - name: Test end-to-end
+        env:
+          CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
         run: make test-e2e
 
       - name: Accessibility with Lighthouse
@@ -118,16 +122,15 @@ jobs:
       - name: Install turbo
         run: npm install -g turbo
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
+      - name: Export pnpm store directory as an environment variable
         shell: bash
         run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
 
       - uses: actions/cache@v3
         name: Setup pnpm cache
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          path: ${{ env.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
@@ -136,6 +139,8 @@ jobs:
         run: turbo prune --scope=docs
 
       - name: Install dependencies
+        env:
+          CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
         run: pnpm install
 
       - uses: chromaui/action@v1
