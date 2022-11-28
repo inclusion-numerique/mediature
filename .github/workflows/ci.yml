@@ -85,10 +85,12 @@ jobs:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
         run: make test-e2e
 
-      - name: Accessibility with Lighthouse
-        run: make accessibility
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      # TODO: enable again once Next 13 with "appDir: true" is compatible with `next export`
+      # Ref: https://beta.nextjs.org/docs/app-directory-roadmap#supported-and-planned-features
+      # - name: Accessibility with Lighthouse
+      #   run: make accessibility
+      #   env:
+      #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       # - name: Release
       #   env:

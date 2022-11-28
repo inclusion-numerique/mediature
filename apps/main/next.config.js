@@ -12,6 +12,7 @@ const moduleExports = {
   //   defaultLocale: 'fr',
   // },
   experimental: {
+    appDir: true,
     outputFileTracingRoot: path.join(__dirname, '../../'),
     transpilePackages: ['ui'],
   },
@@ -59,4 +60,7 @@ const sentryWebpackPluginOptions = {
   },
 };
 
-module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
+// TODO: enable again Sentry once they accept `appDir: true` Next projects
+// Ref: https://github.com/getsentry/sentry-javascript/issues/6290#issuecomment-1329293619
+// module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
+module.exports = moduleExports;
