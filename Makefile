@@ -58,3 +58,6 @@ tools-down:
 
 format:
 	pnpm run format
+
+format-check:
+	pnpm run format:check

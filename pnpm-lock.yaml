@@ -155,7 +155,6 @@ importers:
       eslint-config-prettier: ^8.3.0
       eslint-config-turbo: latest
       eslint-plugin-react: 7.28.0
-      eslint-plugin-simple-import-sort: ^8.0.0
       next: latest
       react: '18.2'
       react-dom: '18.2'
@@ -167,7 +166,6 @@ importers:
       eslint-plugin-react: 7.28.0_eslint@7.32.0
     devDependencies:
       eslint: 7.32.0
-      eslint-plugin-simple-import-sort: 8.0.0_eslint@7.32.0
       next: 13.0.5_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -9264,14 +9262,6 @@ packages:
       semver: 6.3.0
       string.prototype.matchall: 4.0.8
     dev: false
-
-  /eslint-plugin-simple-import-sort/8.0.0_eslint@7.32.0:
-    resolution: {integrity: sha512-bXgJQ+lqhtQBCuWY/FUWdB27j4+lqcvXv5rUARkzbeWLwea+S5eBZEQrhnO+WgX3ZoJHVj0cn943iyXwByHHQw==}
-    peerDependencies:
-      eslint: '>=5.0.0'
-    dependencies:
-      eslint: 7.32.0
-    dev: true
 
   /eslint-plugin-turbo/0.0.4_eslint@7.32.0:
     resolution: {integrity: sha512-dfmYE/iPvoJInQq+5E/0mj140y/rYwKtzZkn3uVK8+nvwC5zmWKQ6ehMWrL4bYBkGzSgpOndZM+jOXhPQ2m8Cg==}

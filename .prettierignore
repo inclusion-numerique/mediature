@@ -1,3 +1,4 @@
+/apps/main/.next/
 **/.dockerignore
 /pnpm-lock.yaml
 /packages/ui/src/animations/**/*.json
