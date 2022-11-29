@@ -2,6 +2,11 @@
   "name": "eslint-config-custom",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "packages/eslint-config-custom"
+  },
   "license": "AGPL-3.0",
   "main": "index.js",
   "dependencies": {

@@ -2,6 +2,11 @@
   "name": "main",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "apps/main"
+  },
   "license": "AGPL-3.0",
   "scripts": {
     "dev": "next dev",
@@ -33,6 +38,7 @@
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^5.15.5",
     "@lhci/cli": "^0.10.0",
+    "@octokit/rest": "^19.0.5",
     "@sentry/cli": "^2.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -50,6 +56,7 @@
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
     "jest-resolver-tsconfig-paths": "^0.14.4",
+    "parse-github-url": "^1.0.2",
     "start-server-and-test": "^1.14.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",

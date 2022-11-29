@@ -2,6 +2,11 @@
   "name": "docs",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "apps/docs"
+  },
   "license": "AGPL-3.0",
   "scripts": {
     "dev": "start-storybook -p 6006 --no-open",

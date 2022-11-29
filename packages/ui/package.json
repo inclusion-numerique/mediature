@@ -2,6 +2,11 @@
   "name": "ui",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "packages/ui"
+  },
   "license": "AGPL-3.0",
   "main": "./index.tsx",
   "types": "./index.tsx",
