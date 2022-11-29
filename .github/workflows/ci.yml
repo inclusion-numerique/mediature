@@ -32,6 +32,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set environment for branch
+        run: |
+          if [[ $GITHUB_REF_NAME == 'main' ]]; then
+              echo "APP_MODE=prod" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF_NAME == 'dev' ]]; then
+              echo "APP_MODE=dev" >> $GITHUB_ENV
+          else
+              echo "APP_MODE=test" >> $GITHUB_ENV
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:

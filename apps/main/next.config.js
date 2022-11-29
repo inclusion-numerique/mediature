@@ -2,11 +2,17 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
 const path = require('path');
 
-const mode = 'dev'; // TODO: this should be based on running command (build or build-dev)... or... based on the environment envVar MODE (for CI, make...)
+const mode = process.env.APP_MODE || 'test';
 
+// TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = {
   reactStrictMode: true,
   // output: 'standalone', // This was great to use in case of a Docker image, but it's totally incompatible with Scalingo build pipeline, giving up this size reducing way :D
+  env: {},
+  serverRuntimeConfig: {},
+  publicRuntimeConfig: {
+    appMode: mode,
+  },
   // i18n: {
   //   locales: ['fr'],
   //   defaultLocale: 'fr',
