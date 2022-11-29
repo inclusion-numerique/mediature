@@ -2,6 +2,8 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
 const path = require('path');
 
+const { getHumanVersion, getTechnicalVersion } = require('./utils/app-version.js');
+
 const mode = process.env.APP_MODE || 'test';
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
@@ -12,6 +14,7 @@ const moduleExports = {
   serverRuntimeConfig: {},
   publicRuntimeConfig: {
     appMode: mode,
+    appVersion: getHumanVersion(),
   },
   // i18n: {
   //   locales: ['fr'],
@@ -42,8 +45,7 @@ const uploadToSentry = process.env.SENTRY_RELEASE_UPLOAD === 'true' && process.e
 if (uploadToSentry) {
   // Define here the environment variable we want to embed in the build (easier than managing it inside `chainWebpack()`)
   // Ref: https://stackoverflow.com/questions/53094975/vue-js-defining-computed-environment-variables-in-vue-config-js-vue-cli-3
-  const formattedDate = gitRevision.date().toISOString().split('.')[0].replace(/\D/g, ''); // Remove milliseconds and keep only digits
-  process.env.SENTRY_RELEASE_TAG = `v${process.env.npm_package_version}-${formattedDate}-${gitRevision.short(null, 12)}`;
+  process.env.SENTRY_RELEASE_TAG = getHumanVersion();
 }
 
 const sentryWebpackPluginOptions = {

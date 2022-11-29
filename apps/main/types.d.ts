@@ -4,6 +4,7 @@ interface ServerRuntimeConfig {
 
 interface PublicRuntimeConfig {
   appMode: 'prod' | 'dev' | 'test';
+  appVersion: string;
 }
 
 interface RuntimeConfig {
