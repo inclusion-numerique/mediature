@@ -46,6 +46,10 @@ const moduleExports = {
     // disableServerWebpackPlugin: true, // TODO
     // disableClientWebpackPlugin: true, // TODO
   },
+  poweredByHeader: false,
+  generateBuildId: async () => {
+    return getTechnicalVersion();
+  },
 };
 
 //
