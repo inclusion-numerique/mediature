@@ -25,6 +25,22 @@ const moduleExports = {
     outputFileTracingRoot: path.join(__dirname, '../../'),
     transpilePackages: ['@mediature/ui'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/robots.txt',
+        destination: '/api/robots',
+      },
+    ];
+  },
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+    config.module.rules.push({
+      test: /\.txt$/i,
+      use: 'raw-loader',
+    });
+
+    return config;
+  },
   sentry: {
     hideSourceMaps: mode === 'prod', // Do not serve sourcemaps in `prod`
     // disableServerWebpackPlugin: true, // TODO
