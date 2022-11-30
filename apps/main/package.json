@@ -58,6 +58,7 @@
     "jest-resolver-tsconfig-paths": "^0.14.4",
     "parse-github-url": "^1.0.2",
     "start-server-and-test": "^1.14.0",
+    "testcontainers": "^9.0.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",

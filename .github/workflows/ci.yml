@@ -19,13 +19,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    services:
-      docker-dind:
-        image: docker:18.09.7-dind # Stick to this version since new ones break the logic to force `2375` as port without TLS... (we tried to align with providing certs but it did not work) Ref: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4566
-        ports:
-          - 2375:2375
-    env:
-      DOCKER_HOST: tcp://127.0.0.1:2375
     steps:
       - name: Checkout
         uses: actions/checkout@v3
