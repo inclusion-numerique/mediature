@@ -1,0 +1,332 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+// TODO: check uuid types... should be the extension of Postgres
+
+// Account, Session, User and VerificationToken
+// Match next-auth model https://next-auth.js.org/adapters/prisma
+// Underscored names are from there too
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionToken String   @unique
+  userId       String   @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // TODO: meaning of "Cascade" here? In which direction?
+}
+
+model VerificationToken {
+  token      String   @id
+  identifier String // Email or other user identifier
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum UserStatus {
+  REGISTERED
+  CONFIRMED
+  DISABLED
+}
+
+model User {
+  id             String     @id @default(uuid()) @db.Uuid
+  firstname      String
+  lastname       String
+  email          String     @unique
+  status         UserStatus @default(REGISTERED)
+  profilePicture String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+  // TODO: https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
+
+  Account         Account[]
+  Session         Session[]
+  Agent           Agent[]
+  Admin           Admin[]
+  AgentInvitation AgentInvitation[]
+}
+
+model Address {
+  id          String @id @default(uuid()) @db.Uuid
+  street      String
+  city        String
+  postalCode  String
+  countryCode String
+  subdivision String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Citizen Citizen[]
+}
+
+enum PhoneType {
+  UNSPECIFIED
+  HOME
+  MOBILE
+}
+
+model Phone {
+  // manage enum objects like Phone/Address through native Postgres objects? To simplify structure/relations?
+
+  id          String    @id @default(uuid()) @db.Uuid
+  phoneType   PhoneType @default(UNSPECIFIED)
+  callingCode String
+  countryCode String
+  number      String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Citizen Citizen[]
+}
+
+model Citizen {
+  id        String @id @default(uuid()) @db.Uuid
+  email     String @unique
+  firstname String
+  lastname  String
+  addressId String @db.Uuid
+  phoneId   String @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  address       Address         @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  phone         Phone           @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  IdentityStamp IdentityStamp[]
+  Case          Case[]
+}
+
+model IdentityStamp {
+  id        String @id @default(uuid()) @db.Uuid
+  ownerType String // TODO: how to specify this... old Laravel hehe
+  ownerId   String @db.Uuid
+  value     String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  // TODO... should be type agnostic
+  owner Citizen @relation(fields: [ownerId], references: [id])
+}
+
+enum CaseStatus {
+  TO_PROCESS
+  MAKE_XXX_CALL // TODO: ... typo?
+  SYNC_WITH_CITIZEN
+  SYNC_WITH_ADMINISTATION
+  ABOUT_TO_CLOSE
+  STUCK
+}
+
+enum CaseInitialPlatform {
+  WEB
+}
+
+model Case {
+  id                           String              @id @default(uuid()) @db.Uuid
+  humanId                      Int                 @default(autoincrement())
+  citizenId                    String              @db.Uuid
+  agentId                      String              @db.Uuid
+  alreadyRequestedInThePast    Boolean
+  gotAnswerFromPreviousRequest Boolean?
+  description                  String              @db.Text
+  units                        String
+  emailCopyWanted              Boolean
+  termReminderAt               DateTime?           @default(dbgenerated("NOW() + interval '5 day'"))
+  initiatedFrom                CaseInitialPlatform @default(WEB)
+  status                       CaseStatus
+  closedAt                     DateTime?
+  finalConclusion              String?
+  nextRequirements             String?
+
+  // TODO: domain/origin
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  citizen            Citizen              @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  agent              Agent                @relation(fields: [agentId], references: [id])
+  Note               Note[]
+  AttachmentsOnCases AttachmentsOnCases[]
+}
+
+model Note {
+  id      String   @id @default(uuid()) @db.Uuid
+  caseId  String   @db.Uuid
+  date    DateTime @default(now()) @db.Date
+  content String   @db.Text
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  case                   Case?                    @relation(fields: [caseId], references: [id])
+  AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
+}
+
+model Agent {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+
+  // rights?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user      User        @relation(fields: [userId], references: [id])
+  Case      Case[] // TODO:
+  Authority Authority[]
+}
+
+// TODO: Admin model?
+
+enum AttachementStatus {
+  PENDING_UPLOAD
+  VALID
+  EXPIRED
+}
+
+model Attachment {
+  id            String            @id @default(uuid()) @db.Uuid
+  contentType   String // TODO: enum?
+  fileUrl       String
+  fileUrlSecret String
+  size          Int // TODO: set max from here
+  name          String?
+  status        AttachementStatus @default(VALID)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Authority              Authority[] // TODO: Prevent this because there is no sens retrieving authority from attachment?
+  AttachmentsOnCases     AttachmentsOnCases[]
+  AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
+
+  @@unique([fileUrl])
+}
+
+enum AuthorityType {
+  CITY
+  // TODO: inter-commune ?
+  SUBDIVISION // TODO: trad pour département
+  REGION // TODO: trad pour région
+}
+
+model Authority {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String
+  mainAgentId String?       @db.Uuid
+  type        AuthorityType @default(CITY)
+  logo        Attachment?   @relation(fields: [attachmentId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  mainAgent       Agent?            @relation(fields: [mainAgentId], references: [id])
+  attachmentId    String?           @db.Uuid
+  AgentInvitation AgentInvitation[]
+}
+
+enum CaseAttachementType {
+  AGENT
+  ADMINISTRATION
+  CITIZEN
+}
+
+model AttachmentsOnCases {
+  caseId       String              @db.Uuid
+  attachmentId String              @db.Uuid
+  transmitter  CaseAttachementType @default(CITIZEN)
+
+  case       Case       @relation(fields: [caseId], references: [id])
+  attachment Attachment @relation(fields: [attachmentId], references: [id])
+
+  @@id([caseId, attachmentId])
+}
+
+model AttachmentsOnCaseNotes {
+  noteId       String              @db.Uuid
+  attachmentId String              @db.Uuid
+  transmitter  CaseAttachementType @default(CITIZEN)
+
+  note       Note       @relation(fields: [noteId], references: [id])
+  attachment Attachment @relation(fields: [attachmentId], references: [id])
+
+  @@id([noteId, attachmentId])
+}
+
+model Admin {
+  id            String  @id @default(uuid()) @db.Uuid
+  userId        String  @db.Uuid
+  canEverything Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  CANCELED
+}
+
+model AgentInvitation {
+  id               String           @id @default(uuid()) @db.Uuid
+  issuerId         String           @db.Uuid
+  authorityId      String           @db.Uuid
+  inviteeEmail     String
+  inviteeFirstname String?
+  inviteeLastname  String?
+  token            String
+  status           InvitationStatus @default(PENDING)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  issuer    User      @relation(fields: [issuerId], references: [id])
+  authority Authority @relation(fields: [authorityId], references: [id])
+}

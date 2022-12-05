@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@mediature/docs/*": ["../../apps/docs/*"],
+      "@mediature/main/*": ["../../apps/main/*"],
+      "@mediature/ui/*": ["../../packages/ui/*"]
+    }
+  }
+}
