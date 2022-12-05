@@ -9,7 +9,10 @@ import {
 } from '@mediature/main/utils/app-version';
 
 describe('app-version', () => {
-  describe('getRepositoryInformation()', () => {
+  // Note: we skip following tests since they reach GitHub API that has a quota limit
+  // and since in their CI the IP is shared with everyone... :)
+
+  describe.skip('getRepositoryInformation()', () => {
     it('should return correct information', () => {
       const repoInfo = getRepositoryInformation();
 
@@ -17,7 +20,7 @@ describe('app-version', () => {
     });
   });
 
-  describe('as in Scalingo environment', () => {
+  describe.skip('as in Scalingo environment', () => {
     // Simulate the commit SHA Scalingo provides
     process.env.SOURCE_VERSION = 'bedf63af57c32f3750e2d0f466066fcf549960f8';
 
