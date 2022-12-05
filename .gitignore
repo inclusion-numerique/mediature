@@ -1,7 +1,8 @@
 # tools settings folders
 /**/.*/**/*
 !.github/**/*
-!.well-known/
+!.vscode/extensions.json
+!.well-known/**/*
 
 # dependencies
 node_modules
