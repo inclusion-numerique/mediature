@@ -29,6 +29,9 @@ serve-dev:
 lint:
 	pnpm turbo lint
 
+test-prepare:
+	pnpm turbo test:prepare
+
 test-unit:
 	pnpm turbo test:unit
 

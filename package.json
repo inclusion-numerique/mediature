@@ -12,6 +12,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mdx}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,mdx}\"",
+    "test:prepare": "turbo run test:prepare",
     "test:unit": "turbo run test:unit",
     "test:unit:watch": "turbo run test:unit:watch",
     "test:e2e:headless": "turbo run test:e2e:headless",

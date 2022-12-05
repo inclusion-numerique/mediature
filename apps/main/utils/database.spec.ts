@@ -1,3 +1,4 @@
+// Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` step
 import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';
 
@@ -32,14 +33,18 @@ describe('database', () => {
   });
 
   describe('prisma', () => {
-    it('migrate', async () => {
-      const { result } = concurrently(['npm:db:push']);
+    it('check schema', async () => {
+      const { result } = concurrently(['npm:db:schema:check:unsecure']);
 
       await result;
     });
-  });
 
-  describe('prisma', () => {
+    it('migrate', async () => {
+      const { result } = concurrently(['npm:db:push:unsecure']);
+
+      await result;
+    });
+
     it('seed', async () => {
       await seedDatabase(prisma);
 

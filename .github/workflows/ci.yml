@@ -71,7 +71,10 @@ jobs:
       - name: Format check
         run: make format-check
 
-      - name: Test
+      - name: Prepare tests
+        run: make test-prepare
+
+      - name: Test unit
         run: make test-unit
 
       - name: Build
