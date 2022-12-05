@@ -11,7 +11,7 @@
   "main": "./index.tsx",
   "types": "./index.tsx",
   "scripts": {
-    "lint": "TIMING=1 eslint \"**/*.ts*\""
+    "lint": "TIMING=1 eslint --ext .js,.jsx,.ts,.tsx,.mdx ."
   },
   "dependencies": {
     "react": "^18.2.0"

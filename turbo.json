@@ -38,5 +38,21 @@
     "format:check": {
       "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "APP_MODE",
+    "CI",
+    "CONTAINER_VERSION",
+    "NEXT_PUBLIC_APP_MODE",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_RELEASE",
+    "NODE_ENV",
+    "npm_package_version",
+    "npm_package_repository_url",
+    "SENTRY_DSN",
+    "SENTRY_RELEASE_UPLOAD",
+    "SENTRY_RELEASE_TAG",
+    "SOURCE_VERSION",
+    "TESTCONTAINERS_RYUK_DISABLED"
+  ]
 }

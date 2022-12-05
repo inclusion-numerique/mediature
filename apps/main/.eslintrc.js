@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: ['custom'],
-  plugins: ['testing-library'],
+  plugins: ['jsx-a11y', 'testing-library'],
   overrides: [
     // Only uses Testing Library lint rules in test files
     {
