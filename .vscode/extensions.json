@@ -1,5 +1,6 @@
 {
   "recommendations": [
+    "benspaulding.procfile",
     "bradgashler.htmltagwrap",
     "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",

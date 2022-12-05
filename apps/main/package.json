@@ -28,6 +28,9 @@
     "db:push:unsecure": "prisma db push",
     "db:seed": "dotenv-run-script .env.test -- db:seed:unsecure",
     "db:seed:unsecure": "prisma db seed",
+    "db:migration:prepare": "dotenv-run-script .env.test -- db:migration:prepare:unsecure",
+    "db:migration:prepare:unsecure": "prisma migrate dev --create-only",
+    "db:migration:deploy": "prisma migrate deploy",
     "db:studio": "dotenv-run-script .env.test -- db:studio:unsecure",
     "db:studio:unsecure": "prisma studio"
   },

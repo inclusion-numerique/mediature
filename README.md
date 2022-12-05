@@ -94,3 +94,16 @@ For each build and runtime (since they are shared), you should have set some env
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
+
+#### Debug
+
+To debug scalingo apps you may prefer using their CLI with some commands like:
+
+```
+scalingo login --api-token ${SCALINGO_API_TOKEN}
+scalingo -a ${SCALINGO_APP_NAME} addons
+scalingo -a ${SCALINGO_APP_NAME} logs
+scalingo -a ${SCALINGO_APP_NAME} logs --addon ${SCALING_ADDON_ID}
+scalingo -a ${SCALINGO_APP_NAME} run bash
+scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
+```

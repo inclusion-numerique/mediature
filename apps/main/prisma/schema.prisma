@@ -168,7 +168,7 @@ model Case {
   description                  String              @db.Text
   units                        String
   emailCopyWanted              Boolean
-  termReminderAt               DateTime?           @default(dbgenerated("NOW() + interval '5 day'"))
+  termReminderAt               DateTime?
   initiatedFrom                CaseInitialPlatform @default(WEB)
   status                       CaseStatus
   closedAt                     DateTime?
