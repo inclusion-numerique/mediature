@@ -12,6 +12,7 @@ import {
   InputLabel,
   Radio,
   RadioGroup,
+  TextField,
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
@@ -31,46 +32,22 @@ export default function RequestPage({ params: { authority } }: { params: { autho
       </Grid>
       <Grid container sx={{ maxWidth: 'sm', mx: 'auto' }}>
         <Grid item xs={12} sm={6}>
-          <FormControl>
-            <InputLabel htmlFor="firstname" placeholder="ex: Marie">
-              Prénom
-            </InputLabel>
-            <Input id="firstname" />
-          </FormControl>
+          {/* <TextField name="firstname" label="Prénom" placeholder="ex: Marie" fullWidth InputLabelProps={{ shrink: true }} /> */}
+          <TextField name="firstname" label="Prénom" placeholder="ex: Marie" fullWidth />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <FormControl>
-            <InputLabel htmlFor="lastname" placeholder="ex: Dupont">
-              Nom
-            </InputLabel>
-            <Input id="lastname" />
-          </FormControl>
+          <TextField name="lastname" label="Nom" placeholder="ex: Dupont" fullWidth />
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
-            <InputLabel htmlFor="address" placeholder="ex: 20 rue de la ...">
-              Adresse
-            </InputLabel>
-            {/* TODO: split into multiple components */}
-            <Input id="address" />
-          </FormControl>
+          <TextField name="address" label="Adresse" placeholder="ex: 20 rue de la ..." fullWidth />
+          {/* TODO: split into multiple components */}
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
-            <InputLabel htmlFor="firstname" placeholder="ex: 06 66 66 66 66">
-              Téléphone
-            </InputLabel>
-            {/* TODO: split into multiple components */}
-            <Input id="firstname" />
-          </FormControl>
+          <TextField name="firstname" label="Téléphone" placeholder="ex: 06 66 66 66 66" fullWidth />
+          {/* TODO: split into multiple components */}
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
-            <InputLabel htmlFor="email" placeholder="ex: marie.dupont@mail.com">
-              Email
-            </InputLabel>
-            <Input id="email" />
-          </FormControl>
+          <TextField type="email" name="email" label="Email" placeholder="ex: marie.dupont@mail.comr=" fullWidth />
         </Grid>
         <Grid item xs={12}>
           <FormControl>
@@ -105,10 +82,7 @@ export default function RequestPage({ params: { authority } }: { params: { autho
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
-            <InputLabel htmlFor="description">Motif de la demande :</InputLabel>
-            <Input id="description" multiline rows={3} />
-          </FormControl>
+          <TextField name="description" label="Motif de la demande :" multiline rows={3} fullWidth />
         </Grid>
         <Grid item xs={12}>
           <FormControl>

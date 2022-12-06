@@ -49,6 +49,7 @@
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",
     "@mediature/ui": "workspace:ui@*",
+    "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
     "@prisma/client": "^4.7.1",
     "@sentry/integrations": "^7.21.1",

@@ -107,3 +107,26 @@ scalingo -a ${SCALINGO_APP_NAME} logs --addon ${SCALING_ADDON_ID}
 scalingo -a ${SCALINGO_APP_NAME} run bash
 scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 ```
+
+### Tips
+
+#### Frontend development
+
+##### Hydratation issue
+
+When developing a frontend it's likely you will have client hydratation according to the server content. It will fail if some browser extensions are enabled and modify the DOM. You need to identify the source of the issue and then, either disable the extension, or request it to not modify the DOM when developing on `http://localhost:xxxx/`.
+
+From our experience, this can be caused by:
+
+- Password managers _(make sure to have no credentials that match your development URL)_
+- Cookie banner automatic rejection _(in their settings you're likely to be able to exclude your development URL from being analyzed)_
+
+_(in React the error was `Extra attributes from the server: xxxxx`)_
+
+##### Cannot fetch specific files
+
+As for any `hydratation issue` it worths taking a look at your browser extensions, some may block outgoing requests.
+
+For example:
+
+- Ad blockers _(whitelist the blocked URL in your extension)_
