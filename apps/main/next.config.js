@@ -42,7 +42,7 @@ const moduleExports = async () => {
       });
 
       config.module.rules.push({
-        test: /\.txt$/i,
+        test: /\.(txt|html)$/i,
         use: 'raw-loader',
       });
 
