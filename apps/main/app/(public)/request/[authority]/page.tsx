@@ -47,7 +47,7 @@ export default function RequestPage({ params: { authority } }: { params: { autho
           {/* TODO: split into multiple components */}
         </Grid>
         <Grid item xs={12}>
-          <TextField type="email" name="email" label="Email" placeholder="ex: marie.dupont@mail.comr=" fullWidth />
+          <TextField type="email" name="email" label="Email" placeholder="ex: marie.dupont@mail.com" fullWidth />
         </Grid>
         <Grid item xs={12}>
           <FormControl>
@@ -98,7 +98,7 @@ export default function RequestPage({ params: { authority } }: { params: { autho
         </Grid>
         <Grid item xs={12}>
           <FormControl>
-            <FormControlLabel label="Envoyez-moi par e-mail une copie de mes réponses." control={<Checkbox defaultChecked />} />
+            <FormControlLabel label="Envoyez-moi par e-mail une copie de mes réponses." control={<Checkbox />} />
           </FormControl>
         </Grid>
         <Grid item xs={12}>

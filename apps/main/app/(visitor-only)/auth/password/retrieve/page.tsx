@@ -1,16 +1,10 @@
 'use client';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Box, Button, FormHelperText, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, FormHelperText, Grid, Link, TextField, Typography } from '@mui/material';
 import NextLink from 'next/link';
-import React, { useState } from 'react';
+import React from 'react';
 
-export default function SignInPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = () => setShowPassword(!showPassword);
-
+export default function ForgotPasswordPage() {
   return (
     <Box
       component="main"
@@ -49,31 +43,16 @@ export default function SignInPage() {
             >
               <div>
                 <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
-                  Connexion
+                  Mot de passe oublié ?
                 </Typography>
                 <form>
                   <TextField type="email" name="email" label="Email" fullWidth />
-                  <TextField
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    label="Password"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
                   <Button size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    Se connecter
+                    Valider
                   </Button>
                   <Typography color="textSecondary" variant="body2">
-                    <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="hover">
-                      Mot de passe oublié ?
+                    <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
+                      Retourner à la page de connexion
                     </Link>
                   </Typography>
                 </form>

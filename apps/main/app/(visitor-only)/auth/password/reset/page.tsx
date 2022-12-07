@@ -6,7 +6,7 @@ import { Box, Button, FormHelperText, Grid, IconButton, InputAdornment, Link, Te
 import NextLink from 'next/link';
 import React, { useState } from 'react';
 
-export default function SignInPage() {
+export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
@@ -49,10 +49,9 @@ export default function SignInPage() {
             >
               <div>
                 <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
-                  Connexion
+                  Redéfinir votre mot de passe
                 </Typography>
                 <form>
-                  <TextField type="email" name="email" label="Email" fullWidth />
                   <TextField
                     type={showPassword ? 'text' : 'password'}
                     name="password"
@@ -69,11 +68,11 @@ export default function SignInPage() {
                     }}
                   />
                   <Button size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    Se connecter
+                    Valider
                   </Button>
                   <Typography color="textSecondary" variant="body2">
-                    <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="hover">
-                      Mot de passe oublié ?
+                    <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
+                      Retourner à la page de connexion
                     </Link>
                   </Typography>
                 </form>

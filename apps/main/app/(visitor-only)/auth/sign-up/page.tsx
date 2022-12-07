@@ -2,11 +2,24 @@
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Box, Button, FormHelperText, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  TextField,
+  Typography,
+} from '@mui/material';
 import NextLink from 'next/link';
 import React, { useState } from 'react';
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
@@ -25,7 +38,6 @@ export default function SignInPage() {
           xs={12}
           lg={6}
           sx={{
-            backgroundColor: 'neutral.50',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
@@ -49,10 +61,15 @@ export default function SignInPage() {
             >
               <div>
                 <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
-                  Connexion
+                  Inscription
+                </Typography>
+                <Typography component="p" variant="subtitle1" sx={{ mb: 1 }}>
+                  Vous avez été invité par XXXXX.
                 </Typography>
                 <form>
                   <TextField type="email" name="email" label="Email" fullWidth />
+                  <TextField name="firstname" label="Prénom" fullWidth />
+                  <TextField name="lastname" label="Nom" fullWidth />
                   <TextField
                     type={showPassword ? 'text' : 'password'}
                     name="password"
@@ -68,12 +85,26 @@ export default function SignInPage() {
                       ),
                     }}
                   />
+                  <FormControl>
+                    <FormControlLabel
+                      label={
+                        <span>
+                          J&apos;accepte les&nbsp;
+                          <Link href="/terms-of-use" variant="subtitle2" underline="hover">
+                            conditions générales d&apos;utilisation
+                          </Link>
+                        </span>
+                      }
+                      control={<Checkbox defaultChecked />}
+                    />
+                  </FormControl>
                   <Button size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
                     Se connecter
                   </Button>
                   <Typography color="textSecondary" variant="body2">
-                    <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="hover">
-                      Mot de passe oublié ?
+                    Vous possédez déjà un compte ?&nbsp;
+                    <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
+                      Se connecter
                     </Link>
                   </Typography>
                 </form>
