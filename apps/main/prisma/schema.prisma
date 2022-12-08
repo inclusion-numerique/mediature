@@ -15,6 +15,8 @@ datasource db {
 // It may just help to quickstart something quickly when having tons of new models
 // (you can remove the comment above models that prevent their generation, so it's easier to find them into the generated folder)
 //
+// Tip: once generated, looks for "ThomasCreateInput> = z" in the folder (replace "Thomas" by your model name)
+//
 
 // generator trpc {
 //   provider          = "prisma-trpc-generator"

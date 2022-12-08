@@ -1,5 +1,6 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
   Checkbox,
@@ -17,42 +18,85 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
+import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/request-case';
 
 export function RequestCaseForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<any>();
+  } = useForm<RequestCaseSchemaType>({
+    resolver: zodResolver(RequestCaseSchema),
+  });
 
-  // For test
-  trpc.greeting.useQuery();
-
-  const onSubmit = async (data: any) => {};
+  const onSubmit = async (input: RequestCaseSchemaType) => {
+    // ...
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container>
         <Grid item xs={12} sm={6}>
           {/* <TextField name="firstname" label="Prénom" placeholder="ex: Marie" fullWidth InputLabelProps={{ shrink: true }} /> */}
-          <TextField name="firstname" label="Prénom" placeholder="ex: Marie" {...register('firstname')} fullWidth />
+          <TextField
+            name="firstname"
+            label="Prénom"
+            placeholder="ex: Marie"
+            {...register('firstname')}
+            error={!!errors.firstname}
+            helperText={errors?.firstname?.message}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField name="lastname" label="Nom" placeholder="ex: Dupont" {...register('lastname')} fullWidth />
+          <TextField
+            name="lastname"
+            label="Nom"
+            placeholder="ex: Dupont"
+            {...register('lastname')}
+            error={!!errors.lastname}
+            helperText={errors?.lastname?.message}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField name="address" label="Adresse" placeholder="ex: 20 rue de la ..." {...register('address')} fullWidth />
+          <TextField
+            name="address"
+            label="Adresse"
+            placeholder="ex: 20 rue de la ..."
+            {...register('address')}
+            error={!!errors.address}
+            helperText={errors?.address?.message}
+            fullWidth
+          />
           {/* TODO: split into multiple components */}
         </Grid>
         <Grid item xs={12}>
-          <TextField name="phone" label="Téléphone" placeholder="ex: 06 66 66 66 66" {...register('phone')} fullWidth />
+          <TextField
+            name="phone"
+            label="Téléphone"
+            placeholder="ex: 06 66 66 66 66"
+            {...register('phone')}
+            error={!!errors.phone}
+            helperText={errors?.phone?.message}
+            fullWidth
+          />
           {/* TODO: split into multiple components */}
         </Grid>
         <Grid item xs={12}>
-          <TextField type="email" name="email" label="Email" placeholder="ex: marie.dupont@mail.com" {...register('email')} fullWidth />
+          <TextField
+            type="email"
+            name="email"
+            label="Email"
+            placeholder="ex: marie.dupont@mail.com"
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors?.email?.message}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
+          <FormControl error={!!errors.alreadyRequestedInThePast}>
             <FormHelperText id="previous-request-helper-text">
               Pour que nous puissions au mieux traiter votre demande, veuillez répondre à la question suivante. Nous prendrons en compte votre demande
               peu importe votre réponse.
@@ -60,33 +104,44 @@ export function RequestCaseForm() {
             <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
             <RadioGroup
               name="previous-request-radio-buttons-group"
-              {...register('previous-case')}
+              {...register('alreadyRequestedInThePast')}
               aria-labelledby="previous-request-radio-buttons-group-label"
               aria-describedby="previous-request-helper-text"
             >
               <FormControlLabel value="yes" control={<Radio />} label="Oui, j'ai effectué un premier recours à l'amiable" />
               <FormControlLabel value="no" control={<Radio />} label="Non, je n'ai pas effectué de premier recours à l'amiable" />
             </RadioGroup>
+            <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
+          <FormControl error={!!errors.gotAnswerFromPreviousRequest}>
             {/* TODO: if above */}
             <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
               Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
             </FormLabel>
             <RadioGroup
               name="answer-from-previous-request-radio-buttons-group"
-              {...register('previous-case-answer')}
+              {...register('gotAnswerFromPreviousRequest')}
               aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
             >
               <FormControlLabel value="yes" control={<Radio />} label="Oui, j'ai obtenu une réponse" />
               <FormControlLabel value="no" control={<Radio />} label="Non, je n'ai pas obtenu de réponse" />
             </RadioGroup>
+            <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <TextField name="description" label="Motif de la demande :" {...register('description')} multiline rows={3} fullWidth />
+          <TextField
+            name="description"
+            label="Motif de la demande :"
+            {...register('description')}
+            error={!!errors.description}
+            helperText={errors?.description?.message}
+            multiline
+            rows={3}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12}>
           <FormControl>
@@ -101,8 +156,12 @@ export function RequestCaseForm() {
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <FormControl>
-            <FormControlLabel label="Envoyez-moi par e-mail une copie de mes réponses." control={<Checkbox name="" {...register('send-email')} />} />
+          <FormControl error={!!errors.emailCopyWanted}>
+            <FormControlLabel
+              label="Envoyez-moi par e-mail une copie de mes réponses."
+              control={<Checkbox name="" {...register('emailCopyWanted')} />}
+            />
+            <FormHelperText>{errors?.emailCopyWanted?.message}</FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12}>
