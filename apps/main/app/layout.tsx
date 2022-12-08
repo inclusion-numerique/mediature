@@ -1,5 +1,3 @@
-'use client';
-
 import { createMuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { createNextDsfrIntegrationApi } from '@codegouvfr/react-dsfr/next';
 import DefaultApp from 'next/app';
@@ -7,6 +5,8 @@ import getConfig from 'next/config';
 import type { LinkProps as NextLinkProps } from 'next/link';
 import { PropsWithChildren } from 'react';
 import { createEmotionSsrAdvancedApproach } from 'tss-react/next';
+
+import { ClientProvider } from '@mediature/main/client/trpcClient';
 
 // declare module '@codegouvfr/react-dsfr' {
 //   export interface LinkProps extends NextLinkProps {}
@@ -44,15 +44,17 @@ export default function RootLayout(props: PropsWithChildren) {
   // const { publicRuntimeConfig } = getConfig();
 
   return (
-    // <html lang="en" {...getColorSchemeHtmlAttributes(props as any)}>
-    <html lang="en">
-      {/* <head></head> */}
-      <body>
-        {/* <MuiDsfrThemeProvider> */}
-        {props.children}
-        {/* <div>{publicRuntimeConfig.appVersion}</div> */}
-        {/* </MuiDsfrThemeProvider> */}
-      </body>
-    </html>
+    <ClientProvider>
+      {/* <html lang="en" {...getColorSchemeHtmlAttributes(props as any)}> */}
+      <html lang="en">
+        {/* <head></head> */}
+        <body>
+          {/* <MuiDsfrThemeProvider> */}
+          {props.children}
+          {/* <div>{publicRuntimeConfig.appVersion}</div> */}
+          {/* </MuiDsfrThemeProvider> */}
+        </body>
+      </html>
+    </ClientProvider>
   );
 }

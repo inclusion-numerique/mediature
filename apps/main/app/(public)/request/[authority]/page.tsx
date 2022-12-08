@@ -103,7 +103,7 @@ export default function RequestPage({ params: { authority } }: { params: { autho
         </Grid>
         <Grid item xs={12}>
           <FormControl>
-            <Button>Envoyer</Button>
+            <Button type="submit">Envoyer</Button>
           </FormControl>
         </Grid>
       </Grid>

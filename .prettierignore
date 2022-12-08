@@ -1,4 +1,7 @@
+/apps/docs/storybook-static/
 /apps/main/.next/
 **/.dockerignore
 /pnpm-lock.yaml
+/packages/trpc-next-layout/**/*.ts
+/packages/trpc-next-layout/**/*.tsx
 /packages/ui/src/animations/**/*.json

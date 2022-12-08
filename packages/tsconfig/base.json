@@ -6,7 +6,8 @@
     "paths": {
       "@mediature/docs/*": ["../../apps/docs/*"],
       "@mediature/main/*": ["../../apps/main/*"],
-      "@mediature/ui/*": ["../../packages/ui/*"]
+      "@mediature/ui/*": ["../../packages/ui/*"],
+      "@trpc/next-layout/*": ["../../packages/trpc-next-layout/*"]
     },
     "composite": false,
     "declaration": true,

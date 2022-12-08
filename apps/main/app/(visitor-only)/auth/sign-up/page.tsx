@@ -98,8 +98,8 @@ export default function SignUpPage() {
                       control={<Checkbox defaultChecked />}
                     />
                   </FormControl>
-                  <Button size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    Se connecter
+                  <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
+                    S&apos;enregistrer
                   </Button>
                   <Typography color="textSecondary" variant="body2">
                     Vous possédez déjà un compte ?&nbsp;

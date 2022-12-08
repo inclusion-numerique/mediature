@@ -48,6 +48,10 @@ module.exports = {
             find: '@mediature/ui',
             replacement: path.resolve(__dirname, '../../../packages/ui/'),
           },
+          {
+            find: '@trpc/next-layout',
+            replacement: path.resolve(__dirname, '../../../packages/trpc-next-layout/'),
+          },
         ],
       },
     };

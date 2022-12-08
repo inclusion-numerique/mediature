@@ -1,16 +1,11 @@
 'use client';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Box, Button, FormHelperText, Grid, IconButton, InputAdornment, Link, TextField, Typography } from '@mui/material';
-import NextLink from 'next/link';
-import React, { useState } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
+import React from 'react';
+
+import { SignInForm } from '@mediature/main/client/SignInForm';
 
 export default function SignInPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = () => setShowPassword(!showPassword);
-
   return (
     <Box
       component="main"
@@ -25,7 +20,6 @@ export default function SignInPage() {
           xs={12}
           lg={6}
           sx={{
-            backgroundColor: 'neutral.50',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
@@ -51,32 +45,7 @@ export default function SignInPage() {
                 <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
                   Connexion
                 </Typography>
-                <form>
-                  <TextField type="email" name="email" label="Email" fullWidth />
-                  <TextField
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    label="Password"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <Button size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    Se connecter
-                  </Button>
-                  <Typography color="textSecondary" variant="body2">
-                    <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="hover">
-                      Mot de passe oublié ?
-                    </Link>
-                  </Typography>
-                </form>
+                <SignInForm />
               </div>
             </Box>
           </Box>

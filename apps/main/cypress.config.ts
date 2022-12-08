@@ -30,6 +30,7 @@ export default defineConfig({
           '@mediature/docs': path.resolve(__dirname, '../../apps/docs/'),
           '@mediature/main': path.resolve(__dirname, '../../apps/main/'),
           '@mediature/ui': path.resolve(__dirname, '../../apps/ui/'),
+          '@trpc/next-layout': path.resolve(__dirname, '../../apps/trpc-next-layout/'),
         },
       };
 

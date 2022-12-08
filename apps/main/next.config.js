@@ -25,6 +25,7 @@ const moduleExports = async () => {
     experimental: {
       appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
+      swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
       transpilePackages: ['@mediature/ui'],
     },
     async rewrites() {
