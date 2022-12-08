@@ -96,6 +96,13 @@ For each build and runtime (since they are shared), you should have set some env
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
 
+#### Review apps
+
+Those are temporary environments, different than `dev` and `prod`. Since they have their own random generated IDs, we use the `scalingo.json` file to:
+
+- adjust environment variables
+- seed the database to have some data to test on
+
 #### Debug
 
 To debug scalingo apps you may prefer using their CLI with some commands like:

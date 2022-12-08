@@ -1,0 +1,20 @@
+{
+  "scripts": {
+    "first-deploy": "cd apps/$BUILD_APP_NAME && pnpm db:seed:unsecure"
+  },
+  "env": {
+    "APP_IS_EPHEMERAL": {
+      "description": "All the variables in this file adapt the environment to review apps (temporary environments)",
+      "value": "true"
+    },
+    "APP_MODE": {
+      "value": "test"
+    },
+    "NEXT_PUBLIC_APP_BASE_URL": {
+      "generator": "url"
+    },
+    "NEXT_PUBLIC_SENTRY_DSN": {
+      "value": ""
+    }
+  }
+}
