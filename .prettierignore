@@ -1,5 +1,6 @@
 /apps/docs/storybook-static/
 /apps/main/.next/
+/apps/main/prisma/generated-for-inspiration/
 **/.dockerignore
 /pnpm-lock.yaml
 /packages/trpc-next-layout/**/*.ts
