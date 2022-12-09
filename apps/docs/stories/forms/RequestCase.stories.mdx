@@ -2,8 +2,21 @@ import { generateMock } from '@anatine/zod-mock';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 
 import { RequestCaseForm } from '@mediature/main/app/(public)/request/[authority]/RequestCaseForm';
+import { RequestCaseSchema } from '@mediature/main/models/actions/request-case';
 import { CaseSchema } from '@mediature/main/models/entities/case';
 import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+
+export const commonParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['requestCase'],
+        response: generateMock(CaseSchema),
+      }),
+    ],
+  },
+};
 
 <Meta title="Forms/RequestCase" component={RequestCaseForm} />
 
@@ -18,20 +31,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl ege
 ## Examples
 
 <Canvas>
-  <Story
-    name="Default"
-    parameters={{
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['requestCase'],
-            response: generateMock(CaseSchema),
-          }),
-        ],
-      },
-    }}
-  >
+  <Story name="Empty" parameters={commonParameters}>
     <RequestCaseForm />
+  </Story>
+  <Story name="Filled" parameters={commonParameters}>
+    <RequestCaseForm prefill={generateMock(RequestCaseSchema)} />
   </Story>
 </Canvas>

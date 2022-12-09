@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form';
 import { trpc } from '@mediature/main/client/trpcClient';
 import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/request-case';
 
-export function RequestCaseForm() {
+export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }) {
   const requestCase = trpc.requestCase.useMutation();
 
   const {
@@ -31,6 +31,7 @@ export function RequestCaseForm() {
     control,
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
+    defaultValues: prefill,
   });
 
   const onSubmit = async (input: RequestCaseSchemaType) => {
