@@ -12,8 +12,8 @@ export const RequestCaseSchema = z
     lastname: CitizenSchema.shape.lastname,
     // address: AddressInputSchema,
     // phone: PhoneInputSchema,
-    // alreadyRequestedInThePast: CaseSchema.shape.alreadyRequestedInThePast,
-    // gotAnswerFromPreviousRequest: CaseSchema.shape.gotAnswerFromPreviousRequest,
+    alreadyRequestedInThePast: CaseSchema.shape.alreadyRequestedInThePast,
+    gotAnswerFromPreviousRequest: CaseSchema.shape.gotAnswerFromPreviousRequest,
     description: CaseSchema.shape.description,
     emailCopyWanted: CaseSchema.shape.emailCopyWanted,
     // TODO: attachements

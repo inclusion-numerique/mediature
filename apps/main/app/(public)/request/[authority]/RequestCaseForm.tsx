@@ -39,6 +39,8 @@ export function RequestCaseForm() {
 
   return (
     <>
+      {/* <DevTool control={control} /> */}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={12} sm={6}>
@@ -109,12 +111,21 @@ export function RequestCaseForm() {
               <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
               <RadioGroup
                 name="previous-request-radio-buttons-group"
-                {...register('alreadyRequestedInThePast')}
                 aria-labelledby="previous-request-radio-buttons-group-label"
                 aria-describedby="previous-request-helper-text"
               >
-                <FormControlLabel value={true} control={<Radio />} label="Oui, j'ai effectué un premier recours à l'amiable" />
-                <FormControlLabel value={false} control={<Radio />} label="Non, je n'ai pas effectué de premier recours à l'amiable" />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  {...register('alreadyRequestedInThePast')}
+                  label="Oui, j'ai effectué un premier recours à l'amiable"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  {...register('alreadyRequestedInThePast')}
+                  label="Non, je n'ai pas effectué de premier recours à l'amiable"
+                />
               </RadioGroup>
               <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
             </FormControl>
@@ -127,11 +138,20 @@ export function RequestCaseForm() {
               </FormLabel>
               <RadioGroup
                 name="answer-from-previous-request-radio-buttons-group"
-                {...register('gotAnswerFromPreviousRequest')}
                 aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
               >
-                <FormControlLabel value={true} control={<Radio />} label="Oui, j'ai obtenu une réponse" />
-                <FormControlLabel value={false} control={<Radio />} label="Non, je n'ai pas obtenu de réponse" />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  {...register('gotAnswerFromPreviousRequest')}
+                  label="Oui, j'ai obtenu une réponse"
+                />
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  {...register('gotAnswerFromPreviousRequest')}
+                  label="Non, je n'ai pas obtenu de réponse"
+                />
               </RadioGroup>
               <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
             </FormControl>
@@ -176,8 +196,6 @@ export function RequestCaseForm() {
           </Grid>
         </Grid>
       </form>
-
-      <DevTool control={control} />
     </>
   );
 }

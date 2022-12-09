@@ -9,9 +9,8 @@ export const appRouter = router({
   requestCase: publicProcedure.input(RequestCaseSchema).mutation(async ({ ctx, input }) => {
     const newCase = await prisma.case.create({
       data: {
-        alreadyRequestedInThePast: false,
-        // TODO: booleans
-        gotAnswerFromPreviousRequest: false,
+        alreadyRequestedInThePast: input.alreadyRequestedInThePast,
+        gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
         units: '',
         emailCopyWanted: input.emailCopyWanted,
