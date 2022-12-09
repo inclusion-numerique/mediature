@@ -23,7 +23,7 @@ datasource db {
 //   output            = "./generated-for-inspiration"
 //   withMiddleware    = false
 //   withShield        = false
-//   contextPath       = "../../../../../server/context"
+//   contextPath       = "../../../../server/context"
 //   isGenerateSelect  = false
 //   isGenerateInclude = false
 // }

@@ -7,5 +7,5 @@
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "prisma/generated-for-inspiration"]
 }

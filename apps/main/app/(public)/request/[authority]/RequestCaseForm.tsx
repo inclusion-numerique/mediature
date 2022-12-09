@@ -72,9 +72,9 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
               name="address"
               label="Adresse"
               placeholder="ex: 20 rue de la ..."
-              {...register('address')}
-              error={!!errors.address}
-              helperText={errors?.address?.message}
+              // {...register('address')}
+              // error={!!errors.address}
+              // helperText={errors?.address?.message}
               fullWidth
             />
             {/* TODO: split into multiple components */}
@@ -84,9 +84,9 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
               name="phone"
               label="Téléphone"
               placeholder="ex: 06 66 66 66 66"
-              {...register('phone')}
-              error={!!errors.phone}
-              helperText={errors?.phone?.message}
+              // {...register('phone')}
+              // error={!!errors.phone}
+              // helperText={errors?.phone?.message}
               fullWidth
             />
             {/* TODO: split into multiple components */}
