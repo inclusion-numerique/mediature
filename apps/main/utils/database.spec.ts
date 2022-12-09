@@ -39,11 +39,15 @@ describe('database', () => {
       await result;
     });
 
-    it('migrate', async () => {
-      const { result } = concurrently(['npm:db:push:unsecure']);
+    it(
+      'migrate',
+      async () => {
+        const { result } = concurrently(['npm:db:push:unsecure']);
 
-      await result;
-    });
+        await result;
+      },
+      15 * 1000
+    );
 
     it('seed', async () => {
       await seedDatabase(prisma);
