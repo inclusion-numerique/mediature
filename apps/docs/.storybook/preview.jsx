@@ -4,6 +4,8 @@ import { themes } from '@storybook/theming';
 import React from 'react';
 import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
+import { ClientProvider } from '@mediature/main/client/trpcClient';
+
 const channel = addons.getChannel();
 
 export const parameters = {
@@ -35,3 +37,11 @@ export const parameters = {
     },
   },
 };
+
+export const decorators = [
+  (Story) => (
+    <ClientProvider>
+      <Story />
+    </ClientProvider>
+  ),
+];
