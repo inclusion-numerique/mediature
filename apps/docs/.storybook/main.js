@@ -32,10 +32,16 @@ module.exports = {
     // });
 
     // TODO: the above is supposed to work... but it's not, so hardcoding paths for now
-    return {
-      ...config,
+    return mergeConfig(config, {
+      define: {
+        'process.env.TRPC_SERVER_MOCK': 'true', // Warning: for whatever reason it's a boolean during the runtime
+      },
       resolve: {
         alias: [
+          {
+            find: 'path',
+            replacement: 'path-browserify',
+          },
           {
             find: '@mediature/docs',
             replacement: path.resolve(__dirname, '../../../apps/docs/'),
@@ -54,6 +60,6 @@ module.exports = {
           },
         ],
       },
-    };
+    });
   },
 };

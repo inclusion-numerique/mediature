@@ -7,6 +7,7 @@ import { useState } from 'react';
 import superjson from 'superjson';
 
 import type { AppRouter } from '@mediature/main/server/app-router';
+import { mockBaseUrl, shouldTargetMock } from '@mediature/main/server/mock/environment';
 import { getBaseUrl } from '@mediature/main/utils/url';
 
 export const trpc = createTRPCReact<AppRouter>({
@@ -21,16 +22,19 @@ export const trpc = createTRPCReact<AppRouter>({
 });
 
 export function ClientProvider(props: { children: React.ReactNode }) {
+  const baseUrl = shouldTargetMock() ? mockBaseUrl : getBaseUrl();
+
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
-      transformer: superjson,
+      transformer: !shouldTargetMock() ? superjson : undefined, // When mock, there is no data over the network so there no specific serialization of types like Date...
       links: [
         loggerLink({
           enabled: (opts) => process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
         }),
         httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          url: `${baseUrl}/api/trpc`,
+          // url: aaa,
         }),
       ],
     })
