@@ -191,7 +191,7 @@ model Case {
   id                           String              @id @default(uuid()) @db.Uuid
   humanId                      Int                 @default(autoincrement())
   citizenId                    String              @db.Uuid
-  agentId                      String              @db.Uuid
+  agentId                      String?             @db.Uuid
   alreadyRequestedInThePast    Boolean
   gotAnswerFromPreviousRequest Boolean?
   description                  String              @db.Text
@@ -211,7 +211,7 @@ model Case {
   deletedAt DateTime?
 
   citizen            Citizen              @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  agent              Agent                @relation(fields: [agentId], references: [id])
+  agent              Agent?               @relation(fields: [agentId], references: [id])
   Note               Note[]
   AttachmentsOnCases AttachmentsOnCases[]
 }

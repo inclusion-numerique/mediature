@@ -16,9 +16,6 @@ export function SignInForm() {
     formState: { errors },
   } = useForm<any>();
 
-  // For test
-  trpc.greeting.useQuery();
-
   const onSubmit = async ({ email }: any) => {};
 
   const [showPassword, setShowPassword] = useState(false);

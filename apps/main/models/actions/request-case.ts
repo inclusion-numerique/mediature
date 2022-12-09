@@ -10,14 +10,15 @@ export const RequestCaseSchema = z
     email: CitizenSchema.shape.email,
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
-    address: AddressInputSchema,
-    phone: PhoneInputSchema,
-    alreadyRequestedInThePast: CaseSchema.shape.alreadyRequestedInThePast,
-    gotAnswerFromPreviousRequest: CaseSchema.shape.gotAnswerFromPreviousRequest,
+    // address: AddressInputSchema,
+    // phone: PhoneInputSchema,
+    // alreadyRequestedInThePast: CaseSchema.shape.alreadyRequestedInThePast,
+    // gotAnswerFromPreviousRequest: CaseSchema.shape.gotAnswerFromPreviousRequest,
     description: CaseSchema.shape.description,
     emailCopyWanted: CaseSchema.shape.emailCopyWanted,
     // TODO: attachements
   })
-  .required()
-  .strict();
+  .required();
+// TODO: set strict
+// .strict();
 export type RequestCaseSchemaType = z.infer<typeof RequestCaseSchema>;

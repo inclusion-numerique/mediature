@@ -21,6 +21,8 @@ import { trpc } from '@mediature/main/client/trpcClient';
 import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/request-case';
 
 export function RequestCaseForm() {
+  const requestCase = trpc.requestCase.useMutation();
+
   const {
     register,
     handleSubmit,
@@ -30,7 +32,7 @@ export function RequestCaseForm() {
   });
 
   const onSubmit = async (input: RequestCaseSchemaType) => {
-    // ...
+    await requestCase.mutateAsync(input);
   };
 
   return (
