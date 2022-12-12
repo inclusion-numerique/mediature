@@ -93,6 +93,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
+- `NEXT_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note that if this secret is lost, all users will have to log in again)_
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
 

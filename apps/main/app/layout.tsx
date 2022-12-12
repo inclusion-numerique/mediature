@@ -6,7 +6,7 @@ import type { LinkProps as NextLinkProps } from 'next/link';
 import { PropsWithChildren } from 'react';
 import { createEmotionSsrAdvancedApproach } from 'tss-react/next';
 
-import { ClientProvider } from '@mediature/main/client/trpcClient';
+import Providers from '@mediature/main/app/providers';
 
 // declare module '@codegouvfr/react-dsfr' {
 //   export interface LinkProps extends NextLinkProps {}
@@ -44,17 +44,15 @@ export default function RootLayout(props: PropsWithChildren) {
   // const { publicRuntimeConfig } = getConfig();
 
   return (
-    <ClientProvider>
+    <html lang="en">
       {/* <html lang="en" {...getColorSchemeHtmlAttributes(props as any)}> */}
-      <html lang="en">
-        {/* <head></head> */}
-        <body>
-          {/* <MuiDsfrThemeProvider> */}
-          {props.children}
-          {/* <div>{publicRuntimeConfig.appVersion}</div> */}
-          {/* </MuiDsfrThemeProvider> */}
-        </body>
-      </html>
-    </ClientProvider>
+      {/* <head></head> */}
+      <body>
+        {/* <MuiDsfrThemeProvider> */}
+        <Providers>{props.children}</Providers>
+        {/* <div>{publicRuntimeConfig.appVersion}</div> */}
+        {/* </MuiDsfrThemeProvider> */}
+      </body>
+    </html>
   );
 }

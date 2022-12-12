@@ -3,7 +3,7 @@
 import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 
-import { SignInForm } from '@mediature/main/client/SignInForm';
+import { SignInForm } from '@mediature/main/app/(visitor-only)/auth/sign-in/SignInForm';
 
 export default function SignInPage() {
   return (

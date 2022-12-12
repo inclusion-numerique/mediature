@@ -56,12 +56,12 @@ model Account {
 
 /// @@Gen.model(hide: true)
 model Session {
-  id           String   @id @default(uuid()) @db.Uuid
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String   @db.Uuid
   expires      DateTime
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // TODO: meaning of "Cascade" here? In which direction?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 /// @@Gen.model(hide: true)
@@ -85,6 +85,7 @@ model User {
   firstname      String
   lastname       String
   email          String     @unique
+  passwordHash   String
   status         UserStatus @default(REGISTERED)
   profilePicture String?
 
