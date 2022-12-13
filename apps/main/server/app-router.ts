@@ -1,4 +1,4 @@
-import { RequestCaseSchema } from '@mediature/main/models/actions/request-case';
+import { RequestCaseSchema } from '@mediature/main/models/actions/case';
 import { CasePlatformSchema, CaseStatusSchema } from '@mediature/main/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/models/entities/phone';
 import { prisma } from '@mediature/main/prisma/client';

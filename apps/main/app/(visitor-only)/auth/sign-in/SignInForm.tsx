@@ -24,7 +24,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { SignInCaseSchema, SignInCaseSchemaType } from '@mediature/main/models/actions/sign-in';
+import { SignInSchema, SignInSchemaType } from '@mediature/main/models/actions/auth';
 
 function errorCodeToError(errorCode: string): string {
   let error: string;
@@ -61,8 +61,8 @@ export function SignInForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignInCaseSchemaType>({
-    resolver: zodResolver(SignInCaseSchema),
+  } = useForm<SignInSchemaType>({
+    resolver: zodResolver(SignInSchema),
     defaultValues: {
       email: loginHint ?? undefined,
     },

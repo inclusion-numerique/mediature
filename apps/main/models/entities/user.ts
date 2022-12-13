@@ -8,19 +8,30 @@ export type UserPasswordSchemaType = z.infer<typeof UserPasswordSchema>;
 
 export const UserSchema = z
   .object({
+    // TODO: add professional phone for colleagues?
     id: z.string().uuid(),
     firstname: z.string().min(1),
     lastname: z.string().min(1),
     email: z.string().email(),
     passwordHash: z.string().min(1), // TODO: set to "z.never()"?
     status: UserStatusSchema,
-    profilePicture: z.string().nullable(),
+    profilePicture: z.string().url().nullable(),
+    lastActivityAt: z.date(),
     createdAt: z.date(),
     updatedAt: z.date(),
     deletedAt: z.date().nullable(),
   })
   .strict();
 export type UserSchemaType = z.infer<typeof UserSchema>;
+
+export const VerificationTokenSchema = z
+  .object({
+    token: z.string().min(1),
+    identifier: UserSchema.shape.id,
+    expires: z.date(),
+  })
+  .strict();
+export type VerificationTokenSchemaType = z.infer<typeof VerificationTokenSchema>;
 
 // This is a lite version of the user entity to be available on the frontend
 export const TokenUserSchema = z

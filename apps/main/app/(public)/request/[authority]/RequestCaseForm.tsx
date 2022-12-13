@@ -19,7 +19,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
-import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/request-case';
+import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/case';
 
 export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }) {
   const requestCase = trpc.requestCase.useMutation();

@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { AttachmentSchema } from '@mediature/main/models/entities/attachment';
+
 export const CasePlatformSchema = z.enum(['WEB']);
 export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 
@@ -28,3 +30,31 @@ export const CaseSchema = z
   })
   .strict();
 export type CaseSchemaType = z.infer<typeof CaseSchema>;
+
+export const CaseNoteSchema = z
+  .object({
+    id: z.string().uuid(),
+    caseId: z.string().uuid(),
+    date: z.date(), // TODO: not a timestamp, should be a date (or maybe not? Hours matter?)
+    content: z.string().min(1),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+    deletedAt: z.date().nullable(),
+  })
+  .strict();
+export type CaseNoteSchemaType = z.infer<typeof CaseNoteSchema>;
+
+export const CaseAttachmentTypeSchema = z.enum(['AGENT', 'ADMINISTRATION', 'CITIZEN']);
+export type CaseAttachmentTypeSchemaType = z.infer<typeof CaseAttachmentTypeSchema>;
+
+export const CaseAttachmentSchema = AttachmentSchema.extend({
+  caseId: z.string().uuid(),
+  transmitter: CaseAttachmentTypeSchema,
+}).strict();
+export type CaseAttachmentSchemaType = z.infer<typeof CaseAttachmentSchema>;
+
+export const CaseNoteAttachmentSchema = AttachmentSchema.extend({
+  noteId: z.string().uuid(),
+  transmitter: CaseAttachmentTypeSchema,
+}).strict();
+export type CaseNoteAttachmentSchemaType = z.infer<typeof CaseNoteAttachmentSchema>;
