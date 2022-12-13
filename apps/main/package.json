@@ -10,7 +10,8 @@
   "license": "AGPL-3.0",
   "scripts": {
     "predev": "only-include-used-icons",
-    "dev": "next dev",
+    "dev": "dotenv-run-script .env.test -- dev:unsecure",
+    "dev:unsecure": "next dev",
     "prebuild": "only-include-used-icons",
     "build": "pnpm run db:schema:compile && next build",
     "start": "next start -p $PORT",
