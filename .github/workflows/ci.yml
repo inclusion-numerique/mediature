@@ -66,6 +66,9 @@ jobs:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
         run: make deps
 
+      - name: Prepare linting
+        run: make lint-prepare
+
       - name: Lint
         run: make lint
 

@@ -45,9 +45,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={12} sm={6}>
-            {/* <TextField name="firstname" label="Prénom" placeholder="ex: Marie" fullWidth InputLabelProps={{ shrink: true }} /> */}
             <TextField
-              name="firstname"
               label="Prénom"
               placeholder="ex: Marie"
               {...register('firstname')}
@@ -58,7 +56,6 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              name="lastname"
               label="Nom"
               placeholder="ex: Dupont"
               {...register('lastname')}
@@ -69,7 +66,6 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="address"
               label="Adresse"
               placeholder="ex: 20 rue de la ..."
               // {...register('address')}
@@ -81,7 +77,6 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="phone"
               label="Téléphone"
               placeholder="ex: 06 66 66 66 66"
               // {...register('phone')}
@@ -94,7 +89,6 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           <Grid item xs={12}>
             <TextField
               type="email"
-              name="email"
               label="Email"
               placeholder="ex: marie.dupont@mail.com"
               {...register('email')}
@@ -110,11 +104,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
                 demande peu importe votre réponse.
               </FormHelperText>
               <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
-              <RadioGroup
-                name="previous-request-radio-buttons-group"
-                aria-labelledby="previous-request-radio-buttons-group-label"
-                aria-describedby="previous-request-helper-text"
-              >
+              <RadioGroup aria-labelledby="previous-request-radio-buttons-group-label" aria-describedby="previous-request-helper-text">
                 <FormControlLabel
                   value={true}
                   control={<Radio />}
@@ -137,10 +127,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
               <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
                 Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
               </FormLabel>
-              <RadioGroup
-                name="answer-from-previous-request-radio-buttons-group"
-                aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
-              >
+              <RadioGroup aria-labelledby="answer-from-previous-request--radio-buttons-group-label">
                 <FormControlLabel
                   value={true}
                   control={<Radio />}
@@ -159,7 +146,6 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12}>
             <TextField
-              name="description"
               label="Motif de la demande :"
               {...register('description')}
               error={!!errors.description}
@@ -183,10 +169,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12}>
             <FormControl error={!!errors.emailCopyWanted}>
-              <FormControlLabel
-                label="Envoyez-moi par e-mail une copie de mes réponses."
-                control={<Checkbox name="" {...register('emailCopyWanted')} />}
-              />
+              <FormControlLabel label="Envoyez-moi par e-mail une copie de mes réponses." control={<Checkbox {...register('emailCopyWanted')} />} />
               <FormHelperText>{errors?.emailCopyWanted?.message}</FormHelperText>
             </FormControl>
           </Grid>

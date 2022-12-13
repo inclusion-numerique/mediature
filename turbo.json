@@ -21,6 +21,9 @@
       "outputs": ["coverage/**"],
       "dependsOn": []
     },
+    "lint:prepare": {
+      "outputs": []
+    },
     "lint": {
       "outputs": []
     },

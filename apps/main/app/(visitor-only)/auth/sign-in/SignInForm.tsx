@@ -85,12 +85,14 @@ export function SignInForm() {
       }
     );
 
-    if (!result.ok) {
+    if (result && !result.ok && result.error) {
       setError(errorCodeToError(result.error));
-    } else {
+    } else if (result && result.ok && result.url) {
       setError(null);
 
       router.push(result.url);
+    } else {
+      setError('default');
     }
   };
 
@@ -105,18 +107,9 @@ export function SignInForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {!!error && <Alert severity="error">{error}</Alert>}
         {!!sessionEnd && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
-        <TextField
-          type="email"
-          name="email"
-          label="Email"
-          {...register('email')}
-          error={!!errors.email}
-          helperText={errors?.email?.message}
-          fullWidth
-        />
+        <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
         <TextField
           type={showPassword ? 'text' : 'password'}
-          name="password"
           label="Password"
           {...register('password')}
           error={!!errors.password}
@@ -133,7 +126,7 @@ export function SignInForm() {
           }}
         />
         <FormControl error={!!errors.rememberMe}>
-          <FormControlLabel label="Rester connecté" control={<Checkbox name="rememberMe" {...register('rememberMe')} defaultChecked />} />
+          <FormControlLabel label="Rester connecté" control={<Checkbox {...register('rememberMe')} defaultChecked />} />
           <FormHelperText>{errors?.rememberMe?.message}</FormHelperText>
         </FormControl>
         <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>

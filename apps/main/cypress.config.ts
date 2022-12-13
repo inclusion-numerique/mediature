@@ -17,6 +17,10 @@ export default defineConfig({
     setupNodeEvents(on: any, config) {
       const preprocessorConfig = webpackPreprocessor.defaultOptions;
 
+      if (!preprocessorConfig.webpackOptions) {
+        preprocessorConfig.webpackOptions = {};
+      }
+
       preprocessorConfig.webpackOptions.resolve = {
         // plugins: [
         //   new TsconfigPathsPlugin({

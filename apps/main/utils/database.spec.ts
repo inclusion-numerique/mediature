@@ -1,4 +1,4 @@
-// Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` step
+// Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` and `lint:prepare` steps
 import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';
 
@@ -6,8 +6,8 @@ import { seedDatabase } from '@mediature/main/prisma/seed';
 import { PostgresContainer, setupProgres } from '@mediature/main/utils/database';
 
 describe('database', () => {
-  let postgres: PostgresContainer | undefined;
-  let prisma: PrismaClient | undefined;
+  let postgres: PostgresContainer;
+  let prisma: PrismaClient;
 
   beforeAll(async () => {
     postgres = await setupProgres();

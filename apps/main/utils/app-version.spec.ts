@@ -37,7 +37,8 @@ describe('app-version', () => {
         const commitInfo = await getFallbackCommitInformation();
 
         expect(commitInfo.sha).toStrictEqual('bedf63af57c32f3750e2d0f466066fcf549960f8');
-        expect(commitInfo.commit.author.date).toStrictEqual('2022-11-21T16:17:32Z');
+        expect(commitInfo.commit.author).not.toBeNull();
+        expect(commitInfo.commit.author?.date).toStrictEqual('2022-11-21T16:17:32Z');
       });
     });
 

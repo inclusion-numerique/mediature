@@ -26,6 +26,9 @@ serve-dev:
 	pnpm turbo dev
 #--mode dev
 
+lint-prepare:
+	pnpm turbo lint:prepare
+
 lint:
 	pnpm turbo lint
 
