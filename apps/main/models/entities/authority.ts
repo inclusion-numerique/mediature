@@ -7,6 +7,7 @@ export const AuthoritySchema = z
   .object({
     id: z.string().uuid(),
     name: z.string().min(1),
+    slug: z.string().min(1).max(30).regex(new RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*$')), // Regex inspired from https://ihateregex.io/expr/url-slug/ and https://stackoverflow.com/a/19256344/3608410
     mainAgentId: z.string().uuid().nullable(),
     type: AuthorityTypeSchema,
     logo: z.string().url().nullable(),

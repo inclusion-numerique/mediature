@@ -6,9 +6,9 @@ import { AuthoritySchema } from '@mediature/main/models/entities/authority';
 export const CreateAuthoritySchema = z
   .object({
     name: AuthoritySchema.shape.name,
-    mainAgentId: AuthoritySchema.shape.mainAgentId,
+    slug: AuthoritySchema.shape.slug,
     type: AuthoritySchema.shape.type,
-    logo: AuthoritySchema.shape.logo,
+    logoAttachmentId: AuthoritySchema.shape.logo,
   })
   .strict();
 export type CreateAuthoritySchemaType = z.infer<typeof CreateAuthoritySchema>;
@@ -17,9 +17,10 @@ export const UpdateAuthoritySchema = z
   .object({
     authorityId: AuthoritySchema.shape.id,
     name: AuthoritySchema.shape.name,
+    slug: AuthoritySchema.shape.slug,
     mainAgentId: AuthoritySchema.shape.mainAgentId,
     type: AuthoritySchema.shape.type,
-    logo: AuthoritySchema.shape.logo,
+    logoAttachmentId: AuthoritySchema.shape.logo,
   })
   .strict();
 export type UpdateAuthoritySchemaType = z.infer<typeof UpdateAuthoritySchema>;
@@ -37,6 +38,8 @@ export const GetAuthoritySchema = z
   })
   .strict();
 export type GetAuthoritySchemaType = z.infer<typeof GetAuthoritySchema>;
+
+// TODO: make a public getter for getAuthority
 
 export const ListAuthoritiesSchema = GetterInputSchema.extend({
   filterBy: z.object({}),

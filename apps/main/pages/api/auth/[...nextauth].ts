@@ -30,6 +30,7 @@ export const nextAuthOptions: NextAuthOptions = {
       id: 'credentials',
       name: 'Connexion',
       async authorize(credentials: any): Promise<TokenUserSchemaType> {
+        // TODO: parse with zod SignInSchema
         if (!credentials.email || !credentials.password) {
           throw new Error('credentials_required');
         }
@@ -84,6 +85,20 @@ export const nextAuthOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
+      // Each time a token is forged (login/refreshToken) we update the "lastActivityAt" property (async to not slow the main purpose)
+      prisma.user
+        .update({
+          where: {
+            id: token.sub,
+          },
+          data: {
+            lastActivityAt: new Date(),
+          },
+        })
+        .catch((err) => {
+          console.warn(`Impossible to update "lastActivityAt" for the user ${token.sub}: ${err.toString()}`);
+        });
+
       if (token) {
         return {
           ...session,

@@ -24,8 +24,12 @@ export const UserSchema = z
   .strict();
 export type UserSchemaType = z.infer<typeof UserSchema>;
 
+export const VerificationTokenActionSchema = z.enum(['RESET_PASSWORD']);
+export type VerificationTokenActionSchemaType = z.infer<typeof VerificationTokenActionSchema>;
+
 export const VerificationTokenSchema = z
   .object({
+    action: VerificationTokenActionSchema,
     token: z.string().min(1),
     identifier: UserSchema.shape.id,
     expires: z.date(),

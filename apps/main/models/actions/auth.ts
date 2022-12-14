@@ -30,18 +30,18 @@ export const RequestNewPasswordSchema = z
   .strict();
 export type RequestNewPasswordSchemaType = z.infer<typeof RequestNewPasswordSchema>;
 
-export const ResetPassword = z
+export const ResetPasswordSchema = z
   .object({
     token: VerificationTokenSchema.shape.token,
     password: UserPasswordSchema,
   })
   .strict();
-export type ResetPasswordType = z.infer<typeof ResetPassword>;
+export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
 
-export const ChangePassword = z
+export const ChangePasswordSchema = z
   .object({
-    oldPassword: UserPasswordSchema,
+    currentPassword: UserPasswordSchema,
     newPassword: UserPasswordSchema,
   })
   .strict();
-export type ChangePasswordType = z.infer<typeof ChangePassword>;
+export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>;

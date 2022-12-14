@@ -38,7 +38,7 @@ export type DeleteUserSchemaType = z.infer<typeof DeleteUserSchema>;
 export const ListUsersAndRolesSchema = GetterInputSchema.extend({
   filterBy: z.object({
     query: z.string().nullable(),
-    authorityIds: z.array(AuthoritySchema).nullable(),
+    authorityIds: z.array(AuthoritySchema.shape.id).nullable(),
     isAdmin: z.boolean().nullable(),
     isAgent: z.boolean().nullable(),
   }),

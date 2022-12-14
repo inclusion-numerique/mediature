@@ -16,7 +16,7 @@ export type AddAgentSchemaType = z.infer<typeof AddAgentSchema>;
 
 export const RemoveAgentSchema = z
   .object({
-    userId: UserSchema.shape.id,
+    agentId: AgentSchema.shape.id,
     authorityId: AgentSchema.shape.authorityId,
   })
   .strict();
@@ -31,7 +31,7 @@ export type GetAgentSchemaType = z.infer<typeof GetAgentSchema>;
 
 export const ListAgentsSchema = GetterInputSchema.extend({
   filterBy: z.object({
-    authorityIds: z.array(AuthoritySchema),
+    authorityIds: z.array(AuthoritySchema.shape.id),
   }),
 }).strict();
 export type ListAgentsSchemaType = z.infer<typeof ListAgentsSchema>;

@@ -64,13 +64,18 @@ model Session {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum VerificationTokenAction {
+  RESET_PASSWORD
+}
+
 /// @@Gen.model(hide: true)
 model VerificationToken {
-  token      String   @id
+  token      String                  @id
+  action     VerificationTokenAction
   identifier String // Email or other user identifier
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@unique([token])
 }
 
 enum UserStatus {
@@ -88,6 +93,7 @@ model User {
   passwordHash   String
   status         UserStatus @default(REGISTERED)
   profilePicture String?
+  lastActivityAt DateTime?  @default(now())
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -99,6 +105,7 @@ model User {
   Agent           Agent[]
   Admin           Admin[]
   AgentInvitation AgentInvitation[]
+  Invitation      Invitation[]
 }
 
 /// @@Gen.model(hide: true)
@@ -146,8 +153,8 @@ model Citizen {
   email     String @unique
   firstname String
   lastname  String
-  addressId String @db.Uuid
-  phoneId   String @db.Uuid
+  addressId String @unique @db.Uuid
+  phoneId   String @unique @db.Uuid
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -191,7 +198,8 @@ enum CaseInitialPlatform {
 model Case {
   id                           String              @id @default(uuid()) @db.Uuid
   humanId                      Int                 @default(autoincrement())
-  citizenId                    String              @db.Uuid
+  citizenId                    String              @unique @db.Uuid
+  authorityId                  String              @db.Uuid
   agentId                      String?             @db.Uuid
   alreadyRequestedInThePast    Boolean
   gotAnswerFromPreviousRequest Boolean?
@@ -211,6 +219,7 @@ model Case {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
+  authority          Authority            @relation(fields: [authorityId], references: [id], onDelete: Cascade)
   citizen            Citizen              @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   agent              Agent?               @relation(fields: [agentId], references: [id])
   Note               Note[]
@@ -234,8 +243,9 @@ model Note {
 
 /// @@Gen.model(hide: true)
 model Agent {
-  id     String @id @default(uuid()) @db.Uuid
-  userId String @db.Uuid
+  id          String @id @default(uuid()) @db.Uuid
+  userId      String @db.Uuid
+  authorityId String @db.Uuid
 
   // rights?
 
@@ -243,9 +253,10 @@ model Agent {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  user      User        @relation(fields: [userId], references: [id])
-  Case      Case[] // TODO:
-  Authority Authority[]
+  user                    User        @relation(fields: [userId], references: [id])
+  authority               Authority   @relation(fields: [authorityId], references: [id])
+  Case                    Case[]
+  AuthorityWhereMainAgent Authority[] @relation("AuthorityWhereMainAgent")
 }
 
 // TODO: Admin model?
@@ -288,6 +299,7 @@ enum AuthorityType {
 model Authority {
   id          String        @id @default(uuid()) @db.Uuid
   name        String
+  slug        String
   mainAgentId String?       @db.Uuid
   type        AuthorityType @default(CITY)
   logo        Attachment?   @relation(fields: [attachmentId], references: [id])
@@ -296,9 +308,11 @@ model Authority {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  mainAgent       Agent?            @relation(fields: [mainAgentId], references: [id])
+  mainAgent       Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
   attachmentId    String?           @db.Uuid
   AgentInvitation AgentInvitation[]
+  Case            Case[]
+  Agent           Agent[]
 }
 
 enum CaseAttachementType {
@@ -334,7 +348,7 @@ model AttachmentsOnCaseNotes {
 /// @@Gen.model(hide: true)
 model Admin {
   id            String  @id @default(uuid()) @db.Uuid
-  userId        String  @db.Uuid
+  userId        String  @unique @db.Uuid
   canEverything Boolean @default(true)
 
   createdAt DateTime  @default(now())
@@ -351,10 +365,9 @@ enum InvitationStatus {
 }
 
 /// @@Gen.model(hide: true)
-model AgentInvitation {
+model Invitation {
   id               String           @id @default(uuid()) @db.Uuid
   issuerId         String           @db.Uuid
-  authorityId      String           @db.Uuid
   inviteeEmail     String
   inviteeFirstname String?
   inviteeLastname  String?
@@ -365,6 +378,28 @@ model AgentInvitation {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  issuer    User      @relation(fields: [issuerId], references: [id])
-  authority Authority @relation(fields: [authorityId], references: [id])
+  issuer          User              @relation(fields: [issuerId], references: [id])
+  AgentInvitation AgentInvitation[]
+  AdminInvitation AdminInvitation[]
+}
+
+/// @@Gen.model(hide: true)
+model AgentInvitation {
+  id           String @id @default(uuid()) @db.Uuid
+  invitationId String @unique @db.Uuid
+  authorityId  String @db.Uuid
+
+  invitation Invitation @relation(fields: [invitationId], references: [id])
+  authority  Authority  @relation(fields: [authorityId], references: [id])
+  User       User?      @relation(fields: [userId], references: [id])
+  userId     String?    @db.Uuid
+}
+
+/// @@Gen.model(hide: true)
+model AdminInvitation {
+  id            String  @id @default(uuid()) @db.Uuid
+  invitationId  String  @unique @db.Uuid
+  canEverything Boolean @default(true)
+
+  invitation Invitation @relation(fields: [invitationId], references: [id])
 }

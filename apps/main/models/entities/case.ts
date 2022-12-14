@@ -12,6 +12,9 @@ export const CaseSchema = z
   .object({
     id: z.string().uuid(),
     humanId: z.number(),
+    citizenId: z.string().uuid(),
+    authorityId: z.string().uuid(),
+    agentId: z.string().uuid().nullable(),
     alreadyRequestedInThePast: z.boolean(),
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
     // TODO: if first false, second should be null... use superRefine() to manage this?
@@ -53,6 +56,7 @@ export const CaseAttachmentSchema = AttachmentSchema.extend({
 }).strict();
 export type CaseAttachmentSchemaType = z.infer<typeof CaseAttachmentSchema>;
 
+// TODO: to use or to remove? (is attachment meaningful on notes)
 export const CaseNoteAttachmentSchema = AttachmentSchema.extend({
   noteId: z.string().uuid(),
   transmitter: CaseAttachmentTypeSchema,
