@@ -14,10 +14,10 @@ export type PaginationCursorSchemaType = z.infer<typeof PaginationCursorSchema>;
 export const GetterInputSchema = z
   .object({
     // TODO: maybe use "cursor" according to tRPC doc' for "useInfiniteQuery"...
-    first: PaginationLimitSchema.nullable(),
-    last: PaginationLimitSchema.nullable(),
-    before: PaginationCursorSchema.nullable(),
-    after: PaginationCursorSchema.nullable(),
+    first: PaginationLimitSchema.nullish(),
+    last: PaginationLimitSchema.nullish(),
+    before: PaginationCursorSchema.nullish(),
+    after: PaginationCursorSchema.nullish(),
     // The following ones should be extended depending on the action
     orderBy: z.object({}),
     filterBy: z.object({}),
@@ -35,8 +35,8 @@ export type PaginationEdgeSchemaType = z.infer<typeof PaginationEdgeSchema>;
 
 export const PaginationInfoSchema = z
   .object({
-    startCursor: PaginationCursorSchema.nullable(),
-    endCursor: PaginationCursorSchema.nullable(),
+    startCursor: PaginationCursorSchema.nullish(),
+    endCursor: PaginationCursorSchema.nullish(),
     hasNextPage: z.boolean(),
     hasPreviousPage: z.boolean(),
   })

@@ -24,7 +24,16 @@ export const trpc = createTRPCReact<AppRouter>({
 export function ClientProvider(props: { children: React.ReactNode }) {
   const baseUrl = shouldTargetMock() ? mockBaseUrl : getBaseUrl();
 
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          },
+        },
+      })
+  );
   const [trpcClient] = useState(() =>
     trpc.createClient({
       transformer: !shouldTargetMock() ? superjson : undefined, // When mock, there is no data over the network so there no specific serialization of types like Date...

@@ -1,10 +1,11 @@
 import { adminRouter } from '@mediature/main/server/routers/admin';
 import { agentRouter } from '@mediature/main/server/routers/agent';
 import { authRouter } from '@mediature/main/server/routers/auth';
+import { authorityRouter } from '@mediature/main/server/routers/authority';
 import { caseRouter } from '@mediature/main/server/routers/case';
 import { systemRouter } from '@mediature/main/server/routers/system';
 import { userRouter } from '@mediature/main/server/routers/user';
 import { mergeRouters } from '@mediature/main/server/trpc';
 
-export const appRouter = mergeRouters(adminRouter, agentRouter, authRouter, caseRouter, systemRouter, userRouter);
+export const appRouter = mergeRouters(adminRouter, agentRouter, authRouter, authorityRouter, caseRouter, systemRouter, userRouter);
 export type AppRouter = typeof appRouter;

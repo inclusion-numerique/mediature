@@ -19,9 +19,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
-import { RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/case';
+import { RequestCasePrefillSchemaType, RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/case';
 
-export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }) {
+export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchemaType }) {
   const requestCase = trpc.requestCase.useMutation();
 
   const {
@@ -104,7 +104,11 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
                 demande peu importe votre réponse.
               </FormHelperText>
               <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
-              <RadioGroup aria-labelledby="previous-request-radio-buttons-group-label" aria-describedby="previous-request-helper-text">
+              <RadioGroup
+                defaultValue={control._defaultValues.alreadyRequestedInThePast}
+                aria-labelledby="previous-request-radio-buttons-group-label"
+                aria-describedby="previous-request-helper-text"
+              >
                 <FormControlLabel
                   value={true}
                   control={<Radio />}
@@ -127,7 +131,10 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
               <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
                 Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
               </FormLabel>
-              <RadioGroup aria-labelledby="answer-from-previous-request--radio-buttons-group-label">
+              <RadioGroup
+                defaultValue={control._defaultValues.gotAnswerFromPreviousRequest}
+                aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
+              >
                 <FormControlLabel
                   value={true}
                   control={<Radio />}
@@ -169,7 +176,10 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCaseSchemaType }
           </Grid>
           <Grid item xs={12}>
             <FormControl error={!!errors.emailCopyWanted}>
-              <FormControlLabel label="Envoyez-moi par e-mail une copie de mes réponses." control={<Checkbox {...register('emailCopyWanted')} />} />
+              <FormControlLabel
+                label="Envoyez-moi par e-mail une copie de mes réponses."
+                control={<Checkbox {...register('emailCopyWanted')} defaultChecked={!!control._defaultValues.emailCopyWanted} />}
+              />
               <FormHelperText>{errors?.emailCopyWanted?.message}</FormHelperText>
             </FormControl>
           </Grid>

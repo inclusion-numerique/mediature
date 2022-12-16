@@ -82,7 +82,13 @@ export function createTRPCNextLayout<TRouter extends AnyRouter>(
     requestStorage._trpc = requestStorage._trpc ?? {
       cache: Object.create(null),
       context: opts.createContext(),
-      queryClient: new QueryClient(),
+      queryClient: new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+          }
+        },
+      }),
     } as any; // TODO: `any` because `cache` property is not recognized
     return requestStorage._trpc;
   }

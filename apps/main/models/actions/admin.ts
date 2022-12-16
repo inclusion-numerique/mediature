@@ -12,12 +12,18 @@ export const GrantAdminSchema = z
   .strict();
 export type GrantAdminSchemaType = z.infer<typeof GrantAdminSchema>;
 
+export const GrantAdminPrefillSchema = GrantAdminSchema.deepPartial();
+export type GrantAdminPrefillSchemaType = z.infer<typeof GrantAdminPrefillSchema>;
+
 export const RevokeAdminSchema = z
   .object({
     userId: UserSchema.shape.id,
   })
   .strict();
 export type RevokeAdminSchemaType = z.infer<typeof RevokeAdminSchema>;
+
+export const RevokeAdminPrefillSchema = RevokeAdminSchema.deepPartial();
+export type RevokeAdminPrefillSchemaType = z.infer<typeof RevokeAdminPrefillSchema>;
 
 export const InviteAdminSchema = z
   .object({
@@ -28,12 +34,18 @@ export const InviteAdminSchema = z
   .strict();
 export type InviteAdminSchemaType = z.infer<typeof InviteAdminSchema>;
 
+export const InviteAdminPrefillSchema = InviteAdminSchema.deepPartial();
+export type InviteAdminPrefillSchemaType = z.infer<typeof InviteAdminPrefillSchema>;
+
 export const DeleteUserSchema = z
   .object({
     userId: UserSchema.shape.id,
   })
   .strict();
 export type DeleteUserSchemaType = z.infer<typeof DeleteUserSchema>;
+
+export const DeleteUserPrefillSchema = DeleteUserSchema.deepPartial();
+export type DeleteUserPrefillSchemaType = z.infer<typeof DeleteUserPrefillSchema>;
 
 export const ListUsersAndRolesSchema = GetterInputSchema.extend({
   filterBy: z.object({
@@ -44,3 +56,6 @@ export const ListUsersAndRolesSchema = GetterInputSchema.extend({
   }),
 }).strict();
 export type ListUsersAndRolesSchemaType = z.infer<typeof ListUsersAndRolesSchema>;
+
+export const ListUsersAndRolesPrefillSchema = ListUsersAndRolesSchema.deepPartial();
+export type ListUsersAndRolesPrefillSchemaType = z.infer<typeof ListUsersAndRolesPrefillSchema>;

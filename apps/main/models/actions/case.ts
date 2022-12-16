@@ -26,6 +26,9 @@ export const RequestCaseSchema = z
   .strict();
 export type RequestCaseSchemaType = z.infer<typeof RequestCaseSchema>;
 
+export const RequestCasePrefillSchema = RequestCaseSchema.deepPartial();
+export type RequestCasePrefillSchemaType = z.infer<typeof RequestCasePrefillSchema>;
+
 export const UpdateCaseSchema = z
   .object({
     caseId: CaseSchema.shape.id,
@@ -39,6 +42,9 @@ export const UpdateCaseSchema = z
   .strict();
 export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
 
+export const UpdateCasePrefillSchema = UpdateCaseSchema.deepPartial();
+export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema>;
+
 export const AssignCaseSchema = z
   .object({
     caseId: CaseSchema.shape.id,
@@ -46,6 +52,9 @@ export const AssignCaseSchema = z
   })
   .strict();
 export type AssignCaseSchemaType = z.infer<typeof AssignCaseSchema>;
+
+export const AssignCasePrefillSchema = AssignCaseSchema.deepPartial();
+export type AssignCasePrefillSchemaType = z.infer<typeof AssignCasePrefillSchema>;
 
 export const UnassignCaseSchema = z
   .object({
@@ -55,6 +64,9 @@ export const UnassignCaseSchema = z
   .strict();
 export type UnassignCaseSchemaType = z.infer<typeof UnassignCaseSchema>;
 
+export const UnassignCasePrefillSchema = UnassignCaseSchema.deepPartial();
+export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSchema>;
+
 export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({
     authorityIds: z.array(AuthoritySchema.shape.id).nullable(),
@@ -63,12 +75,18 @@ export const ListCasesSchema = GetterInputSchema.extend({
 }).strict();
 export type ListCasesSchemaType = z.infer<typeof ListCasesSchema>;
 
+export const ListCasesPrefillSchema = ListCasesSchema.deepPartial();
+export type ListCasesPrefillSchemaType = z.infer<typeof ListCasesPrefillSchema>;
+
 export const GeneratePdfFromCaseSchema = z
   .object({
     caseId: CaseSchema.shape.id,
   })
   .strict();
 export type GeneratePdfFromCaseSchemaType = z.infer<typeof GeneratePdfFromCaseSchema>;
+
+export const GeneratePdfFromCasePrefillSchema = GeneratePdfFromCaseSchema.deepPartial();
+export type GeneratePdfFromCasePrefillSchemaType = z.infer<typeof GeneratePdfFromCasePrefillSchema>;
 
 export const AddNoteToCaseSchema = z
   .object({
@@ -79,12 +97,18 @@ export const AddNoteToCaseSchema = z
   .strict();
 export type AddNoteToCaseSchemaType = z.infer<typeof AddNoteToCaseSchema>;
 
+export const AddNoteToCasePrefillSchema = AddNoteToCaseSchema.deepPartial();
+export type AddNoteToCasePrefillSchemaType = z.infer<typeof AddNoteToCasePrefillSchema>;
+
 export const RemoveNoteFromCaseSchema = z
   .object({
     noteId: CaseNoteSchema.shape.id,
   })
   .strict();
 export type RemoveNoteFromCaseSchemaType = z.infer<typeof RemoveNoteFromCaseSchema>;
+
+export const RemoveNoteFromCasePrefillSchema = RemoveNoteFromCaseSchema.deepPartial();
+export type RemoveNoteFromCasePrefillSchemaType = z.infer<typeof RemoveNoteFromCasePrefillSchema>;
 
 export const UpdateCaseNoteSchema = z
   .object({
@@ -95,6 +119,9 @@ export const UpdateCaseNoteSchema = z
   .strict();
 export type UpdateCaseNoteSchemaType = z.infer<typeof UpdateCaseNoteSchema>;
 
+export const UpdateCaseNotePrefillSchema = UpdateCaseNoteSchema.deepPartial();
+export type UpdateCaseNotePrefillSchemaType = z.infer<typeof UpdateCaseNotePrefillSchema>;
+
 export const AddAttachmentToCaseSchema = z
   .object({
     attachmentId: AttachmentSchema.shape.id,
@@ -104,12 +131,18 @@ export const AddAttachmentToCaseSchema = z
   .strict();
 export type AddAttachmentToCaseSchemaType = z.infer<typeof AddAttachmentToCaseSchema>;
 
+export const AddAttachmentToCasePrefillSchema = AddAttachmentToCaseSchema.deepPartial();
+export type AddAttachmentToCasePrefillSchemaType = z.infer<typeof AddAttachmentToCasePrefillSchema>;
+
 export const RemoveAttachmentFromCaseSchema = z
   .object({
     attachmentId: AttachmentSchema.shape.id,
   })
   .strict();
 export type RemoveAttachmentFromCaseSchemaType = z.infer<typeof RemoveAttachmentFromCaseSchema>;
+
+export const RemoveAttachmentFromCasePrefillSchema = RemoveAttachmentFromCaseSchema.deepPartial();
+export type RemoveAttachmentFromCasePrefillSchemaType = z.infer<typeof RemoveAttachmentFromCasePrefillSchema>;
 
 export const UpdateCaseAttachmentLabelSchema = z
   .object({
@@ -118,3 +151,6 @@ export const UpdateCaseAttachmentLabelSchema = z
   })
   .strict();
 export type UpdateCaseAttachmentLabelSchemaType = z.infer<typeof UpdateCaseAttachmentLabelSchema>;
+
+export const UpdateCaseAttachmentLabelPrefillSchema = UpdateCaseAttachmentLabelSchema.deepPartial();
+export type UpdateCaseAttachmentLabelPrefillSchemaType = z.infer<typeof UpdateCaseAttachmentLabelPrefillSchema>;

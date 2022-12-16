@@ -60,7 +60,11 @@ export default function ResetPasswordPage() {
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                          <IconButton
+                            aria-label="changer la visibilité du mot de passe"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
                             {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                           </IconButton>
                         </InputAdornment>

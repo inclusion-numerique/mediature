@@ -298,8 +298,8 @@ enum AuthorityType {
 /// @@Gen.model(hide: true)
 model Authority {
   id          String        @id @default(uuid()) @db.Uuid
-  name        String
-  slug        String
+  name        String        @unique
+  slug        String        @unique
   mainAgentId String?       @db.Uuid
   type        AuthorityType @default(CITY)
   logo        Attachment?   @relation(fields: [attachmentId], references: [id])

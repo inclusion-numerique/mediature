@@ -14,6 +14,9 @@ export const AddAgentSchema = z
   .strict();
 export type AddAgentSchemaType = z.infer<typeof AddAgentSchema>;
 
+export const AddAgentPrefillSchema = AddAgentSchema.deepPartial();
+export type AddAgentPrefillSchemaType = z.infer<typeof AddAgentPrefillSchema>;
+
 export const RemoveAgentSchema = z
   .object({
     agentId: AgentSchema.shape.id,
@@ -22,6 +25,9 @@ export const RemoveAgentSchema = z
   .strict();
 export type RemoveAgentSchemaType = z.infer<typeof RemoveAgentSchema>;
 
+export const RemoveAgentPrefillSchema = RemoveAgentSchema.deepPartial();
+export type RemoveAgentPrefillSchemaType = z.infer<typeof RemoveAgentPrefillSchema>;
+
 export const GetAgentSchema = z
   .object({
     id: AgentSchema.shape.id,
@@ -29,12 +35,18 @@ export const GetAgentSchema = z
   .strict();
 export type GetAgentSchemaType = z.infer<typeof GetAgentSchema>;
 
+export const GetAgentPrefillSchema = GetAgentSchema.deepPartial();
+export type GetAgentPrefillSchemaType = z.infer<typeof GetAgentPrefillSchema>;
+
 export const ListAgentsSchema = GetterInputSchema.extend({
   filterBy: z.object({
     authorityIds: z.array(AuthoritySchema.shape.id),
   }),
 }).strict();
 export type ListAgentsSchemaType = z.infer<typeof ListAgentsSchema>;
+
+export const ListAgentsPrefillSchema = ListAgentsSchema.deepPartial();
+export type ListAgentsPrefillSchemaType = z.infer<typeof ListAgentsPrefillSchema>;
 
 export const InviteAgentSchema = z
   .object({
@@ -45,3 +57,6 @@ export const InviteAgentSchema = z
   })
   .strict();
 export type InviteAgentSchemaType = z.infer<typeof InviteAgentSchema>;
+
+export const InviteAgentPrefillSchema = InviteAgentSchema.deepPartial();
+export type InviteAgentPrefillSchemaType = z.infer<typeof InviteAgentPrefillSchema>;

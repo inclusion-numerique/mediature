@@ -21,10 +21,10 @@ export const mergeRouters = t.mergeRouters;
 
 export const isAuthed = t.middleware(({ next, ctx }) => {
   // TODO: make sure it checks before entering the mdw, the expiration date of the JWT
-  if (!ctx.user || TokenUserSchema.parse(ctx.user)) {
+  if (!ctx.user || !TokenUserSchema.parse(ctx.user)) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
-      message: 'Vous devez être connecté pour effectuer cette action',
+      message: 'vous devez être connecté pour effectuer cette action',
     });
   }
 

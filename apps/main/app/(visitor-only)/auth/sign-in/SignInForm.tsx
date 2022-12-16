@@ -61,6 +61,7 @@ export function SignInForm() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
@@ -110,7 +111,7 @@ export function SignInForm() {
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
         <TextField
           type={showPassword ? 'text' : 'password'}
-          label="Password"
+          label="Mot de passe"
           {...register('password')}
           error={!!errors.password}
           helperText={errors?.password?.message}
@@ -118,7 +119,11 @@ export function SignInForm() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                <IconButton
+                  aria-label="changer la visibilité du mot de passe"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
                   {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
               </InputAdornment>

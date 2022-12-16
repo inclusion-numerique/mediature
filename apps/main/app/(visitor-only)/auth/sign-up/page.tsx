@@ -1,28 +1,26 @@
 'use client';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  Grid,
-  IconButton,
-  InputAdornment,
-  Link,
-  TextField,
-  Typography,
-} from '@mui/material';
-import NextLink from 'next/link';
-import React, { useState } from 'react';
+import { Box, Grid, Typography } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
+
+import { SignUpForm } from '@mediature/main/app/(visitor-only)/auth/sign-up/SignUpForm';
+import { SignUpPrefillSchema } from '@mediature/main/models/actions/auth';
 
 export default function SignUpPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const searchParams = useSearchParams();
+  const invitationToken = searchParams.get('token');
+
+  // TODO: use getter to check invitation is still valid and adjust what's here, and to display issuer info
+  // prefill names with invitation info?
+
+  if (!invitationToken) {
+    return (
+      <span>
+        Vous ne pouvez vous inscrire sans avoir être invité par un agent d&apos;une collectivité déjà sur la plateforme. Merci de vous rapprocher de
+        votre collectivité pour en savoir plus.
+      </span>
+    );
+  }
 
   return (
     <Box
@@ -66,48 +64,11 @@ export default function SignUpPage() {
                 <Typography component="p" variant="subtitle1" sx={{ mb: 1 }}>
                   Vous avez été invité par XXXXX.
                 </Typography>
-                <form>
-                  <TextField type="email" name="email" label="Email" fullWidth />
-                  <TextField name="firstname" label="Prénom" fullWidth />
-                  <TextField name="lastname" label="Nom" fullWidth />
-                  <TextField
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    label="Password"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <FormControl>
-                    <FormControlLabel
-                      label={
-                        <span>
-                          J&apos;accepte les&nbsp;
-                          <Link href="/terms-of-use" variant="subtitle2" underline="hover">
-                            conditions générales d&apos;utilisation
-                          </Link>
-                        </span>
-                      }
-                      control={<Checkbox defaultChecked />}
-                    />
-                  </FormControl>
-                  <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    S&apos;enregistrer
-                  </Button>
-                  <Typography color="textSecondary" variant="body2">
-                    Vous possédez déjà un compte ?&nbsp;
-                    <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
-                      Se connecter
-                    </Link>
-                  </Typography>
-                </form>
+                <SignUpForm
+                  prefill={SignUpPrefillSchema.parse({
+                    invitationToken: 'abc',
+                  })}
+                />
               </div>
             </Box>
           </Box>

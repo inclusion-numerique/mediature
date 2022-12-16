@@ -1,8 +1,7 @@
 'use client';
 
 import { Button, Skeleton } from '@mui/material';
-import { useSession } from 'next-auth/react';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 

@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect } from 'react';
 
+import PublicLayout from '@mediature/main/app/(public)/layout';
+
 export default function VisitorOnlyLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
   const router = useRouter();
@@ -20,7 +22,12 @@ export default function VisitorOnlyLayout(props: PropsWithChildren) {
 
   if (sessionWrapper.status !== 'unauthenticated') {
     return <Skeleton />;
-  } else {
-    return <>{props.children}</>;
   }
+
+  // Take as layout the public one
+  return (
+    <>
+      <PublicLayout>{props.children}</PublicLayout>
+    </>
+  );
 }

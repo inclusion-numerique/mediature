@@ -1,9 +1,9 @@
-import { GetProfileSchema, UpdateProfile } from '@mediature/main/models/actions/user';
+import { GetProfileSchema, UpdateProfileSchema } from '@mediature/main/models/actions/user';
 import { prisma } from '@mediature/main/prisma/client';
 import { privateProcedure, router } from '@mediature/main/server/trpc';
 
 export const userRouter = router({
-  updateProfile: privateProcedure.input(UpdateProfile).mutation(async ({ ctx, input }) => {
+  updateProfile: privateProcedure.input(UpdateProfileSchema).mutation(async ({ ctx, input }) => {
     const user = await prisma.user.update({
       where: {
         id: ctx.user.id,

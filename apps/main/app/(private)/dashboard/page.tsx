@@ -1,11 +1,18 @@
 'use client';
 
-import * as React from 'react';
+import { Link, Skeleton, Typography } from '@mui/material';
+import NextLink from 'next/link';
 
-export default function XxxPage() {
+export default function OverviewPage() {
   return (
     <div>
-      <h1>Hola</h1>
+      <h1>Hola, vous êtes connecté :D</h1>
+      <Typography color="textSecondary" variant="body2">
+        <Link component={NextLink} href="/dashboard/authority/list" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+          Liste des collectivités
+        </Link>
+      </Typography>
+      <h2>...</h2>
     </div>
   );
 }

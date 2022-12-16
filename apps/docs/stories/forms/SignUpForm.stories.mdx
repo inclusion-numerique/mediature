@@ -1,0 +1,49 @@
+import { generateMock } from '@anatine/zod-mock';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+
+import { SignUpForm } from '@mediature/main/app/(visitor-only)/auth/sign-up/SignUpForm';
+import { SignUpPrefillSchema } from '@mediature/main/models/actions/auth';
+import { UserSchema } from '@mediature/main/models/entities/user';
+import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+
+<Meta title="Forms/SignUp" component={SignUpForm} />
+
+# SignUpForm
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget consectetur tempor, nisl nunc egestas nisi, euismod aliquam nisl nunc euismod.
+
+## Props
+
+<ArgsTable of={SignUpForm} />
+
+## Examples
+
+<Canvas>
+  <Story name="Empty" parameters={commonParameters}>
+    <SignUpForm />
+  </Story>
+  <Story name="Filled" parameters={commonParameters}>
+    <SignUpForm
+      prefill={SignUpPrefillSchema.parse({
+        invitationToken: 'abc',
+        email: 'jean@france.fr',
+        password: 'mypassword',
+        firstname: 'Jean',
+        lastname: 'Derrien',
+        termsAccepted: true,
+      })}
+    />
+  </Story>
+</Canvas>
+
+export const commonParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['signUp'],
+        response: generateMock(UserSchema),
+      }),
+    ],
+  },
+};

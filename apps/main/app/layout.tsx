@@ -1,8 +1,12 @@
+'use client';
+
 import { createMuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { createNextDsfrIntegrationApi } from '@codegouvfr/react-dsfr/next';
+import { Link, Typography } from '@mui/material';
 import DefaultApp from 'next/app';
 import getConfig from 'next/config';
 import type { LinkProps as NextLinkProps } from 'next/link';
+import NextLink from 'next/link';
 import { PropsWithChildren } from 'react';
 import { createEmotionSsrAdvancedApproach } from 'tss-react/next';
 
@@ -52,6 +56,20 @@ export default function RootLayout(props: PropsWithChildren) {
         <Providers>{props.children}</Providers>
         {/* <div>{publicRuntimeConfig.appVersion}</div> */}
         {/* </MuiDsfrThemeProvider> */}
+        <Typography color="textSecondary" variant="body2">
+          <Link component={NextLink} href="/accessibility" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+            Accessibilité : non conforme
+          </Link>
+          <Link component={NextLink} href="/accessibility" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+            Notice légale
+          </Link>
+          <Link component={NextLink} href="/accessibility" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+            Conditions générales d&apos;utilisation
+          </Link>
+          <Link component={NextLink} href="/accessibility" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+            Politique de confidentialité
+          </Link>
+        </Typography>
       </body>
     </html>
   );

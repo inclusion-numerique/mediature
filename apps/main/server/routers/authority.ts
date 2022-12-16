@@ -2,11 +2,13 @@ import {
   CreateAuthoritySchema,
   DeleteAuthoritySchema,
   GetAuthoritySchema,
+  GetPublicFacingAuthoritySchema,
   ListAuthoritiesSchema,
   UpdateAuthoritySchema,
 } from '@mediature/main/models/actions/authority';
+import { PublicFacingAuthoritySchema } from '@mediature/main/models/entities/authority';
 import { prisma } from '@mediature/main/prisma/client';
-import { privateProcedure, router } from '@mediature/main/server/trpc';
+import { privateProcedure, publicProcedure, router } from '@mediature/main/server/trpc';
 
 export async function isUserAnAdmin(userId: string): Promise<boolean> {
   const admin = await prisma.admin.findFirst({
@@ -44,6 +46,9 @@ export const authorityRouter = router({
     if (!(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
+
+    // TODO:
+    input.logoAttachmentId = null;
 
     await requiresThereIsNoSimilarAuthority(input.name, input.slug);
 
@@ -137,17 +142,45 @@ export const authorityRouter = router({
 
     return authority;
   }),
+  getPublicFacingAuthority: publicProcedure.input(GetPublicFacingAuthoritySchema).query(async ({ ctx, input }) => {
+    const authority = await prisma.authority.findUnique({
+      where: {
+        slug: input.slug,
+      },
+      include: {
+        logo: true,
+      },
+    });
+
+    if (!authority) {
+      throw new Error(`aucune collectivité trouvée`);
+    }
+
+    return { authority: PublicFacingAuthoritySchema.parse({ ...authority, logo: authority.logo ? authority.logo.fileUrl : null }) };
+  }),
   listAuthorities: privateProcedure.input(ListAuthoritiesSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
-    const cases = await prisma.case.findMany({
+    const authorities = await prisma.authority.findMany({
       where: {
+        name: input.filterBy.query
+          ? {
+              search: input.filterBy.query,
+              mode: 'insensitive',
+            }
+          : undefined,
+        slug: input.filterBy.query
+          ? {
+              search: input.filterBy.query,
+              mode: 'insensitive',
+            }
+          : undefined,
         // TODO: pagination
       },
     });
 
-    return { cases };
+    return { authorities };
   }),
 });

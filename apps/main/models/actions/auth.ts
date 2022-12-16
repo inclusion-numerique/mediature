@@ -12,16 +12,21 @@ export const SignInSchema = z
   .strict();
 export type SignInSchemaType = z.infer<typeof SignInSchema>;
 
-export const SignUpSchema = z
-  .object({
-    invitationToken: InvitationSchema.shape.token.nullable(), // TODO: must be required in the future
-    email: UserSchema.shape.email,
-    password: UserPasswordSchema,
-    firstname: UserSchema.shape.firstname,
-    lastname: UserSchema.shape.lastname,
-  })
-  .strict();
+export const SignInPrefillSchema = SignInSchema.deepPartial();
+export type SignInPrefillSchemaType = z.infer<typeof SignInPrefillSchema>;
+
+export const SignUpSchema = z.object({
+  invitationToken: InvitationSchema.shape.token,
+  email: UserSchema.shape.email,
+  password: UserPasswordSchema,
+  firstname: UserSchema.shape.firstname,
+  lastname: UserSchema.shape.lastname,
+  termsAccepted: z.literal<boolean>(true),
+});
 export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
+
+export const SignUpPrefillSchema = SignUpSchema.deepPartial();
+export type SignUpPrefillSchemaType = z.infer<typeof SignUpPrefillSchema>;
 
 export const RequestNewPasswordSchema = z
   .object({
@@ -29,6 +34,9 @@ export const RequestNewPasswordSchema = z
   })
   .strict();
 export type RequestNewPasswordSchemaType = z.infer<typeof RequestNewPasswordSchema>;
+
+export const RequestNewPasswordPrefillSchema = RequestNewPasswordSchema.deepPartial();
+export type RequestNewPasswordPrefillSchemaType = z.infer<typeof RequestNewPasswordPrefillSchema>;
 
 export const ResetPasswordSchema = z
   .object({
@@ -38,6 +46,9 @@ export const ResetPasswordSchema = z
   .strict();
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
 
+export const ResetPasswordPrefillSchema = ResetPasswordSchema.deepPartial();
+export type ResetPasswordPrefillSchemaType = z.infer<typeof ResetPasswordPrefillSchema>;
+
 export const ChangePasswordSchema = z
   .object({
     currentPassword: UserPasswordSchema,
@@ -45,3 +56,6 @@ export const ChangePasswordSchema = z
   })
   .strict();
 export type ChangePasswordSchemaType = z.infer<typeof ChangePasswordSchema>;
+
+export const ChangePasswordPrefillSchema = ChangePasswordSchema.deepPartial();
+export type ChangePasswordPrefillSchemaType = z.infer<typeof ChangePasswordPrefillSchema>;
