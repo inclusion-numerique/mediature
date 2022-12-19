@@ -9,19 +9,25 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-links',
     '@storybook/addon-measure',
-    '@storybook/addon-notes',
+    // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7
     '@storybook/addon-viewport',
     'storybook-addon-designs',
     // 'storybook-addon-next-router',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
   ],
-  framework: '@storybook/react',
+  framework: {
+    name: '@storybook/react-vite',
+    options: {},
+  },
   core: {
-    builder: '@storybook/builder-vite',
     enableCrashReports: false,
     disableTelemetry: true,
   },
+  env: (config) => ({
+    ...config,
+    TRPC_SERVER_MOCK: 'true',
+  }),
   async viteFinal(config, { configType }) {
     // return mergeConfig(config, {
     //   plugins: [
@@ -33,9 +39,6 @@ module.exports = {
 
     // TODO: the above is supposed to work... but it's not, so hardcoding paths for now
     return mergeConfig(config, {
-      define: {
-        'process.env.TRPC_SERVER_MOCK': 'true', // Warning: for whatever reason it's a boolean during the runtime
-      },
       resolve: {
         alias: [
           {
@@ -61,5 +64,8 @@ module.exports = {
         ],
       },
     });
+  },
+  docs: {
+    docsPage: 'automatic',
   },
 };

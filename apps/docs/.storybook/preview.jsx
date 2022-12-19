@@ -7,7 +7,7 @@ import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dar
 
 import { ClientProvider } from '@mediature/main/client/trpcClient';
 
-const channel = addons.getChannel();
+// const channel = addons.getChannel();
 
 // Initialize MSW
 initialize({
@@ -33,18 +33,22 @@ export const parameters = {
     container: (props) => {
       const [isDark, setDark] = React.useState();
 
-      const onChangeHandler = () => {
-        channel.emit(UPDATE_DARK_MODE_EVENT_NAME);
-      };
+      //
+      // TODO: `channel` not available for now since upgrade to Storybook v7
+      //
 
-      React.useEffect(() => {
-        channel.on(DARK_MODE_EVENT_NAME, setDark);
-        return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
-      }, [channel, setDark]);
+      // const onChangeHandler = () => {
+      //   channel.emit(UPDATE_DARK_MODE_EVENT_NAME);
+      // };
+
+      // React.useEffect(() => {
+      //   channel.on(DARK_MODE_EVENT_NAME, setDark);
+      //   return () => channel.removeListener(DARK_MODE_EVENT_NAME, setDark);
+      // }, [channel, setDark]);
 
       return (
         <div>
-          <input type="checkbox" onChange={onChangeHandler} />
+          {/* <input type="checkbox" onChange={onChangeHandler} /> */}
           <DocsContainer {...props} />
         </div>
       );
