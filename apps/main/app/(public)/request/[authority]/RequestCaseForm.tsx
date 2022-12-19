@@ -20,6 +20,7 @@ import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
 import { RequestCasePrefillSchemaType, RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/models/actions/case';
+import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/utils/form';
 
 export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchemaType }) {
   const requestCase = trpc.requestCase.useMutation();
@@ -105,20 +106,20 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
               </FormHelperText>
               <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
               <RadioGroup
-                defaultValue={control._defaultValues.alreadyRequestedInThePast}
+                defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
                 aria-labelledby="previous-request-radio-buttons-group-label"
                 aria-describedby="previous-request-helper-text"
               >
                 <FormControlLabel
-                  value={true}
+                  value="true"
                   control={<Radio />}
-                  {...register('alreadyRequestedInThePast')}
+                  {...register('alreadyRequestedInThePast', reactHookFormBooleanRadioGroupRegisterOptions)}
                   label="Oui, j'ai effectué un premier recours à l'amiable"
                 />
                 <FormControlLabel
-                  value={false}
+                  value="false"
                   control={<Radio />}
-                  {...register('alreadyRequestedInThePast')}
+                  {...register('alreadyRequestedInThePast', reactHookFormBooleanRadioGroupRegisterOptions)}
                   label="Non, je n'ai pas effectué de premier recours à l'amiable"
                 />
               </RadioGroup>
@@ -132,19 +133,19 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
                 Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
               </FormLabel>
               <RadioGroup
-                defaultValue={control._defaultValues.gotAnswerFromPreviousRequest}
+                defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
                 aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
               >
                 <FormControlLabel
-                  value={true}
+                  value="true"
                   control={<Radio />}
-                  {...register('gotAnswerFromPreviousRequest')}
+                  {...register('gotAnswerFromPreviousRequest', reactHookFormBooleanRadioGroupRegisterOptions)}
                   label="Oui, j'ai obtenu une réponse"
                 />
                 <FormControlLabel
-                  value={false}
+                  value="false"
                   control={<Radio />}
-                  {...register('gotAnswerFromPreviousRequest')}
+                  {...register('gotAnswerFromPreviousRequest', reactHookFormBooleanRadioGroupRegisterOptions)}
                   label="Non, je n'ai pas obtenu de réponse"
                 />
               </RadioGroup>
