@@ -1,9 +1,10 @@
 'use client';
 
 import { Button, Skeleton } from '@mui/material';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
+
+import { signIn, signOut, useSession } from '@mediature/main/proxies/next-auth/react';
 
 export default function PrivateLayout(props: PropsWithChildren) {
   const router = useRouter();

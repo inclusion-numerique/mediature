@@ -1,9 +1,10 @@
 'use client';
 
 import { Link, Skeleton, Typography } from '@mui/material';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 import { PropsWithChildren } from 'react';
+
+import { signIn, signOut, useSession } from '@mediature/main/proxies/next-auth/react';
 
 export default function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();

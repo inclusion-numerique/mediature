@@ -19,6 +19,8 @@
     "@anatine/zod-mock": "^3.6.0",
     "@mediature/main": "workspace:main@*",
     "@mediature/ui": "workspace:ui@*",
+    "@storybook/nextjs": "7.0.0-beta.12",
+    "@tomfreudenberg/next-auth-mock": "^0.5.5",
     "chromatic": "^6.11.4",
     "msw": "^0.49.1",
     "next": "^13.0.7",

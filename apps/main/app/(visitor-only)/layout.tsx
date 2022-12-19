@@ -1,11 +1,11 @@
 'use client';
 
 import { Skeleton } from '@mui/material';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect } from 'react';
 
 import PublicLayout from '@mediature/main/app/(public)/layout';
+import { useSession } from '@mediature/main/proxies/next-auth/react';
 
 export default function VisitorOnlyLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();

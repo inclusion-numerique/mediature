@@ -48,7 +48,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
 
   return (
     <>
-      <DevTool control={control} />
+      {/* <DevTool control={control} /> */}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />

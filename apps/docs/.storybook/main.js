@@ -11,14 +11,18 @@ module.exports = {
     '@storybook/addon-measure',
     // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7
     '@storybook/addon-viewport',
+    '@tomfreudenberg/next-auth-mock/storybook',
     'storybook-addon-designs',
     // 'storybook-addon-next-router',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
   ],
   framework: {
-    name: '@storybook/react-vite',
-    options: {},
+    name: '@storybook/nextjs',
+    options: {
+      // https://github.com/storybookjs/storybook/tree/next/code/frameworks/nextjs
+      nextConfigPath: path.resolve(__dirname, '../../../apps/main/next.config.js'),
+    },
   },
   core: {
     enableCrashReports: false,
@@ -26,6 +30,7 @@ module.exports = {
   },
   env: (config) => ({
     ...config,
+    ENABLE_MOCKS: 'true',
     TRPC_SERVER_MOCK: 'true',
   }),
   async viteFinal(config, { configType }) {

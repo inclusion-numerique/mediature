@@ -17,14 +17,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { signIn } from 'next-auth/react';
 import NextLink from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { SignInSchema, SignInSchemaType } from '@mediature/main/models/actions/auth';
+import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/models/actions/auth';
+import { signIn } from '@mediature/main/proxies/next-auth/react';
 
 function errorCodeToError(errorCode: string): string {
   let error: string;
@@ -44,7 +43,7 @@ function errorCodeToError(errorCode: string): string {
   return error;
 }
 
-export function SignInForm() {
+export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -64,7 +63,7 @@ export function SignInForm() {
     control,
   } = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues: {
+    defaultValues: prefill ?? {
       email: loginHint ?? undefined,
     },
   });
@@ -131,6 +130,7 @@ export function SignInForm() {
           }}
         />
         <FormControl error={!!errors.rememberMe}>
+          {/* TODO: really manage "rememberMe" */}
           <FormControlLabel label="Rester connecté" control={<Checkbox {...register('rememberMe')} defaultChecked />} />
           <FormHelperText>{errors?.rememberMe?.message}</FormHelperText>
         </FormControl>
