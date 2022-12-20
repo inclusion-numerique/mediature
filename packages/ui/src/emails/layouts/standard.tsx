@@ -9,6 +9,7 @@ import {
   MjmlHead,
   MjmlImage,
   MjmlPreview,
+  MjmlRaw,
   MjmlSection,
   MjmlSocial,
   MjmlSocialElement,
@@ -37,10 +38,11 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties
           <MjmlSection padding="10px 0px"></MjmlSection>
           <MjmlColumn padding="0px 0px"></MjmlColumn>
           <MjmlAll fontFamily='"Marianne", arial, sans-serif'></MjmlAll>
-          <MjmlText color="#3a3a3a" fontSize="14px" lineHeight="24px"></MjmlText>
+          <MjmlText cssClass="light-text" color="#3a3a3a" fontSize="14px" lineHeight="24px"></MjmlText>
           <MjmlButton
             backgroundColor="#000091"
             borderRadius="0px"
+            cssClass="light-button"
             color="#f5f5fe"
             fontSize={16}
             fontWeight={500}
@@ -49,9 +51,13 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties
           ></MjmlButton>
         </MjmlAttributes>
         <MjmlStyle>{css}</MjmlStyle>
+        <MjmlRaw>
+          <meta name="color-scheme" content="light dark" />
+          <meta name="supported-color-schemes" content="light dark" />
+        </MjmlRaw>
       </MjmlHead>
       <MjmlBody width={500}>
-        <MjmlWrapper>
+        <MjmlWrapper cssClass="light-body">
           <MjmlSection>
             <MjmlGroup>
               <MjmlColumn verticalAlign="middle" width="120px">
@@ -68,7 +74,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties
               </MjmlColumn>
             </MjmlGroup>
           </MjmlSection>
-          <MjmlSection backgroundColor="#f6f6f6">
+          <MjmlSection cssClass="light-main-section" backgroundColor="#f6f6f6">
             <MjmlGroup>
               <MjmlColumn>{props.children}</MjmlColumn>
             </MjmlGroup>
