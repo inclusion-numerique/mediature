@@ -6,6 +6,7 @@ import React from 'react';
 import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
 import { ClientProvider } from '@mediature/main/client/trpcClient';
+import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
 
 // const channel = addons.getChannel();
 
@@ -61,9 +62,23 @@ export const parameters = {
 
 export const decorators = [
   mswDecorator,
-  (Story) => (
-    <ClientProvider>
-      <Story />
-    </ClientProvider>
-  ),
+  (Story, context) => {
+    // Provide the necessary depending on the context
+
+    if (context.kind.startsWith('Emails/')) {
+      // We are in the email templating context, a specific wrapper is needed to render
+      return (
+        <StorybookRendererLayout>
+          <Story />
+        </StorybookRendererLayout>
+      );
+    } else {
+      // For now for all other cases we provide the client provider to mock tRPC calls
+      return (
+        <ClientProvider>
+          <Story />
+        </ClientProvider>
+      );
+    }
+  },
 ];

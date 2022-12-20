@@ -14,14 +14,20 @@
     "lint": "TIMING=1 eslint --ext .js,.jsx,.ts,.tsx,.mdx ."
   },
   "dependencies": {
-    "react": "^18.2.0"
+    "@luma-team/mjml-react": "^0.2.0",
+    "mjml": "^4.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@lottiefiles/react-lottie-player": "^3.4.9",
+    "@types/mjml": "^4.7.0",
+    "@types/mjml-react": "^2.0.6",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "mjml-browser": "^4.13.0",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.2"
   }

@@ -1,0 +1,23 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+
+import { SignUpConfirmationEmail } from '@mediature/ui/src/emails/templates/sign-up-confirmation/email';
+
+<Meta title="Emails/Templates/SignUpConfirmation" component={SignUpConfirmationEmail} />
+
+# SignUpConfirmationEmail
+
+Email sent just after the user has signed up.
+
+## Props
+
+<ArgsTable of={SignUpConfirmationEmail} />
+
+## Examples
+
+<Canvas>
+  <Story name="Normal" parameters={commonParameters}>
+    <SignUpConfirmationEmail firstname="Thomas" signInUrl="" />
+  </Story>
+</Canvas>
+
+export const commonParameters = {};

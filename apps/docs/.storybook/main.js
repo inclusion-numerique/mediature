@@ -1,9 +1,18 @@
+const fg = require('fast-glob');
 const path = require('path');
 const { mergeConfig } = require('vite');
 const { default: tsconfigPaths } = require('vite-tsconfig-paths');
 
+const getStories = () =>
+  fg.sync([
+    path.resolve(__dirname, '../../../apps/docs/stories/**/*.stories.{mdx,tsx}'),
+    path.resolve(__dirname, '../../../apps/main/**/*.stories.{mdx,tsx}'),
+    path.resolve(__dirname, '../../../packages/ui/src/**/*.stories.{mdx,tsx}'),
+    '!**/node_modules', // Important otherwise it loads from PNPM workspace packages too resulting in the error `Duplicate stories with id: xxx`
+  ]);
+
 module.exports = {
-  stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.tsx'],
+  stories: async () => [...getStories()],
   addons: [
     '@storybook/addon-a11y',
     '@storybook/addon-essentials',
@@ -44,6 +53,14 @@ module.exports = {
 
     // TODO: the above is supposed to work... but it's not, so hardcoding paths for now
     return mergeConfig(config, {
+      module: {
+        rules: [
+          {
+            test: /\.(css)$/i,
+            use: ['style-loader', 'css-loader'],
+          },
+        ],
+      },
       resolve: {
         alias: [
           {
