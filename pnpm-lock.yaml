@@ -333,8 +333,8 @@ importers:
       '@luma-team/mjml-react': ^0.2.0
       '@types/mjml': ^4.7.0
       '@types/mjml-react': ^2.0.6
-      '@types/react': ^17.0.37
-      '@types/react-dom': ^17.0.11
+      '@types/react': ^18.0.22
+      '@types/react-dom': ^18.0.7
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       mjml: ^4.13.0
@@ -352,8 +352,8 @@ importers:
       '@lottiefiles/react-lottie-player': 3.4.9_react@18.2.0
       '@types/mjml': 4.7.0
       '@types/mjml-react': 2.0.6
-      '@types/react': 17.0.52
-      '@types/react-dom': 17.0.18
+      '@types/react': 18.0.26
+      '@types/react-dom': 18.0.9
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       mjml-browser: 4.13.0
@@ -5978,16 +5978,10 @@ packages:
       '@types/react': 18.0.26
     dev: true
 
-  /@types/react-dom/17.0.18:
-    resolution: {integrity: sha512-rLVtIfbwyur2iFKykP2w0pl/1unw26b5td16d5xMgp7/yjTHomkyxPYChFoCr/FtEX1lN9wY6lFj1qvKdS5kDw==}
-    dependencies:
-      '@types/react': 17.0.52
-    dev: true
-
   /@types/react-dom/18.0.9:
     resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
     dependencies:
-      '@types/react': 18.0.25
+      '@types/react': 18.0.26
     dev: true
 
   /@types/react-is/17.0.3:
@@ -6007,14 +6001,6 @@ packages:
     dependencies:
       '@types/react': 18.0.26
     dev: false
-
-  /@types/react/17.0.52:
-    resolution: {integrity: sha512-vwk8QqVODi0VaZZpDXQCmEmiOuyjEFPY7Ttaw5vjM112LOq37yz1CDJGrRJwA1fYEq4Iitd5rnjd1yWAc/bT+A==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: true
 
   /@types/react/18.0.25:
     resolution: {integrity: sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==}
