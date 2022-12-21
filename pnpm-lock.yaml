@@ -65,8 +65,6 @@ importers:
       style-loader: ^3.3.1
       tsconfig: workspace:*
       typescript: ^4.5.4
-      vite: ^3.2.5
-      vite-tsconfig-paths: ^3.6.0
     dependencies:
       '@anatine/zod-mock': 3.6.0
       '@mediature/main': link:../main
@@ -99,7 +97,7 @@ importers:
       '@storybook/core-common': 7.0.0-beta.12
       '@storybook/preview-web': 7.0.0-beta.12
       '@storybook/react': 7.0.0-beta.12_lb6du3saekb5anf2gjv3wxj3oq
-      '@storybook/react-vite': 7.0.0-beta.12_nrqynh5mow6wkad2mnqeyfsoaq
+      '@storybook/react-vite': 7.0.0-beta.12_lb6du3saekb5anf2gjv3wxj3oq
       '@storybook/testing-react': 2.0.0-next.0_bja447xctukjrgrbldrkjzrffy
       '@storybook/theming': 7.0.0-beta.12_biqbaboplfbrettd7655fr4n2y
       '@vitejs/plugin-react': 1.3.2
@@ -116,8 +114,6 @@ importers:
       style-loader: 3.3.1
       tsconfig: link:../../packages/tsconfig
       typescript: 4.9.3
-      vite: 3.2.5
-      vite-tsconfig-paths: 3.6.0_vite@3.2.5
 
   apps/main:
     specifiers:
@@ -2022,10 +2018,6 @@ packages:
       '@jridgewell/trace-mapping': 0.3.9
     dev: true
 
-  /@cush/relative/1.0.0:
-    resolution: {integrity: sha512-RpfLEtTlyIxeNPGKcokS+p3BZII/Q3bYxryFRglh5H3A3T8q9fsLYm72VYAMEOOIBLEa8o93kFLiBDUWKrwXZA==}
-    dev: true
-
   /@cypress/request/2.88.10:
     resolution: {integrity: sha512-Zp7F+R93N0yZyG34GutyTNr+okam7s/Fzc1+i3kcqOP8vk6OuajuE9qZJ6Rs+10/1JFtXFYMdyarnU1rZuJesg==}
     engines: {node: '>= 6'}
@@ -2899,7 +2891,7 @@ packages:
       chalk: 4.1.2
     dev: true
 
-  /@joshwooding/vite-plugin-react-docgen-typescript/0.0.5_sqshdgy4e5w27wzvykvnubcgki:
+  /@joshwooding/vite-plugin-react-docgen-typescript/0.0.5_typescript@4.9.3:
     resolution: {integrity: sha512-HwAEj/vAP1+hzBfIv9DTCyg+1O0/LG48Up7j1RmJ+pFwjb/wRxzUBco4LqKFKe7SZ0M6IyASNh1oKP3yHnJElA==}
     peerDependencies:
       typescript: '>= 4.3.x'
@@ -2911,7 +2903,6 @@ packages:
       magic-string: 0.26.7
       react-docgen-typescript: 2.2.2_typescript@4.9.3
       typescript: 4.9.3
-      vite: 3.2.5
     dev: true
 
   /@jridgewell/gen-mapping/0.1.1:
@@ -4561,7 +4552,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-vite/7.0.0-beta.12_sqshdgy4e5w27wzvykvnubcgki:
+  /@storybook/builder-vite/7.0.0-beta.12_typescript@4.9.3:
     resolution: {integrity: sha512-K1e6tS6uwygh9/g0Zg3n32ebnUOv1r/neMml532/jl7n9kcgQXz93WSmEuQtMDJ8hEEeVl/LMR0NEfsUVMsnHg==}
     peerDependencies:
       '@preact/preset-vite': '*'
@@ -4576,7 +4567,7 @@ packages:
       vite-plugin-glimmerx:
         optional: true
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.0.5_sqshdgy4e5w27wzvykvnubcgki
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.0.5_typescript@4.9.3
       '@storybook/client-logger': 7.0.0-beta.12
       '@storybook/core-common': 7.0.0-beta.12
       '@storybook/csf-plugin': 7.0.0-beta.12
@@ -4596,7 +4587,6 @@ packages:
       rollup-plugin-external-globals: 0.7.1_rollup@2.79.1
       slash: 3.0.0
       typescript: 4.9.3
-      vite: 3.2.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5233,7 +5223,7 @@ packages:
       - supports-color
     dev: false
 
-  /@storybook/react-vite/7.0.0-beta.12_nrqynh5mow6wkad2mnqeyfsoaq:
+  /@storybook/react-vite/7.0.0-beta.12_lb6du3saekb5anf2gjv3wxj3oq:
     resolution: {integrity: sha512-OkbcE42Co+U2EZ3KUJ7dtUljXYrmhOh1KBRqrrBalY4LuJcwMQQ9BQJh4Plf9nL31jLvEaj6gvtHh+DpP3mrOQ==}
     engines: {node: ^14.18 || >=16}
     peerDependencies:
@@ -5241,17 +5231,16 @@ packages:
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
       vite: ^3.0.0 || ^4.0.0
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.0.5_sqshdgy4e5w27wzvykvnubcgki
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.0.5_typescript@4.9.3
       '@rollup/pluginutils': 4.2.1
-      '@storybook/builder-vite': 7.0.0-beta.12_sqshdgy4e5w27wzvykvnubcgki
+      '@storybook/builder-vite': 7.0.0-beta.12_typescript@4.9.3
       '@storybook/react': 7.0.0-beta.12_lb6du3saekb5anf2gjv3wxj3oq
-      '@vitejs/plugin-react': 3.0.0_vite@3.2.5
+      '@vitejs/plugin-react': 3.0.0
       ast-types: 0.14.2
       magic-string: 0.26.7
       react: 18.2.0
       react-docgen: 6.0.0-alpha.3
       react-dom: 18.2.0_react@18.2.0
-      vite: 3.2.5
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - supports-color
@@ -6250,7 +6239,7 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react/3.0.0_vite@3.2.5:
+  /@vitejs/plugin-react/3.0.0:
     resolution: {integrity: sha512-1mvyPc0xYW5G8CHQvJIJXLoMjl5Ct3q2g5Y2s6Ccfgwm45y48LBvsla7az+GkkAtYikWQ4Lxqcsq5RHLcZgtNQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -6261,7 +6250,6 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.5
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 3.2.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -6614,6 +6602,7 @@ packages:
 
   /any-promise/1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
+    dev: false
 
   /anymatch/3.1.2:
     resolution: {integrity: sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==}
@@ -7812,6 +7801,7 @@ packages:
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
+    dev: false
 
   /commander/5.1.0:
     resolution: {integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==}
@@ -10361,10 +10351,6 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /glob-regex/0.3.2:
-    resolution: {integrity: sha512-m5blUd3/OqDTWwzBBtWBPrGlAzatRywHameHeekAZyZrskYouOGdNB8T/q6JucucvJXtOuyHIn0/Yia7iDasDw==}
-    dev: true
-
   /glob-to-regexp/0.4.1:
     resolution: {integrity: sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==}
 
@@ -10377,6 +10363,7 @@ packages:
       minimatch: 3.1.2
       once: 1.4.0
       path-is-absolute: 1.0.1
+    dev: false
 
   /glob/7.1.7:
     resolution: {integrity: sha512-OvD9ENzPLbegENnYP5UUfJIirTg4+XwMWGaQfQTY0JenxNvvIKP3U3/tAQSPIu/lHxXYSZmpXlUHeqAIdKzBLQ==}
@@ -10450,10 +10437,6 @@ packages:
       ignore: 5.2.0
       merge2: 1.4.1
       slash: 3.0.0
-
-  /globrex/0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-    dev: true
 
   /good-listener/1.2.2:
     resolution: {integrity: sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw==}
@@ -13255,6 +13238,7 @@ packages:
       any-promise: 1.3.0
       object-assign: 4.1.1
       thenify-all: 1.6.0
+    dev: false
 
   /nan/2.17.0:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
@@ -14547,7 +14531,7 @@ packages:
     engines: {node: '>=12.0.0'}
     hasBin: true
     dependencies:
-      '@babel/core': 7.20.2
+      '@babel/core': 7.20.5
       '@babel/generator': 7.20.5
       ast-types: 0.14.2
       commander: 2.20.3
@@ -14867,16 +14851,6 @@ packages:
     engines: {node: '>= 0.10'}
     dependencies:
       resolve: 1.22.1
-    dev: true
-
-  /recrawl-sync/2.2.3:
-    resolution: {integrity: sha512-vSaTR9t+cpxlskkdUFrsEpnf67kSmPk66yAGT1fZPrDudxQjoMzPgQhSMImQ0pAw5k0NPirefQfhopSjhdUtpQ==}
-    dependencies:
-      '@cush/relative': 1.0.0
-      glob-regex: 0.3.2
-      slash: 3.0.0
-      sucrase: 3.29.0
-      tslib: 1.14.1
     dev: true
 
   /redent/3.0.0:
@@ -16093,6 +16067,7 @@ packages:
       mz: 2.7.0
       pirates: 4.0.5
       ts-interface-checker: 0.1.13
+    dev: false
 
   /superjson/1.12.0:
     resolution: {integrity: sha512-B4tefmFqj8KDShHi2br2rz0kBlUJuQHtxMCydEuHvooL+6EscROTNWRfOLMDxW1dS/daK2zZr3C3N9DU+jXATQ==}
@@ -16341,11 +16316,13 @@ packages:
     engines: {node: '>=0.8'}
     dependencies:
       thenify: 3.3.1
+    dev: false
 
   /thenify/3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
     dependencies:
       any-promise: 1.3.0
+    dev: false
 
   /third-party-web/0.12.7:
     resolution: {integrity: sha512-9d/OfjEOjyeOpnm4F9o0KSK6BI6ytvi9DINSB5h1+jdlCvQlhKpViMSxWpBN9WstdfDQ61BS6NxWqcPCuQCAJg==}
@@ -16487,6 +16464,7 @@ packages:
 
   /ts-interface-checker/0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
+    dev: false
 
   /ts-jest/29.0.3_4f6uxrzmuwipl5rr3bcogf6k74:
     resolution: {integrity: sha512-Ibygvmuyq1qp/z3yTh9QTwVVAbFdDy/+4BtIQR2sp6baF2SJU/8CKK/hhnGIDY2L90Az2jIqTwZPnN2p+BweiQ==}
@@ -17130,53 +17108,6 @@ packages:
       assert-plus: 1.0.0
       core-util-is: 1.0.2
       extsprintf: 1.3.0
-    dev: true
-
-  /vite-tsconfig-paths/3.6.0_vite@3.2.5:
-    resolution: {integrity: sha512-UfsPYonxLqPD633X8cWcPFVuYzx/CMNHAjZTasYwX69sXpa4gNmQkR0XCjj82h7zhLGdTWagMjC1qfb9S+zv0A==}
-    peerDependencies:
-      vite: '>2.0.0-0'
-    dependencies:
-      debug: 4.3.4
-      globrex: 0.1.2
-      recrawl-sync: 2.2.3
-      tsconfig-paths: 4.1.0
-      vite: 3.2.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /vite/3.2.5:
-    resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.15.18
-      postcss: 8.4.20
-      resolve: 1.22.1
-      rollup: 2.79.1
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /void-elements/3.1.0:
