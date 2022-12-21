@@ -1,5 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 
+import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { SignUpConfirmationEmail } from '@mediature/ui/src/emails/templates/sign-up-confirmation/email';
 
 <Meta title="Emails/Templates/SignUpConfirmation" component={SignUpConfirmationEmail} />
@@ -20,4 +21,4 @@ Email sent just after the user has signed up.
   </Story>
 </Canvas>
 
-export const commonParameters = {};
+export const commonParameters = { ...commonEmailsParameters };

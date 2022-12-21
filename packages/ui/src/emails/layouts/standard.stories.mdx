@@ -2,6 +2,7 @@ import { MjmlButton, MjmlText } from '@luma-team/mjml-react';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
+import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 
 <Meta title="Emails/Layouts/Standard" component={StandardLayout} />
 
@@ -39,4 +40,4 @@ Standard email layout that wraps content.
   </Story>
 </Canvas>
 
-export const commonParameters = {};
+export const commonParameters = { ...commonEmailsParameters };
