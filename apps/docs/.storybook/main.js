@@ -12,6 +12,7 @@ const getStories = () =>
 
 module.exports = {
   stories: async () => [...getStories()],
+  staticDirs: ['../public'],
   addons: [
     '@storybook/addon-a11y',
     '@storybook/addon-essentials',
