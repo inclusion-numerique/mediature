@@ -49,7 +49,33 @@ module.exports = {
     TRPC_SERVER_MOCK: 'true',
   }),
   async webpackFinal(config, { configType }) {
-    config.module.rules = [...config.module.rules];
+    for (const rule of config.module.rules) {
+      console.log(rule.test);
+      console.log(JSON.stringify(rule.use));
+      console.log('      ');
+    }
+
+    config.module.rules = [
+      {
+        // test: /\.(scss|sass)\?raw$/i,
+        test: /\.soss$/i,
+        use: [
+          'raw-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [require('cssnano')({ preset: 'default' })],
+              },
+            },
+          },
+          'resolve-url-loader',
+          'sass-loader',
+        ],
+      },
+      // The ones above defaults are to take precedance in the condition matching
+      ...config.module.rules,
+    ];
 
     if (!config.resolve) {
       config.resolve = { alias: {} };
