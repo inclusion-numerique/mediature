@@ -20,7 +20,7 @@ import {
 } from '@luma-team/mjml-react';
 import { PropsWithChildren } from 'react';
 
-import css from '@mediature/ui/src/emails/layouts/standard.css';
+import css from '@mediature/ui/src/emails/layouts/standard.css?inline';
 
 export interface StandardLayoutPropreties {
   title: string;

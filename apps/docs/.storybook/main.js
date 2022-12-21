@@ -1,5 +1,6 @@
 const fg = require('fast-glob');
 const path = require('path');
+const { mergeConfig } = require('vite');
 
 const getStories = () =>
   fg.sync([
@@ -18,55 +19,72 @@ module.exports = {
     '@storybook/addon-measure',
     // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7
     '@storybook/addon-viewport',
-    '@tomfreudenberg/next-auth-mock/storybook',
+    // '@tomfreudenberg/next-auth-mock/storybook',
     'storybook-addon-designs',
+    // {
+    //   name: 'storybook-addon-next',
+    //   options: {
+    //     nextConfigPath: path.resolve(__dirname, '../../../apps/main/next.config.js'),
+    //   },
+    // },
     // 'storybook-addon-next-router',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
   ],
   framework: {
-    name: '@storybook/nextjs',
-    options: {
-      // https://github.com/storybookjs/storybook/tree/next/code/frameworks/nextjs
-      nextConfigPath: path.resolve(__dirname, '../../../apps/main/next.config.js'),
-    },
+    name: '@storybook/react-vite',
+    options: {},
   },
   core: {
     enableCrashReports: false,
     disableTelemetry: true,
-    builder: {
-      name: 'webpack5',
-      options: {
-        fsCache: true,
-        lazyCompilation: true,
-      },
-    },
-  },
-  env: (config) => ({
-    ...config,
-    ENABLE_MOCKS: 'true',
-    STORYBOOK_ENVIRONMENT: 'true',
-    TRPC_SERVER_MOCK: 'true',
-  }),
-  async webpackFinal(config, { configType }) {
-    config.module.rules = [...config.module.rules];
-
-    if (!config.resolve) {
-      config.resolve = { alias: {} };
-    }
-
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      path$: 'path-browserify',
-      '@mediature/docs': '../../../apps/docs/',
-      '@mediature/main': '../../../apps/main/',
-      '@mediature/ui': '../../../packages/ui/',
-      '@trpc/next-layout': '../../../packages/trpc-next-layout/',
-    };
-
-    return config;
   },
   docs: {
     docsPage: 'automatic',
+  },
+  async viteFinal(config, { configType }) {
+    // return mergeConfig(config, {
+    //   plugins: [
+    //     tsconfigPaths({
+    //       projects: [path.resolve(__dirname, '../../../packages/tsconfig/base.json')],
+    //     }),
+    //   ],
+    // });
+
+    // TODO: the above is supposed to work... but it's not, so hardcoding paths for now
+    return mergeConfig(config, {
+      define: {
+        'process.env': {
+          // Warning: for whatever reason it's a boolean during the runtime
+          ENABLE_MOCKS: 'true',
+          STORYBOOK_ENVIRONMENT: 'true',
+          TRPC_SERVER_MOCK: 'true',
+        },
+      },
+      resolve: {
+        alias: [
+          {
+            find: 'path',
+            replacement: 'path-browserify',
+          },
+          {
+            find: '@mediature/docs',
+            replacement: path.resolve(__dirname, '../../../apps/docs/'),
+          },
+          {
+            find: '@mediature/main',
+            replacement: path.resolve(__dirname, '../../../apps/main/'),
+          },
+          {
+            find: '@mediature/ui',
+            replacement: path.resolve(__dirname, '../../../packages/ui/'),
+          },
+          {
+            find: '@trpc/next-layout',
+            replacement: path.resolve(__dirname, '../../../packages/trpc-next-layout/'),
+          },
+        ],
+      },
+    });
   },
 };
