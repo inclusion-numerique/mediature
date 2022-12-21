@@ -17,6 +17,9 @@ import { SignInPrefillSchema } from '@mediature/main/models/actions/auth';
   <Story name="Empty" parameters={commonParameters}>
     <SignInForm />
   </Story>
+</Canvas>
+
+<Canvas>
   <Story name="Filled" parameters={commonParameters}>
     <SignInForm
       prefill={SignInPrefillSchema.parse({
@@ -26,6 +29,9 @@ import { SignInPrefillSchema } from '@mediature/main/models/actions/auth';
       })}
     />
   </Story>
+</Canvas>
+
+<Canvas>
   <Story
     name="Logged out"
     parameters={{
