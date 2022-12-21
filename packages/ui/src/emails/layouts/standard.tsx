@@ -22,6 +22,8 @@ import { PropsWithChildren } from 'react';
 
 import css from '@mediature/ui/src/emails/layouts/standard.css';
 
+import './abc.scss';
+
 export interface StandardLayoutPropreties {
   title: string;
 }
