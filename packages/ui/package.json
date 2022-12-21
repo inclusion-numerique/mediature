@@ -11,7 +11,9 @@
   "main": "./index.tsx",
   "types": "./index.tsx",
   "scripts": {
-    "lint": "TIMING=1 eslint --ext .js,.jsx,.ts,.tsx,.mdx ."
+    "lint": "pnpm run lint:es && pnpm run lint:ts",
+    "lint:es": "TIMING=1 eslint --ext .js,.jsx,.ts,.tsx,.mdx .",
+    "lint:ts": "tsc --noEmit --incremental false"
   },
   "dependencies": {
     "@luma-team/mjml-react": "^0.2.0",

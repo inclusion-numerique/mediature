@@ -1,5 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "storybook-static"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -7,6 +9,19 @@
       "@mediature/main/*": ["../../apps/main/*"],
       "@mediature/ui/*": ["../../packages/ui/*"],
       "@trpc/next-layout/*": ["../../packages/trpc-next-layout/*"]
-    }
+    },
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true
   }
 }
