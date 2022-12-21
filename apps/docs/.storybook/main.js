@@ -21,7 +21,6 @@ module.exports = {
     '@storybook/addon-viewport',
     '@tomfreudenberg/next-auth-mock/storybook',
     'storybook-addon-designs',
-    // 'storybook-addon-next-router',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
   ],
@@ -39,7 +38,7 @@ module.exports = {
       name: 'webpack5',
       options: {
         fsCache: true,
-        lazyCompilation: true,
+        // lazyCompilation: true, // It's too slow for now
       },
     },
   },
