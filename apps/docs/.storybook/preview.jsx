@@ -3,8 +3,8 @@ import addons from '@storybook/addons';
 import { themes } from '@storybook/theming';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
 import React from 'react';
-import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
+// import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { ClientProvider } from '@mediature/main/client/trpcClient';
 import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
 
@@ -35,7 +35,7 @@ export const parameters = {
   },
   docs: {
     container: (props) => {
-      const [isDark, setDark] = React.useState();
+      // const [isDark, setDark] = React.useState();
 
       //
       // TODO: `channel` not available for now since upgrade to Storybook v7
