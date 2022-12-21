@@ -1,5 +1,6 @@
 const fg = require('fast-glob');
 const path = require('path');
+const cssnano = require('cssnano');
 
 const getStories = () =>
   fg.sync([
@@ -49,33 +50,49 @@ module.exports = {
     TRPC_SERVER_MOCK: 'true',
   }),
   async webpackFinal(config, { configType }) {
-    for (const rule of config.module.rules) {
-      console.log(rule.test);
-      console.log(JSON.stringify(rule.use));
-      console.log('      ');
+    // TODO: move the following to a `utils` to be reused elsewhere than in Storybook
+    const originalRules = config.module.rules;
+    config.module.rules = [];
+
+    let scssRuleFound = false;
+    for (const originalRule of originalRules) {
+      // If for `sass` we add our additional one (they cannot colocate on the same level because they would be played both... resulting in CSS parsing errors)
+      if (originalRule.test.test('.scss')) {
+        scssRuleFound = true;
+
+        config.module.rules.push({
+          test: originalRule.test,
+          oneOf: [
+            {
+              resourceQuery: /raw/, // foo.scss?raw
+              use: [
+                'raw-loader',
+                {
+                  loader: 'postcss-loader',
+                  options: {
+                    postcssOptions: {
+                      // In our case getting raw style in to inject it in emails, we want to make sure it's minified to avoid comments and so on
+                      plugins: [cssnano({ preset: 'default' })],
+                    },
+                  },
+                },
+                'resolve-url-loader',
+                'sass-loader',
+              ],
+            },
+            {
+              use: originalRule.use,
+            },
+          ],
+        });
+      } else {
+        config.module.rules.push(originalRule);
+      }
     }
 
-    config.module.rules = [
-      {
-        // test: /\.(scss|sass)\?raw$/i,
-        test: /\.soss$/i,
-        use: [
-          'raw-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [require('cssnano')({ preset: 'default' })],
-              },
-            },
-          },
-          'resolve-url-loader',
-          'sass-loader',
-        ],
-      },
-      // The ones above defaults are to take precedance in the condition matching
-      ...config.module.rules,
-    ];
+    if (!scssRuleFound) {
+      throw new Error('our custom SCSS rule should have been added, make sure the project manage SCSS by default first');
+    }
 
     if (!config.resolve) {
       config.resolve = { alias: {} };
