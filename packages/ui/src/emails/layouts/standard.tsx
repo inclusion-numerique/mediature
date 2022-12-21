@@ -20,7 +20,11 @@ import {
 } from '@luma-team/mjml-react';
 import { PropsWithChildren } from 'react';
 
-import css from '@mediature/ui/src/emails/layouts/standard.css';
+import emailCss from '@mediature/ui/src/emails/layouts/standard.email.scss?raw';
+import storybookCss from '@mediature/ui/src/emails/layouts/standard.storybook.scss?raw';
+
+// We avoided using React context hook here for simplicity
+const isStorybookEnvironment: boolean = process.env.STORYBOOK_ENVIRONMENT === 'true';
 
 export interface StandardLayoutPropreties {
   title: string;
@@ -50,10 +54,14 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties
             padding="8px 16px"
           ></MjmlButton>
         </MjmlAttributes>
-        <MjmlStyle>{css}</MjmlStyle>
+        <MjmlStyle>{isStorybookEnvironment ? storybookCss : emailCss}</MjmlStyle>
         <MjmlRaw>
-          <meta name="color-scheme" content="light dark" />
-          <meta name="supported-color-schemes" content="light dark" />
+          {!isStorybookEnvironment && (
+            <>
+              <meta name="color-scheme" content="light dark" />
+              <meta name="supported-color-schemes" content="light dark" />
+            </>
+          )}
         </MjmlRaw>
       </MjmlHead>
       <MjmlBody width={500}>
@@ -61,7 +69,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties
           <MjmlSection>
             <MjmlGroup>
               <MjmlColumn verticalAlign="middle" width="120px">
-                {/* TODO: upload images on our own CDN */}
+                {/* TODO: upload images on our own CDN, or use public folder of the app... */}
                 <MjmlImage src="https://upload.wikimedia.org/wikipedia/commons/4/44/Logo_republique_francaise.png" alt="Logo" paddingRight={0} />
               </MjmlColumn>
               <MjmlColumn verticalAlign="middle" width="380px">

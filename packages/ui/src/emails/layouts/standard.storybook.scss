@@ -1,0 +1,10 @@
+@import '@mediature/ui/src/emails/layouts/standard.partial.scss';
+
+// Make sure we target the Storybook preview body to not pollute the global style
+body.sb-show-main.dark {
+  &, .light-body {
+    background: $darkWrapperBackground !important;
+  }
+
+  @include darkStyle;
+}

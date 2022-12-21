@@ -1,0 +1,34 @@
+/*
+There is no easy way to manage colors with MJML when set with `mj-attributes` (no usage of `--var(xxx)` or so...)
+We have to guess where it may be changed, so we use `cssClass` attribute to help a bit locating elements to style
+
+Notes:
+- we have to differenciate email client and Storybook environments because in Storybook we can manually switch between the light/dark modes, so we cannot rely on global browser media queries
+- that's weird but inside Storybook the DSFR dark mode seems not compliant for contrasts...
+- impossible to set a class to `mj-body` so we guess a `body` will be present (there is no way to detect it...), and so to apply a background color
+*/
+
+$darkWrapperBackground: #161616;
+
+@mixin darkStyle {
+  h1 {
+    color: #fff !important;
+  }
+
+  h2 {
+    color: #fff !important;
+  }
+
+  .light-text, .light-text div {
+    color: #cecece !important;
+  }
+
+  .light-button p {
+    background: #8585f6 !important;
+    color: #000091 !important;
+  }
+
+  .light-main-section, .light-main-section > table {
+    background: #1e1e1e !important;
+  }
+}
