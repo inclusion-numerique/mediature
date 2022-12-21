@@ -36,6 +36,13 @@ module.exports = {
   core: {
     enableCrashReports: false,
     disableTelemetry: true,
+    builder: {
+      name: 'webpack5',
+      options: {
+        fsCache: true,
+        lazyCompilation: true,
+      },
+    },
   },
   env: (config) => ({
     ...config,
