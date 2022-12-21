@@ -337,6 +337,7 @@ importers:
       '@luma-team/mjml-react': ^0.2.0
       '@types/mjml': ^4.7.0
       '@types/mjml-react': ^2.0.6
+      '@types/node': ^17.0.45
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
       eslint: ^7.32.0
@@ -356,6 +357,7 @@ importers:
       '@lottiefiles/react-lottie-player': 3.4.9_react@18.2.0
       '@types/mjml': 4.7.0
       '@types/mjml-react': 2.0.6
+      '@types/node': 17.0.45
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
       eslint: 7.32.0
