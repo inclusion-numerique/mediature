@@ -14,6 +14,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-turbo": "latest",
     "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-mdx": "^2.0.5",
     "eslint-plugin-react": "7.28.0"
   },
   "devDependencies": {

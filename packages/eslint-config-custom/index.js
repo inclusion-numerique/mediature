@@ -10,4 +10,18 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'react/jsx-key': 'off',
   },
+  overrides: [
+    {
+      files: ['*.md', '*.mdx'],
+      extends: 'plugin:mdx/recommended',
+      parserOptions: {
+        // The version needs to be "fixed" due to linting errors otherwise (ref: https://github.com/mdx-js/eslint-mdx/issues/366#issuecomment-1361898854)
+        ecmaVersion: 12,
+      },
+      rules: {
+        // Inside .mdx files it always throws this rule when there is a title tag, no matter what, so skipping
+        'jsx-a11y/heading-has-content': 'off',
+      },
+    },
+  ],
 };
