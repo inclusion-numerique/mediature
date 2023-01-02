@@ -21,8 +21,8 @@ export function SignUpConfirmationEmail(props: PropsWithChildren<StandardLayoutP
       <MjmlButton href={props.signInUrl}>Se connecter</MjmlButton>
       <MjmlText>
         <p>
-          Si vous tu as la moindre question concernant la plateforme, ou une idée d&apos;amélioration, n&apos;hésite pas à contacter le support depuis
-          ton espace membre.
+          Si tu as la moindre question concernant la plateforme, ou une idée d&apos;amélioration, n&apos;hésite pas à contacter le support depuis ton
+          espace membre.
         </p>
       </MjmlText>
     </StandardLayout>
