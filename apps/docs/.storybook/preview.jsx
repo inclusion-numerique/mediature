@@ -1,9 +1,15 @@
-import { DocsContainer } from '@storybook/addon-docs';
+import { MuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
+import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
+import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import addons from '@storybook/addons';
 import { themes } from '@storybook/theming';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
 import React from 'react';
 
+import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContainer';
+// import { useDarkMode } from 'storybook-dark-mode';
+import StartDsfr from '@mediature/main/app/StartDsfr';
+import Providers from '@mediature/main/app/providers';
 // import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { ClientProvider } from '@mediature/main/client/trpcClient';
 import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
@@ -53,7 +59,7 @@ export const parameters = {
       return (
         <div>
           {/* <input type="checkbox" onChange={onChangeHandler} /> */}
-          <DocsContainer {...props} />
+          <ThemedDocsContainer {...props} />
         </div>
       );
     },
@@ -75,9 +81,17 @@ export const decorators = [
     } else {
       // For now for all other cases we provide the client provider to mock tRPC calls
       return (
-        <ClientProvider>
-          <Story />
-        </ClientProvider>
+        <>
+          <StartDsfr />
+          <DsfrHead defaultColorScheme={context.parameters.darkMode.current} />
+          <DsfrProvider defaultColorScheme={context.parameters.darkMode.current}>
+            <MuiDsfrThemeProvider>
+              <ClientProvider>
+                <Story />
+              </ClientProvider>
+            </MuiDsfrThemeProvider>
+          </DsfrProvider>
+        </>
       );
     }
   },
