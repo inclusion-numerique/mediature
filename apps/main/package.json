@@ -9,11 +9,9 @@
   },
   "license": "AGPL-3.0",
   "scripts": {
-    "predev": "only-include-used-icons",
-    "dev": "dotenv-run-script .env.test -- dev:unsecure",
+    "dev": "only-include-used-icons && dotenv-run-script .env.test -- dev:unsecure",
     "dev:unsecure": "next dev",
-    "prebuild": "only-include-used-icons",
-    "build": "pnpm run db:schema:compile && next build",
+    "build": "pnpm run db:schema:compile && only-include-used-icons && next build",
     "start:test": "dotenv-run-script .env.test -- start",
     "start": "next start -p $PORT",
     "lint:prepare": "pnpm run db:schema:compile",
@@ -49,7 +47,7 @@
     "seed": "tsx --tsconfig ../../packages/tsconfig/tsx-fallback.json prisma/seed.script.ts"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "^0.0.76",
+    "@codegouvfr/react-dsfr": "^0.18.1",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",

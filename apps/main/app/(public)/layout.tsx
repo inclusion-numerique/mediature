@@ -1,60 +1,69 @@
 'use client';
 
-import { Link, Skeleton, Typography } from '@mui/material';
-import NextLink from 'next/link';
+import { Footer } from '@codegouvfr/react-dsfr/Footer';
+import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
+import { Skeleton } from '@mui/material';
 import { PropsWithChildren } from 'react';
 
-import { signIn, signOut, useSession } from '@mediature/main/proxies/next-auth/react';
+import { useSession } from '@mediature/main/proxies/next-auth/react';
+import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/utils/dsfr';
+import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export default function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
-
-  // TODO: factorize we other file that use this
-  const logout = async () => {
-    const result = await signOut({
-      redirect: true,
-      callbackUrl: '/auth/sign-in?session_end',
-    });
-  };
 
   if (sessionWrapper.status === 'loading') {
     return <Skeleton />;
   }
 
   // TODO: display a loading... maybe on the whole layout?
-  let dynamicSection;
+  let quickAccessItems: HeaderProps.QuickAccessItem[] | undefined;
   if (sessionWrapper.status === 'authenticated') {
-    dynamicSection = (
-      <>
-        <span>Bonjour {sessionWrapper.data?.user.firstname}</span>
-        {/* TODO: component="button" does not have the same style, but a NextLink does not accept onClick... */}
-        <Link component="button" onClick={logout} variant="subtitle2" underline="hover" sx={{ m: 2 }}>
-          Se déconnecter
-        </Link>
-      </>
-    );
+    quickAccessItems = [logoutQuickAccessItem(sessionWrapper.data?.user)];
   } else {
-    dynamicSection = (
-      <>
-        <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
-          Connexion
-        </Link>
-        <Link component={NextLink} href="/auth/sign-up" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
-          (Inscription)
-        </Link>
-      </>
-    );
+    quickAccessItems = [
+      {
+        iconId: 'fr-icon-lock-line',
+        linkProps: {
+          href: '/auth/sign-in',
+        },
+        text: 'Se connecter',
+      },
+    ];
   }
 
   return (
     <>
-      <Typography color="textSecondary" variant="body2">
-        <Link component={NextLink} href="/" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
-          Accueil
-        </Link>
-        {dynamicSection}
-      </Typography>
-      {props.children}
+      <Header
+        {...commonHeaderAttributes}
+        quickAccessItems={quickAccessItems}
+        navigation={[
+          {
+            linkProps: {
+              href: '#',
+              target: '_self',
+            },
+            text: 'Accueil',
+          },
+          {
+            isActive: true, // TODO: should depends on the pathname
+            linkProps: {
+              href: '#',
+              target: '_self',
+            },
+            text: 'Le service',
+          },
+          {
+            linkProps: {
+              href: '#',
+              target: '_self',
+            },
+            text: 'Contact',
+          },
+        ]}
+      />
+      <ContentWrapper>{props.children}</ContentWrapper>
+      <Footer {...commonFooterAttributes} />
     </>
   );
 }

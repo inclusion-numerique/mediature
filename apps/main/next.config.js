@@ -1,6 +1,5 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
-const withTM = require('next-transpile-modules')(['@codegouvfr/react-dsfr']);
 const path = require('path');
 
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./utils/app-version.js');
@@ -11,6 +10,7 @@ const mode = process.env.APP_MODE || 'test';
 const moduleExports = async () => {
   let standardModuleExports = {
     reactStrictMode: true,
+    swcMinify: true,
     // output: 'standalone', // This was great to use in case of a Docker image, but it's totally incompatible with Scalingo build pipeline, giving up this size reducing way :D
     env: {},
     serverRuntimeConfig: {},
@@ -38,7 +38,7 @@ const moduleExports = async () => {
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
       config.module.rules.push({
-        test: /\.(woff2|webmanifest)$/,
+        test: /\.woff2$/,
         type: 'asset/resource',
       });
 
@@ -95,9 +95,6 @@ const moduleExports = async () => {
       env: mode,
     },
   };
-
-  // Wrap with `next-transpile-modules` for the DSFR to work
-  standardModuleExports = withTM(standardModuleExports);
 
   // TODO: enable again Sentry once they accept `appDir: true` Next projects
   // Ref: https://github.com/getsentry/sentry-javascript/issues/6290#issuecomment-1329293619

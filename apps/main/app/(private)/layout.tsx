@@ -1,10 +1,14 @@
 'use client';
 
-import { Button, Skeleton } from '@mui/material';
+import { Footer } from '@codegouvfr/react-dsfr/Footer';
+import { Header } from '@codegouvfr/react-dsfr/Header';
+import { Skeleton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
-import { signIn, signOut, useSession } from '@mediature/main/proxies/next-auth/react';
+import { signIn, useSession } from '@mediature/main/proxies/next-auth/react';
+import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/utils/dsfr';
+import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export default function PrivateLayout(props: PropsWithChildren) {
   const router = useRouter();
@@ -17,28 +21,41 @@ export default function PrivateLayout(props: PropsWithChildren) {
     }
   }, [logoutCommitted, router, sessionWrapper.status]);
 
-  // TODO: should be moved into the header when the UI is up
-  const onLogout = async () => {
-    const result = await signOut({
-      redirect: false,
-      callbackUrl: '/auth/sign-in?session_end',
-    });
-
-    setLogoutCommitted(true);
-
-    router.push(result.url);
-  };
-
   if (sessionWrapper.status !== 'authenticated') {
     return <Skeleton />;
   } else {
     return (
       <>
-        <Button onClick={onLogout} variant="outlined">
-          Log out
-        </Button>
-
-        <div>{props.children}</div>
+        <Header
+          {...commonHeaderAttributes}
+          quickAccessItems={[logoutQuickAccessItem(sessionWrapper.data?.user)]}
+          navigation={[
+            {
+              linkProps: {
+                href: '#',
+                target: '_self',
+              },
+              text: 'Accueil',
+            },
+            {
+              isActive: true, // TODO: should depends on the pathname
+              linkProps: {
+                href: '#',
+                target: '_self',
+              },
+              text: 'Le service',
+            },
+            {
+              linkProps: {
+                href: '#',
+                target: '_self',
+              },
+              text: 'Contact',
+            },
+          ]}
+        />
+        <ContentWrapper>{props.children}</ContentWrapper>
+        <Footer {...commonFooterAttributes} />
       </>
     );
   }

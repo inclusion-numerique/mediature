@@ -138,7 +138,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
           Se connecter
         </Button>
         <Typography color="textSecondary" variant="body2">
-          <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="hover">
+          <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="none">
             Mot de passe oublié ?
           </Link>
         </Typography>

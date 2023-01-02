@@ -8,7 +8,7 @@ export default function OverviewPage() {
     <div>
       <h1>Hola, vous êtes connecté :D</h1>
       <Typography color="textSecondary" variant="body2">
-        <Link component={NextLink} href="/dashboard/authority/list" variant="subtitle2" underline="hover" sx={{ m: 2 }}>
+        <Link component={NextLink} href="/dashboard/authority/list" variant="subtitle2" underline="none" sx={{ m: 2 }}>
           Liste des collectivités
         </Link>
       </Typography>

@@ -87,7 +87,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
             label={
               <span>
                 J&apos;accepte les&nbsp;
-                <Link href="/terms-of-use" variant="subtitle2" underline="hover">
+                <Link href="/terms-of-use" variant="subtitle2" underline="none">
                   conditions générales d&apos;utilisation
                 </Link>
               </span>
@@ -101,7 +101,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
         </Button>
         <Typography color="textSecondary" variant="body2">
           Vous possédez déjà un compte ?&nbsp;
-          <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
+          <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
             Se connecter
           </Link>
         </Typography>

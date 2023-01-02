@@ -12,97 +12,89 @@ export default function ResetPasswordPage() {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <Box
-      component="main"
-      sx={{
-        display: 'flex',
-        flex: '1 1 auto',
-      }}
-    >
-      <Grid container sx={{ flex: '1 1 auto' }}>
-        <Grid
-          item
-          xs={12}
-          lg={6}
+    <Grid container>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        sx={{
+          backgroundColor: 'neutral.50',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+        }}
+      >
+        <Box
           sx={{
-            backgroundColor: 'neutral.50',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative',
-          }}
-        >
-          <Box
-            sx={{
-              flex: '1 1 auto',
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Box
-              sx={{
-                maxWidth: 500,
-                px: 3,
-                py: '100px',
-                width: '100%',
-              }}
-            >
-              <div>
-                <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
-                  Redéfinir votre mot de passe
-                </Typography>
-                <form>
-                  <TextField
-                    type={showPassword ? 'text' : 'password'}
-                    name="password"
-                    label="Password"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="changer la visibilité du mot de passe"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                          >
-                            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
-                    Valider
-                  </Button>
-                  <Typography color="textSecondary" variant="body2">
-                    <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="hover">
-                      Retourner à la page de connexion
-                    </Link>
-                  </Typography>
-                </form>
-              </div>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          lg={6}
-          sx={{
+            flex: '1 1 auto',
             alignItems: 'center',
-            background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
-            color: 'white',
             display: 'flex',
             justifyContent: 'center',
           }}
         >
-          <Box sx={{ p: 3 }}>
-            <Typography align="center" variant="body1">
-              Cet espace est réservé aux agents des collectivités ... TODO
-            </Typography>
+          <Box
+            sx={{
+              maxWidth: 500,
+              px: 3,
+              py: '100px',
+              width: '100%',
+            }}
+          >
+            <div>
+              <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
+                Redéfinir votre mot de passe
+              </Typography>
+              <form>
+                <TextField
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  label="Password"
+                  fullWidth
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="changer la visibilité du mot de passe"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
+                  Valider
+                </Button>
+                <Typography color="textSecondary" variant="body2">
+                  <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
+                    Retourner à la page de connexion
+                  </Link>
+                </Typography>
+              </form>
+            </div>
           </Box>
-        </Grid>
+        </Box>
       </Grid>
-    </Box>
+      <Grid
+        item
+        xs={12}
+        lg={6}
+        sx={{
+          alignItems: 'center',
+          background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Box sx={{ p: 3 }}>
+          <Typography align="center" variant="body1">
+            Cet espace est réservé aux agents des collectivités ... TODO
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
