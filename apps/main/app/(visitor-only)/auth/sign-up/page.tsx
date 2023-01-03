@@ -51,10 +51,10 @@ export default function SignUpPage() {
             }}
           >
             <div>
-              <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
+              <Typography component="h1" variant="h4">
                 Inscription
               </Typography>
-              <Typography component="p" variant="subtitle1" sx={{ mb: 1 }}>
+              <Typography component="p" variant="subtitle1">
                 Vous avez été invité par XXXXX.
               </Typography>
               <SignUpForm

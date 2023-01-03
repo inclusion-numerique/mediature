@@ -26,7 +26,7 @@ export default function RequestPage({ params: { authority: authoritySlug } }: { 
   }
 
   return (
-    <>
+    <Grid container sx={{ maxWidth: 'md', mx: 'auto' }}>
       <Grid item xs={12}>
         {/* <Image src="https://beta.gouv.fr/img/logo_twitter_image-2019.jpg" width={200} height={100} alt="Logo de la collectivité XXX TODO" /> */}
         <Typography component="h2" variant="h6" align="center">
@@ -41,6 +41,6 @@ export default function RequestPage({ params: { authority: authoritySlug } }: { 
       <Grid container sx={{ maxWidth: 'sm', mx: 'auto' }}>
         <RequestCaseForm />
       </Grid>
-    </>
+    </Grid>
   );
 }

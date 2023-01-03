@@ -138,12 +138,10 @@ export const authRouter = router({
     // TODO: exclude hashed password
     return { createdUser };
   }),
-  requestNewPassword: privateProcedure.input(RequestNewPasswordSchema).mutation(async ({ ctx, input }) => {
-    const userId = ctx.user.id;
-
+  requestNewPassword: publicProcedure.input(RequestNewPasswordSchema).mutation(async ({ ctx, input }) => {
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        email: input.email,
       },
     });
 
@@ -158,7 +156,7 @@ export const authRouter = router({
       data: {
         action: VerificationTokenActionSchema.Values.RESET_PASSWORD,
         token: uuidv4(),
-        identifier: userId,
+        identifier: user.id,
         expires: expiresAt,
       },
     });
@@ -167,14 +165,11 @@ export const authRouter = router({
 
     return;
   }),
-  resetPassword: privateProcedure.input(ResetPasswordSchema).mutation(async ({ ctx, input }) => {
-    const userId = ctx.user.id;
-
+  resetPassword: publicProcedure.input(ResetPasswordSchema).mutation(async ({ ctx, input }) => {
     const verificationToken = await prisma.verificationToken.findFirst({
       where: {
         action: VerificationTokenActionSchema.Values.RESET_PASSWORD,
         token: input.token,
-        identifier: userId,
       },
     });
 
@@ -190,7 +185,7 @@ export const authRouter = router({
 
     await prisma.user.update({
       where: {
-        id: userId,
+        id: verificationToken.identifier,
       },
       data: {
         passwordHash: hashedPassword,

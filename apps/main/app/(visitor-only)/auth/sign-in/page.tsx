@@ -35,7 +35,7 @@ export default function SignInPage() {
             }}
           >
             <div>
-              <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
+              <Typography component="h1" variant="h4">
                 Connexion
               </Typography>
               <SignInForm />
