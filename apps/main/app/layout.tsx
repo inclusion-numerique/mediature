@@ -1,3 +1,4 @@
+import { Display } from '@codegouvfr/react-dsfr/Display';
 import { MuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
@@ -21,6 +22,7 @@ export default function RootLayout(props: PropsWithChildren) {
           <MuiDsfrThemeProvider>
             <Providers>{props.children}</Providers>
           </MuiDsfrThemeProvider>
+          <Display />
         </DsfrProvider>
       </body>
     </html>
