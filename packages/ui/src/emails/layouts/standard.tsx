@@ -26,11 +26,11 @@ import storybookCss from '@mediature/ui/src/emails/layouts/standard.storybook.sc
 // We avoided using React context hook here for simplicity
 const isStorybookEnvironment: boolean = process.env.STORYBOOK_ENVIRONMENT === 'true';
 
-export interface StandardLayoutPropreties {
+export interface StandardLayoutProps {
   title: string;
 }
 
-export function StandardLayout(props: PropsWithChildren<StandardLayoutPropreties>) {
+export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
   const currentYear = new Date().getFullYear();
 
   return (

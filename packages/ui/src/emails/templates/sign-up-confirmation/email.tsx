@@ -3,12 +3,12 @@ import { PropsWithChildren } from 'react';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
-export interface StandardLayoutPropreties {
+export interface StandardLayoutProps {
   firstname: string;
   signInUrl: string;
 }
 
-export function SignUpConfirmationEmail(props: PropsWithChildren<StandardLayoutPropreties>) {
+export function SignUpConfirmationEmail(props: PropsWithChildren<StandardLayoutProps>) {
   const title = `Confirmation d'inscription`;
 
   return (
