@@ -1,6 +1,8 @@
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display';
+import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import type { DefaultColorScheme } from '@codegouvfr/react-dsfr/next-appdir';
 
+import { TokenUserSchemaType } from '@mediature/main/models/entities/user';
 import { logout } from '@mediature/main/utils/auth';
 
 export const defaultColorScheme: DefaultColorScheme = 'system';
@@ -18,16 +20,14 @@ export const homeLinkProps = {
   title: 'Accueil - Médiature',
 };
 
-// export const logoutQuickAccessItem = (user: Session.user) => {
-// TODO: remove "any"
-export const logoutQuickAccessItem = (user: any) => {
+export const logoutQuickAccessItem = (user: TokenUserSchemaType): HeaderProps.QuickAccessItem => {
   return {
     iconId: 'fr-icon-lock-line',
     buttonProps: {
       onClick: logout,
     },
     text: `Se déconnecter (${user.firstname})`,
-  } as any;
+  };
 };
 
 export const commonHeaderAttributes = {
