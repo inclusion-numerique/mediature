@@ -3,11 +3,12 @@
 import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
+import { BaseForm } from '@mediature/main/components/BaseForm';
 import { CreateAuthorityPrefillSchemaType, CreateAuthoritySchema, CreateAuthoritySchemaType } from '@mediature/main/models/actions/authority';
 import { AuthorityTypeSchema } from '@mediature/main/models/entities/authority';
 
@@ -31,12 +32,10 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
   };
 
   return (
-    <>
-      {/* <DevTool control={control} /> */}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {/* TODO: 2 columns, set logo on the right */}
-        <input type="hidden" {...register('logoAttachmentId')} value="d58ac4a3-7672-403c-ad04-112f5927e2be"></input>
+    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+      {/* TODO: 2 columns, set logo on the right */}
+      <input type="hidden" {...register('logoAttachmentId')} value="d58ac4a3-7672-403c-ad04-112f5927e2be"></input>
+      <Grid item>
         <TextField
           select
           label="Type de collectivité"
@@ -52,7 +51,11 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
             </MenuItem> // TODO: should use i18n for proper display (instead of hard values)
           ))}
         </TextField>
+      </Grid>
+      <Grid item>
         <TextField type="name" label="Nom" {...register('name')} error={!!errors.name} helperText={errors?.name?.message} fullWidth />
+      </Grid>
+      <Grid item>
         <TextField
           type="slug"
           label="Identifiant technique (slug)"
@@ -61,10 +64,12 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
           helperText={errors?.slug?.message}
           fullWidth
         />
-        <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" startIcon={<SaveIcon />} fullWidth>
+      </Grid>
+      <Grid item>
+        <Button type="submit" size="large" variant="contained" startIcon={<SaveIcon />} fullWidth>
           Sauvegarder
         </Button>
-      </form>
-    </>
+      </Grid>
+    </BaseForm>
   );
 }

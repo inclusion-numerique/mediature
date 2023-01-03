@@ -10,6 +10,7 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Grid,
   IconButton,
   InputAdornment,
   Link,
@@ -21,6 +22,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/client/trpcClient';
+import { BaseForm } from '@mediature/main/components/BaseForm';
 import { SignUpPrefillSchemaType, SignUpSchema, SignUpSchemaType } from '@mediature/main/models/actions/auth';
 
 export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
@@ -47,11 +49,11 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <>
-      {/* <DevTool control={control} /> */}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+      <Grid item>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
+      </Grid>
+      <Grid item>
         <TextField
           type="firstname"
           label="Prénom"
@@ -60,7 +62,11 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
           helperText={errors?.firstname?.message}
           fullWidth
         />
+      </Grid>
+      <Grid item>
         <TextField type="lastname" label="Nom" {...register('lastname')} error={!!errors.lastname} helperText={errors?.lastname?.message} fullWidth />
+      </Grid>
+      <Grid item>
         <TextField
           type={showPassword ? 'text' : 'password'}
           label="Mot de passe"
@@ -82,6 +88,8 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
             ),
           }}
         />
+      </Grid>
+      <Grid item>
         <FormControl error={!!errors.termsAccepted}>
           <FormControlLabel
             label={
@@ -96,16 +104,20 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
           />
           <FormHelperText>{errors?.termsAccepted?.message}</FormHelperText>
         </FormControl>
-        <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
+      </Grid>
+      <Grid item>
+        <Button type="submit" size="large" variant="contained" fullWidth>
           S&apos;enregistrer
         </Button>
+      </Grid>
+      <Grid item>
         <Typography color="textSecondary" variant="body2">
           Vous possédez déjà un compte ?&nbsp;
           <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
             Se connecter
           </Link>
         </Typography>
-      </form>
-    </>
+      </Grid>
+    </BaseForm>
   );
 }

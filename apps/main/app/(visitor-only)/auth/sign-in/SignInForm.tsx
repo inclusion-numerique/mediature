@@ -11,6 +11,7 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Grid,
   IconButton,
   InputAdornment,
   Link,
@@ -22,6 +23,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { BaseForm } from '@mediature/main/components/BaseForm';
 import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/models/actions/auth';
 import { signIn } from '@mediature/main/proxies/next-auth/react';
 
@@ -101,13 +103,17 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <>
-      {/* <DevTool control={control} /> */}
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        {!!error && <Alert severity="error">{error}</Alert>}
-        {!!sessionEnd && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
+    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+      {(!!error || !!sessionEnd) && (
+        <Grid item>
+          {!!error && <Alert severity="error">{error}</Alert>}
+          {!!sessionEnd && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
+        </Grid>
+      )}
+      <Grid item>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
+      </Grid>
+      <Grid item>
         <TextField
           type={showPassword ? 'text' : 'password'}
           label="Mot de passe"
@@ -129,20 +135,26 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
             ),
           }}
         />
+      </Grid>
+      <Grid item>
         <FormControl error={!!errors.rememberMe}>
           {/* TODO: really manage "rememberMe" */}
           <FormControlLabel label="Rester connecté" control={<Checkbox {...register('rememberMe')} defaultChecked />} />
           <FormHelperText>{errors?.rememberMe?.message}</FormHelperText>
         </FormControl>
-        <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
+      </Grid>
+      <Grid item>
+        <Button type="submit" size="large" variant="contained" fullWidth>
           Se connecter
         </Button>
+      </Grid>
+      <Grid item>
         <Typography color="textSecondary" variant="body2">
           <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="none">
             Mot de passe oublié ?
           </Link>
         </Typography>
-      </form>
-    </>
+      </Grid>
+    </BaseForm>
   );
 }

@@ -64,7 +64,7 @@ export default function ResetPasswordPage() {
                     ),
                   }}
                 />
-                <Button type="submit" size="large" sx={{ mt: 3 }} variant="contained" fullWidth>
+                <Button type="submit" size="large" variant="contained" fullWidth>
                   Valider
                 </Button>
                 <Typography color="textSecondary" variant="body2">
