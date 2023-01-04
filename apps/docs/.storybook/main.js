@@ -1,12 +1,13 @@
 const fg = require('fast-glob');
 const path = require('path');
 const cssnano = require('cssnano');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const getStories = () =>
   fg.sync([
-    path.resolve(__dirname, '../../../apps/docs/stories/**/*.stories.{mdx,tsx}'),
-    path.resolve(__dirname, '../../../apps/main/**/*.stories.{mdx,tsx}'),
-    path.resolve(__dirname, '../../../packages/ui/src/**/*.stories.{mdx,tsx}'),
+    path.resolve(__dirname, '../../../apps/docs/stories/**/*.stories.{js,ts,jsx,tsx,mdx}'),
+    path.resolve(__dirname, '../../../apps/main/**/*.stories.{js,ts,jsx,tsx,mdx}'),
+    path.resolve(__dirname, '../../../packages/ui/src/**/*.stories.{js,ts,jsx,tsx,mdx}'),
     '!**/node_modules', // Important otherwise it loads from PNPM workspace packages too resulting in the error `Duplicate stories with id: xxx`
   ]);
 
@@ -20,7 +21,8 @@ module.exports = {
     '@storybook/addon-measure',
     // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7
     '@storybook/addon-viewport',
-    '@tomfreudenberg/next-auth-mock/storybook',
+    /* eslint-disable storybook/no-uninstalled-addons */
+    '@tomfreudenberg/next-auth-mock/storybook', // Ref: https://github.com/storybookjs/eslint-plugin-storybook/issues/95#issuecomment-1371960311
     'storybook-addon-designs',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
@@ -95,21 +97,19 @@ module.exports = {
     }
 
     if (!config.resolve) {
-      config.resolve = { alias: {} };
+      config.resolve = {};
     }
 
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      path$: 'path-browserify',
-      '@mediature/docs': '../../../apps/docs/',
-      '@mediature/main': '../../../apps/main/',
-      '@mediature/ui': '../../../packages/ui/',
-      '@trpc/next-layout': '../../../packages/trpc-next-layout/',
-    };
+    config.resolve.plugins = [
+      new TsconfigPathsPlugin({
+        configFile: path.resolve(__dirname, '../../../packages/tsconfig/base.json'),
+      }),
+    ];
 
     return config;
   },
   docs: {
-    docsPage: 'automatic',
+    docsPage: true,
+    autodocs: true,
   },
 };

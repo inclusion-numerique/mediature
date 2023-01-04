@@ -10,8 +10,8 @@
       "@trpc/next-layout/*": ["../../packages/trpc-next-layout/*"]
     },
     "composite": false,
-    "declaration": true,
-    "declarationMap": true,
+    "declaration": false,
+    "declarationMap": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Storybook",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "jsx": "preserve"
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

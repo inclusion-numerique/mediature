@@ -1,30 +1,40 @@
 import { MjmlButton, MjmlText } from '@luma-team/mjml-react';
-import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Meta, StoryFn } from '@storybook/react';
 
+import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 
-<Meta title="Emails/Layouts/Standard" component={StandardLayout} />
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof StandardLayout>();
 
-# StandardLayout
+export default {
+  title: 'Emails/Layouts/Standard',
+  component: StandardLayout,
+  ...generateMetaDefault({
+    parameters: {
+      ...commonEmailsParameters,
+      docs: {
+        description: {
+          component: 'Standard email layout that wraps content.',
+        },
+      },
+    },
+  }),
+} as Meta<typeof StandardLayout>;
 
-Standard email layout that wraps content.
+const Template: StoryFn<typeof StandardLayout> = (args) => {
+  return <StandardLayout {...args} />;
+};
 
-## Props
+const EmptyStory = Template.bind({});
+EmptyStory.args = {};
 
-<ArgsTable of={StandardLayout} />
+export const Empty = prepareStory(EmptyStory);
 
-## Examples
-
-<Canvas>
-  <Story name="Empty" parameters={commonParameters}>
-    <StandardLayout />
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story name="Lorem" parameters={commonParameters}>
-    <StandardLayout>
+const LoremStory = Template.bind({});
+LoremStory.args = {
+  children: (
+    <StandardLayout title="Quia sunt eum.">
       <MjmlText>
         <h1>Fuga quis qui</h1>
         <p>Labore sint et. Porro non doloremque vel magnam eaque adipisci. Sit sint ducimus magnam sint eaque cum laborum.</p>
@@ -40,7 +50,7 @@ Standard email layout that wraps content.
         </p>
       </MjmlText>
     </StandardLayout>
-  </Story>
-</Canvas>
+  ),
+};
 
-export const commonParameters = { ...commonEmailsParameters };
+export const Lorem = prepareStory(LoremStory);

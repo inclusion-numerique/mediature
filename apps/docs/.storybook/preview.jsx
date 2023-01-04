@@ -1,6 +1,7 @@
 import { MuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
+import { withLinks } from '@storybook/addon-links';
 import addons from '@storybook/addons';
 import { themes } from '@storybook/theming';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
@@ -67,6 +68,7 @@ export const parameters = {
 };
 
 export const decorators = [
+  withLinks,
   mswDecorator,
   (Story, context) => {
     // Provide the necessary depending on the context

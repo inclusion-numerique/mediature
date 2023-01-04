@@ -23,8 +23,10 @@
   },
   "devDependencies": {
     "@lottiefiles/react-lottie-player": "^3.4.9",
+    "@mediature/docs": "workspace:docs@*",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
+    "@storybook/react": "7.0.0-beta.19",
     "@types/mjml": "^4.7.0",
     "@types/mjml-react": "^2.0.6",
     "@types/node": "^17.0.45",

@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['next', 'turbo', 'prettier', 'plugin:jsx-a11y/strict'],
+  extends: ['next', 'turbo', 'prettier', 'plugin:storybook/recommended', 'plugin:jsx-a11y/strict'],
   plugins: ['jsx-a11y'],
   rules: {
     '@next/next/no-html-link-for-pages': 'off',

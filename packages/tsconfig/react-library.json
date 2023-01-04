@@ -3,9 +3,11 @@
   "display": "React Library",
   "extends": "./base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "jsx": "preserve",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "esnext",
     "module": "esnext",
-    "target": "es5"
+    "strict": true,
+    "lib": ["dom", "dom.iterable", "esnext"]
   }
 }
