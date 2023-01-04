@@ -31,15 +31,15 @@ export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPassword
 
   return (
     <BaseForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Button type="submit" size="large" variant="contained" fullWidth>
           Valider
         </Button>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
           <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
             Retourner à la page de connexion

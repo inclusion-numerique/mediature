@@ -49,10 +49,10 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
 
   return (
     <BaseForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           type="firstname"
           label="Prénom"
@@ -62,10 +62,10 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
           fullWidth
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField type="lastname" label="Nom" {...register('lastname')} error={!!errors.lastname} helperText={errors?.lastname?.message} fullWidth />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           type={showPassword ? 'text' : 'password'}
           label="Mot de passe"
@@ -88,7 +88,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
           }}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <FormControl error={!!errors.termsAccepted}>
           <FormControlLabel
             label={
@@ -104,12 +104,12 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
           <FormHelperText>{errors?.termsAccepted?.message}</FormHelperText>
         </FormControl>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Button type="submit" size="large" variant="contained" fullWidth>
           S&apos;enregistrer
         </Button>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
           Vous possédez déjà un compte ?&nbsp;
           <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">

@@ -181,9 +181,9 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <FormControl>
-          <Button type="submit">Envoyer</Button>
-        </FormControl>
+        <Button type="submit" size="large" variant="contained" fullWidth>
+          Envoyer
+        </Button>
       </Grid>
     </BaseForm>
   );

@@ -34,7 +34,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
     <BaseForm onSubmit={handleSubmit(onSubmit)}>
       {/* TODO: 2 columns, set logo on the right */}
       <input type="hidden" {...register('logoAttachmentId')} value="d58ac4a3-7672-403c-ad04-112f5927e2be"></input>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           select
           label="Type de collectivité"
@@ -51,10 +51,10 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
           ))}
         </TextField>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField type="name" label="Nom" {...register('name')} error={!!errors.name} helperText={errors?.name?.message} fullWidth />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           type="slug"
           label="Identifiant technique (slug)"
@@ -64,7 +64,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
           fullWidth
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Button type="submit" size="large" variant="contained" startIcon={<SaveIcon />} fullWidth>
           Sauvegarder
         </Button>

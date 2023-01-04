@@ -13,7 +13,7 @@ export function BaseForm(props: PropsWithChildren<BaseFormProps>) {
       {/* <DevTool control={control} /> */}
 
       <form onSubmit={props.onSubmit}>
-        <Grid container direction={'column'} spacing={2}>
+        <Grid container spacing={2}>
           {props.children}
         </Grid>
       </form>

@@ -36,7 +36,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
 
   return (
     <BaseForm onSubmit={handleSubmit(onSubmit)}>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           type={showPassword ? 'text' : 'password'}
           label="Nouveau mot de passe"
@@ -59,7 +59,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
           }}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Button type="submit" size="large" variant="contained" fullWidth>
           Mettre à jour
         </Button>

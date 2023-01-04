@@ -1,3 +1,4 @@
+import { HeadingProps, TypographyProps } from '@mui/material';
 import { RegisterOptions } from 'react-hook-form';
 
 export function forceHtmlRadioOutputToBeBoolean(value: string | null): boolean | null {
@@ -16,3 +17,10 @@ export function forceHtmlRadioOutputToBeBoolean(value: string | null): boolean |
 export const reactHookFormBooleanRadioGroupRegisterOptions = {
   setValueAs: forceHtmlRadioOutputToBeBoolean,
 } as RegisterOptions;
+
+export const formTitleProps: TypographyProps<'h1'> = {
+  variant: 'h4',
+  sx: {
+    mb: 2,
+  },
+};

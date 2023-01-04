@@ -104,15 +104,15 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   return (
     <BaseForm onSubmit={handleSubmit(onSubmit)}>
       {(!!error || !!sessionEnd) && (
-        <Grid item>
+        <Grid item xs={12}>
           {!!error && <Alert severity="error">{error}</Alert>}
           {!!sessionEnd && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
         </Grid>
       )}
-      <Grid item>
+      <Grid item xs={12}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <TextField
           type={showPassword ? 'text' : 'password'}
           label="Mot de passe"
@@ -135,19 +135,19 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
           }}
         />
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <FormControl error={!!errors.rememberMe}>
           {/* TODO: really manage "rememberMe" */}
           <FormControlLabel label="Rester connecté" control={<Checkbox {...register('rememberMe')} defaultChecked />} />
           <FormHelperText>{errors?.rememberMe?.message}</FormHelperText>
         </FormControl>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Button type="submit" size="large" variant="contained" fullWidth>
           Se connecter
         </Button>
       </Grid>
-      <Grid item>
+      <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
           <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="none">
             Mot de passe oublié ?
