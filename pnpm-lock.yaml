@@ -128,7 +128,7 @@ importers:
   apps/main:
     specifiers:
       '@anatine/zod-mock': ^3.6.0
-      '@codegouvfr/react-dsfr': ^0.18.1
+      '@codegouvfr/react-dsfr': ^0.21.3
       '@cypress/webpack-preprocessor': ^5.15.5
       '@emotion/react': ^11.10.5
       '@emotion/server': ^11.10.0
@@ -206,7 +206,7 @@ importers:
       uuid: ^9.0.0
       zod: ^3.19.1
     dependencies:
-      '@codegouvfr/react-dsfr': 0.18.1_fan5qbzahqtxlm5dzefqlqx5ia
+      '@codegouvfr/react-dsfr': 0.21.3_fan5qbzahqtxlm5dzefqlqx5ia
       '@emotion/react': 11.10.5_fan5qbzahqtxlm5dzefqlqx5ia
       '@emotion/server': 11.10.0
       '@emotion/styled': 11.10.5_otcjdfkheatawhug6fwk7ldzni
@@ -2025,8 +2025,8 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@codegouvfr/react-dsfr/0.18.1_fan5qbzahqtxlm5dzefqlqx5ia:
-    resolution: {integrity: sha512-XwucH0+uR9JTQeF/cHzUnr+HKONpcH8bM3+5tmz92NpQvo8PyiNKyZgn62TeE9RRoi2/b7e7lZhRi94cYLnfyQ==}
+  /@codegouvfr/react-dsfr/0.21.3_fan5qbzahqtxlm5dzefqlqx5ia:
+    resolution: {integrity: sha512-OtYq/2ZGESL+PuylMKbxKp1U0JHkxBC3G39sI9Tw144SWtld6L2Ir3X+O7imI+ys16lbfF03ILmdwvM3oNSE+g==}
     hasBin: true
     peerDependencies:
       '@types/react': ^16.0.0 || ^17.0.0 || ^18.0.0
