@@ -1,18 +1,16 @@
-const fg = require('fast-glob');
-const path = require('path');
 const cssnano = require('cssnano');
+const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
-const getStories = () =>
-  fg.sync([
-    path.resolve(__dirname, '../../../apps/docs/stories/**/*.stories.{js,ts,jsx,tsx,mdx}'),
-    path.resolve(__dirname, '../../../apps/main/**/*.stories.{js,ts,jsx,tsx,mdx}'),
-    path.resolve(__dirname, '../../../packages/ui/src/**/*.stories.{js,ts,jsx,tsx,mdx}'),
-    '!**/node_modules', // Important otherwise it loads from PNPM workspace packages too resulting in the error `Duplicate stories with id: xxx`
-  ]);
-
 module.exports = {
-  stories: async () => [...getStories()],
+  stories: [
+    // Lookup wildcards should not meet a `node_modules` because due to `pnpm` symlinks everything break
+    // We scoped everything in folders like `stories` and `src` in each package
+    // Ref: https://github.com/storybookjs/storybook/issues/11181#issuecomment-1372243094
+    path.resolve(__dirname, '../../../apps/docs/stories/**/*.stories.@(js|ts|jsx|tsx|mdx)'),
+    path.resolve(__dirname, '../../../apps/main/src/**/*.stories.@(js|ts|jsx|tsx|mdx)'),
+    path.resolve(__dirname, '../../../packages/ui/src/**/*.stories.@(js|ts|jsx|tsx|mdx)'),
+  ],
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-a11y',

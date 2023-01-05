@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { Button } from '@mediature/ui';
+import { Button } from '@mediature/ui/src/Button';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof Button>();
 
