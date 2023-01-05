@@ -19,8 +19,6 @@ module.exports = {
     '@storybook/addon-measure',
     // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7
     '@storybook/addon-viewport',
-    /* eslint-disable storybook/no-uninstalled-addons */
-    '@tomfreudenberg/next-auth-mock/storybook', // Ref: https://github.com/storybookjs/eslint-plugin-storybook/issues/95#issuecomment-1371960311
     'storybook-addon-designs',
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',

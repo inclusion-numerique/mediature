@@ -4,6 +4,7 @@ import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { withLinks } from '@storybook/addon-links';
 import addons from '@storybook/addons';
 import { themes } from '@storybook/theming';
+import { withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
 import React from 'react';
 
@@ -70,6 +71,7 @@ export const parameters = {
 
 export const decorators = [
   withLinks,
+  withMockAuth,
   mswDecorator,
   (Story, context) => {
     // Provide the necessary depending on the context
