@@ -1,6 +1,24 @@
 import { ArgsTable, Description, PRIMARY_STORY, Primary, Stories, Subtitle, Title } from '@storybook/addon-docs';
 import { Meta, StoryFn } from '@storybook/react';
 
+// This helper is required because `react-dsfr` manages global styles that was leaking
+// on our other stories like email stories. It's due to importing the `DsfrHead` so there is no
+// easy workdaround like moving the decorator elsewhere because it would be still in the Storybook project
+export function disableGlobalDsfrStyle(value: boolean): void {
+  // Storybook styles are annoted `[data-s]`, the rest should be leaking global style since we use none in our business components
+  const styleElements = document.querySelectorAll('head > meta[name="next-head-count"] ~ style:not([data-s])');
+
+  if (value) {
+    styleElements.forEach((styleElement) => {
+      styleElement.setAttribute('media', 'not all');
+    });
+  } else {
+    styleElements.forEach((styleElement) => {
+      styleElement.removeAttribute('media');
+    });
+  }
+}
+
 export interface StoryHelpers<ComponentType> {
   generateMetaDefault: (initialMeta: Meta<ComponentType>) => Meta<ComponentType>;
   prepareStory: (story: StoryFn<ComponentType>, options?: StoryOptions) => StoryFn<ComponentType>;
