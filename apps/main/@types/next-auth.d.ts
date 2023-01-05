@@ -15,7 +15,6 @@ declare module 'next-auth' {
     email: TokenUserSchemaType['email'];
     firstname: TokenUserSchemaType['firstname'];
     lastname: TokenUserSchemaType['lastname'];
-    lastname: TokenUserSchemaType['lastname'];
     profilePicture: TokenUserSchemaType['profilePicture'];
   }
 }
