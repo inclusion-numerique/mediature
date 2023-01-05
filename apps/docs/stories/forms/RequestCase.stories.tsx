@@ -2,10 +2,10 @@ import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { RequestCaseForm } from '@mediature/main/app/(public)/request/[authority]/RequestCaseForm';
-import { RequestCasePrefillSchema } from '@mediature/main/models/actions/case';
-import { CaseSchema } from '@mediature/main/models/entities/case';
-import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
+import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/case';
+import { CaseSchema } from '@mediature/main/src/models/entities/case';
+import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof RequestCaseForm>();
 

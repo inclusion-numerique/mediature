@@ -1,8 +1,8 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { SignInForm } from '@mediature/main/app/(visitor-only)/auth/sign-in/SignInForm';
-import { SignInPrefillSchema } from '@mediature/main/models/actions/auth';
+import { SignInForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm';
+import { SignInPrefillSchema } from '@mediature/main/src/models/actions/auth';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignInForm>();
 

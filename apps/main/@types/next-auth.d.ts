@@ -1,6 +1,6 @@
 import { DefaultSession, Session } from 'next-auth';
 
-import { TokenUserSchemaType } from '@mediature/main/models/entities/user';
+import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
 
 declare module 'next-auth' {
   interface Session {

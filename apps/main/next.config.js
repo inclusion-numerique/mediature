@@ -2,7 +2,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
 const path = require('path');
 
-const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./utils/app-version.js');
+const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
 
 const mode = process.env.APP_MODE || 'test';
 

@@ -1,4 +1,4 @@
-import { JwtDataSchemaType } from '@mediature/main/models/entities/user';
+import { JwtDataSchemaType } from '@mediature/main/src/models/entities/user';
 
 declare module 'next-auth/jwt' {
   // We fought for a long time by thinking extending the original our custom with the original name would work...

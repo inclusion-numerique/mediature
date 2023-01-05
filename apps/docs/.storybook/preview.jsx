@@ -9,10 +9,10 @@ import React from 'react';
 
 import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContainer';
 // import { useDarkMode } from 'storybook-dark-mode';
-import StartDsfr from '@mediature/main/app/StartDsfr';
-import Providers from '@mediature/main/app/providers';
+import StartDsfr from '@mediature/main/src/app/StartDsfr';
+import Providers from '@mediature/main/src/app/providers';
 // import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
-import { ClientProvider } from '@mediature/main/client/trpcClient';
+import { ClientProvider } from '@mediature/main/src/client/trpcClient';
 import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
 
 // const channel = addons.getChannel();

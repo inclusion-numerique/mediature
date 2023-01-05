@@ -1,9 +1,9 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { RetrievePasswordForm } from '@mediature/main/app/(visitor-only)/auth/password/retrieve/RetrievePasswordForm';
-import { RequestNewPasswordPrefillSchema } from '@mediature/main/models/actions/auth';
-import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+import { RetrievePasswordForm } from '@mediature/main/src/app/(visitor-only)/auth/password/retrieve/RetrievePasswordForm';
+import { RequestNewPasswordPrefillSchema } from '@mediature/main/src/models/actions/auth';
+import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof RetrievePasswordForm>();
 

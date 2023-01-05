@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-import { AuthorityTypeSchema } from '@mediature/main/models/entities/authority';
+import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
 
 export async function truncateDatabase(prismaClient: PrismaClient) {
   const tablenames = await prismaClient.$queryRaw<Array<{ tablename: string }>>`SELECT tablename FROM pg_tables WHERE schemaname='public'`;

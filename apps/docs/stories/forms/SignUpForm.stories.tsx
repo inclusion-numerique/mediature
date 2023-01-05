@@ -2,10 +2,10 @@ import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { SignUpForm } from '@mediature/main/app/(visitor-only)/auth/sign-up/SignUpForm';
-import { SignUpPrefillSchema } from '@mediature/main/models/actions/auth';
-import { UserSchema } from '@mediature/main/models/entities/user';
-import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+import { SignUpForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm';
+import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
+import { UserSchema } from '@mediature/main/src/models/entities/user';
+import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignUpForm>();
 

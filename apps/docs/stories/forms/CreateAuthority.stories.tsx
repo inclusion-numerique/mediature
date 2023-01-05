@@ -2,10 +2,10 @@ import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { CreateAuthorityForm } from '@mediature/main/app/(private)/dashboard/authority/create/CreateAuthorityForm';
-import { CreateAuthorityPrefillSchema } from '@mediature/main/models/actions/authority';
-import { AuthoritySchema } from '@mediature/main/models/entities/authority';
-import { getTRPCMock } from '@mediature/main/server/mock/trpc';
+import { CreateAuthorityForm } from '@mediature/main/src/app/(private)/dashboard/authority/create/CreateAuthorityForm';
+import { CreateAuthorityPrefillSchema } from '@mediature/main/src/models/actions/authority';
+import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CreateAuthorityForm>();
 
