@@ -11,6 +11,7 @@ import React from 'react';
 import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContainer';
 // import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { disableGlobalDsfrStyle } from '@mediature/docs/.storybook/helpers';
+import { withDisablingTestRunner } from '@mediature/docs/.storybook/testing';
 // import { useDarkMode } from 'storybook-dark-mode';
 import StartDsfr from '@mediature/main/src/app/StartDsfr';
 import Providers from '@mediature/main/src/app/providers';
@@ -106,4 +107,5 @@ export const decorators = [
       );
     }
   },
+  withDisablingTestRunner, // This must be the latest to avoid other decorators to be called
 ];

@@ -14,6 +14,7 @@ module.exports = {
   staticDirs: ['../public'],
   addons: [
     '@storybook/addon-a11y',
+    '@storybook/addon-coverage',
     '@storybook/addon-essentials',
     '@storybook/addon-links',
     '@storybook/addon-measure',
@@ -23,6 +24,9 @@ module.exports = {
     'storybook-addon-pseudo-states',
     'storybook-dark-mode',
   ],
+  features: {
+    buildStoriesJson: true,
+  },
   framework: {
     name: '@storybook/nextjs',
     options: {
