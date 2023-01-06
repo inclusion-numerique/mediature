@@ -102,7 +102,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
       {(!!error || !!sessionEnd) && (
         <Grid item xs={12}>
           {!!error && <Alert severity="error">{error}</Alert>}

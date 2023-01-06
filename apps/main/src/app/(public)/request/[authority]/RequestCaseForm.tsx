@@ -40,7 +40,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
       <Grid item xs={12} sm={6}>
         <TextField
           label="Prénom"

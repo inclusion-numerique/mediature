@@ -1,8 +1,11 @@
-import { Box, Grid } from '@mui/material';
+import { DevTool } from '@hookform/devtools';
+import { Grid } from '@mui/material';
 import { PropsWithChildren } from 'react';
+import { Control } from 'react-hook-form';
 
 export interface BaseFormProps {
   onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
+  control: Control<any>;
 }
 
 export function BaseForm(props: PropsWithChildren<BaseFormProps>) {
@@ -10,7 +13,7 @@ export function BaseForm(props: PropsWithChildren<BaseFormProps>) {
 
   return (
     <>
-      {/* <DevTool control={control} /> */}
+      {/* <DevTool control={props.control} /> */}
 
       <form onSubmit={props.onSubmit}>
         <Grid container spacing={2}>

@@ -37,7 +37,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
       <Grid item xs={12}>
         <TextField
           type={showPassword ? 'text' : 'password'}
