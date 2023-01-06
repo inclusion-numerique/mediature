@@ -33,8 +33,6 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: { para
     return <span>Not found TODO</span>;
   }
 
-  console.log(mdCenteredFormContainerGridProps);
-
   return (
     <Grid container {...mdCenteredFormContainerGridProps}>
       <Typography component="h2" variant="h6" align="center">
