@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Button as B } from '@mediature/ui';
 import { LottieTest } from '@mediature/ui/src/LottieTest';
 
-export default function HomePage() {
+export function HomePage() {
   return (
     <div>
       <h1>Web</h1>
@@ -16,3 +16,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+export default HomePage;

@@ -10,7 +10,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 
-export default function AuthorityListPage() {
+export function AuthorityListPage() {
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
@@ -104,3 +104,5 @@ export default function AuthorityListPage() {
     </>
   );
 }
+
+export default AuthorityListPage;

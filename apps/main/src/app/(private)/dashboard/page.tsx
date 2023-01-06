@@ -3,7 +3,7 @@
 import { Link, Skeleton, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
-export default function OverviewPage() {
+export function OverviewPage() {
   return (
     <div>
       <h1>Hola, vous êtes connecté :D</h1>
@@ -16,3 +16,5 @@ export default function OverviewPage() {
     </div>
   );
 }
+
+export default OverviewPage;

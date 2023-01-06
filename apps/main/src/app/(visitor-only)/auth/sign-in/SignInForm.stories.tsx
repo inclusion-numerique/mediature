@@ -23,7 +23,7 @@ EmptyStory.args = {};
 
 export const Empty = prepareStory(EmptyStory);
 
-const FilledStory = Template.bind({});
+export const FilledStory = Template.bind({});
 FilledStory.args = {
   prefill: SignInPrefillSchema.parse({
     email: 'jean@france.fr',

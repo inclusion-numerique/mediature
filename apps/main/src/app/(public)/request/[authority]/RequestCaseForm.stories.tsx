@@ -13,21 +13,23 @@ export default {
   title: 'Forms/RequestCase',
   component: RequestCaseForm,
   ...generateMetaDefault({
-    parameters: {
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['requestCase'],
-            response: {
-              case: generateMock(CaseSchema),
-            },
-          }),
-        ],
-      },
-    },
+    parameters: {},
   }),
 } as Meta<typeof RequestCaseForm>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['requestCase'],
+        response: {
+          case: generateMock(CaseSchema),
+        },
+      }),
+    ],
+  },
+};
 
 const Template: StoryFn<typeof RequestCaseForm> = (args) => {
   return <RequestCaseForm {...args} />;
@@ -35,6 +37,7 @@ const Template: StoryFn<typeof RequestCaseForm> = (args) => {
 
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
+EmptyStory.parameters = { ...defaultMswParameters };
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -54,5 +57,6 @@ FilledStory.args = {
     emailCopyWanted: true,
   }),
 };
+FilledStory.parameters = { ...defaultMswParameters };
 
 export const Filled = prepareStory(FilledStory);

@@ -7,6 +7,8 @@ function createMarkup() {
   return { __html: cleanStatementContent };
 }
 
-export default function AccessibilityPage() {
+export function AccessibilityPage() {
   return <div dangerouslySetInnerHTML={createMarkup()}></div>;
 }
+
+export default createMarkup;

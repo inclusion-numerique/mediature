@@ -21,7 +21,10 @@ export function disableGlobalDsfrStyle(value: boolean): void {
 
 export interface StoryHelpers<ComponentType> {
   generateMetaDefault: (initialMeta: Meta<ComponentType>) => Meta<ComponentType>;
-  prepareStory: (story: StoryFn<ComponentType>, options?: StoryOptions) => StoryFn<ComponentType>;
+  prepareStory: <ComponentType, ContextValueType extends MatchingContextValue<PossibleContextValueType>, PossibleContextValueType>(
+    story: StoryFn<ComponentType>,
+    options?: StoryOptions<ContextValueType, PossibleContextValueType>
+  ) => StoryFn<ComponentType>;
 }
 
 export function StoryHelperFactory<ComponentType>(): StoryHelpers<ComponentType> {
@@ -71,14 +74,30 @@ export function generateMetaDefault<ComponentType>(initialMeta: Meta<ComponentTy
   return meta;
 }
 
-export interface StoryOptions {
-  layoutStory?: StoryFn;
-  childrenContext?: JSX.Element;
+export type MatchingContextValue<PossibleContextValueType> = {
+  [key in keyof PossibleContextValueType]: PossibleContextValueType[key] | StoryFn<PossibleContextValueType[key]>;
+};
+
+export interface ChildrenContext<ContextValueType extends MatchingContextValue<PossibleContextValueType>, PossibleContextValueType> {
+  context: React.Context<PossibleContextValueType & object>;
+  value: ContextValueType;
 }
 
-export function prepareStory<ComponentType>(story: StoryFn<ComponentType>, options?: StoryOptions): StoryFn<ComponentType> {
+export interface StoryOptions<ContextValueType extends MatchingContextValue<PossibleContextValueType>, PossibleContextValueType> {
+  layoutStory?: StoryFn<any>;
+  childrenContext?: ChildrenContext<ContextValueType, PossibleContextValueType>;
+}
+
+export function prepareStory<ComponentType, ContextValueType extends MatchingContextValue<PossibleContextValueType>, PossibleContextValueType>(
+  story: StoryFn<ComponentType>,
+  options?: StoryOptions<ContextValueType, PossibleContextValueType>
+): StoryFn<ComponentType> {
   if (!story.parameters) {
     story.parameters = {};
+  }
+
+  if (!story.decorators) {
+    story.decorators = [];
   }
 
   if (!story.parameters.docs) {
@@ -96,15 +115,77 @@ export function prepareStory<ComponentType>(story: StoryFn<ComponentType>, optio
   }
 
   if (options?.layoutStory) {
-    description += `\nTODO: depending on layout... adjust <button data-sb-kind="Forms/ResetPassword" data-sb-story="Empty">
-    Go to "Forms/ResetPassword"
-  </button>`;
+    description += `\nThis story uses a mocked parent layout to give you more context. Keep in mind this may differ from the runtime reality.`;
+
+    // It we detect some authentication mocking from the layout, make sure to reuse it (but not as prioritary)
+    if (options.layoutStory.parameters?.nextAuthMock) {
+      if (!story.parameters.nextAuthMock) {
+        story.parameters.nextAuthMock = {};
+      }
+
+      story.parameters.nextAuthMock = { ...options.layoutStory.parameters.nextAuthMock, ...story.parameters.nextAuthMock };
+    }
+
+    const LayoutStory = options.layoutStory;
+
+    story.decorators.push((Story, context) => {
+      return (
+        <LayoutStory {...LayoutStory.args}>
+          <Story />
+        </LayoutStory>
+      );
+    });
   }
 
-  if (options?.layoutStory) {
-    description += `\nTODO: depending on children... adjust <button data-sb-kind="Forms/ResetPassword" data-sb-story="Empty">
-    Go to "Forms/ResetPassword"
-  </button>`;
+  if (options?.childrenContext) {
+    description += `\nThis story uses a possible mocked children components to give you more context. Keep in mind this may differ from the runtime reality.`;
+
+    if (typeof options.childrenContext.value === 'object') {
+      // In case a child is a story, reapply its stuff accordingly
+      // [IMPORTANT] This is not magic trick since all the stuff from Storybook is not easily reapplied (and setting the children as <iframe> would make complication with styling, paddings... we are good for now with this)
+      // Note: "Object.entries" not available despite the Babel having normally the necessary https://storybook.js.org/docs/react/configure/babel#generate-a-babelrc
+      for (const key in options.childrenContext.value) {
+        const child = options.childrenContext.value[key] as any;
+
+        if (child.decorators || child.args || child.decorators || child.args) {
+          const childStory = child as StoryFn<any>;
+          const ChildStory = childStory;
+
+          // It we detect some network mocking from the child story, make sure to reuse it
+          if (childStory.parameters?.msw) {
+            if (!story.parameters.msw) {
+              story.parameters.msw = {
+                handlers: [],
+              };
+            }
+
+            story.parameters.msw.handlers = [...childStory.parameters.msw.handlers, ...story.parameters.msw.handlers];
+          }
+
+          (options.childrenContext.value[key] as any) = () => {
+            return (
+              <>
+                <ChildStory {...childStory.args} />
+              </>
+            );
+          };
+        }
+      }
+    }
+
+    const ChildrenContext = options.childrenContext.context;
+
+    // It's safe to cast to `PossibleContextValueType` due to type checking in the function signatures
+    // I didn't find a better way than casting, despite the type verification above Typescript cannot affirm it will match
+    const safeValues = options.childrenContext.value as unknown as PossibleContextValueType & object;
+
+    story.decorators.push((Story, context) => {
+      return (
+        <ChildrenContext.Provider value={safeValues}>
+          <Story />
+        </ChildrenContext.Provider>
+      );
+    });
   }
 
   story.parameters.docs.description = {

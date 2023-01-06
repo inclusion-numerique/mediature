@@ -3,12 +3,19 @@
 import { Grid, Typography } from '@mui/material';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import { createContext, useContext } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredFormContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
 
-export default function RequestPage({ params: { authority: authoritySlug } }: { params: { authority: string } }) {
+export const RequestCasePageContext = createContext({
+  ContextualRequestCaseForm: RequestCaseForm,
+});
+
+export function RequestCasePage({ params: { authority: authoritySlug } }: { params: { authority: string } }) {
+  const { ContextualRequestCaseForm } = useContext(RequestCasePageContext);
+
   const { data, error, isLoading } = trpc.getPublicFacingAuthority.useQuery({
     slug: authoritySlug,
   });
@@ -36,7 +43,9 @@ export default function RequestPage({ params: { authority: authoritySlug } }: { 
       <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ mb: 5 }}>
         Lancer ma démarche de médiation
       </Typography>
-      <RequestCaseForm />
+      <ContextualRequestCaseForm />
     </Grid>
   );
 }
+
+export default RequestCasePage;

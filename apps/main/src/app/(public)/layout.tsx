@@ -9,7 +9,7 @@ import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
-export default function PublicLayout(props: PropsWithChildren) {
+export function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
 
   if (sessionWrapper.status === 'loading') {
@@ -67,3 +67,5 @@ export default function PublicLayout(props: PropsWithChildren) {
     </>
   );
 }
+
+export default PublicLayout;

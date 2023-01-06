@@ -11,19 +11,21 @@ export default {
   title: 'Forms/RetrievePassword',
   component: RetrievePasswordForm,
   ...generateMetaDefault({
-    parameters: {
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['requestNewPassword'],
-            response: undefined,
-          }),
-        ],
-      },
-    },
+    parameters: {},
   }),
 } as Meta<typeof RetrievePasswordForm>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['requestNewPassword'],
+        response: undefined,
+      }),
+    ],
+  },
+};
 
 const Template: StoryFn<typeof RetrievePasswordForm> = (args) => {
   return <RetrievePasswordForm {...args} />;
@@ -31,6 +33,7 @@ const Template: StoryFn<typeof RetrievePasswordForm> = (args) => {
 
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
+EmptyStory.parameters = { ...defaultMswParameters };
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -40,5 +43,6 @@ FilledStory.args = {
     email: 'jean@france.fr',
   }),
 };
+FilledStory.parameters = { ...defaultMswParameters };
 
 export const Filled = prepareStory(FilledStory);

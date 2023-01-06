@@ -7,7 +7,7 @@ import { PropsWithChildren, useEffect } from 'react';
 import PublicLayout from '@mediature/main/src/app/(public)/layout';
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 
-export default function VisitorOnlyLayout(props: PropsWithChildren) {
+export function VisitorOnlyLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
   const router = useRouter();
 
@@ -31,3 +31,5 @@ export default function VisitorOnlyLayout(props: PropsWithChildren) {
     </>
   );
 }
+
+export default VisitorOnlyLayout;

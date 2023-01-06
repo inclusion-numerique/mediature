@@ -13,28 +13,35 @@ export default {
   title: 'Forms/SignUp',
   component: SignUpForm,
   ...generateMetaDefault({
-    parameters: {
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['signUp'],
-            response: {
-              createdUser: generateMock(UserSchema),
-            },
-          }),
-        ],
-      },
-    },
+    parameters: {},
   }),
 } as Meta<typeof SignUpForm>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['signUp'],
+        response: {
+          createdUser: generateMock(UserSchema),
+        },
+      }),
+    ],
+  },
+};
 
 const Template: StoryFn<typeof SignUpForm> = (args) => {
   return <SignUpForm {...args} />;
 };
 
 const EmptyStory = Template.bind({});
-EmptyStory.args = {};
+EmptyStory.args = {
+  prefill: SignUpPrefillSchema.parse({
+    invitationToken: 'abc',
+  }),
+};
+EmptyStory.parameters = { ...defaultMswParameters };
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -49,5 +56,6 @@ FilledStory.args = {
     termsAccepted: true,
   }),
 };
+FilledStory.parameters = { ...defaultMswParameters };
 
 export const Filled = prepareStory(FilledStory);

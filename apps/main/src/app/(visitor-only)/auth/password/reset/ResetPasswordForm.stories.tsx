@@ -11,26 +11,33 @@ export default {
   title: 'Forms/ResetPassword',
   component: ResetPasswordForm,
   ...generateMetaDefault({
-    parameters: {
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['resetPassword'],
-            response: undefined,
-          }),
-        ],
-      },
-    },
+    parameters: {},
   }),
 } as Meta<typeof ResetPasswordForm>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['resetPassword'],
+        response: undefined,
+      }),
+    ],
+  },
+};
 
 const Template: StoryFn<typeof ResetPasswordForm> = (args) => {
   return <ResetPasswordForm {...args} />;
 };
 
 const EmptyStory = Template.bind({});
-EmptyStory.args = {};
+EmptyStory.args = {
+  prefill: ResetPasswordPrefillSchema.parse({
+    token: 'sunt-aut-quod',
+  }),
+};
+EmptyStory.parameters = { ...defaultMswParameters };
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -41,5 +48,6 @@ FilledStory.args = {
     password: 'mypassword',
   }),
 };
+FilledStory.parameters = { ...defaultMswParameters };
 
 export const Filled = prepareStory(FilledStory);

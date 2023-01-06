@@ -1,13 +1,19 @@
 'use client';
 
 import { Grid, Typography } from '@mui/material';
-import React from 'react';
+import { createContext, useContext } from 'react';
 
 import { SignInForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
 
-export default function SignInPage() {
+export const SignInPageContext = createContext({
+  ContextualSignInForm: SignInForm,
+});
+
+export function SignInPage() {
+  const { ContextualSignInForm } = useContext(SignInPageContext);
+
   return (
     <Grid container>
       <Grid item xs={12} lg={6} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -15,7 +21,7 @@ export default function SignInPage() {
           <Typography component="h1" {...formTitleProps}>
             Connexion
           </Typography>
-          <SignInForm />
+          <ContextualSignInForm />
         </Grid>
       </Grid>
       <Grid
@@ -40,3 +46,5 @@ export default function SignInPage() {
     </Grid>
   );
 }
+
+export default SignInPage;

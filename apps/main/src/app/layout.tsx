@@ -5,12 +5,12 @@ import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { getColorSchemeHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getColorSchemeHtmlAttributes';
 import { PropsWithChildren } from 'react';
 
-import StartDsfr from '@mediature/main/src/app/StartDsfr';
+import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import '@mediature/main/src/app/layout.scss';
-import Providers from '@mediature/main/src/app/providers';
+import { Providers } from '@mediature/main/src/app/providers';
 import { defaultColorScheme } from '@mediature/main/src/utils/dsfr';
 
-export default function RootLayout(props: PropsWithChildren) {
+export function RootLayout(props: PropsWithChildren) {
   return (
     <html lang="fr" {...getColorSchemeHtmlAttributes({ defaultColorScheme })}>
       <head>
@@ -28,3 +28,5 @@ export default function RootLayout(props: PropsWithChildren) {
     </html>
   );
 }
+
+export default RootLayout;

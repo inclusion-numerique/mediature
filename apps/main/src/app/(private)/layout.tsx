@@ -10,7 +10,7 @@ import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react'
 import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
-export default function PrivateLayout(props: PropsWithChildren) {
+export function PrivateLayout(props: PropsWithChildren) {
   const router = useRouter();
   const sessionWrapper = useSession();
   const [logoutCommitted, setLogoutCommitted] = useState(false);
@@ -60,3 +60,5 @@ export default function PrivateLayout(props: PropsWithChildren) {
     );
   }
 }
+
+export default PrivateLayout;

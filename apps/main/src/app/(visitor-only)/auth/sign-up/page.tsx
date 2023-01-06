@@ -2,13 +2,20 @@
 
 import { Grid, Typography } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
+import { createContext, useContext } from 'react';
 
 import { SignUpForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm';
 import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
 
-export default function SignUpPage() {
+export const SignUpPageContext = createContext({
+  ContextualSignUpForm: SignUpForm,
+});
+
+export function SignUpPage() {
+  const { ContextualSignUpForm } = useContext(SignUpPageContext);
+
   const searchParams = useSearchParams();
   const invitationToken = searchParams.get('token');
 
@@ -34,7 +41,7 @@ export default function SignUpPage() {
           <Typography component="p" variant="subtitle1">
             Vous avez été invité par XXXXX.
           </Typography>
-          <SignUpForm
+          <ContextualSignUpForm
             prefill={SignUpPrefillSchema.parse({
               invitationToken: 'abc',
             })}
@@ -63,3 +70,5 @@ export default function SignUpPage() {
     </Grid>
   );
 }
+
+export default SignUpPage;

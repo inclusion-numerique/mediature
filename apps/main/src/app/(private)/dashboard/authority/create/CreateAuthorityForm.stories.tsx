@@ -13,22 +13,24 @@ export default {
   title: 'Forms/CreateAuthority',
   component: CreateAuthorityForm,
   ...generateMetaDefault({
-    parameters: {
-      msw: {
-        handlers: [
-          getTRPCMock({
-            type: 'mutation',
-            path: ['createAuthority'],
-            response: {
-              ...generateMock(AuthoritySchema),
-              attachmentId: 'd58ac4a3-7672-403c-ad04-112f5927e2be',
-            },
-          }),
-        ],
-      },
-    },
+    parameters: {},
   }),
 } as Meta<typeof CreateAuthorityForm>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'mutation',
+        path: ['createAuthority'],
+        response: {
+          ...generateMock(AuthoritySchema),
+          attachmentId: 'd58ac4a3-7672-403c-ad04-112f5927e2be',
+        },
+      }),
+    ],
+  },
+};
 
 const Template: StoryFn<typeof CreateAuthorityForm> = (args) => {
   return <CreateAuthorityForm {...args} />;
@@ -36,6 +38,7 @@ const Template: StoryFn<typeof CreateAuthorityForm> = (args) => {
 
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
+EmptyStory.parameters = { ...defaultMswParameters };
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -48,5 +51,6 @@ FilledStory.args = {
     logoAttachmentId: 'd58ac4a3-7672-403c-ad04-112f5927e2be',
   }),
 };
+FilledStory.parameters = { ...defaultMswParameters };
 
 export const Filled = prepareStory(FilledStory);

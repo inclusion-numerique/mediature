@@ -6,7 +6,7 @@ import prodRobotsFile from '@mediature/main/src/pages/assets/public/prod/robots.
 
 const { publicRuntimeConfig } = getConfig();
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export function handler(req: NextApiRequest, res: NextApiResponse) {
   // Only allow indexing in production
   if (publicRuntimeConfig.appMode === 'prod') {
     res.send(prodRobotsFile);
@@ -14,3 +14,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res.send(devRobotsFile);
   }
 }
+
+export default handler;
