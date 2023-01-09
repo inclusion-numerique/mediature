@@ -2,14 +2,14 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import PublicLayout from '@mediature/main/src/app/(public)/layout';
-import { Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/layout.stories';
+import { PrivateLayout } from '@mediature/main/src/app/(private)/PrivateLayout';
+import { Lorem as PrivateLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PublicLayout>();
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PrivateLayout>();
 
 export default {
   title: 'Layouts/PrivatePages',
-  component: PublicLayout,
+  component: PrivateLayout,
   ...generateMetaDefault({
     parameters: {
       msw: {
@@ -17,10 +17,10 @@ export default {
       },
     },
   }),
-} as Meta<typeof PublicLayout>;
+} as Meta<typeof PrivateLayout>;
 
-const Template: StoryFn<typeof PublicLayout> = (args) => {
-  return <PublicLayout {...args} />;
+const Template: StoryFn<typeof PrivateLayout> = (args) => {
+  return <PrivateLayout {...args} />;
 };
 
 const NormalStory = Template.bind({});
@@ -38,7 +38,7 @@ LoremStory.parameters = {
   ...NormalStory.parameters,
 };
 LoremStory.args = {
-  ...PublicLayoutLoremStory.args,
+  ...PrivateLayoutLoremStory.args,
 };
 
 export const Lorem = prepareStory(LoremStory);

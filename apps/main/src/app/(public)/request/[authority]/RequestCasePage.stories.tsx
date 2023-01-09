@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Empty as RequestCaseFormEmptyStory } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm.stories';
-import { RequestCasePage, RequestCasePageContext } from '@mediature/main/src/app/(public)/request/[authority]/page';
-import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/layout.stories';
+import { RequestCasePage, RequestCasePageContext } from '@mediature/main/src/app/(public)/request/[authority]/RequestCasePage';
+import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
 import { PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 

@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { visitorSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/layout.stories';
-import VisitorOnlyLayout from '@mediature/main/src/app/(visitor-only)/layout';
+import { Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
+import { VisitorOnlyLayout } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof VisitorOnlyLayout>();
 

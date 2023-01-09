@@ -1,9 +1,9 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
 import { Empty as SignUpFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm.stories';
-import { SignUpPage, SignUpPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/page';
-import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/layout.stories';
+import { SignUpPage, SignUpPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpPage';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignUpPage>();
 

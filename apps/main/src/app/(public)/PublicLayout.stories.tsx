@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { userSessionContext, visitorSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import PublicLayout from '@mediature/main/src/app/(public)/layout';
+import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PublicLayout>();
 
