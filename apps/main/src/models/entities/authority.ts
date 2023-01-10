@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { AgentSchema } from '@mediature/main/src/models/entities/agent';
+
 export const AuthorityTypeSchema = z.enum(['CITY', 'SUBDIVISION', 'REGION']);
 export type AuthorityTypeSchemaType = z.infer<typeof AuthorityTypeSchema>;
 
@@ -25,3 +27,14 @@ export const PublicFacingAuthoritySchema = z.object({
   logo: AuthoritySchema.shape.logo,
 });
 export type PublicFacingAuthoritySchemaType = z.infer<typeof PublicFacingAuthoritySchema>;
+
+export const AuthorityWrapperSchema = z
+  .object({
+    authority: AuthoritySchema,
+    mainAgent: AgentSchema.nullable(),
+    agents: z.array(AgentSchema).nullable(),
+    openCases: z.number().int().positive(),
+    closeCases: z.number().int().positive(),
+  })
+  .strict();
+export type AuthorityWrapperSchemaType = z.infer<typeof AuthorityWrapperSchema>;

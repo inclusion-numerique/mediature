@@ -1,0 +1,40 @@
+import { AgentSchema, AgentSchemaType } from '@mediature/main/src/models/entities/agent';
+
+export const agents: AgentSchemaType[] = [
+  AgentSchema.parse({
+    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
+    firstname: 'Romain',
+    lastname: 'Garcia',
+    email: 'germaine38@hotmail.fr',
+    profilePicture: 'http://placeimg.com/640/480',
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
+  }),
+  AgentSchema.parse({
+    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
+    firstname: 'Aminte',
+    lastname: 'Bertrand',
+    email: 'justine.blanchard@hotmail.fr',
+    profilePicture: 'http://placeimg.com/640/480',
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
+  }),
+  AgentSchema.parse({
+    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
+    firstname: 'Agathon',
+    lastname: 'Louis',
+    email: 'aure.benoit71@hotmail.fr',
+    profilePicture: 'http://placeimg.com/640/480',
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
+  }),
+];

@@ -9,6 +9,7 @@ import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
 
 export function AuthorityListPage() {
   const queryRef = React.createRef<HTMLInputElement>();
@@ -34,7 +35,7 @@ export function AuthorityListPage() {
     };
   }, [debounedHandleClearQuery]);
 
-  const authorities = data?.authorities || [];
+  const authoritiesWrappers = data?.authoritiesWrappers || [];
 
   if (error) {
     return <span>Error TODO</span>;
@@ -54,18 +55,19 @@ export function AuthorityListPage() {
   return (
     <>
       <Grid container sx={{ maxWidth: 'md', mx: 'auto' }}>
-        <h1>Gérer les collectivités</h1>
-        <Button
-          component={NextLink}
-          href="/dashboard/authority/create"
-          size="large"
-          sx={{ mt: 3 }}
-          variant="contained"
-          startIcon={<AddCircleOutlineIcon />}
-        >
-          Ajouter une collectivité
-        </Button>
-        <Grid item xs={12}>
+        <Grid container sx={{ py: 3 }}>
+          <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography component="h1" variant="h5">
+              Gérer les collectivités
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+            <Button component={NextLink} href="/dashboard/authority/create" size="large" variant="contained" startIcon={<AddCircleOutlineIcon />}>
+              Ajouter une collectivité
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sx={{ mb: 3 }}>
           <TextField
             type="text"
             name="search"
@@ -88,15 +90,19 @@ export function AuthorityListPage() {
           />
         </Grid>
         {!isLoading ? (
-          <>
-            {authorities.map((authority) => (
-              <Grid key={authority.id} item xs={12} sm={6}>
-                <Card variant="outlined">
-                  <CardContent>{authority.name}</CardContent>
-                </Card>
+          <Grid container spacing={3}>
+            {authoritiesWrappers.map((authorityWrapper) => (
+              <Grid key={authorityWrapper.authority.id} item xs={12} sm={6}>
+                <AuthorityCard
+                  authority={authorityWrapper.authority}
+                  mainAgent={authorityWrapper.mainAgent}
+                  agents={authorityWrapper.agents}
+                  openCases={authorityWrapper.openCases}
+                  closeCases={authorityWrapper.closeCases}
+                />
               </Grid>
             ))}
-          </>
+          </Grid>
         ) : (
           <Skeleton />
         )}

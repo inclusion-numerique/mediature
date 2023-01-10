@@ -7,7 +7,8 @@ import {
   ListAuthoritiesSchema,
   UpdateAuthoritySchema,
 } from '@mediature/main/src/models/actions/authority';
-import { PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export async function isUserAnAdmin(userId: string): Promise<boolean> {
@@ -179,8 +180,57 @@ export const authorityRouter = router({
           : undefined,
         // TODO: pagination
       },
+      include: {
+        mainAgent: {
+          include: {
+            user: true,
+          },
+        },
+        Agent: {
+          include: {
+            user: true,
+          },
+        },
+        Case: {
+          select: {
+            closedAt: true,
+          },
+        },
+      },
     });
 
-    return { authorities };
+    return {
+      authoritiesWrappers: authorities.map((authority): AuthorityWrapperSchemaType => {
+        let openCases: number = 0;
+        let closeCases: number = 0;
+        for (const authorityCase of authority.Case) {
+          if (authorityCase.closedAt) {
+            closeCases++;
+          } else {
+            openCases++;
+          }
+        }
+
+        return {
+          authority: {
+            id: authority.id,
+            name: authority.name,
+            slug: authority.slug,
+            mainAgentId: authority.mainAgentId,
+            type: authority.type,
+            logo: null, // TODO
+            createdAt: authority.createdAt,
+            updatedAt: authority.updatedAt,
+            deletedAt: authority.deletedAt,
+          },
+          mainAgent: authority.mainAgent ? agentPrismaToModel(authority.mainAgent) : null,
+          agents: authority.Agent.map((agent) => {
+            return agentPrismaToModel(agent);
+          }),
+          openCases: openCases,
+          closeCases: closeCases,
+        };
+      }),
+    };
   }),
 });

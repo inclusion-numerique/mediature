@@ -1,7 +1,8 @@
 import z from 'zod';
 
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
-import { AgentInvitationSchema, AgentSchema } from '@mediature/main/src/models/entities/agent';
+import { AgentSchema } from '@mediature/main/src/models/entities/agent';
+import { AgentInvitationSchema } from '@mediature/main/src/models/entities/agent-invitation';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
