@@ -1,10 +1,18 @@
 const { withSentryConfig } = require('@sentry/nextjs');
+const CopyPlugin = require('copy-webpack-plugin');
 const gitRevision = require('git-rev-sync');
 const path = require('path');
 
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
 
 const mode = process.env.APP_MODE || 'test';
+
+const copyPrismaSchema = (file) => ({
+  // TODO: prisma issue with the schema https://github.com/prisma/prisma/issues/10433
+  from: '../../apps/main/prisma/schema.prisma',
+  // from: path.join(__dirname, 'prisma/schema.prisma'),
+  to: path.join(__dirname, file),
+});
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
@@ -24,6 +32,7 @@ const moduleExports = async () => {
     // },
     experimental: {
       appDir: true,
+      serverComponentsExternalPackages: ['@prisma/client'], // TODO: to remove or not? https://github.com/prisma/prisma/issues/10433#issuecomment-1346198205
       outputFileTracingRoot: path.join(__dirname, '../../'),
       swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
       transpilePackages: ['@mediature/ui'],
@@ -37,6 +46,20 @@ const moduleExports = async () => {
       ];
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+      // Silent a module import error due to RSC
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        child_process: false,
+        v8: false,
+      };
+
+      config.plugins.push(
+        new CopyPlugin({
+          patterns: [copyPrismaSchema('.next/cache/webpack/client-development/'), copyPrismaSchema('.next/cache/webpack/server-development/')],
+        })
+      );
+
       config.module.rules.push({
         test: /\.woff2$/,
         type: 'asset/resource',

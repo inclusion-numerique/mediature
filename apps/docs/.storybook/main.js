@@ -52,6 +52,12 @@ module.exports = {
     TRPC_SERVER_MOCK: 'true',
   }),
   async webpackFinal(config, { configType }) {
+    // Silent a module import error
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+
     // TODO: move the following to a `utils` to be reused elsewhere than in Storybook
     const originalRules = config.module.rules;
     config.module.rules = [];

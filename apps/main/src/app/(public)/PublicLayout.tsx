@@ -1,25 +1,29 @@
-'use client';
-
 import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import { Skeleton } from '@mui/material';
+import { unstable_getServerSession } from 'next-auth/next';
 import { PropsWithChildren } from 'react';
 
-import { useSession } from '@mediature/main/src/proxies/next-auth/react';
+// import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
-export function PublicLayout(props: PropsWithChildren) {
-  const sessionWrapper = useSession();
+import { nextAuthOptions } from '../../pages/api/auth/[...nextauth]';
 
-  if (sessionWrapper.status === 'loading') {
-    return <Skeleton />;
-  }
+export async function PublicLayout(props: PropsWithChildren) {
+  const sessionWrapper = await unstable_getServerSession(nextAuthOptions);
+  console.log(sessionWrapper);
+  // const sessionWrapper = useSession();
+  // sessionWrapper.
+
+  // if (sessionWrapper.status === 'loading') {
+  //   return <Skeleton />;
+  // }
 
   // TODO: display a loading... maybe on the whole layout?
   let quickAccessItems: HeaderProps.QuickAccessItem[] | undefined;
-  if (sessionWrapper.status === 'authenticated') {
-    quickAccessItems = [logoutQuickAccessItem(sessionWrapper.data?.user)];
+  if (!!false) {
+    // quickAccessItems = [logoutQuickAccessItem(sessionWrapper.data?.user)];
   } else {
     quickAccessItems = [
       {

@@ -4,6 +4,7 @@ import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { getColorSchemeHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getColorSchemeHtmlAttributes';
 import { PropsWithChildren } from 'react';
+import { NextAppDirEmotionCacheProvider } from 'tss-react/next';
 
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import '@mediature/main/src/app/layout.scss';
@@ -19,10 +20,12 @@ export function RootLayout(props: PropsWithChildren) {
       </head>
       <body>
         <DsfrProvider defaultColorScheme={defaultColorScheme}>
-          <MuiDsfrThemeProvider>
-            <Providers>{props.children}</Providers>
-          </MuiDsfrThemeProvider>
-          <Display />
+          <NextAppDirEmotionCacheProvider options={{ key: 'css' }}>
+            <MuiDsfrThemeProvider>
+              <Providers>{props.children}</Providers>
+            </MuiDsfrThemeProvider>
+            <Display />
+          </NextAppDirEmotionCacheProvider>
         </DsfrProvider>
       </body>
     </html>
