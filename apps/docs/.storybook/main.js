@@ -16,6 +16,7 @@ module.exports = {
     '@storybook/addon-a11y',
     '@storybook/addon-coverage',
     '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
     '@storybook/addon-links',
     '@storybook/addon-measure',
     // '@storybook/addon-notes', // TODO: enable a new time, but for now seems uncompatible with Storybook v7

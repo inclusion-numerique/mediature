@@ -7,6 +7,7 @@ import {
   ListAuthoritiesSchema,
   UpdateAuthoritySchema,
 } from '@mediature/main/src/models/actions/authority';
+import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';

@@ -4,7 +4,10 @@ import { prisma } from '@mediature/main/prisma/client';
 import { AddAgentSchema, GetAgentSchema, InviteAgentSchema, ListAgentsSchema, RemoveAgentSchema } from '@mediature/main/src/models/actions/agent';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
+import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+
+import { AgentWrapperSchemaType } from '../../models/entities/agent';
 
 export async function isUserMainAgentOfAuthorities(authorityIds: string[], userId: string): Promise<boolean> {
   // Remove duplicates
@@ -110,7 +113,7 @@ export const agentRouter = router({
 
     return;
   }),
-  listAgents: privateProcedure.input(ListAgentsSchema).mutation(async ({ ctx, input }) => {
+  listAgents: privateProcedure.input(ListAgentsSchema).query(async ({ ctx, input }) => {
     const authorityIds = input.filterBy.authorityIds;
 
     if (!(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
@@ -124,11 +127,30 @@ export const agentRouter = router({
         },
       },
       include: {
+        Case: true,
         user: true,
       },
     });
 
-    return { agents };
+    return {
+      agentsWrappers: agents.map((agent): AgentWrapperSchemaType => {
+        let openCases: number = 0;
+        let closeCases: number = 0;
+        for (const agentCase of agent.Case) {
+          if (agentCase.closedAt) {
+            closeCases++;
+          } else {
+            openCases++;
+          }
+        }
+
+        return {
+          agent: agentPrismaToModel(agent),
+          openCases: openCases,
+          closeCases: closeCases,
+        };
+      }),
+    };
   }),
   inviteAgent: privateProcedure.input(InviteAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {

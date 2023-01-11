@@ -1,4 +1,4 @@
-import { AgentSchema, AgentSchemaType } from '@mediature/main/src/models/entities/agent';
+import { AgentSchema, AgentSchemaType, AgentWrapperSchema, AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 
 export const agents: AgentSchemaType[] = [
   AgentSchema.parse({
@@ -8,33 +8,51 @@ export const agents: AgentSchemaType[] = [
     firstname: 'Romain',
     lastname: 'Garcia',
     email: 'germaine38@hotmail.fr',
-    profilePicture: 'http://placeimg.com/640/480',
+    profilePicture: 'https://via.placeholder.com/300x150',
     createdAt: new Date('December 17, 2022 03:24:00'),
     updatedAt: new Date('December 19, 2022 04:33:00'),
     deletedAt: null,
   }),
   AgentSchema.parse({
-    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
-    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e02',
+    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
     firstname: 'Aminte',
     lastname: 'Bertrand',
     email: 'justine.blanchard@hotmail.fr',
-    profilePicture: 'http://placeimg.com/640/480',
+    profilePicture: 'https://via.placeholder.com/300x250',
     createdAt: new Date('December 17, 2022 03:24:00'),
     updatedAt: new Date('December 19, 2022 04:33:00'),
     deletedAt: null,
   }),
   AgentSchema.parse({
-    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
-    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e03',
+    userId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e31',
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
     firstname: 'Agathon',
     lastname: 'Louis',
     email: 'aure.benoit71@hotmail.fr',
-    profilePicture: 'http://placeimg.com/640/480',
+    profilePicture: 'https://via.placeholder.com/150x150',
     createdAt: new Date('December 17, 2022 03:24:00'),
     updatedAt: new Date('December 19, 2022 04:33:00'),
     deletedAt: null,
+  }),
+];
+
+export const agentsWrappers: AgentWrapperSchemaType[] = [
+  AgentWrapperSchema.parse({
+    agent: agents[0],
+    openCases: 2,
+    closeCases: 3,
+  }),
+  AgentWrapperSchema.parse({
+    agent: agents[1],
+    openCases: 2,
+    closeCases: 3,
+  }),
+  AgentWrapperSchema.parse({
+    agent: agents[2],
+    openCases: 2,
+    closeCases: 3,
   }),
 ];

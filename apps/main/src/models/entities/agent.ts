@@ -17,3 +17,12 @@ export const AgentSchema = z
   })
   .strict();
 export type AgentSchemaType = z.infer<typeof AgentSchema>;
+
+export const AgentWrapperSchema = z
+  .object({
+    agent: AgentSchema,
+    openCases: z.number().int().positive(),
+    closeCases: z.number().int().positive(),
+  })
+  .strict();
+export type AgentWrapperSchemaType = z.infer<typeof AgentWrapperSchema>;
