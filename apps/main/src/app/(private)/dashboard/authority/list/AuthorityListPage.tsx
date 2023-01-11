@@ -71,7 +71,7 @@ export function AuthorityListPage() {
           <TextField
             type="text"
             name="search"
-            label="Search..."
+            label="Rechercher..."
             inputRef={queryRef}
             onChange={debounedHandleClearQuery}
             fullWidth
