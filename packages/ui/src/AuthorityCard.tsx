@@ -32,9 +32,17 @@ export function AuthorityCard(props: AuthorityCardProps) {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Alert severity="info" icon={false}>
+            <Alert
+              severity="info"
+              icon={false}
+              sx={{
+                '& .MuiAlert-message': {
+                  width: '100%',
+                  textAlign: 'center',
+                },
+              }}
+            >
               <Grid container spacing={2}>
-                {/* TODO: the subcomponent of the alert should be "width: 100%" */}
                 <Grid item xs={12} sm={6}>
                   Dossiers en cours : {props.openCases}
                 </Grid>
