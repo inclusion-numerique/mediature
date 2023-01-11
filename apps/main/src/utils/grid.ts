@@ -1,5 +1,14 @@
 import { GridProps } from '@mui/material';
 
+export const centeredContainerGridProps: GridProps = {
+  sx: {
+    maxWidth: 'lg',
+    mx: 'auto',
+    px: 3,
+    py: 6,
+  },
+};
+
 export const centeredFormContainerGridProps: GridProps = {
   direction: 'column',
   sx: {

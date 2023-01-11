@@ -5,6 +5,7 @@ import { Button, Grid, Skeleton, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
 
 export interface AgentListPageProps {
@@ -40,14 +41,14 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
 
   return (
     <>
-      <Grid container sx={{ maxWidth: 'md', mx: 'auto' }}>
-        <Grid container sx={{ py: 3 }}>
-          <Grid item xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
+      <Grid container {...centeredContainerGridProps}>
+        <Grid container spacing={1} sx={{ pb: 3 }}>
+          <Grid item xs={12} md={7} sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography component="h1" variant="h5">
               Mon équipe de médiateurs
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+          <Grid item xs={12} md={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
             <Button
               component={NextLink}
               href={`/dashboard/authority/${authorityId}/agent/add`}
