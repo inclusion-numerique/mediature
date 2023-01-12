@@ -1,9 +1,10 @@
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display';
 import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import type { DefaultColorScheme } from '@codegouvfr/react-dsfr/next-appdir';
+import { EventEmitter } from 'eventemitter3';
 
+import { HeaderUserItem } from '@mediature/main/src/components/HeaderUserItem';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
-import { logout } from '@mediature/main/src/utils/auth';
 
 export const defaultColorScheme: DefaultColorScheme = 'system';
 
@@ -21,12 +22,16 @@ export const homeLinkProps = {
 };
 
 export const logoutQuickAccessItem = (user: TokenUserSchemaType): HeaderProps.QuickAccessItem => {
+  const eventEmitter = new EventEmitter();
+
   return {
-    iconId: 'fr-icon-lock-line',
+    iconId: undefined as any,
     buttonProps: {
-      onClick: logout,
+      onClick: (event) => {
+        eventEmitter.emit('click', event);
+      },
     },
-    text: `Se déconnecter (${user.firstname})`,
+    text: <HeaderUserItem user={user} eventEmitter={eventEmitter} />,
   };
 };
 
