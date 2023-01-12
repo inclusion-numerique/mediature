@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { DefaultBodyType, DelayMode, PathParams, ResponseTransformer, RestRequest, rest } from 'msw';
 import path from 'path';
 
 import { mockBaseUrl } from '@mediature/main/src/server/mock/environment';
@@ -37,6 +37,7 @@ export const getTRPCMock = <
   path: [K1];
   response: O;
   type?: 'query' | 'mutation';
+  delayHook?: (req: RestRequest<DefaultBodyType, PathParams<string>>, params: RouterInputs[K1]) => number | DelayMode | null;
 }) => {
   const fn = endpoint.type === 'mutation' ? rest.post : rest.get;
 
@@ -46,6 +47,38 @@ export const getTRPCMock = <
     const rpcResponse =
       (endpoint.response as any) instanceof Error ? jsonRpcErrorResponse(endpoint.response) : jsonRpcSuccessResponse(endpoint.response);
 
-    return res(ctx.json(rpcResponse));
+    const transformers: ResponseTransformer<DefaultBodyType, any>[] = [];
+
+    if (!!endpoint.delayHook) {
+      let params: RouterInputs[K1];
+      if (endpoint.type === 'query') {
+        params = extractParamsFromQuery(req) as RouterInputs[K1];
+      } else {
+        params = req.params as RouterInputs[K1];
+      }
+
+      const delayToAdd = endpoint.delayHook(req, params);
+
+      if (delayToAdd !== null && delayToAdd !== 0) {
+        transformers.push(ctx.delay(delayToAdd));
+      }
+    }
+
+    transformers.push(ctx.json(rpcResponse));
+
+    return res(...transformers);
   });
 };
+
+export function extractParamsFromQuery(req: RestRequest<DefaultBodyType, PathParams<string>>): object {
+  const url = new URL(req.url);
+
+  const inputQueryParam = url.searchParams.get('input');
+  if (inputQueryParam) {
+    const params = JSON.parse(inputQueryParam)[0];
+
+    return params;
+  }
+
+  return {};
+}

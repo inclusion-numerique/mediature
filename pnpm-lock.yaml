@@ -177,6 +177,7 @@ importers:
       '@sentry/nextjs': ^7.20.0
       '@sentry/rrweb': ^0.3.3
       '@storybook/react': 7.0.0-beta.19
+      '@storybook/testing-library': 0.0.14-next.1
       '@tanstack/react-query': ^4.19.1
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^13.4.0
@@ -251,6 +252,7 @@ importers:
       '@sentry/nextjs': 7.21.1_next@13.0.7+react@18.2.0
       '@sentry/rrweb': 0.3.3_rrweb@1.1.3
       '@storybook/react': 7.0.0-beta.19_lb6du3saekb5anf2gjv3wxj3oq
+      '@storybook/testing-library': 0.0.14-next.1
       '@tanstack/react-query': 4.19.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.4.3_@trpc+server@10.4.3
       '@trpc/next-layout': link:../../packages/trpc-next-layout
@@ -5733,8 +5735,8 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
 
-  /@storybook/client-logger/7.0.0-beta.24:
-    resolution: {integrity: sha512-5VlDqYmbz/KrHPo+7Iis/fKO2oPGMoEpWyscyGoqJmJLHm7flA7NJWlVmSkUcvOZ9NO7spyX7NLwVudxHYY7og==}
+  /@storybook/client-logger/7.0.0-beta.25:
+    resolution: {integrity: sha512-yMTK00dj1x8Q3zxciEckHOT9BpGpQofAx51h7X7PuiVqhAnk1YyIJW99eSjfUb/Yj6PNwjysv+6E6rXSiTAu6A==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -6622,7 +6624,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.24
+      '@storybook/client-logger': 7.0.0-beta.25
       '@storybook/instrumenter': 7.0.0-beta.19
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei

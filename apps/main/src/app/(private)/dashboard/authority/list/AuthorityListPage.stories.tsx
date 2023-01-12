@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { userEvent, within } from '@storybook/testing-library';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
@@ -17,17 +18,17 @@ export default {
   }),
 } as Meta<typeof AuthorityListPage>;
 
+const mswListAuthoritiesParameters = {
+  type: 'query' as 'query',
+  path: ['listAuthorities'] as ['listAuthorities'],
+  response: {
+    authoritiesWrappers: [authoritiesWrappers[0], authoritiesWrappers[1], authoritiesWrappers[2]],
+  },
+};
+
 const defaultMswParameters = {
   msw: {
-    handlers: [
-      getTRPCMock({
-        type: 'query',
-        path: ['listAuthorities'],
-        response: {
-          authoritiesWrappers: [authoritiesWrappers[0], authoritiesWrappers[1], authoritiesWrappers[2]],
-        },
-      }),
-    ],
+    handlers: [getTRPCMock(mswListAuthoritiesParameters)],
   },
 };
 
@@ -53,4 +54,55 @@ WithLayoutStory.args = {};
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,
 });
-WithLayoutStory.parameters = { ...defaultMswParameters, ...defaultAuthParameters };
+WithLayoutStory.parameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        ...mswListAuthoritiesParameters,
+      }),
+    ],
+  },
+  ...defaultAuthParameters,
+};
+
+const SearchLoadingWithLayoutStory = Template.bind({});
+SearchLoadingWithLayoutStory.args = {};
+
+export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory, {
+  layoutStory: PrivateLayoutNormalStory,
+});
+SearchLoadingWithLayoutStory.parameters = {
+  counter: 0,
+  msw: {
+    handlers: [
+      getTRPCMock({
+        ...mswListAuthoritiesParameters,
+        delayHook: (req, params) => {
+          // It will be infinite for all except the first query that allows displaying almost all the page
+          if (SearchLoadingWithLayoutStory.parameters?.counter !== undefined) {
+            SearchLoadingWithLayoutStory.parameters.counter++;
+
+            if (SearchLoadingWithLayoutStory.parameters.counter > 1) {
+              return 'infinite';
+            }
+          }
+
+          return null;
+        },
+      }),
+    ],
+  },
+  ...defaultAuthParameters,
+};
+SearchLoadingWithLayoutStory.play = async ({ canvasElement }) => {
+  if (SearchLoadingWithLayoutStory.parameters?.counter !== undefined) {
+    SearchLoadingWithLayoutStory.parameters.counter = 0;
+  }
+
+  const canvas = within(canvasElement);
+  const searchInput = await canvas.findByRole('textbox', {
+    name: /Rechercher/i,
+  });
+
+  await userEvent.type(searchInput, 'Ma belle recherche');
+};
