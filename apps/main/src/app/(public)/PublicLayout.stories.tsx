@@ -11,6 +11,7 @@ export default {
   component: PublicLayout,
   ...generateMetaDefault({
     parameters: {
+      layout: 'fullscreen',
       msw: {
         handlers: [],
       },

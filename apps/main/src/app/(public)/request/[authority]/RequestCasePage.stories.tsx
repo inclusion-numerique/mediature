@@ -90,7 +90,10 @@ const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
   ...commonNextParamsParameters,
 };
-WithLayoutStory.parameters = { ...defaultMswParameters };
+WithLayoutStory.parameters = {
+  layout: 'fullscreen',
+  ...defaultMswParameters,
+};
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: VisitorOnlyLayoutNormalStory,

@@ -55,6 +55,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,
 });
 WithLayoutStory.parameters = {
+  layout: 'fullscreen',
   msw: {
     handlers: [
       getTRPCMock({
@@ -72,6 +73,7 @@ export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory
   layoutStory: PrivateLayoutNormalStory,
 });
 SearchLoadingWithLayoutStory.parameters = {
+  layout: 'fullscreen',
   counter: 0,
   msw: {
     handlers: [

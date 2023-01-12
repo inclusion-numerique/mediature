@@ -72,6 +72,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,
 });
 WithLayoutStory.parameters = {
+  layout: 'fullscreen',
   ...defaultMswParameters,
   ...defaultAuthParameters,
 };

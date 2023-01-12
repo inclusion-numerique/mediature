@@ -36,6 +36,9 @@ export const Normal = prepareStory(NormalStory, {
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {};
+WithLayoutStory.parameters = {
+  layout: 'fullscreen',
+};
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,

@@ -12,6 +12,7 @@ export default {
   component: PrivateLayout,
   ...generateMetaDefault({
     parameters: {
+      layout: 'fullscreen',
       msw: {
         handlers: [],
       },

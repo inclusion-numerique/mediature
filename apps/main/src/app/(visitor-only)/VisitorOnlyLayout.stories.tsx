@@ -12,6 +12,7 @@ export default {
   component: VisitorOnlyLayout,
   ...generateMetaDefault({
     parameters: {
+      layout: 'fullscreen',
       msw: {
         handlers: [],
       },

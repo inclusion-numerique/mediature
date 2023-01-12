@@ -57,7 +57,10 @@ export const MissingInvitationToken = prepareStory(MissingInvitationTokenStory, 
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {};
-WithLayoutStory.parameters = { ...tokenProvidedParameters };
+WithLayoutStory.parameters = {
+  layout: 'fullscreen',
+  ...tokenProvidedParameters,
+};
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: VisitorOnlyLayoutNormalStory,
