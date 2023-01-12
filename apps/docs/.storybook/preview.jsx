@@ -12,6 +12,7 @@ import { MockProvider } from '@mediature/docs/.storybook/MockProvider';
 import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContainer';
 // import { DARK_MODE_EVENT_NAME, UPDATE_DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 import { disableGlobalDsfrStyle } from '@mediature/docs/.storybook/helpers';
+import '@mediature/docs/.storybook/layout.scss';
 import { withDisablingTestRunner } from '@mediature/docs/.storybook/testing';
 // import { useDarkMode } from 'storybook-dark-mode';
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';

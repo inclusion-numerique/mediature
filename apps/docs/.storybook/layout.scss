@@ -1,0 +1,9 @@
+html, body, #storybook-root {
+    width: 100%;
+    height: 100%;
+}
+
+#storybook-root {
+    display: flex;
+    flex-direction: column;
+}
