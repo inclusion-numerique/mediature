@@ -67,7 +67,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
                 <Typography sx={{ fontWeight: 'bold' }}>Liste des médiateurs :</Typography>
                 <Grid container spacing={1}>
                   {props.agents.map((agent) => (
-                    <Grid item xs={12} sm={6}>
+                    <Grid key={agent.id} item xs={12} sm={6}>
                       {agent.firstname} {agent.lastname}
                     </Grid>
                   ))}
