@@ -1,12 +1,13 @@
 'use client';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Button, Grid, Skeleton, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export interface AgentListPageProps {
   params: { authorityId: string };
@@ -35,8 +36,8 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
 
   if (error) {
     return <span>Error TODO</span>;
-  } else if (isInitialLoading) {
-    return <span>Loading... TODO template</span>;
+  } else if (isLoading) {
+    return <LoadingArea />;
   }
 
   return (
@@ -60,22 +61,18 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
             </Button>
           </Grid>
         </Grid>
-        {!isLoading ? (
-          <Grid container spacing={3}>
-            {agentsWrappers.map((agentWrapper) => (
-              <Grid key={agentWrapper.agent.id} item xs={12} sm={6}>
-                <AgentCard
-                  agent={agentWrapper.agent}
-                  openCases={agentWrapper.openCases}
-                  closeCases={agentWrapper.closeCases}
-                  removeAction={() => removeAgentAction(agentWrapper.agent.id)}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Skeleton />
-        )}
+        <Grid container spacing={3}>
+          {agentsWrappers.map((agentWrapper) => (
+            <Grid key={agentWrapper.agent.id} item xs={12} sm={6}>
+              <AgentCard
+                agent={agentWrapper.agent}
+                openCases={agentWrapper.openCases}
+                closeCases={agentWrapper.closeCases}
+                removeAction={() => removeAgentAction(agentWrapper.agent.id)}
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </>
   );

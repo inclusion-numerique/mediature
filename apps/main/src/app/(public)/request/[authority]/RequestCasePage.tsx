@@ -8,6 +8,7 @@ import { createContext, useContext } from 'react';
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredFormContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const RequestCasePageContext = createContext({
   ContextualRequestCaseForm: RequestCaseForm,
@@ -29,7 +30,7 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
   if (error) {
     return <span>Error TODO</span>;
   } else if (isLoading) {
-    return <span>Loading... TODO template</span>;
+    return <LoadingArea />;
   } else if (!authority) {
     // TODO: in case of error... do the right thing, "notFound() / error500..."
     // Error: <head> cannot appear as a child of <div>

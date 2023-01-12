@@ -1,6 +1,6 @@
 'use client';
 
-import { Link, Skeleton, Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 export function OverviewPage() {

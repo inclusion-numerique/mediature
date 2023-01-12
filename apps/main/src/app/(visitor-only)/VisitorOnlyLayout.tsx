@@ -1,11 +1,11 @@
 'use client';
 
-import { Skeleton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect } from 'react';
 
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export function VisitorOnlyLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
@@ -21,7 +21,7 @@ export function VisitorOnlyLayout(props: PropsWithChildren) {
   }, [router, sessionWrapper.status]);
 
   if (sessionWrapper.status !== 'unauthenticated') {
-    return <Skeleton />;
+    return <LoadingArea />;
   }
 
   // Take as layout the public one

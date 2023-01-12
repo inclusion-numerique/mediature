@@ -2,18 +2,18 @@
 
 import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
-import { Skeleton } from '@mui/material';
 import { PropsWithChildren } from 'react';
 
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
 
   if (sessionWrapper.status === 'loading') {
-    return <Skeleton />;
+    return <LoadingArea />;
   }
 
   // TODO: display a loading... maybe on the whole layout?

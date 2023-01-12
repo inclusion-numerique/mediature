@@ -3,7 +3,7 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button, Card, CardContent, CircularProgress, Grid, IconButton, InputAdornment, Skeleton, TextField, Typography } from '@mui/material';
+import { Button, Card, CardContent, CircularProgress, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import debounce from 'lodash.debounce';
 import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -11,6 +11,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export function AuthorityListPage() {
   const queryRef = React.createRef<HTMLInputElement>();
@@ -41,7 +42,7 @@ export function AuthorityListPage() {
   if (error) {
     return <span>Error TODO</span>;
   } else if (isInitialLoading && !searchQueryManipulated) {
-    return <span>Loading... TODO template</span>;
+    return <LoadingArea />;
   }
 
   const handleClearQuery = () => {
@@ -105,7 +106,7 @@ export function AuthorityListPage() {
             ))}
           </Grid>
         ) : (
-          <Skeleton />
+          <LoadingArea />
         )}
       </Grid>
     </>

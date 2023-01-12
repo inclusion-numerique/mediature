@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { userSessionContext, visitorSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
+import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PublicLayout>();
 
@@ -71,3 +72,18 @@ LoremStory.args = {
 
 export const Lorem = prepareStory(LoremStory);
 Lorem.storyName = 'With lorem';
+
+const LoadingStory = Template.bind({});
+LoadingStory.parameters = {
+  ...AsVisitorStory.parameters,
+};
+LoadingStory.args = {
+  children: (
+    <>
+      <LoadingArea />
+    </>
+  ),
+};
+
+export const Loading = prepareStory(LoadingStory);
+Loading.storyName = 'With loader';
