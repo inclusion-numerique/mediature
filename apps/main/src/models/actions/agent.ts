@@ -59,5 +59,5 @@ export const InviteAgentSchema = z
   .strict();
 export type InviteAgentSchemaType = z.infer<typeof InviteAgentSchema>;
 
-export const InviteAgentPrefillSchema = InviteAgentSchema.deepPartial();
+export const InviteAgentPrefillSchema = InviteAgentSchema.deepPartial().strict();
 export type InviteAgentPrefillSchemaType = z.infer<typeof InviteAgentPrefillSchema>;

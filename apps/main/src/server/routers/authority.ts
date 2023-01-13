@@ -9,7 +9,7 @@ import {
 } from '@mediature/main/src/models/actions/authority';
 import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import { agentPrismaToModel, authorityPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export async function isUserAnAdmin(userId: string): Promise<boolean> {
@@ -142,7 +142,7 @@ export const authorityRouter = router({
       throw new Error(`aucune collectivité trouvée`);
     }
 
-    return authority;
+    return { authority: authorityPrismaToModel(authority) };
   }),
   getPublicFacingAuthority: publicProcedure.input(GetPublicFacingAuthoritySchema).query(async ({ ctx, input }) => {
     const authority = await prisma.authority.findUnique({
@@ -213,17 +213,7 @@ export const authorityRouter = router({
         }
 
         return {
-          authority: {
-            id: authority.id,
-            name: authority.name,
-            slug: authority.slug,
-            mainAgentId: authority.mainAgentId,
-            type: authority.type,
-            logo: null, // TODO
-            createdAt: authority.createdAt,
-            updatedAt: authority.updatedAt,
-            deletedAt: authority.deletedAt,
-          },
+          authority: authorityPrismaToModel(authority),
           mainAgent: authority.mainAgent ? agentPrismaToModel(authority.mainAgent) : null,
           agents: authority.Agent.map((agent) => {
             return agentPrismaToModel(agent);

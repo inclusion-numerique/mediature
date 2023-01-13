@@ -69,8 +69,9 @@ export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSc
 
 export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({
-    authorityIds: z.array(AuthoritySchema.shape.id).nullable(),
-    assigned: z.boolean().nullable(),
+    query: z.string().nullish(),
+    authorityIds: z.array(AuthoritySchema.shape.id).nullish(),
+    assigned: z.boolean().nullish(),
   }),
 }).strict();
 export type ListCasesSchemaType = z.infer<typeof ListCasesSchema>;

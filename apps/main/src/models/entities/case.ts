@@ -2,6 +2,8 @@ import z from 'zod';
 
 import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 
+import { CitizenSchema } from './citizen';
+
 export const CasePlatformSchema = z.enum(['WEB']);
 export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 
@@ -62,3 +64,11 @@ export const CaseNoteAttachmentSchema = AttachmentSchema.extend({
   transmitter: CaseAttachmentTypeSchema,
 }).strict();
 export type CaseNoteAttachmentSchemaType = z.infer<typeof CaseNoteAttachmentSchema>;
+
+export const CaseWrapperSchema = z
+  .object({
+    case: CaseSchema,
+    citizen: CitizenSchema,
+  })
+  .strict();
+export type CaseWrapperSchemaType = z.infer<typeof CaseWrapperSchema>;

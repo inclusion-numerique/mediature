@@ -36,12 +36,6 @@ const defaultMswParameters = {
   },
 };
 
-const defaultAuthParameters = {
-  nextAuthMock: {
-    session: userSessionContext,
-  },
-};
-
 const commonNextParamsParameters = {
   params: {
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
@@ -58,7 +52,6 @@ NormalStory.args = {
 };
 NormalStory.parameters = {
   ...defaultMswParameters,
-  ...defaultAuthParameters,
 };
 
 export const Normal = prepareStory(NormalStory, {});
@@ -67,12 +60,11 @@ const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
   ...commonNextParamsParameters,
 };
+WithLayoutStory.parameters = {
+  layout: 'fullscreen',
+  ...defaultMswParameters,
+};
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,
 });
-WithLayoutStory.parameters = {
-  layout: 'fullscreen',
-  ...defaultMswParameters,
-  ...defaultAuthParameters,
-};

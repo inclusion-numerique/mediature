@@ -16,6 +16,7 @@
     "lint:ts": "tsc --noEmit --incremental false"
   },
   "dependencies": {
+    "@codegouvfr/react-dsfr": "0.24.0",
     "@luma-team/mjml-react": "^0.2.0",
     "material-ui-confirm": "^3.0.7",
     "mjml": "^4.13.0",
@@ -33,7 +34,7 @@
     "@types/mjml": "^4.7.0",
     "@types/mjml-react": "^2.0.6",
     "@types/node": "^17.0.45",
-    "@types/react": "^18.0.22",
+    "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.7",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",

@@ -4,52 +4,62 @@ import { userEvent, within } from '@storybook/testing-library';
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { AuthorityListPage } from '@mediature/main/src/app/(private)/dashboard/authority/list/AuthorityListPage';
-import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
+import { CaseListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/list/CaseListPage';
+import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AuthorityListPage>();
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseListPage>();
 
 export default {
-  title: 'Pages/AuthorityList',
-  component: AuthorityListPage,
+  title: 'Pages/CaseList',
+  component: CaseListPage,
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AuthorityListPage>;
+} as Meta<typeof CaseListPage>;
 
-const mswListAuthoritiesParameters = {
+const mswListCasesParameters = {
   type: 'query' as 'query',
-  path: ['listAuthorities'] as ['listAuthorities'],
+  path: ['listCases'] as ['listCases'],
   response: {
-    authoritiesWrappers: [authoritiesWrappers[0], authoritiesWrappers[1], authoritiesWrappers[2]],
+    casesWrappers: [casesWrappers[0], casesWrappers[1], casesWrappers[2]],
   },
 };
 
 const defaultMswParameters = {
   msw: {
-    handlers: [getTRPCMock(mswListAuthoritiesParameters)],
+    handlers: [getTRPCMock(mswListCasesParameters)],
   },
 };
 
-const Template: StoryFn<typeof AuthorityListPage> = (args) => {
-  return <AuthorityListPage />;
+const commonNextParamsParameters = {
+  params: {
+    authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+  },
+};
+
+const Template: StoryFn<typeof CaseListPage> = (args) => {
+  return <CaseListPage {...args} />;
 };
 
 const NormalStory = Template.bind({});
-NormalStory.args = {};
+NormalStory.args = {
+  ...commonNextParamsParameters,
+};
 NormalStory.parameters = { ...defaultMswParameters };
 
 export const Normal = prepareStory(NormalStory, {});
 
 const WithLayoutStory = Template.bind({});
-WithLayoutStory.args = {};
+WithLayoutStory.args = {
+  ...commonNextParamsParameters,
+};
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
   msw: {
     handlers: [
       getTRPCMock({
-        ...mswListAuthoritiesParameters,
+        ...mswListCasesParameters,
       }),
     ],
   },
@@ -60,14 +70,16 @@ export const WithLayout = prepareStory(WithLayoutStory, {
 });
 
 const SearchLoadingWithLayoutStory = Template.bind({});
-SearchLoadingWithLayoutStory.args = {};
+SearchLoadingWithLayoutStory.args = {
+  ...commonNextParamsParameters,
+};
 SearchLoadingWithLayoutStory.parameters = {
   layout: 'fullscreen',
   counter: 0,
   msw: {
     handlers: [
       getTRPCMock({
-        ...mswListAuthoritiesParameters,
+        ...mswListCasesParameters,
         delayHook: (req, params) => {
           // It will be infinite for all except the first query that allows displaying almost all the page
           if (SearchLoadingWithLayoutStory.parameters?.counter !== undefined) {

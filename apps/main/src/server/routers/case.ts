@@ -13,9 +13,10 @@ import {
   UpdateCaseNoteSchema,
   UpdateCaseSchema,
 } from '@mediature/main/src/models/actions/case';
-import { CasePlatformSchema, CaseStatusSchema } from '@mediature/main/src/models/entities/case';
+import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export async function isAgentPartOfAuthority(authorityId: string, agentId: string): Promise<boolean> {
@@ -262,6 +263,15 @@ export const caseRouter = router({
       }
     }
 
+    let humandIdSearch: number | undefined;
+    if (input.filterBy.query) {
+      const value = parseInt(input.filterBy.query);
+
+      if (!isNaN(value)) {
+        humandIdSearch = value;
+      }
+    }
+
     const cases = await prisma.case.findMany({
       where: {
         authorityId: input.filterBy.authorityIds
@@ -269,14 +279,50 @@ export const caseRouter = router({
               in: input.filterBy.authorityIds,
             }
           : undefined,
+        humanId: input.filterBy.query
+          ? {
+              equals: humandIdSearch,
+            }
+          : undefined,
+        description: input.filterBy.query
+          ? {
+              search: input.filterBy.query,
+              mode: 'insensitive',
+            }
+          : undefined,
+        citizen: {
+          // TODO: concatenate the 2 columns in the DB and search on it
+          firstname: input.filterBy.query
+            ? {
+                search: input.filterBy.query,
+                mode: 'insensitive',
+              }
+            : undefined,
+          lastname: input.filterBy.query
+            ? {
+                search: input.filterBy.query,
+                mode: 'insensitive',
+              }
+            : undefined,
+        },
         agent: {
           is: input.filterBy.assigned === false ? null : undefined,
           isNot: input.filterBy.assigned === false ? null : undefined,
         },
       },
+      include: {
+        citizen: true,
+      },
     });
 
-    return { cases };
+    return {
+      casesWrappers: cases.map((iterationCase): CaseWrapperSchemaType => {
+        return {
+          case: casePrismaToModel(iterationCase),
+          citizen: citizenPrismaToModel(iterationCase.citizen),
+        };
+      }),
+    };
   }),
   generatePdfFromCase: privateProcedure.input(GeneratePdfFromCaseSchema).mutation(async ({ ctx, input }) => {
     // TODO

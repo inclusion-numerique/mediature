@@ -6,6 +6,7 @@ export const CitizenSchema = z
     email: z.string().email(),
     firstname: z.string().min(1),
     lastname: z.string().min(1),
+    // TODO: phone / address
     createdAt: z.date(),
     updatedAt: z.date(),
     deletedAt: z.date().nullable(),
