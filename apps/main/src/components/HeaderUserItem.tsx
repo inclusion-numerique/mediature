@@ -59,6 +59,7 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
         PaperProps={{ ...menuPaperProps }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        sx={{ zIndex: 2000 }} // Needed to be displayed over the navbar on mobile devices
       >
         <MenuItem>
           <ListItemIcon>
