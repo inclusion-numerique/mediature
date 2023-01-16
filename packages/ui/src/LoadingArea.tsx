@@ -27,6 +27,7 @@ export const LoadingArea = (props: LoadingAreaProps) => {
         flex: '1 1 auto',
         alignItems: 'center',
         justifyContent: 'center',
+        p: 3,
       }}
     >
       <CircularProgress size={loaderSize} />
