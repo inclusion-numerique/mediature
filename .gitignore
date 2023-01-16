@@ -2,6 +2,7 @@
 /**/.*/**/*
 !.github/**/*
 !.vscode/extensions.json
+!.vscode/settings.json
 !.well-known/**/*
 
 # dependencies
