@@ -3,6 +3,7 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Box, Grid, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import FocusTrap from '@mui/material/Unstable_TrapFocus';
 import { EventEmitter } from 'eventemitter3';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
@@ -50,30 +51,33 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
           {props.user.firstname} {props.user.lastname}
         </Grid>
       </Grid>
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={open}
-        onClose={handleClose}
-        onClick={handleClose}
-        PaperProps={{ ...menuPaperProps }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-        sx={{ zIndex: 2000 }} // Needed to be displayed over the navbar on mobile devices
-      >
-        <MenuItem>
-          <ListItemIcon>
-            <SettingsIcon fontSize="small" />
-          </ListItemIcon>
-          Paramètres
-        </MenuItem>
-        <MenuItem onClick={logout}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" />
-          </ListItemIcon>
-          Se déconnecter
-        </MenuItem>
-      </Menu>
+      <FocusTrap open={open}>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          disableEnforceFocus={true} // Required otherwise on responsive navbar clicking when the menu is open throws an error ("Maximum call stack size exceeded" on the "FocusTrap"). I did not find a way to fix this :/ ... not sure about the accessibility impact so we added manually a `<FocusTrap>` (https://mui.com/material-ui/react-modal/#focus-trap)?
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{ ...menuPaperProps }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          sx={{ zIndex: 2000 }} // Needed to be displayed over the navbar on mobile devices
+        >
+          <MenuItem>
+            <ListItemIcon>
+              <SettingsIcon fontSize="small" />
+            </ListItemIcon>
+            Paramètres
+          </MenuItem>
+          <MenuItem onClick={logout}>
+            <ListItemIcon>
+              <LogoutIcon fontSize="small" />
+            </ListItemIcon>
+            Se déconnecter
+          </MenuItem>
+        </Menu>
+      </FocusTrap>
     </Box>
   );
 }
