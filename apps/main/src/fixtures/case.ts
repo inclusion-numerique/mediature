@@ -10,8 +10,11 @@ export const cases: CaseSchemaType[] = [
     agentId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e31',
     alreadyRequestedInThePast: false,
     gotAnswerFromPreviousRequest: true,
-    description:
-      'Vero mollitia rerum labore aperiam facere minima. Placeat quibusdam quaerat exercitationem eveniet ut velit vel fuga atque. Aliquam molestiae aut error nisi et facere unde esse. Sit maiores repellat sint debitis consequatur officia repellendus illo.',
+    description: `Veritatis ducimus quas atque. Velit cumque sunt tempore laboriosam nesciunt beatae aut. Blanditiis explicabo sint ut omnis doloribus necessitatibus magni molestias perspiciatis. Eveniet enim optio tenetur non voluptatum facilis. Harum reprehenderit quos nesciunt tenetur ut quo qui. Eos non est illo et dolorum ipsa.
+
+Ad quasi cum ut ipsa harum accusantium minima quo magnam. Similique repellendus ab dolor magnam officiis laboriosam repudiandae vitae. Rem aut quasi. Repudiandae vel aut commodi. Ullam deserunt nesciunt ullam quibusdam consequatur dolor reiciendis.
+
+Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat libero amet. Architecto provident recusandae.`,
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,

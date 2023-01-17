@@ -31,7 +31,7 @@
   },
   "pnpm": {
     "overrides": {
-      "@codegouvfr/react-dsfr": "0.24.0",
+      "@codegouvfr/react-dsfr": "^0.25.4",
       "@lhci/cli": "^0.10.0",
       "@mui/icons-material": "^5.10.16",
       "@mui/material": "^5.10.16",
@@ -39,6 +39,7 @@
       "@storybook/react": "7.0.0-beta.19",
       "@storybook/testing-library": "0.0.14-next.1",
       "@types/react": "^18.0.26",
+      "date-fns": "^2.29.3",
       "dotenv": "^16.0.3",
       "dotenv-run-script": "^0.2.0",
       "get-tsconfig": "^4.2.0",

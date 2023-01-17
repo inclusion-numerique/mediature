@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 overrides:
-  '@codegouvfr/react-dsfr': 0.24.0
+  '@codegouvfr/react-dsfr': ^0.25.4
   '@lhci/cli': ^0.10.0
   '@mui/icons-material': ^5.10.16
   '@mui/material': ^5.10.16
@@ -9,6 +9,7 @@ overrides:
   '@storybook/react': 7.0.0-beta.19
   '@storybook/testing-library': 0.0.14-next.1
   '@types/react': ^18.0.26
+  date-fns: ^2.29.3
   dotenv: ^16.0.3
   dotenv-run-script: ^0.2.0
   get-tsconfig: ^4.2.0
@@ -44,7 +45,7 @@ importers:
   apps/docs:
     specifiers:
       '@anatine/zod-mock': ^3.6.0
-      '@codegouvfr/react-dsfr': 0.24.0
+      '@codegouvfr/react-dsfr': ^0.25.4
       '@mdx-js/react': 1.6.22
       '@mediature/main': workspace:main@*
       '@mediature/ui': workspace:ui@*
@@ -111,7 +112,7 @@ importers:
       typescript: ^4.5.3
     dependencies:
       '@anatine/zod-mock': 3.6.0
-      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
+      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
       '@mediature/main': link:../main
       '@mediature/ui': link:../../packages/ui
       '@storybook/addon-interactions': 6.5.15_qs7bkq7q37abor2mq6p2ts4x4m
@@ -181,7 +182,7 @@ importers:
   apps/main:
     specifiers:
       '@anatine/zod-mock': ^3.6.0
-      '@codegouvfr/react-dsfr': 0.24.0
+      '@codegouvfr/react-dsfr': ^0.25.4
       '@cypress/webpack-preprocessor': ^5.15.5
       '@emotion/react': ^11.10.5
       '@emotion/server': ^11.10.0
@@ -263,7 +264,7 @@ importers:
       uuid: ^9.0.0
       zod: ^3.19.1
     dependencies:
-      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
+      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
       '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
       '@emotion/server': 11.10.0
       '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
@@ -400,7 +401,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@codegouvfr/react-dsfr': 0.24.0
+      '@codegouvfr/react-dsfr': ^0.25.4
       '@lottiefiles/react-lottie-player': ^3.4.9
       '@luma-team/mjml-react': ^0.2.0
       '@mediature/docs': workspace:docs@*
@@ -413,6 +414,8 @@ importers:
       '@types/node': ^17.0.45
       '@types/react': ^18.0.26
       '@types/react-dom': ^18.0.7
+      '@types/react-show-more-text': ^1.4.2
+      date-fns: ^2.29.3
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       material-ui-confirm: ^3.0.7
@@ -421,16 +424,19 @@ importers:
       next: ^13.0.7
       react: ^18.2.0
       react-dom: ^18.2.0
+      react-show-more-text: ^1.6.2
       tsconfig: workspace:*
       typescript: ^4.5.3
     dependencies:
-      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
+      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
       '@luma-team/mjml-react': 0.2.0_biqbaboplfbrettd7655fr4n2y
+      date-fns: 2.29.3
       material-ui-confirm: 3.0.7_gdf3iu2ggqrklttzrxe7wuxlzu
       mjml: 4.13.0
       next: 13.1.1_biqbaboplfbrettd7655fr4n2y
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-show-more-text: 1.6.2_react@18.2.0
     devDependencies:
       '@lottiefiles/react-lottie-player': 3.4.9_react@18.2.0
       '@mediature/docs': link:../../apps/docs
@@ -443,6 +449,7 @@ importers:
       '@types/node': 17.0.45
       '@types/react': 18.0.26
       '@types/react-dom': 18.0.9
+      '@types/react-show-more-text': 1.4.2
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       mjml-browser: 4.13.0
@@ -1947,6 +1954,14 @@ packages:
       '@babel/helper-create-regexp-features-plugin': 7.20.5_@babel+core@7.20.5
       '@babel/helper-plugin-utils': 7.20.2
 
+  /@babel/polyfill/7.12.1:
+    resolution: {integrity: sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==}
+    deprecated: 🚨 This package has been deprecated in favor of separate inclusion of a polyfill and regenerator-runtime (when needed). See the @babel/polyfill docs (https://babeljs.io/docs/en/babel-polyfill) for more information.
+    dependencies:
+      core-js: 2.6.12
+      regenerator-runtime: 0.13.11
+    dev: false
+
   /@babel/preset-env/7.20.2_@babel+core@7.20.5:
     resolution: {integrity: sha512-1G0efQEWR1EHkKvKHqbG+IN/QdgwfByUpM5V5QroDzGV2t3S/WXNQd693cHiHTlCFMpr9B6FkPFXDA2lQcKoDg==}
     engines: {node: '>=6.9.0'}
@@ -2282,17 +2297,12 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@codegouvfr/react-dsfr/0.24.0_kzbn2opkn2327fwg5yzwzya5o4:
-    resolution: {integrity: sha512-5Uos8tZdgUNCWyzgOv8l4UU3F53ffyZZvLeSi3jAsu7DLeLUGQNJhybX7Xg74HcTcB0lEm4Ky4c237HIM3A8Xw==}
+  /@codegouvfr/react-dsfr/0.25.4_react@18.2.0:
+    resolution: {integrity: sha512-RQnZej4K+H/S/sIBkmyq9pJNNfpEcK7tLzzoLxiJe8HS4/Cx6LlRir3SET+TjZXRF3jzZVjL51AcM3xidimdjg==}
     hasBin: true
     peerDependencies:
-      '@types/react': ^16.0.0 || ^17.0.0 || ^18.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
     dependencies:
-      '@types/react': 18.0.26
       react: 18.2.0
       tsafe: 1.4.1
     dev: false
@@ -5677,8 +5687,8 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
 
-  /@storybook/client-logger/7.0.0-beta.28:
-    resolution: {integrity: sha512-hF9IRa36Ydd22KKfZTXEtHzs1SDO7f+vj8cg5lyvEqS/UmCKNDSiScvz5iyfHmqJX+OEa/6I8b/yX8TU1vYoEw==}
+  /@storybook/client-logger/7.0.0-beta.29:
+    resolution: {integrity: sha512-Qi3TrJWAp36CVr9AUPSqszXSoMBaFo5shE0RqIxuqDjYEWlwnQa9ZvmqoGWsklSr1S80OeMxyrFtgdkilgwAgQ==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -6547,7 +6557,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.28
+      '@storybook/client-logger': 7.0.0-beta.29
       '@storybook/instrumenter': 7.0.0-beta.19
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei
@@ -7160,6 +7170,12 @@ packages:
     resolution: {integrity: sha512-aBTIWg1emtu95bLTLx0cpkxwGW3ueZv71nE2YFBpL8k/z5czEW8yYpOo8Dp+UUAFAtKwNaOsh/ioSeQnWlZcfw==}
     dependencies:
       '@types/react': 18.0.26
+
+  /@types/react-show-more-text/1.4.2:
+    resolution: {integrity: sha512-CinPPhpxYFVKx4V0yqQGK0HUbHdlvLH8fQ/Ccp5XNKuQyIyc6bDMQz5b8bIBqmhMcCvn6AvSz3MmPpwNVCjmHQ==}
+    dependencies:
+      '@types/react': 18.0.26
+    dev: true
 
   /@types/react-textarea-autosize/4.3.6:
     resolution: {integrity: sha512-cTf8tCem0c8A7CERYbTuF+bRFaqYu7N7HLCa6ZhUhDx8XnUsTpGx5udMWljt87JpciUKuUkImKPEsy6kcKhrcQ==}
@@ -9590,6 +9606,12 @@ packages:
 
   /core-js-pure/3.26.1:
     resolution: {integrity: sha512-VVXcDpp/xJ21KdULRq/lXdLzQAtX7+37LzpyfFM973il0tWSsDEoyzG38G14AjTpK9VTfiNM9jnFauq/CpaWGQ==}
+    requiresBuild: true
+    dev: false
+
+  /core-js/2.6.12:
+    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==}
+    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
     requiresBuild: true
     dev: false
 
@@ -18692,6 +18714,16 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: true
+
+  /react-show-more-text/1.6.2_react@18.2.0:
+    resolution: {integrity: sha512-Z6tRcnEosHvo07vZw36LxCjqYq4ghgaDI273b5XcayJ1PYbT56OKbaQlPqH7W9LGF5rhUVIhEDBPURuG5eO/Uw==}
+    peerDependencies:
+      react: 16 - 18.x
+    dependencies:
+      '@babel/polyfill': 7.12.1
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
 
   /react-simple-animate/3.5.2_react-dom@18.2.0:
     resolution: {integrity: sha512-xLE65euP920QMTOmv5haPlml+hmOPDkbIr5WeF7ADIXWBYt5kW/vwpNfWg8EKMab8aeDxIZ6QjffVh8v2dUyhg==}
