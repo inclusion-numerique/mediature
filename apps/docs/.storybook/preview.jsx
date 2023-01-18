@@ -22,7 +22,7 @@ import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storyb
 // const channel = addons.getChannel();
 
 // Initialize MSW
-initialize({
+const mswServerSingleton = initialize({
   onUnhandledRequest: (request, print) => {
     if (request.url.pathname.startsWith('/api/')) {
       // If API calls are not handled it means they are missing handlers for the server mock

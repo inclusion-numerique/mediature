@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "eslint.packageManager": "pnpm",
   "faker.locale": "fr",
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true,
