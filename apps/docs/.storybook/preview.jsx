@@ -3,6 +3,7 @@ import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { withLinks } from '@storybook/addon-links';
 import addons from '@storybook/addons';
+import { configure as testingConfigure } from '@storybook/testing-library';
 import { themes } from '@storybook/theming';
 import { withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
@@ -33,6 +34,10 @@ const mswServerSingleton = initialize({
     }
   },
 });
+
+// Increase the timeout because when testing (test runners or interactions panel) all async methods like `findBy`
+// have 1 second of timeout, this is sometimes too short when there are multiple loadings behind
+testingConfigure({ asyncUtilTimeout: 10 * 1000 });
 
 export const parameters = {
   nextjs: {
