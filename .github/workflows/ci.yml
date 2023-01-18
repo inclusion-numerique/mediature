@@ -80,6 +80,15 @@ jobs:
       - name: Prepare tests
         run: make test-prepare
 
+      - uses: KengoTODA/actions-setup-docker-compose@v1
+        name: Install `docker-compose` for local CI/CD simulations (https://github.com/nektos/act/issues/112#issuecomment-1387307297)
+        if: ${{ env.ACT }}
+        with:
+          version: '2.14.2'
+      - name: Install `Xvfb` and others to run browsers for end-to-end testing in local CI/CD simulations (https://github.com/nektos/act/issues/1300#issuecomment-1387344639)
+        if: ${{ env.ACT }}
+        run: sudo apt-get update && sudo apt-get install -y xvfb && npx playwright install-deps
+
       - name: Test unit
         run: make test-unit
 
@@ -106,6 +115,7 @@ jobs:
       #     LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       # - name: Release
+      #   if: ${{ !env.ACT }}
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       #     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -113,7 +123,8 @@ jobs:
 
   publish-chromatic:
     name: Publish to Chromatic
-    # if: github.ref_name == 'dev' || github.ref_name == 'prod'
+    if: ${{ !github.event.act }}
+    # if: ${{ !github.event.act && (github.ref_name == 'dev' || github.ref_name == 'main') }}
     needs: [requirements]
     runs-on: ubuntu-latest
     steps:
@@ -178,7 +189,7 @@ jobs:
 
   # build-and-push-images:
   #   name: Build and push container images
-  #   if: github.ref_name == 'dev' || github.ref_name == 'main'
+  #   if: ${{ !github.event.act && (github.ref_name == 'dev' || github.ref_name == 'main') }}
   #   runs-on: ubuntu-latest
   #   permissions:
   #     contents: read
@@ -212,7 +223,7 @@ jobs:
 
   # deploy-dev:
   #   name: Deploy to development
-  #   if: github.ref_name == 'dev'
+  #   if: ${{ !github.event.act && github.ref_name == 'dev' }}
   #   environment:
   #     name: dev
   #   needs: [requirements]
@@ -222,7 +233,7 @@ jobs:
 
   # deploy-prod:
   #   name: Deploy to production
-  #   if: github.ref_name == 'main'
+  #   if: ${{ !github.event.act && github.ref_name == 'main' }}
   #   environment:
   #     name: prod
   #   needs: [requirements]

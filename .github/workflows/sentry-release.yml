@@ -5,6 +5,7 @@ on:
 name: Publish release on Sentry
 jobs:
   deploy:
+    if: ${{ !github.event.act }}
     runs-on: ubuntu-latest
     steps:
       - run: echo Silent for test
