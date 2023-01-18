@@ -19,7 +19,9 @@
     "test:coverage:backup": "start-server-and-test start http://localhost:6006 test:coverage:command",
     "test:coverage:command": "test-storybook --stories-json --coverage",
     "test:e2e": "start-server-and-test start http://localhost:6006 test:e2e:command",
-    "test:e2e:command": "test-storybook --stories-json",
+    "test:e2e:command": "test-storybook --stories-json -- --no-headless",
+    "test:e2e:headless": "start-server-and-test start http://localhost:6006 test:e2e:headless:command",
+    "test:e2e:headless:command": "test-storybook --stories-json",
     "clean": "rm -rf .turbo && rm -rf node_modules",
     "chromatic": "npx chromatic --build-script-name build --auto-accept-changes --exit-zero-on-changes"
   },

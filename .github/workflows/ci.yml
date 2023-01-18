@@ -12,6 +12,7 @@ env:
   NODE_VERSION: 16.15.0
   PNPM_VERSION: 7.16.0
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
+  PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX: .cache/ms-playwright
 jobs:
   requirements:
     name: Continuous Integration
@@ -64,6 +65,7 @@ jobs:
       - name: Install dependencies
         env:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
+          PLAYWRIGHT_BROWSERS_PATH: ${{ env.STORE_PATH }}/${{ env.PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX }}
         run: make deps
 
       - name: Prepare linting
@@ -93,6 +95,7 @@ jobs:
       - name: Test end-to-end
         env:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
+          PLAYWRIGHT_BROWSERS_PATH: ${{ env.STORE_PATH }}/${{ env.PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX }}
         run: make test-e2e
 
       # TODO: enable again once Next 13 with "appDir: true" is compatible with `next export`
@@ -153,6 +156,7 @@ jobs:
       - name: Install dependencies
         env:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
+          PLAYWRIGHT_BROWSERS_PATH: ${{ env.STORE_PATH }}/${{ env.PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX }}
         run: pnpm install
 
       - uses: chromaui/action@v1
