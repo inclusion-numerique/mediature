@@ -80,6 +80,7 @@ importers:
       '@tomfreudenberg/next-auth-mock': ^0.5.6
       '@types/react': ^18.0.26
       '@vitejs/plugin-react': ^1.3.2
+      axe-playwright: ^1.1.12
       chromatic: ^6.11.4
       css-loader: ^6.7.3
       cssnano: ^4.1.10
@@ -154,6 +155,7 @@ importers:
       '@storybook/theming': 7.0.0-beta.19_biqbaboplfbrettd7655fr4n2y
       '@types/react': 18.0.26
       '@vitejs/plugin-react': 1.3.2
+      axe-playwright: 1.1.12
       css-loader: 6.7.3
       cssnano: 4.1.11
       eslint-config-custom: link:../../packages/eslint-config-custom
@@ -5687,8 +5689,8 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
 
-  /@storybook/client-logger/7.0.0-beta.29:
-    resolution: {integrity: sha512-Qi3TrJWAp36CVr9AUPSqszXSoMBaFo5shE0RqIxuqDjYEWlwnQa9ZvmqoGWsklSr1S80OeMxyrFtgdkilgwAgQ==}
+  /@storybook/client-logger/7.0.0-beta.30:
+    resolution: {integrity: sha512-50JKxy0E2jUfGcfHwBp+NnlVLqaELSTjB5CjxckUExLfsU/u3dzTPrMmxevBw3ojqaCtyGKZE0yY0ndn/QbeuA==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -6557,7 +6559,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.29
+      '@storybook/client-logger': 7.0.0-beta.30
       '@storybook/instrumenter': 7.0.0-beta.19
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei
@@ -8222,6 +8224,15 @@ packages:
   /axe-core/4.5.2:
     resolution: {integrity: sha512-u2MVsXfew5HBvjsczCv+xlwdNnB1oQR9HlAcsejZttNjKKSkeDNVwB1vMThIUIFI9GoT57Vtk8iQLwqOfAkboA==}
     engines: {node: '>=4'}
+
+  /axe-playwright/1.1.12:
+    resolution: {integrity: sha512-NGZeMAOQof43lld1FHiSWcRUBrfNDM32c4qb7BreH9c7bTyH6kf/jRBpcexyxAYd8sZIL4TvelpI0ZFGJrxV6A==}
+    peerDependencies:
+      playwright: '>1.0.0'
+    dependencies:
+      axe-core: 4.5.2
+      picocolors: 1.0.0
+    dev: true
 
   /axios/0.21.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
