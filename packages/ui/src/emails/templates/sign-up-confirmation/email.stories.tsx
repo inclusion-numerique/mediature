@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { SignUpConfirmationEmail } from '@mediature/ui/src/emails/templates/sign-up-confirmation/email';
 
@@ -29,6 +30,9 @@ const NormalStory = Template.bind({});
 NormalStory.args = {
   firstname: 'Thomas',
   signInUrl: '',
+};
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindEmailStructure(canvasElement);
 };
 
 export const Normal = prepareStory(NormalStory);

@@ -48,7 +48,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="s'inscrire">
       <Grid item xs={12}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>

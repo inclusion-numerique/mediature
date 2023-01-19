@@ -2,12 +2,14 @@ import { Box, CircularProgress } from '@mui/material';
 import * as React from 'react';
 
 export interface LoadingAreaProps {
+  ariaLabelTarget: string;
   minHeight?: string | null;
   height?: string | null;
   loaderSize?: number | 'medium' | 'large' | 'small';
 }
 
 export const LoadingArea = (props: LoadingAreaProps) => {
+  const ariaLabel = `zone en cours de chargement - ${props.ariaLabelTarget}`;
   let loaderSize: number;
 
   if (!props.loaderSize || props.loaderSize === 'medium') {
@@ -22,6 +24,7 @@ export const LoadingArea = (props: LoadingAreaProps) => {
 
   return (
     <Box
+      aria-busy={true}
       sx={{
         display: 'flex',
         flex: '1 1 auto',
@@ -30,7 +33,7 @@ export const LoadingArea = (props: LoadingAreaProps) => {
         p: 3,
       }}
     >
-      <CircularProgress size={loaderSize} />
+      <CircularProgress size={loaderSize} aria-label={ariaLabel} />
     </Box>
   );
 };

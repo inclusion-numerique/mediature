@@ -21,7 +21,7 @@ export function VisitorOnlyLayout(props: PropsWithChildren) {
   }, [router, sessionWrapper.status]);
 
   if (sessionWrapper.status !== 'unauthenticated') {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="contenu" />;
   }
 
   // Take as layout the public one

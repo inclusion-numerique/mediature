@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
@@ -14,6 +15,10 @@ export default {
   }),
 } as Meta<typeof AuthorityCard>;
 
+async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await within(canvasElement).findByText(/dossiers en cours/i);
+}
+
 const Template: StoryFn<any> = (args) => {
   return <AuthorityCard {...args} />;
 };
@@ -21,6 +26,9 @@ const Template: StoryFn<any> = (args) => {
 const NormalStory = Template.bind({});
 NormalStory.args = {
   ...authoritiesWrappers[0],
+};
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
 };
 
 export const Normal = prepareStory(NormalStory);
@@ -31,6 +39,9 @@ NoCasesStory.args = {
   openCases: 0,
   closeCases: 0,
 };
+NoCasesStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
+};
 
 export const NoCases = prepareStory(NoCasesStory);
 
@@ -39,6 +50,9 @@ NoMainAgentStory.args = {
   ...NormalStory.args,
   mainAgent: null,
 };
+NoMainAgentStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
+};
 
 export const NoMainAgent = prepareStory(NoMainAgentStory);
 
@@ -46,6 +60,9 @@ const NoAgentsStory = Template.bind({});
 NoAgentsStory.args = {
   ...NormalStory.args,
   agents: [],
+};
+NoAgentsStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
 };
 
 export const NoAgents = prepareStory(NoAgentsStory);

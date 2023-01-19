@@ -13,7 +13,7 @@ export function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
 
   if (sessionWrapper.status === 'loading') {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="contenu" />;
   }
 
   // TODO: display a loading... maybe on the whole layout?

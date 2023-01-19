@@ -30,7 +30,7 @@ export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPassword
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="demander à réinitialiser son mot de passe">
       <Grid item xs={12}>
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>

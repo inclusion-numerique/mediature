@@ -2,6 +2,7 @@ import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindForm } from '@mediature/docs/.storybook/testing';
 import { SignUpForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm';
 import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
@@ -42,6 +43,9 @@ EmptyStory.args = {
   }),
 };
 EmptyStory.parameters = { ...defaultMswParameters };
+EmptyStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -57,5 +61,8 @@ FilledStory.args = {
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };
+FilledStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Filled = prepareStory(FilledStory);

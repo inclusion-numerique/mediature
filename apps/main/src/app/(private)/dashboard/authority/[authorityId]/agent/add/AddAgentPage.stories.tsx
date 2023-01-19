@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindAlert, playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
 import { AddAgentPage, AddAgentPageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/AddAgentPage';
 import { Empty as InviteAgentFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm.stories';
 import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
@@ -47,6 +48,9 @@ NormalStory.args = {
   ...commonNextParamsParameters,
 };
 NormalStory.parameters = { ...defaultMswParameters };
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory, {
   childrenContext: {
@@ -72,6 +76,9 @@ NotFoundStory.parameters = {
     ],
   },
 };
+NotFoundStory.play = async ({ canvasElement }) => {
+  await playFindAlert(canvasElement);
+};
 
 export const NotFound = prepareStory(NotFoundStory, {
   childrenContext: {
@@ -89,6 +96,9 @@ WithLayoutStory.args = {
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
   ...defaultMswParameters,
+};
+WithLayoutStory.play = async ({ canvasElement }) => {
+  await playFindFormInMain(canvasElement);
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {

@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
 import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
 import { Empty as SignInFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm.stories';
 import { SignInPage, SignInPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInPage';
@@ -21,6 +22,9 @@ const Template: StoryFn<typeof SignInPage> = (args) => {
 
 const NormalStory = Template.bind({});
 NormalStory.args = {};
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory, {
   childrenContext: {
@@ -35,6 +39,9 @@ const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {};
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
+};
+WithLayoutStory.play = async ({ canvasElement }) => {
+  await playFindFormInMain(canvasElement);
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {

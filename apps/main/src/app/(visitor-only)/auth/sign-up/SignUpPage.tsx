@@ -24,7 +24,7 @@ export function SignUpPage() {
 
   if (!invitationToken) {
     return (
-      <span>
+      <span role="alert">
         Vous ne pouvez vous inscrire sans avoir être invité par un agent d&apos;une collectivité déjà sur la plateforme. Merci de vous rapprocher de
         votre collectivité pour en savoir plus.
       </span>

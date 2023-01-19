@@ -121,6 +121,41 @@ scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 
 #### Frontend development
 
+##### Storybook
+
+###### Use it first
+
+Developing a UI component by launching the whole application is annoying because you may have to do specific interactions to end viewing the right state of the component you are building.
+
+We advise when doing some UI to only run Storybook locally, so you do not worry about other stuff. You can also mock your API calls! At the end splitting your component into different stories makes easy for non-technical people of the team to view deepest details. They will be able to review the visual changes with Chromatic, and also from the Storybook they will save too their time avoiding complex interactions to see specific state of the application.
+
+It's not magical, it does not replace unit and end-to-end testing, but it helps :)
+
+###### Advantages
+
+- Accessibility reports
+- See almost all tests of your application
+- Helps architecturing your components split
+- Their rendering is tested in the CI/CD, so it's very likely your components are valid at runtime
+
+###### Testing
+
+You can do UI testing scoped to components (I mean, not full end-to-end), and if so, it's recommended to reuse the stories to benefit from their mocking set up.
+
+A decision we took to keep in mind: it's common to create a `.test.js` file to test that a component renders correctly (thanks to Jest, Playwright or Cypress), but since we have "Storybook test runners" already in place that pop each component, we feel it's better to use the story `play` function concept (also used by the interaction addon) to make sure they are rendering correctly.
+
+- It avoids rendering each component one more time
+- It saves 1 file and it's clearer since from Storybook you can see in the "Interactions" tab if the expected behavior is matched
+
+Those kind of tests may be useful to:
+
+- Make sure for an atomic component the data is displayed correctly (but it's likely the work of your team to review visual changes)
+- Guarantee the sequences when mocking (e.g. first a loader, then the form is displayed), it helps also the "Storybook test runners" to wait the right moment to take a screenshot/snapshot of the final state (through Chromatic in this case), not intermediate ones since the runner doesn't know when the component is fully loaded otherwise
+
+_(in case you have specific needs of testing that should not pollute the Storybook stories, go with a `.test.js` file, see examples [here](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests))_
+
+_Tip: during the testing you could `findByText` but it's recommended to `findByRole`. It helps thinking and building for accessibility from scratch (because no, accessibility is not done/advised by an accessibility automated check unfortunately)._
+
 ##### Hydratation issue
 
 When developing a frontend it's likely you will have client hydratation according to the server content. It will fail if some browser extensions are enabled and modify the DOM. You need to identify the source of the issue and then, either disable the extension, or request it to not modify the DOM when developing on `http://localhost:xxxx/`.

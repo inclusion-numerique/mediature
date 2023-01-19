@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
+import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 
 export interface AuthorityCardProps {
   authority: AuthoritySchemaType;
@@ -27,12 +28,15 @@ export function AuthorityCard(props: AuthorityCardProps) {
                 </Grid>
               )}
               <Grid item>
-                <Typography variant="h4">{props.authority.name}</Typography>
+                <Typography component="b" variant="h4">
+                  {props.authority.name}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Alert
+              role="none"
               severity="info"
               icon={false}
               sx={{
@@ -65,9 +69,9 @@ export function AuthorityCard(props: AuthorityCardProps) {
             {!!props.agents && props.agents.length ? (
               <>
                 <Typography sx={{ fontWeight: 'bold' }}>Liste des médiateurs :</Typography>
-                <Grid container spacing={1}>
+                <Grid container component="ul" spacing={1} sx={ulComponentResetStyles}>
                   {props.agents.map((agent) => (
-                    <Grid key={agent.id} item xs={12} sm={6}>
+                    <Grid key={agent.id} item component="li" xs={12} sm={6}>
                       {agent.firstname} {agent.lastname}
                     </Grid>
                   ))}

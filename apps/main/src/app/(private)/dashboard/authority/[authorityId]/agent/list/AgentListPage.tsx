@@ -5,7 +5,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -37,7 +37,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
   if (error) {
     return <span>Error TODO</span>;
   } else if (isLoading) {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="page" />;
   }
 
   return (
@@ -61,9 +61,9 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
             </Button>
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
+        <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
           {agentsWrappers.map((agentWrapper) => (
-            <Grid key={agentWrapper.agent.id} item xs={12} sm={6}>
+            <Grid key={agentWrapper.agent.id} item component="li" xs={12} sm={6}>
               <AgentCard
                 agent={agentWrapper.agent}
                 openCases={agentWrapper.openCases}

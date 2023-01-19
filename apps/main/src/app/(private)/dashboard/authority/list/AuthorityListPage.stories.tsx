@@ -3,6 +3,7 @@ import { userEvent, within } from '@storybook/testing-library';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { AuthorityListPage } from '@mediature/main/src/app/(private)/dashboard/authority/list/AuthorityListPage';
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
@@ -32,6 +33,12 @@ const defaultMswParameters = {
   },
 };
 
+async function playFindSearchInput(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await within(canvasElement).findByRole('textbox', {
+    name: /rechercher/i,
+  });
+}
+
 const Template: StoryFn<typeof AuthorityListPage> = (args) => {
   return <AuthorityListPage />;
 };
@@ -39,6 +46,9 @@ const Template: StoryFn<typeof AuthorityListPage> = (args) => {
 const NormalStory = Template.bind({});
 NormalStory.args = {};
 NormalStory.parameters = { ...defaultMswParameters };
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindSearchInput(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory, {});
 
@@ -53,6 +63,9 @@ WithLayoutStory.parameters = {
       }),
     ],
   },
+};
+WithLayoutStory.play = async ({ canvasElement }) => {
+  await playFindSearchInput(canvasElement);
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {
@@ -89,12 +102,11 @@ SearchLoadingWithLayoutStory.play = async ({ canvasElement }) => {
     SearchLoadingWithLayoutStory.parameters.counter = 0;
   }
 
-  const canvas = within(canvasElement);
-  const searchInput = await canvas.findByRole('textbox', {
-    name: /Rechercher/i,
-  });
+  const searchInput = await playFindSearchInput(canvasElement);
 
   await userEvent.type(searchInput, 'Ma belle recherche');
+
+  await playFindProgressBar(canvasElement, /liste/i);
 };
 
 export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory, {

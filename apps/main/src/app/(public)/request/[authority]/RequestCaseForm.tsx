@@ -40,7 +40,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="déposer une requête">
       <Grid item xs={12} sm={6}>
         <TextField
           label="Prénom"
@@ -164,7 +164,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
           <FormHelperText id="upload-helper-text">
             Si vous avez des documents susceptibles de nous aider, merci de les envoyer en cliquant sur le bouton ci-dessous :{' '}
           </FormHelperText>
-          <Button variant="contained" component="label" aria-describedby="upload-helper-text">
+          <Button variant="contained" aria-describedby="upload-helper-text">
             {/* TODO: improve + extensions */}
             Joindre un fichier
             <input hidden accept="image/*" multiple type="file" />

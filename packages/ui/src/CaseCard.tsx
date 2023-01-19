@@ -49,12 +49,16 @@ export function CaseCard(props: CaseCardProps) {
       <CardContent>
         <Grid container direction={'column'} spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4">
+            <Typography component="b" variant="h4">
               {props.citizen.firstname} {props.citizen.lastname}
             </Typography>
-            <Typography variant="subtitle1">Dossier n°{props.case.humanId}</Typography>
+            <br />
+            <Typography component="b" variant="subtitle1">
+              Dossier n°{props.case.humanId}
+            </Typography>
+            <br />
             {/* TODO: reminder field + status with i18n */}
-            <Typography variant="subtitle1">
+            <Typography component="span" variant="subtitle1">
               Avancement du dossier :
               <br />
               <CaseStatusChip status={props.case.status} />

@@ -22,7 +22,7 @@ export function PrivateLayout(props: PropsWithChildren) {
   }, [logoutCommitted, router, sessionWrapper.status]);
 
   if (sessionWrapper.status !== 'authenticated') {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="contenu" />;
   } else {
     return (
       <>

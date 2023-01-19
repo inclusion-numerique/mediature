@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindMainTitle } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { AgentListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/list/AgentListPage';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
@@ -42,6 +43,10 @@ const commonNextParamsParameters = {
   },
 };
 
+async function playFindTitle(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await playFindMainTitle(canvasElement, /médiateurs/i);
+}
+
 const Template: StoryFn<typeof AgentListPage> = (args) => {
   return <AgentListPage {...args} />;
 };
@@ -53,6 +58,9 @@ NormalStory.args = {
 NormalStory.parameters = {
   ...defaultMswParameters,
 };
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindTitle(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory, {});
 
@@ -63,6 +71,9 @@ WithLayoutStory.args = {
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
   ...defaultMswParameters,
+};
+WithLayoutStory.play = async ({ canvasElement }) => {
+  await playFindTitle(canvasElement);
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {

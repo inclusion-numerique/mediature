@@ -43,6 +43,8 @@ export interface AvatarProps {
 
 export const Avatar = (props: AvatarProps) => {
   return (
-    <MuiAvatar sx={{ width: 24, height: 24, fontSize: 12, bgcolor: stringToColor(props.fullName) }}>{extractInitials(props.fullName)}</MuiAvatar>
+    <MuiAvatar className="UserAvatar" sx={{ width: 24, height: 24, fontSize: 12, bgcolor: stringToColor(props.fullName) }}>
+      {extractInitials(props.fullName)}
+    </MuiAvatar>
   );
 };

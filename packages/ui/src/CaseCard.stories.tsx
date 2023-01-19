@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { cases } from '@mediature/main/src/fixtures/case';
@@ -15,6 +16,10 @@ export default {
   }),
 } as Meta<typeof CaseCard>;
 
+async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await within(canvasElement).findByText(/avancement du dossier/i);
+}
+
 const Template: StoryFn<any> = (args) => {
   return <CaseCard {...args} />;
 };
@@ -24,6 +29,9 @@ NormalStory.args = {
   case: cases[0],
   citizen: citizens[0],
   assignAction: async (agentId: string) => {},
+};
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
 };
 
 export const Normal = prepareStory(NormalStory);

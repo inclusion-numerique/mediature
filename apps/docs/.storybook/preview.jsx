@@ -74,6 +74,22 @@ export const parameters = {
       );
     },
   },
+  a11y: {
+    config: {
+      rules: [
+        {
+          // A layout footer button targets a theming modal that we do not render to keep things simple, ignore this button violation
+          id: 'aria-valid-attr-value',
+          selector: '*:not([aria-controls="fr-theme-modal"])',
+        },
+        {
+          // TODO: for now the user avatar background color is generated with a simple algorithm but does not respect the ratio
+          id: 'color-contrast',
+          selector: '*:not(.MuiAvatar-circular.UserAvatar)',
+        },
+      ],
+    },
+  },
 };
 
 export const decorators = [

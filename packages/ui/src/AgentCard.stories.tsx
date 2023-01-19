@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
@@ -14,6 +15,10 @@ export default {
   }),
 } as Meta<typeof AgentCard>;
 
+async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await within(canvasElement).findByText(/dossiers en cours/i);
+}
+
 const Template: StoryFn<any> = (args) => {
   return <AgentCard {...args} />;
 };
@@ -23,6 +28,9 @@ NormalStory.args = {
   ...agentsWrappers[0],
   removeAction: async () => {},
 };
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory);
 
@@ -31,6 +39,9 @@ NoCasesStory.args = {
   ...NormalStory.args,
   openCases: 0,
   closeCases: 0,
+};
+NoCasesStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
 };
 
 export const NoCases = prepareStory(NoCasesStory);

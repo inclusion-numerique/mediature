@@ -1,15 +1,13 @@
 'use client';
 
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button, Card, CardContent, CircularProgress, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import debounce from 'lodash.debounce';
-import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -53,7 +51,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   if (error) {
     return <span>Error TODO</span>;
   } else if (isInitialLoading && !searchQueryManipulated) {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="page" />;
   }
 
   const handleClearQuery = () => {
@@ -83,7 +81,11 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
             onChange={debounedHandleClearQuery}
             fullWidth
             InputProps={{
-              startAdornment: <InputAdornment position="start">{isLoading ? <CircularProgress size={20} /> : <SearchIcon />}</InputAdornment>,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
               endAdornment: (
                 <InputAdornment position="end">
                   {searchQuery && searchQuery !== '' && (
@@ -99,13 +101,13 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
         {!isLoading ? (
           <>
             <Grid item xs={12} sx={{ py: 3 }}>
-              <Typography component="h1" variant="h6">
+              <Typography component="h2" variant="h6">
                 Dossiers ouverts
               </Typography>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
               {openCasesWrappers.map((caseWrapper) => (
-                <Grid key={caseWrapper.case.id} item xs={12} sm={6}>
+                <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
                   <CaseCard
                     case={caseWrapper.case}
                     citizen={caseWrapper.citizen}
@@ -117,13 +119,13 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
               ))}
             </Grid>
             <Grid item xs={12} sx={{ py: 3 }}>
-              <Typography component="h1" variant="h6">
+              <Typography component="h2" variant="h6">
                 Dossiers clôturés
               </Typography>
             </Grid>
-            <Grid container spacing={3}>
+            <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
               {closeCasesWrappers.map((caseWrapper) => (
-                <Grid key={caseWrapper.case.id} item xs={12} sm={6}>
+                <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
                   <CaseCard
                     case={caseWrapper.case}
                     citizen={caseWrapper.citizen}
@@ -136,7 +138,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
             </Grid>
           </>
         ) : (
-          <LoadingArea />
+          <LoadingArea ariaLabelTarget="liste des dossiers" />
         )}
       </Grid>
     </>

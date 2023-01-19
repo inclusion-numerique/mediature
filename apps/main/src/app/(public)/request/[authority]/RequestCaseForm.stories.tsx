@@ -2,6 +2,7 @@ import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindForm } from '@mediature/docs/.storybook/testing';
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/case';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
@@ -38,6 +39,9 @@ const Template: StoryFn<typeof RequestCaseForm> = (args) => {
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
 EmptyStory.parameters = { ...defaultMswParameters };
+EmptyStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -58,5 +62,8 @@ FilledStory.args = {
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };
+FilledStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Filled = prepareStory(FilledStory);

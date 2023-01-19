@@ -1,7 +1,9 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { within } from '@storybook/testing-library';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { PrivateLayout } from '@mediature/main/src/app/(private)/PrivateLayout';
 import { Loading as PublicLayoutLoadingStory, Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
 
@@ -31,6 +33,9 @@ NormalStory.parameters = {
   },
 };
 NormalStory.args = {};
+NormalStory.play = async ({ canvasElement }) => {
+  await playFindMain(canvasElement);
+};
 
 export const Normal = prepareStory(NormalStory);
 
@@ -40,6 +45,9 @@ LoremStory.parameters = {
 };
 LoremStory.args = {
   ...PublicLayoutLoremStory.args,
+};
+LoremStory.play = async ({ canvasElement }) => {
+  await playFindMain(canvasElement);
 };
 
 export const Lorem = prepareStory(LoremStory);
@@ -51,6 +59,9 @@ LoadingStory.parameters = {
 };
 LoadingStory.args = {
   ...PublicLayoutLoadingStory.args,
+};
+LoadingStory.play = async ({ canvasElement }) => {
+  await playFindProgressBar(canvasElement, /chargement/i);
 };
 
 export const Loading = prepareStory(LoadingStory);

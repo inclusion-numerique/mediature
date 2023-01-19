@@ -8,6 +8,7 @@ import ShowMoreText from 'react-show-more-text';
 
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 
 export interface CaseSliderCardProps {
@@ -133,10 +134,10 @@ export function CaseSliderCard(props: CaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Documents :
             </Typography>
-            <Stack direction="row" spacing={1}>
-              <Chip label="TODO.pdf" />
-              <Chip label="TODO.pdf" />
-              <Chip label="TODO.pdf" />
+            <Stack component="ul" direction="row" spacing={1} sx={ulComponentResetStyles}>
+              <Chip component="li" label="TODO.pdf" />
+              <Chip component="li" label="TODO.pdf" />
+              <Chip component="li" label="TODO.pdf" />
             </Stack>
           </Grid>
         </Grid>

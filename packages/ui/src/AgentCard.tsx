@@ -35,9 +35,9 @@ export function AgentCard(props: AgentCardProps) {
         description: (
           <>
             Êtes-vous sûr de vouloir supprimer{' '}
-            <b>
+            <Typography component="span" sx={{ fontWeight: 'bold' }}>
               {props.agent.firstname} {props.agent.lastname}
-            </b>{' '}
+            </Typography>{' '}
             de la collectivité ?
           </>
         ),
@@ -80,15 +80,19 @@ export function AgentCard(props: AgentCardProps) {
                 </Grid>
               )}
               <Grid item>
-                <Typography variant="h4">
+                <Typography component="b" variant="h4">
                   {props.agent.firstname} {props.agent.lastname}
                 </Typography>
-                <Typography variant="subtitle1">{props.agent.email}</Typography>
+                <br />
+                <Typography component="span" variant="subtitle1">
+                  {props.agent.email}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12}>
             <Alert
+              role="none"
               severity="info"
               icon={false}
               sx={{

@@ -1,7 +1,9 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { within } from '@storybook/testing-library';
 
 import { userSessionContext, visitorSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -32,6 +34,9 @@ AsVisitorStory.parameters = {
   },
 };
 AsVisitorStory.args = {};
+AsVisitorStory.play = async ({ canvasElement }) => {
+  await playFindMain(canvasElement);
+};
 
 export const AsVisitor = prepareStory(AsVisitorStory);
 AsVisitor.storyName = 'As a visitor';
@@ -43,6 +48,9 @@ AsUserStory.parameters = {
   },
 };
 AsUserStory.args = {};
+AsUserStory.play = async ({ canvasElement }) => {
+  await playFindMain(canvasElement);
+};
 
 export const AsUser = prepareStory(AsUserStory);
 AsUser.storyName = 'As a user';
@@ -69,6 +77,9 @@ LoremStory.args = {
     </>
   ),
 };
+LoremStory.play = async ({ canvasElement }) => {
+  await playFindMain(canvasElement);
+};
 
 export const Lorem = prepareStory(LoremStory);
 Lorem.storyName = 'With lorem';
@@ -80,9 +91,12 @@ LoadingStory.parameters = {
 LoadingStory.args = {
   children: (
     <>
-      <LoadingArea />
+      <LoadingArea ariaLabelTarget="contenu" />;
     </>
   ),
+};
+LoadingStory.play = async ({ canvasElement }) => {
+  await playFindProgressBar(canvasElement, /chargement/i);
 };
 
 export const Loading = prepareStory(LoadingStory);

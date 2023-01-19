@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { userEvent, within } from '@storybook/testing-library';
+import { screen, userEvent, within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { AskConfirmationDemo } from '@mediature/ui/src/AskConfirmation';
@@ -25,6 +25,11 @@ DefaultStory.play = async ({ canvasElement }) => {
   const button = canvas.getByRole('button');
 
   await userEvent.click(button);
+
+  const dialog = await screen.findByRole('dialog');
+  await within(dialog).findByRole('button', {
+    name: /confirmer/i,
+  });
 };
 
 export const Default = prepareStory(DefaultStory);

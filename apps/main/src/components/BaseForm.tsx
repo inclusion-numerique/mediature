@@ -6,6 +6,7 @@ import { Control } from 'react-hook-form';
 export interface BaseFormProps {
   onSubmit: React.FormEventHandler<HTMLFormElement> | undefined;
   control: Control<any>;
+  ariaLabel: string;
 }
 
 export function BaseForm(props: PropsWithChildren<BaseFormProps>) {
@@ -15,7 +16,7 @@ export function BaseForm(props: PropsWithChildren<BaseFormProps>) {
     <>
       {/* <DevTool control={props.control} /> */}
 
-      <form onSubmit={props.onSubmit}>
+      <form onSubmit={props.onSubmit} aria-label={props.ariaLabel}>
         <Grid container spacing={2}>
           {props.children}
         </Grid>

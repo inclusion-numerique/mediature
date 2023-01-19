@@ -27,3 +27,10 @@ export const mdCenteredFormContainerGridProps = {
     maxWidth: 'md',
   },
 };
+
+export const ulComponentResetStyles = {
+  listStyle: 'none',
+  paddingInlineStart: 0,
+  marginBlockStart: 0,
+  marginBlockEnd: 0,
+};

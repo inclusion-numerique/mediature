@@ -1,10 +1,9 @@
-import { generateMock } from '@anatine/zod-mock';
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { playFindForm } from '@mediature/docs/.storybook/testing';
 import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm';
 import { InviteAgentPrefillSchema } from '@mediature/main/src/models/actions/agent';
-import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof InviteAgentForm>();
@@ -36,6 +35,9 @@ const Template: StoryFn<typeof InviteAgentForm> = (args) => {
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
 EmptyStory.parameters = { ...defaultMswParameters };
+EmptyStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Empty = prepareStory(EmptyStory);
 
@@ -49,5 +51,8 @@ FilledStory.args = {
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };
+FilledStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
 
 export const Filled = prepareStory(FilledStory);

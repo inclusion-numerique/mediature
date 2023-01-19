@@ -3,13 +3,13 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
-import { Button, Card, CardContent, CircularProgress, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { Button, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import debounce from 'lodash.debounce';
 import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -42,7 +42,7 @@ export function AuthorityListPage() {
   if (error) {
     return <span>Error TODO</span>;
   } else if (isInitialLoading && !searchQueryManipulated) {
-    return <LoadingArea />;
+    return <LoadingArea ariaLabelTarget="page" />;
   }
 
   const handleClearQuery = () => {
@@ -78,7 +78,11 @@ export function AuthorityListPage() {
             onChange={debounedHandleClearQuery}
             fullWidth
             InputProps={{
-              startAdornment: <InputAdornment position="start">{isLoading ? <CircularProgress size={20} /> : <SearchIcon />}</InputAdornment>,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
               endAdornment: (
                 <InputAdornment position="end">
                   {searchQuery && searchQuery !== '' && (
@@ -92,9 +96,9 @@ export function AuthorityListPage() {
           />
         </Grid>
         {!isLoading ? (
-          <Grid container spacing={3}>
+          <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
             {authoritiesWrappers.map((authorityWrapper) => (
-              <Grid key={authorityWrapper.authority.id} item xs={12} sm={6}>
+              <Grid key={authorityWrapper.authority.id} item component="li" xs={12} sm={6}>
                 <AuthorityCard
                   authority={authorityWrapper.authority}
                   mainAgent={authorityWrapper.mainAgent}
@@ -106,7 +110,7 @@ export function AuthorityListPage() {
             ))}
           </Grid>
         ) : (
-          <LoadingArea />
+          <LoadingArea ariaLabelTarget="liste des collectivités" />
         )}
       </Grid>
     </>
