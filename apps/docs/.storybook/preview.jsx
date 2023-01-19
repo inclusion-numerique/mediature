@@ -22,6 +22,21 @@ import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storyb
 
 // const channel = addons.getChannel();
 
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    // When using test runners they may inherit from system settings or the dark mode addon
+    // which is not wanted. So each test make sure to manually set `light` or `dark` as color scheme.
+    // The tricky part is `testing-library` and/or `playwright` have not access to the `jsdom` to manipulate the DOM (and it's not possible to set it up due to Storybook testing logic)
+    // so we emulate a media query into the testing browser that we listen changes from, like that we can change the theming.
+    // Note: we didn't scope it to tests otherwise we should hack a bit to inject a variable into the `window` to read it... but it's unlikely you will change your OS color settings while developing :)
+    const newColorScheme = event.matches ? 'dark' : 'light';
+
+    document.documentElement.dataset.theme = newColorScheme;
+    document.documentElement.dataset.frTheme = newColorScheme;
+    document.documentElement.dataset.frScheme = newColorScheme;
+  });
+}
+
 // Initialize MSW
 const mswServerSingleton = initialize({
   onUnhandledRequest: (request, print) => {

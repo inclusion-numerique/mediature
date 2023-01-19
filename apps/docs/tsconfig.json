@@ -1,5 +1,8 @@
 {
   "extends": "tsconfig/storybook.json",
+  "compilerOptions": {
+    "types": ["axe-playwright"]
+  },
   "include": ["**/*.ts", "**/*.tsx", "../../apps/main/@types"],
   "exclude": ["node_modules"]
 }
