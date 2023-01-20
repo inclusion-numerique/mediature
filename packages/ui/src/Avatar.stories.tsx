@@ -4,7 +4,8 @@ import { within } from '@storybook/testing-library';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Avatar } from '@mediature/ui/src/Avatar';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof Avatar>();
+type ComponentType = typeof Avatar;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/Avatar',
@@ -12,9 +13,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof Avatar>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <Avatar {...args} />;
 };
 

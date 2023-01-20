@@ -1,14 +1,15 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
-import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMainTitle } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { AgentListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/list/AgentListPage';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AgentListPage>();
+type ComponentType = typeof AgentListPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/AgentList',
@@ -16,7 +17,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AgentListPage>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -37,7 +38,7 @@ const defaultMswParameters = {
   },
 };
 
-const commonNextParamsParameters = {
+const commonComponentProps: ComponentProps<ComponentType> = {
   params: {
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
   },
@@ -47,13 +48,13 @@ async function playFindTitle(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await playFindMainTitle(canvasElement, /médiateurs/i);
 }
 
-const Template: StoryFn<typeof AgentListPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AgentListPage {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NormalStory.parameters = {
   ...defaultMswParameters,
@@ -66,7 +67,7 @@ export const Normal = prepareStory(NormalStory, {});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 WithLayoutStory.parameters = {
   layout: 'fullscreen',

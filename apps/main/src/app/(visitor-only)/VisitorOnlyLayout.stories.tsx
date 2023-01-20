@@ -7,7 +7,8 @@ import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/te
 import { Loading as PublicLayoutLoadingStory, Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
 import { VisitorOnlyLayout } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof VisitorOnlyLayout>();
+type ComponentType = typeof VisitorOnlyLayout;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Layouts/VisitorOnlyPages',
@@ -20,9 +21,9 @@ export default {
       },
     },
   }),
-} as Meta<typeof VisitorOnlyLayout>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof VisitorOnlyLayout> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <VisitorOnlyLayout {...args} />;
 };
 

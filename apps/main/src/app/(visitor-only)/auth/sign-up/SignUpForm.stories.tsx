@@ -8,7 +8,8 @@ import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignUpForm>();
+type ComponentType = typeof SignUpForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Forms/SignUp',
@@ -16,7 +17,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof SignUpForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -32,7 +33,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof SignUpForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <SignUpForm {...args} />;
 };
 

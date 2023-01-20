@@ -6,7 +6,8 @@ import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/
 import { Empty as SignInFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm.stories';
 import { SignInPage, SignInPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInPage';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignInPage>();
+type ComponentType = typeof SignInPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/SignIn',
@@ -14,9 +15,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof SignInPage>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof SignInPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <SignInPage />;
 };
 

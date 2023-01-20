@@ -4,7 +4,8 @@ import { screen, userEvent, within } from '@storybook/testing-library';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { AskConfirmationDemo } from '@mediature/ui/src/AskConfirmation';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AskConfirmationDemo>();
+type ComponentType = typeof AskConfirmationDemo;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/AskConfirmation',
@@ -12,9 +13,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AskConfirmationDemo>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AskConfirmationDemo {...args} />;
 };
 

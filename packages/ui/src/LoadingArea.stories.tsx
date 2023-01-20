@@ -4,7 +4,8 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof LoadingArea>();
+type ComponentType = typeof LoadingArea;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/LoadingArea',
@@ -12,9 +13,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof LoadingArea>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <LoadingArea {...args} />;
 };
 

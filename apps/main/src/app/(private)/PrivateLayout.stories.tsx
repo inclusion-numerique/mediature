@@ -7,7 +7,8 @@ import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/te
 import { PrivateLayout } from '@mediature/main/src/app/(private)/PrivateLayout';
 import { Loading as PublicLayoutLoadingStory, Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PrivateLayout>();
+type ComponentType = typeof PrivateLayout;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Layouts/PrivatePages',
@@ -20,9 +21,9 @@ export default {
       },
     },
   }),
-} as Meta<typeof PrivateLayout>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof PrivateLayout> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <PrivateLayout {...args} />;
 };
 

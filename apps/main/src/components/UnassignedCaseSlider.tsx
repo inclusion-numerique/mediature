@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react';
 import { A11y, Keyboard, Mousewheel, Pagination, Scrollbar } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/scrollbar';
@@ -14,7 +13,7 @@ export interface UnassignedCaseSliderProps {
   assignAction: (caseId: string) => Promise<void>;
 }
 
-export function UnassignedCaseSlider({ authorityId, assignAction }: PropsWithChildren<UnassignedCaseSliderProps>) {
+export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCaseSliderProps) {
   const { data, error, isInitialLoading, isLoading } = trpc.listCases.useQuery({
     orderBy: {},
     filterBy: {

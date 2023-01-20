@@ -8,15 +8,15 @@ import { CreateAuthorityPrefillSchema } from '@mediature/main/src/models/actions
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CreateAuthorityForm>();
-
+type ComponentType = typeof CreateAuthorityForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 export default {
   title: 'Forms/CreateAuthority',
   component: CreateAuthorityForm,
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CreateAuthorityForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -33,7 +33,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof CreateAuthorityForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <CreateAuthorityForm {...args} />;
 };
 

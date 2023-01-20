@@ -5,7 +5,8 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
 import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AuthorityCard>();
+type ComponentType = typeof AuthorityCard;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/AuthorityCard',
@@ -13,13 +14,13 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AuthorityCard>;
+} as Meta<ComponentType>;
 
 async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await within(canvasElement).findByText(/dossiers en cours/i);
 }
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AuthorityCard {...args} />;
 };
 

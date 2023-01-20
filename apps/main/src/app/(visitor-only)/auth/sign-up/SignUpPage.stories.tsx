@@ -6,7 +6,8 @@ import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/
 import { Empty as SignUpFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm.stories';
 import { SignUpPage, SignUpPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpPage';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignUpPage>();
+type ComponentType = typeof SignUpPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/SignUp',
@@ -14,7 +15,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof SignUpPage>;
+} as Meta<ComponentType>;
 
 const tokenProvidedParameters = {
   nextjs: {
@@ -26,7 +27,7 @@ const tokenProvidedParameters = {
   },
 };
 
-const Template: StoryFn<typeof SignUpPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <SignUpPage />;
 };
 

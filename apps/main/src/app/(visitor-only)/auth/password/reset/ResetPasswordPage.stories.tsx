@@ -6,7 +6,8 @@ import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/
 import { Empty as ResetPasswordFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordForm.stories';
 import { ResetPasswordPage, ResetPasswordPageContext } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordPage';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof ResetPasswordPage>();
+type ComponentType = typeof ResetPasswordPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/ResetPassword',
@@ -14,9 +15,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof ResetPasswordPage>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof ResetPasswordPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <ResetPasswordPage />;
 };
 

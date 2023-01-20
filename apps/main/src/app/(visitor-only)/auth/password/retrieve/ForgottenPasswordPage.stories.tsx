@@ -9,7 +9,8 @@ import {
 } from '@mediature/main/src/app/(visitor-only)/auth/password/retrieve/ForgottenPasswordPage';
 import { Empty as RetrievePasswordFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/password/retrieve/RetrievePasswordForm.stories';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof ForgottenPasswordPage>();
+type ComponentType = typeof ForgottenPasswordPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/ForgottenPassword',
@@ -17,9 +18,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof ForgottenPasswordPage>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof ForgottenPasswordPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <ForgottenPasswordPage />;
 };
 

@@ -5,7 +5,8 @@ import { ResetPasswordForm } from '@mediature/main/src/app/(visitor-only)/auth/p
 import { ResetPasswordPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof ResetPasswordForm>();
+type ComponentType = typeof ResetPasswordForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Forms/ResetPassword',
@@ -13,7 +14,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof ResetPasswordForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -27,7 +28,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof ResetPasswordForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <ResetPasswordForm {...args} />;
 };
 

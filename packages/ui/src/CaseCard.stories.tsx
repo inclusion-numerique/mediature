@@ -6,7 +6,8 @@ import { cases } from '@mediature/main/src/fixtures/case';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseCard>();
+type ComponentType = typeof CaseCard;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/CaseCard',
@@ -14,13 +15,13 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CaseCard>;
+} as Meta<ComponentType>;
 
 async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await within(canvasElement).findByText(/avancement du dossier/i);
 }
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <CaseCard {...args} />;
 };
 

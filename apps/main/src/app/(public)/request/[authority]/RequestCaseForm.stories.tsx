@@ -8,15 +8,15 @@ import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/cas
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof RequestCaseForm>();
-
+type ComponentType = typeof RequestCaseForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 export default {
   title: 'Forms/RequestCase',
   component: RequestCaseForm,
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof RequestCaseForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -32,7 +32,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof RequestCaseForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <RequestCaseForm {...args} />;
 };
 

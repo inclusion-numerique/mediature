@@ -9,15 +9,15 @@ import { AuthorityListPage } from '@mediature/main/src/app/(private)/dashboard/a
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AuthorityListPage>();
-
+type ComponentType = typeof AuthorityListPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 export default {
   title: 'Pages/AuthorityList',
   component: AuthorityListPage,
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AuthorityListPage>;
+} as Meta<ComponentType>;
 
 const mswListAuthoritiesParameters = {
   type: 'query' as 'query',
@@ -39,7 +39,7 @@ async function playFindSearchInput(canvasElement: HTMLElement): Promise<HTMLElem
   });
 }
 
-const Template: StoryFn<typeof AuthorityListPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AuthorityListPage />;
 };
 

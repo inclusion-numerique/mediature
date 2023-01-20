@@ -7,7 +7,8 @@ import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof StandardLayout>();
+type ComponentType = typeof StandardLayout;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Emails/Layouts/Standard',
@@ -22,9 +23,9 @@ export default {
       },
     },
   }),
-} as Meta<typeof StandardLayout>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof StandardLayout> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <StandardLayout {...args} />;
 };
 

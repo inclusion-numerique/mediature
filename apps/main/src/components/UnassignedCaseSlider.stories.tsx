@@ -3,12 +3,13 @@ import { Meta, StoryFn } from '@storybook/react';
 import { screen, userEvent, within } from '@storybook/testing-library';
 import { EventEmitter } from 'eventemitter3';
 
-import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { UnassignedCaseSlider } from '@mediature/main/src/components/UnassignedCaseSlider';
+import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { UnassignedCaseSlider, UnassignedCaseSliderProps } from '@mediature/main/src/components/UnassignedCaseSlider';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof UnassignedCaseSlider>();
+type ComponentType = typeof UnassignedCaseSlider;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/UnassignedCaseSlider',
@@ -16,20 +17,20 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof UnassignedCaseSlider>;
+} as Meta<ComponentType>;
 
-const commonNextParamsParameters = {
+const commonComponentProps: ComponentProps<ComponentType> = {
   authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
-  assignAction: (caseId: string) => {},
+  assignAction: async (caseId: string) => {},
 };
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <UnassignedCaseSlider {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NormalStory.parameters = {
   msw: {
@@ -67,7 +68,7 @@ export const Normal = prepareStory(NormalStory);
 
 const NoCaseStory = Template.bind({});
 NoCaseStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NoCaseStory.parameters = {
   msw: {

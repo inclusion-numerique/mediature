@@ -6,7 +6,8 @@ import { EventEmitter } from 'eventemitter3';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { HeaderUserItem } from '@mediature/main/src/components/HeaderUserItem';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof HeaderUserItem>();
+type ComponentType = typeof HeaderUserItem;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/HeaderUserItem',
@@ -14,9 +15,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof HeaderUserItem>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   const eventEmitter = new EventEmitter();
 
   args.eventEmitter = eventEmitter;

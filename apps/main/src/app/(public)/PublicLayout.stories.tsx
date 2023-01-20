@@ -7,8 +7,8 @@ import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/te
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof PublicLayout>();
-
+type ComponentType = typeof PublicLayout;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 export default {
   title: 'Layouts/PublicPages',
   component: PublicLayout,
@@ -20,9 +20,9 @@ export default {
       },
     },
   }),
-} as Meta<typeof PublicLayout>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof PublicLayout> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <PublicLayout {...args} />;
 };
 

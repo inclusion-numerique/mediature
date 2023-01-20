@@ -5,7 +5,8 @@ import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { SignUpConfirmationEmail } from '@mediature/ui/src/emails/templates/sign-up-confirmation/email';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignUpConfirmationEmail>();
+type ComponentType = typeof SignUpConfirmationEmail;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Emails/Templates/SignUpConfirmation',
@@ -20,9 +21,9 @@ export default {
       },
     },
   }),
-} as Meta<typeof SignUpConfirmationEmail>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof SignUpConfirmationEmail> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <SignUpConfirmationEmail {...args} />;
 };
 

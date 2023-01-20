@@ -9,7 +9,8 @@ import {
 } from '@mediature/main/src/app/(private)/dashboard/authority/create/AuthorityCreationPage';
 import { Empty as CreateAuthorityFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/create/CreateAuthorityForm.stories';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AuthorityCreationPage>();
+type ComponentType = typeof AuthorityCreationPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/CreateAuthority',
@@ -17,9 +18,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AuthorityCreationPage>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof AuthorityCreationPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AuthorityCreationPage />;
 };
 

@@ -2,14 +2,15 @@ import { Meta, StoryFn } from '@storybook/react';
 import { userEvent, within } from '@storybook/testing-library';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
-import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { CaseListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/list/CaseListPage';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseListPage>();
+type ComponentType = typeof CaseListPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/CaseList',
@@ -17,7 +18,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CaseListPage>;
+} as Meta<ComponentType>;
 
 const mswListCasesParameters = {
   type: 'query' as 'query',
@@ -33,7 +34,7 @@ const defaultMswParameters = {
   },
 };
 
-const commonNextParamsParameters = {
+const commonComponentProps: ComponentProps<ComponentType> = {
   params: {
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
   },
@@ -45,13 +46,13 @@ async function playFindSearchInput(canvasElement: HTMLElement): Promise<HTMLElem
   });
 }
 
-const Template: StoryFn<typeof CaseListPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <CaseListPage {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NormalStory.parameters = { ...defaultMswParameters };
 NormalStory.play = async ({ canvasElement }) => {
@@ -62,7 +63,7 @@ export const Normal = prepareStory(NormalStory, {});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
@@ -84,7 +85,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
 
 const SearchLoadingWithLayoutStory = Template.bind({});
 SearchLoadingWithLayoutStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 SearchLoadingWithLayoutStory.parameters = {
   layout: 'fullscreen',

@@ -1,6 +1,9 @@
 import { ArgsTable, Description, PRIMARY_STORY, Primary, Stories, Subtitle, Title } from '@storybook/addon-docs';
 import { Meta, StoryFn } from '@storybook/react';
 
+// Helper to get props type of a component
+export type ComponentProps<F extends (props: any) => JSX.Element> = F extends (...args: infer A) => any ? Partial<A[0]> : never;
+
 // This helper is required because `react-dsfr` manages global styles that was leaking
 // on our other stories like email stories. It's due to importing the `DsfrHead` so there is no
 // easy workdaround like moving the decorator elsewhere because it would be still in the Storybook project

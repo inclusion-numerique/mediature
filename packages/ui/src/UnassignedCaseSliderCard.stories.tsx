@@ -8,7 +8,8 @@ import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
 import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof UnassignedCaseSliderCard>();
+type ComponentType = typeof UnassignedCaseSliderCard;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/UnassignedCaseSliderCard',
@@ -16,13 +17,13 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof UnassignedCaseSliderCard>;
+} as Meta<ComponentType>;
 
 async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await within(canvasElement).findByText(/avancement du dossier/i);
 }
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <UnassignedCaseSliderCard {...args} />;
 };
 

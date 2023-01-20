@@ -2,7 +2,9 @@ import { Button } from '@mui/material';
 import { useConfirm } from 'material-ui-confirm';
 import * as React from 'react';
 
-export const AskConfirmationDemo = () => {
+export interface AskConfirmationDemoProps {}
+
+export const AskConfirmationDemo = (props: AskConfirmationDemoProps) => {
   const askConfirmation = useConfirm();
 
   const onClick = async () => {

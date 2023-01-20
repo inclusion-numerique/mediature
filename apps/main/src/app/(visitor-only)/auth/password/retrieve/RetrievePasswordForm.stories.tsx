@@ -6,7 +6,8 @@ import { RetrievePasswordForm } from '@mediature/main/src/app/(visitor-only)/aut
 import { RequestNewPasswordPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof RetrievePasswordForm>();
+type ComponentType = typeof RetrievePasswordForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Forms/RetrievePassword',
@@ -14,7 +15,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof RetrievePasswordForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -28,7 +29,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof RetrievePasswordForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <RetrievePasswordForm {...args} />;
 };
 

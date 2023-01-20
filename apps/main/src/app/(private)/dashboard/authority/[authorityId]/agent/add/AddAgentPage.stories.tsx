@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindAlert, playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
 import { AddAgentPage, AddAgentPageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/AddAgentPage';
 import { Empty as InviteAgentFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm.stories';
@@ -9,7 +9,8 @@ import { authorities } from '@mediature/main/src/fixtures/authority';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof AddAgentPage>();
+type ComponentType = typeof AddAgentPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/AddAgent',
@@ -17,7 +18,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof AddAgentPage>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -33,19 +34,19 @@ const defaultMswParameters = {
   },
 };
 
-const commonNextParamsParameters = {
+const commonComponentProps: ComponentProps<ComponentType> = {
   params: {
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
   },
 };
 
-const Template: StoryFn<typeof AddAgentPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <AddAgentPage {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NormalStory.parameters = { ...defaultMswParameters };
 NormalStory.play = async ({ canvasElement }) => {
@@ -63,7 +64,7 @@ export const Normal = prepareStory(NormalStory, {
 
 const NotFoundStory = Template.bind({});
 NotFoundStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NotFoundStory.parameters = {
   msw: {
@@ -91,7 +92,7 @@ export const NotFound = prepareStory(NotFoundStory, {
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 WithLayoutStory.parameters = {
   layout: 'fullscreen',

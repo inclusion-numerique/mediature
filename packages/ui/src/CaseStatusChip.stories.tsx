@@ -5,7 +5,8 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { CaseStatusSchema } from '@mediature/main/src/models/entities/case';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseStatusChip>();
+type ComponentType = typeof CaseStatusChip;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Components/CaseStatusChip',
@@ -13,13 +14,13 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CaseStatusChip>;
+} as Meta<ComponentType>;
 
 async function playFindNumberedChip(canvasElement: HTMLElement, stepNumber: number | '#'): Promise<HTMLElement> {
   return await within(canvasElement).findByText(stepNumber.toString());
 }
 
-const Template: StoryFn<any> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return (
     <div>
       <CaseStatusChip {...args} />

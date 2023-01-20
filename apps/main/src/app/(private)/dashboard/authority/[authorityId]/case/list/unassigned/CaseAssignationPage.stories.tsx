@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
-import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import {
   CaseAssignationPage,
@@ -11,7 +11,8 @@ import { Normal as UnassignedCaseSliderNormalStory } from '@mediature/main/src/c
 import { cases } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseAssignationPage>();
+type ComponentType = typeof CaseAssignationPage;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Pages/CaseAssignation',
@@ -19,7 +20,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CaseAssignationPage>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -33,7 +34,7 @@ const defaultMswParameters = {
   },
 };
 
-const commonNextParamsParameters = {
+const commonComponentProps: ComponentProps<ComponentType> = {
   params: {
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
   },
@@ -46,13 +47,13 @@ async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement>
   });
 }
 
-const Template: StoryFn<typeof CaseAssignationPage> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <CaseAssignationPage {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 NormalStory.parameters = { ...defaultMswParameters };
 NormalStory.play = async ({ canvasElement }) => {
@@ -63,7 +64,7 @@ export const Normal = prepareStory(NormalStory, {});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
-  ...commonNextParamsParameters,
+  ...commonComponentProps,
 };
 WithLayoutStory.parameters = {
   layout: 'fullscreen',

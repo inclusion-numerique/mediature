@@ -6,7 +6,8 @@ import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/aut
 import { InviteAgentPrefillSchema } from '@mediature/main/src/models/actions/agent';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof InviteAgentForm>();
+type ComponentType = typeof InviteAgentForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Forms/InviteAgent',
@@ -14,7 +15,7 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof InviteAgentForm>;
+} as Meta<ComponentType>;
 
 const defaultMswParameters = {
   msw: {
@@ -28,7 +29,7 @@ const defaultMswParameters = {
   },
 };
 
-const Template: StoryFn<typeof InviteAgentForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <InviteAgentForm {...args} />;
 };
 

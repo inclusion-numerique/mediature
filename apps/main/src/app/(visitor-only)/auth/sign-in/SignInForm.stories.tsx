@@ -5,7 +5,8 @@ import { playFindForm } from '@mediature/docs/.storybook/testing';
 import { SignInForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm';
 import { SignInPrefillSchema } from '@mediature/main/src/models/actions/auth';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof SignInForm>();
+type ComponentType = typeof SignInForm;
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
   title: 'Forms/SignIn',
@@ -13,9 +14,9 @@ export default {
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof SignInForm>;
+} as Meta<ComponentType>;
 
-const Template: StoryFn<typeof SignInForm> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   return <SignInForm {...args} />;
 };
 
