@@ -4,6 +4,7 @@ import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Button, Card, CardContent, Chip, Divider, Grid, Stack, Typography, alpha } from '@mui/material';
 import { format, subBusinessDays } from 'date-fns';
+import { useConfirm } from 'material-ui-confirm';
 import ShowMoreText from 'react-show-more-text';
 
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
@@ -11,17 +12,39 @@ import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 
-export interface CaseSliderCardProps {
+export interface UnassignedCaseSliderCardProps {
   case: CaseSchemaType;
   citizen: CitizenSchemaType;
-  assignAction: () => Promise<void>;
+  assignAction: (caseId: string) => Promise<void>;
 }
 
-export function CaseSliderCard(props: CaseSliderCardProps) {
+export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
   const reminderDateStartingBeSoon = subBusinessDays(new Date(), 1);
   const isReminderSoon: boolean = props.case.termReminderAt ? props.case.termReminderAt >= reminderDateStartingBeSoon : false;
 
   const theme = useColors();
+
+  const askAssignmentConfirmation = useConfirm();
+
+  const assignAction = async (caseId: string) => {
+    try {
+      await askAssignmentConfirmation({
+        description: (
+          <>
+            Voulez-vous vous attribuer le dossier de{' '}
+            <Typography component="span" sx={{ fontWeight: 'bold' }}>
+              {props.citizen.firstname} {props.citizen.lastname}
+            </Typography>{' '}
+            ?
+          </>
+        ),
+      });
+    } catch (e) {
+      return;
+    }
+
+    await props.assignAction(caseId);
+  };
 
   return (
     <Card
@@ -35,7 +58,14 @@ export function CaseSliderCard(props: CaseSliderCardProps) {
       <CardContent>
         <Grid container direction={'column'} spacing={2}>
           <Grid item xs={12}>
-            <Button onClick={props.assignAction} size="large" variant="contained" fullWidth>
+            <Button
+              onClick={() => {
+                assignAction(props.case.id);
+              }}
+              size="large"
+              variant="contained"
+              fullWidth
+            >
               S&apos;attribuer le dossier
             </Button>
           </Grid>
@@ -55,7 +85,7 @@ export function CaseSliderCard(props: CaseSliderCardProps) {
           <Grid item xs={12}>
             <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
               <Grid item xs="auto" sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h4">
+                <Typography component="b" variant="h4">
                   {props.citizen.firstname} {props.citizen.lastname}
                 </Typography>
               </Grid>

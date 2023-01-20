@@ -6,24 +6,24 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
-import { CaseSliderCard } from '@mediature/ui/src/CaseSliderCard';
+import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
 
-const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof CaseSliderCard>();
+const { generateMetaDefault, prepareStory } = StoryHelperFactory<typeof UnassignedCaseSliderCard>();
 
 export default {
-  title: 'Components/CaseSliderCard',
-  component: CaseSliderCard,
+  title: 'Components/UnassignedCaseSliderCard',
+  component: UnassignedCaseSliderCard,
   ...generateMetaDefault({
     parameters: {},
   }),
-} as Meta<typeof CaseSliderCard>;
+} as Meta<typeof UnassignedCaseSliderCard>;
 
 async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await within(canvasElement).findByText(/avancement du dossier/i);
 }
 
 const Template: StoryFn<any> = (args) => {
-  return <CaseSliderCard {...args} />;
+  return <UnassignedCaseSliderCard {...args} />;
 };
 
 const NormalStory = Template.bind({});
