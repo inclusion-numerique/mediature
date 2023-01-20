@@ -58,6 +58,9 @@ export const parameters = {
   nextjs: {
     appDirectory: true,
   },
+  backgrounds: {
+    disable: true,
+  },
   darkMode: {
     current: 'light',
     stylePreview: true,
