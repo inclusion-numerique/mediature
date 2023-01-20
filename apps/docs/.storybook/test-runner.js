@@ -1,11 +1,22 @@
 const { getStoryContext } = require('@storybook/test-runner');
 const { injectAxe, checkA11y, configureAxe } = require('axe-playwright');
 
+const timeToWaitAfterChangingThemeMs = process.env.TIME_TO_WAIT_AFTER_CHANGING_THEME_MS || 1;
+
+async function setColorSchemeToBrowser(colorScheme) {
+  // See `preview.jsx` to understand how we force the change of the current theming
+  await page.emulateMedia({ colorScheme: colorScheme });
+
+  // Wait a few to be sure all components have updated their colors (otherwise it fails with multiple stories for the same file)
+  // (there is no way to check all elements have updated since we don't know the story structure)
+  await new Promise((resolve) => setTimeout(resolve, timeToWaitAfterChangingThemeMs));
+}
+
 module.exports = {
   setup() {},
   async preRender(page, context) {
     await Promise.all([
-      page.emulateMedia({ colorScheme: 'light' }), // Reset the light theme for each new test (to not be polluted by previous stories)
+      setColorSchemeToBrowser('light'),
       injectAxe(page),
       // ---
       // [WORKAROUND] To avoid context leak between stories of the same file, it's needed to wait for the new story to be ready
@@ -36,11 +47,7 @@ module.exports = {
 
     console.log('Switching to dark mode');
 
-    // See `preview.jsx` to understand how we force the change of the current theming
-    await page.emulateMedia({ colorScheme: 'dark' });
-
-    // Wait 50ms just to be sure all components have updated their colors ("just in case")
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await setColorSchemeToBrowser('dark');
 
     // Only test the color rules since the page structure has not changed
     await checkA11y(page, '#storybook-root', {

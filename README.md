@@ -138,7 +138,7 @@ It's not magical, it does not replace unit and end-to-end testing, but it helps 
 - Helps architecturing your components split
 - Their rendering is tested in the CI/CD, so it's very likely your components are valid at runtime
 
-###### Testing
+###### How we test stories
 
 You can do UI testing scoped to components (I mean, not full end-to-end), and if so, it's recommended to reuse the stories to benefit from their mocking set up.
 
@@ -155,6 +155,20 @@ Those kind of tests may be useful to:
 _(in case you have specific needs of testing that should not pollute the Storybook stories, go with a `.test.js` file, see examples [here](https://storybook.js.org/docs/react/writing-tests/importing-stories-in-tests))_
 
 _Tip: during the testing you could `findByText` but it's recommended to `findByRole`. It helps thinking and building for accessibility from scratch (because no, accessibility is not done/advised by an accessibility automated check unfortunately)._
+
+###### Testing performance
+
+During the test we render the story, we test the light theme accessibility and then we switch to the dark theme to test it too. The re-rendering for color change over the entire DOM is unpredictable, it depends on the CPU saturation. We had some leakage of previous theme rendered over the new one.
+
+We evaluated 2 solutions:
+
+- limit the number of Jest workers with `--maxWorkers`
+- increase the amount of time we wait after triggering a theme change
+
+After dozens of tests it appears the most reliable and the fastest is by keeping parallelism (no worker limitation), but increase the amount of time. But this latter depends on the environment:
+
+- when testing headless: there is less work done, the delay is shorter
+- when testing with a browser rendering: it is in higher demand, to avoid color style leakage we need to increase the delay (tests duration is +50%, which is fine)
 
 ##### Hydratation issue
 
