@@ -45,10 +45,10 @@ export function CaseSliderCard(props: CaseSliderCardProps) {
           {!!props.case.termReminderAt && (
             <Grid item xs={12}>
               <Typography color="error">
-                <Stack direction="row" alignItems="center" spacing={1}>
-                  <AccessTimeIcon />
+                <Grid container direction="row" alignItems="center">
+                  <AccessTimeIcon sx={{ mr: '5px' }} />
                   <span>Échéance : {format(props.case.termReminderAt, 'dd/MM/yyyy')}</span>
-                </Stack>
+                </Grid>
               </Typography>
             </Grid>
           )}
@@ -134,11 +134,17 @@ export function CaseSliderCard(props: CaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Documents :
             </Typography>
-            <Stack component="ul" direction="row" spacing={1} sx={ulComponentResetStyles}>
-              <Chip component="li" label="TODO.pdf" />
-              <Chip component="li" label="TODO.pdf" />
-              <Chip component="li" label="TODO.pdf" />
-            </Stack>
+            <Grid container component="ul" direction="row" spacing={1} sx={ulComponentResetStyles}>
+              <Grid item component="li">
+                <Chip label="TODO.pdf" />
+              </Grid>
+              <Grid item component="li">
+                <Chip label="TODO.pdf" />
+              </Grid>
+              <Grid item component="li">
+                <Chip label="TODO.pdf" />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </CardContent>
