@@ -50,7 +50,8 @@ module.exports = {
       },
       axeOptions: {
         ...(storyContext.parameters?.a11y?.options || {}),
-        runOnly: ['color-contrast-enhanced', 'link-in-text-block', 'color-contrast'],
+        // [BUG] When running only the following rules, `color-contrast` on links always fails in dark mode... whereas it does not when all rules are enabled and also when testing with the browser extension `axe DevTools`... commenting since no explanation
+        // runOnly: ['color-contrast-enhanced', 'link-in-text-block', 'color-contrast'],
       },
     });
   },
