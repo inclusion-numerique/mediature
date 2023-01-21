@@ -55,7 +55,12 @@ const NormalStory = Template.bind({});
 NormalStory.args = {
   ...commonComponentProps,
 };
-NormalStory.parameters = { ...defaultMswParameters };
+NormalStory.parameters = {
+  testing: {
+    timeToWaitAfterChangingThemeMs: 2000,
+  },
+  ...defaultMswParameters,
+};
 NormalStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);
 };
@@ -68,6 +73,9 @@ WithLayoutStory.args = {
 };
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
+  testing: {
+    timeToWaitAfterChangingThemeMs: 2000,
+  },
   ...defaultMswParameters,
 };
 WithLayoutStory.play = async ({ canvasElement }) => {

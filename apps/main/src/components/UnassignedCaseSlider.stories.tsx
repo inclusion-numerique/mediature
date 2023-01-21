@@ -33,6 +33,9 @@ NormalStory.args = {
   ...commonComponentProps,
 };
 NormalStory.parameters = {
+  testing: {
+    timeToWaitAfterChangingThemeMs: 2000,
+  },
   msw: {
     handlers: [
       getTRPCMock({

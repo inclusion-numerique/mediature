@@ -1,15 +1,15 @@
 const { getStoryContext } = require('@storybook/test-runner');
 const { injectAxe, checkA11y, configureAxe } = require('axe-playwright');
 
-const timeToWaitAfterChangingThemeMs = process.env.TIME_TO_WAIT_AFTER_CHANGING_THEME_MS || 1;
+const defaultTimeToWaitAfterChangingThemeMs = process.env.TIME_TO_WAIT_AFTER_CHANGING_THEME_MS || 1;
 
-async function setColorSchemeToBrowser(colorScheme) {
+async function setColorSchemeToBrowser(colorScheme, timeToWaitAfterChangingThemeMs) {
   // See `preview.jsx` to understand how we force the change of the current theming
   await page.emulateMedia({ colorScheme: colorScheme });
 
   // Wait a few to be sure all components have updated their colors (otherwise it fails with multiple stories for the same file)
   // (there is no way to check all elements have updated since we don't know the story structure)
-  await new Promise((resolve) => setTimeout(resolve, timeToWaitAfterChangingThemeMs));
+  await new Promise((resolve) => setTimeout(resolve, timeToWaitAfterChangingThemeMs || defaultTimeToWaitAfterChangingThemeMs));
 }
 
 module.exports = {
@@ -47,7 +47,16 @@ module.exports = {
 
     console.log('Switching to dark mode');
 
-    await setColorSchemeToBrowser('dark');
+    // Allow overriding the delay per-story (some are slower than others to update their colors)
+    let timeToWaitAfterChangingThemeMs;
+    if (
+      storyContext.parameters?.testing?.timeToWaitAfterChangingThemeMs &&
+      typeof storyContext.parameters.testing.timeToWaitAfterChangingThemeMs === 'number'
+    ) {
+      timeToWaitAfterChangingThemeMs = storyContext.parameters?.testing?.timeToWaitAfterChangingThemeMs;
+    }
+
+    await setColorSchemeToBrowser('dark', timeToWaitAfterChangingThemeMs);
 
     // Only test the color rules since the page structure has not changed
     await checkA11y(page, '#storybook-root', {
