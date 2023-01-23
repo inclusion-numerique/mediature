@@ -36,7 +36,7 @@ export function ClientProvider(props: { children: React.ReactNode }) {
   );
   const [trpcClient] = useState(() =>
     trpc.createClient({
-      transformer: !shouldTargetMock() ? superjson : undefined, // When mock, there is no data over the network so there no specific serialization of types like Date...
+      transformer: superjson,
       links: [
         loggerLink({
           enabled: (opts) => process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),

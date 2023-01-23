@@ -1,5 +1,6 @@
 import { DefaultBodyType, DelayMode, PathParams, ResponseTransformer, RestRequest, rest } from 'msw';
 import path from 'path';
+import superjson from 'superjson';
 
 import { mockBaseUrl } from '@mediature/main/src/server/mock/environment';
 import { jsonRpcErrorResponse, jsonRpcSuccessResponse } from '@mediature/main/src/server/mock/requests';
@@ -44,8 +45,17 @@ export const getTRPCMock = <
   const route = `${mockBaseUrl}/api/trpc/${endpoint.path[0]}`;
 
   return fn(route, (req, res, ctx) => {
-    const rpcResponse =
-      (endpoint.response as any) instanceof Error ? jsonRpcErrorResponse(endpoint.response) : jsonRpcSuccessResponse(endpoint.response);
+    const isResponseAnError = (endpoint.response as any) instanceof Error;
+
+    let rpcResponse: DefaultBodyType;
+    if (isResponseAnError) {
+      rpcResponse = jsonRpcErrorResponse(endpoint.response);
+    } else {
+      // In the real app we use the `superjson` transformer to encode/decode complex response objects, so we have to mimic the server behavior
+      const transformedResponse = superjson.serialize(endpoint.response);
+
+      rpcResponse = jsonRpcSuccessResponse(transformedResponse);
+    }
 
     const transformers: ResponseTransformer<DefaultBodyType, any>[] = [];
 
