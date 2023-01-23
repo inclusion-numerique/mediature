@@ -32,7 +32,7 @@ export const jsonRpcErrorResponse = (err: Error) => [
     error: {
       json: {
         message: err.message,
-        code: -32600,
+        code: -50100,
         data: {
           code: 'INTERNAL_SERVER_ERROR',
           stack: err.stack,
