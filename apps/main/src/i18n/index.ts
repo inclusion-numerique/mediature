@@ -1,3 +1,6 @@
+import { format as formatDate, formatDistance, formatRelative, isDate } from 'date-fns';
+import { Locale } from 'date-fns';
+import { fr as frDateLocale } from 'date-fns/locale';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -14,6 +17,12 @@ export const resources = {
   // },
 };
 
+interface DateLocales {
+  [key: string]: Locale;
+}
+
+const dateFnsLocales: DateLocales = { fr: frDateLocale };
+
 i18next.use(LanguageDetector).init(
   {
     detection: {
@@ -25,6 +34,27 @@ i18next.use(LanguageDetector).init(
     returnNull: false,
     interpolation: {
       escapeValue: false, // React already safes from xss
+      format: (value, format, lng) => {
+        if (!!format && !!lng) {
+          if (isDate(value)) {
+            const locale = dateFnsLocales[lng];
+
+            if (format === 'short') return formatDate(value, 'P', { locale });
+            if (format === 'long') return formatDate(value, 'PPPP', { locale });
+            if (format === 'relative') return formatRelative(value, new Date(), { locale });
+            if (format === 'ago') {
+              return formatDistance(value, new Date(), {
+                locale,
+                addSuffix: true,
+              });
+            }
+
+            return formatDate(value, format, { locale });
+          }
+        }
+
+        return value;
+      },
     },
     resources: resources,
     debug: false,
