@@ -7,7 +7,8 @@ import { configure as testingConfigure } from '@storybook/testing-library';
 import { themes } from '@storybook/theming';
 import { withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { I18nextProvider } from 'react-i18next';
 
 import { MockProvider } from '@mediature/docs/.storybook/MockProvider';
 import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContainer';
@@ -18,6 +19,7 @@ import { withDisablingTestRunner } from '@mediature/docs/.storybook/testing';
 // import { useDarkMode } from 'storybook-dark-mode';
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import { Providers } from '@mediature/main/src/app/providers';
+import { i18n } from '@mediature/main/src/i18n';
 import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
 
 // const channel = addons.getChannel();
@@ -117,15 +119,24 @@ export const decorators = [
   (Story, context) => {
     // Provide the necessary depending on the context
 
+    const { locale } = context.globals;
+
+    // When the locale global changes set the new locale in i18n
+    useEffect(() => {
+      i18n.changeLanguage(locale);
+    }, [locale]);
+
     if (context.kind.startsWith('Emails/')) {
       // We are in the email templating context, a specific wrapper is needed to render
 
       disableGlobalDsfrStyle(true); // Workaround for global style leaking
 
       return (
-        <StorybookRendererLayout>
-          <Story />
-        </StorybookRendererLayout>
+        <I18nextProvider i18n={i18n}>
+          <StorybookRendererLayout>
+            <Story />
+          </StorybookRendererLayout>
+        </I18nextProvider>
       );
     } else {
       // For now for all other cases we provide the client provider to mock tRPC calls
@@ -151,3 +162,17 @@ export const decorators = [
   },
   withDisablingTestRunner, // This must be the latest to avoid other decorators to be called
 ];
+
+// TODO: it appears as selected even if default... which is weird (ref: https://github.com/storybookjs/storybook/issues/20009)
+export const globalTypes = {
+  locale: {
+    name: 'Locale',
+    description: 'Internationalization locale',
+    defaultValue: 'fr',
+    // toolbar: {
+    //   icon: 'globe',
+    //   items: [{ value: 'fr', right: '🇫🇷', title: 'Français' }],
+    //   showName: false,
+    // },
+  },
+};
