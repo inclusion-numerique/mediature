@@ -2,13 +2,14 @@
 
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { Button, Card, CardContent, Chip, Divider, Grid, Stack, Typography, alpha } from '@mui/material';
-import { format, subBusinessDays } from 'date-fns';
+import { Button, Card, CardContent, Chip, Divider, Grid, Typography, alpha } from '@mui/material';
+import { format } from 'date-fns';
 import { useConfirm } from 'material-ui-confirm';
 import ShowMoreText from 'react-show-more-text';
 
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 
@@ -19,8 +20,7 @@ export interface UnassignedCaseSliderCardProps {
 }
 
 export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
-  const reminderDateStartingBeSoon = subBusinessDays(new Date(), 1);
-  const isReminderSoon: boolean = props.case.termReminderAt ? props.case.termReminderAt >= reminderDateStartingBeSoon : false;
+  const reminderSoon: boolean = props.case.termReminderAt ? isReminderSoon(props.case.termReminderAt) : false;
 
   const theme = useColors();
 
@@ -52,7 +52,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
       sx={{
         position: 'relative',
         overflow: 'visible',
-        backgroundColor: isReminderSoon ? alpha(theme.decisions.background.actionLow.redMarianne.hover, 0.3) : undefined,
+        backgroundColor: reminderSoon ? alpha(theme.decisions.background.actionLow.redMarianne.hover, 0.3) : undefined,
       }}
     >
       <CardContent>
@@ -77,7 +77,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               <Typography color="error">
                 <Grid container direction="row" alignItems="center">
                   <AccessTimeIcon sx={{ mr: '5px' }} />
-                  <span>Échéance : {format(props.case.termReminderAt, 'dd/MM/yyyy')}</span>
+                  <span>Échéance : {format(props.case.termReminderAt, 'P')}</span>
                 </Grid>
               </Typography>
             </Grid>

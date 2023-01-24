@@ -44,7 +44,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
           helperText={errors.type?.message}
           fullWidth
         >
-          {Object.keys(AuthorityTypeSchema.Values).map((type) => (
+          {Object.values(AuthorityTypeSchema.Values).map((type) => (
             <MenuItem key={type} value={type}>
               {type}
             </MenuItem> // TODO: should use i18n for proper display (instead of hard values)

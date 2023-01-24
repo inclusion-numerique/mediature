@@ -31,6 +31,7 @@ export type RequestCasePrefillSchemaType = z.infer<typeof RequestCasePrefillSche
 
 export const UpdateCaseSchema = z
   .object({
+    initiatedFrom: CaseSchema.shape.initiatedFrom,
     caseId: CaseSchema.shape.id,
     units: CaseSchema.shape.units,
     termReminderAt: CaseSchema.shape.termReminderAt,
@@ -66,6 +67,13 @@ export type UnassignCaseSchemaType = z.infer<typeof UnassignCaseSchema>;
 
 export const UnassignCasePrefillSchema = UnassignCaseSchema.deepPartial();
 export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSchema>;
+
+export const GetCaseSchema = z
+  .object({
+    id: CaseSchema.shape.id,
+  })
+  .strict();
+export type GetCaseSchemaType = z.infer<typeof GetCaseSchema>;
 
 export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({

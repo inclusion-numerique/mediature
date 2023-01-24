@@ -4,6 +4,7 @@ import {
   AddNoteToCaseSchema,
   AssignCaseSchema,
   GeneratePdfFromCaseSchema,
+  GetCaseSchema,
   ListCasesSchema,
   RemoveAttachmentFromCaseSchema,
   RemoveNoteFromCaseSchema,
@@ -13,7 +14,7 @@ import {
   UpdateCaseNoteSchema,
   UpdateCaseSchema,
 } from '@mediature/main/src/models/actions/case';
-import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
+import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
@@ -165,6 +166,7 @@ export const caseRouter = router({
         id: input.caseId,
       },
       data: {
+        initiatedFrom: input.initiatedFrom,
         units: input.units,
         termReminderAt: input.termReminderAt,
         status: input.status,
@@ -249,6 +251,29 @@ export const caseRouter = router({
     });
 
     return { case: assignedCase };
+  }),
+  getCase: privateProcedure.input(GetCaseSchema).query(async ({ ctx, input }) => {
+    const targetedCase = await prisma.case.findUnique({
+      where: {
+        id: input.id,
+      },
+      include: {
+        citizen: true,
+      },
+    });
+
+    if (!targetedCase) {
+      throw new Error(`ce dossier n'existe pas`);
+    } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
+      throw new Error(`en tant qu'agent vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+    }
+
+    return {
+      caseWrapper: CaseWrapperSchema.parse({
+        case: casePrismaToModel(targetedCase),
+        citizen: citizenPrismaToModel(targetedCase.citizen),
+      }),
+    };
   }),
   listCases: privateProcedure.input(ListCasesSchema).query(async ({ ctx, input }) => {
     const isAdmin = await isUserAnAdmin(ctx.user.id);

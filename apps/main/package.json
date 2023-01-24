@@ -57,6 +57,7 @@
     "@mediature/ui": "workspace:ui@*",
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.16",
+    "@mui/x-date-pickers": "^5.0.15",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.7.1",
     "@sentry/integrations": "^7.21.1",

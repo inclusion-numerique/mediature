@@ -1,5 +1,7 @@
 'use client';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ConfirmProvider } from 'material-ui-confirm';
 import { PropsWithChildren } from 'react';
 import { createContext, useContext } from 'react';
@@ -27,9 +29,11 @@ export function Providers(props: PropsWithChildren) {
         },
       }}
     >
-      <ClientProvider>
-        <ContextualSessionProvider>{props.children}</ContextualSessionProvider>
-      </ClientProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ClientProvider>
+          <ContextualSessionProvider>{props.children}</ContextualSessionProvider>
+        </ClientProvider>
+      </LocalizationProvider>
     </ConfirmProvider>
   );
 }
