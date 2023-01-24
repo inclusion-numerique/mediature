@@ -13,7 +13,7 @@ import { CreateAuthorityPrefillSchemaType, CreateAuthoritySchema, CreateAuthorit
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
 
 export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPrefillSchemaType }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   const createAuthority = trpc.createAuthority.useMutation();
 

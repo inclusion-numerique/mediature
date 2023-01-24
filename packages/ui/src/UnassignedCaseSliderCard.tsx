@@ -5,6 +5,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Button, Card, CardContent, Chip, Divider, Grid, Typography, alpha } from '@mui/material';
 import { format } from 'date-fns';
 import { useConfirm } from 'material-ui-confirm';
+import { useTranslation } from 'react-i18next';
 import ShowMoreText from 'react-show-more-text';
 
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
@@ -20,6 +21,8 @@ export interface UnassignedCaseSliderCardProps {
 }
 
 export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
+  const { t } = useTranslation('common');
+
   const reminderSoon: boolean = props.case.termReminderAt ? isReminderSoon(props.case.termReminderAt) : false;
 
   const theme = useColors();
@@ -77,7 +80,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               <Typography color="error">
                 <Grid container direction="row" alignItems="center">
                   <AccessTimeIcon sx={{ mr: '5px' }} />
-                  <span>Échéance : {format(props.case.termReminderAt, 'P')}</span>
+                  <span>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
                 </Grid>
               </Typography>
             </Grid>

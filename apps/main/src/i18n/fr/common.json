@@ -1,4 +1,12 @@
 {
+  "date": {
+    "ago": "{{ date, ago }}",
+    "default": "{{ date }}",
+    "long": "{{ date, long }}",
+    "longWithTime": "{{ date, longWithTime }}",
+    "relative": "{{ date, relative }}",
+    "short": "{{ date, short }}"
+  },
   "model": {
     "authority": {
       "type": {

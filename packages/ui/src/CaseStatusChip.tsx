@@ -11,7 +11,7 @@ export interface CaseStatusChipProps {
 }
 
 export function CaseStatusChip(props: CaseStatusChipProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   // Main colors with different shades: green, blue, yellow, red
   let statusNumber: number | '#' = 0;

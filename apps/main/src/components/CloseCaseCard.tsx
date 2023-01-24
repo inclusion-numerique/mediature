@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { useConfirm } from 'material-ui-confirm';
 import { PropsWithChildren, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
@@ -18,6 +19,8 @@ export interface CloseCaseCardProps {
 }
 
 export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
+  const { t } = useTranslation('common');
+
   const [closeAreaExpanded, setCloseAreaExpanded] = useState<boolean>(!!props.case.closedAt);
 
   const askCloseCaseConfirmation = useConfirm();
@@ -84,7 +87,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
               <Grid container direction="column" spacing={2}>
                 {!!props.case.closedAt && (
                   <Grid item xs={12}>
-                    <Tooltip title={format(props.case.closedAt, 'PPPPpppp')}>
+                    <Tooltip title={t('date.longWithTime', { date: props.case.closedAt })}>
                       <div>
                         <DatePicker
                           label="Date de clôture"

@@ -32,7 +32,7 @@ export interface CasePageProps {
 }
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   const { data, error, isInitialLoading, isLoading } = trpc.getCase.useQuery({
     id: caseId,
@@ -177,7 +177,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   sx={{ ml: 'auto' }}
                 >
                   {targetedCase.termReminderAt ? (
-                    <span>Échéance : {format(targetedCase.termReminderAt, 'dd/MM/yyyy')}</span>
+                    <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
                   ) : (
                     <span>Définir une échéance</span>
                   )}
@@ -289,7 +289,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       <Grid item xs={12}>
                         <Grid container spacing={2}>
                           <Grid item xs={12} sm={6}>
-                            <Tooltip title={format(targetedCase.createdAt, 'PPPPpppp')}>
+                            <Tooltip title={t('date.longWithTime', { date: targetedCase.createdAt })}>
                               <div>
                                 <DatePicker
                                   label="Date de la demande"
