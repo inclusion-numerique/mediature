@@ -1,0 +1,30 @@
+{
+  "model": {
+    "authority": {
+      "type": {
+        "enum": {
+          "CITY": "Ville",
+          "REGION": "Région",
+          "SUBDIVISION": "Département"
+        }
+      }
+    },
+    "case": {
+      "platform": {
+        "enum": {
+          "WEB": "Formulaire internet"
+        }
+      },
+      "status": {
+        "enum": {
+          "ABOUT_TO_CLOSE": "Étapes de finalisation",
+          "MAKE_XXX_CALL": "Appeler le requérant",
+          "STUCK": "Dossier bloqué",
+          "SYNC_WITH_ADMINISTATION": "Se synchroniser avec l'administration",
+          "SYNC_WITH_CITIZEN": "Se synchroniser avec le requérant",
+          "TO_PROCESS": "À traiter"
+        }
+      }
+    }
+  }
+}

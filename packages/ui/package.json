@@ -19,11 +19,13 @@
     "@codegouvfr/react-dsfr": "0.24.0",
     "@luma-team/mjml-react": "^0.2.0",
     "date-fns": "^2.29.3",
+    "i18next": "^22.4.5",
     "material-ui-confirm": "^3.0.7",
     "mjml": "^4.13.0",
     "next": "^13.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.1.1",
     "react-show-more-text": "^1.6.2"
   },
   "devDependencies": {

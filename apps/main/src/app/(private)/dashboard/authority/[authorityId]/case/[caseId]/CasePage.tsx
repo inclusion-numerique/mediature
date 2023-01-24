@@ -12,6 +12,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
@@ -31,6 +32,8 @@ export interface CasePageProps {
 }
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
+  const { t } = useTranslation();
+
   const { data, error, isInitialLoading, isLoading } = trpc.getCase.useQuery({
     id: caseId,
   });
@@ -229,7 +232,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               {Object.values(CaseStatusSchema.Values).map((status) => (
                 <MenuItem key={status} value={status}>
                   <CaseStatusChip status={status} />
-                </MenuItem> // TODO: should use i18n for proper display (instead of hard values)
+                </MenuItem>
               ))}
             </TextField>
           </Typography>
@@ -312,8 +315,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                             >
                               {Object.values(CasePlatformSchema.Values).map((initiatedFrom) => (
                                 <MenuItem key={initiatedFrom} value={initiatedFrom}>
-                                  {initiatedFrom}
-                                </MenuItem> // TODO: should use i18n for proper display (instead of hard values)
+                                  {t(`model.case.platform.enum.${initiatedFrom}`)}
+                                </MenuItem>
                               ))}
                             </TextField>
                           </Grid>

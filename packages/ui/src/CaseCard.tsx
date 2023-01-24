@@ -57,7 +57,7 @@ export function CaseCard(props: CaseCardProps) {
               Dossier n°{props.case.humanId}
             </Typography>
             <br />
-            {/* TODO: reminder field + status with i18n */}
+            {/* TODO: reminder field */}
             <Typography component="span" variant="subtitle1">
               Avancement du dossier :
               <br />

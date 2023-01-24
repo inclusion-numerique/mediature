@@ -1,6 +1,6 @@
-declare module '*.json' {
-  const value: any;
-  export default value;
+declare module '*.yaml' {
+  const content: object;
+  export default content;
 }
 
 declare module '*.scss?raw' {

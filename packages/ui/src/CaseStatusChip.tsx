@@ -2,6 +2,7 @@
 
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { Avatar, Chip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 
@@ -10,12 +11,13 @@ export interface CaseStatusChipProps {
 }
 
 export function CaseStatusChip(props: CaseStatusChipProps) {
-  // TODO: translate the text with i18n feature
+  const { t } = useTranslation();
+
   // Main colors with different shades: green, blue, yellow, red
   let statusNumber: number | '#' = 0;
   let statusNumberColor = 'black';
   let statusColor = 'black';
-  let statusText = props.status;
+  let statusText = t(`model.case.status.enum.${props.status}`);
 
   const theme = useColors();
 

@@ -97,7 +97,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            {/* TODO: reminder field + status with i18n */}
+            {/* TODO: reminder field */}
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Avancement du dossier :
             </Typography>

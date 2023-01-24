@@ -4,6 +4,11 @@
 // are to enhance some modules while keeping other inner types accessible
 //
 
+declare module '*.yaml' {
+  const content: object;
+  export default content;
+}
+
 declare module '*.txt' {
   const content: string;
   export default content;

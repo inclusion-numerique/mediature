@@ -55,7 +55,12 @@ module.exports = {
   async webpackFinal(config, { configType }) {
     // TODO: move the following to a `utils` to be reused elsewhere than in Storybook
     const originalRules = config.module.rules;
-    config.module.rules = [];
+    config.module.rules = [
+      {
+        test: /\.ya?ml$/i,
+        use: 'yaml-loader',
+      },
+    ];
 
     let scssRuleFound = false;
     for (const originalRule of originalRules) {

@@ -5,6 +5,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
@@ -12,6 +13,8 @@ import { CreateAuthorityPrefillSchemaType, CreateAuthoritySchema, CreateAuthorit
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
 
 export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPrefillSchemaType }) {
+  const { t } = useTranslation();
+
   const createAuthority = trpc.createAuthority.useMutation();
 
   const {
@@ -46,8 +49,8 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
         >
           {Object.values(AuthorityTypeSchema.Values).map((type) => (
             <MenuItem key={type} value={type}>
-              {type}
-            </MenuItem> // TODO: should use i18n for proper display (instead of hard values)
+              {t(`model.authority.type.enum.${type}`)}
+            </MenuItem>
           ))}
         </TextField>
       </Grid>

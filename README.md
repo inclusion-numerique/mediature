@@ -121,6 +121,10 @@ scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 
 #### Frontend development
 
+##### i18n
+
+Currently we only use i18n to help displaying ENUM values. We use the `i18n Ally` VSCode extension to improve a bit the usage but everything can be written manually in `.json` files :)
+
 ##### Storybook
 
 ###### Use it first

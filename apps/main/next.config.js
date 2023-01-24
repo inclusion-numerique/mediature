@@ -3,6 +3,7 @@ const gitRevision = require('git-rev-sync');
 const path = require('path');
 
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
+const { i18n } = require('./next-i18next.config');
 
 const mode = process.env.APP_MODE || 'test';
 
@@ -18,10 +19,7 @@ const moduleExports = async () => {
       appMode: mode,
       appVersion: await getHumanVersion(),
     },
-    // i18n: {
-    //   locales: ['fr'],
-    //   defaultLocale: 'fr',
-    // },
+    i18n: i18n,
     experimental: {
       appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
@@ -45,6 +43,11 @@ const moduleExports = async () => {
       config.module.rules.push({
         test: /\.(txt|html)$/i,
         use: 'raw-loader',
+      });
+
+      config.module.rules.push({
+        test: /\.ya?ml$/i,
+        use: 'yaml-loader',
       });
 
       return config;
