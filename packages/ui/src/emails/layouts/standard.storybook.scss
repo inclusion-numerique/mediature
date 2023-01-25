@@ -2,7 +2,8 @@
 
 // Make sure we target the Storybook preview body to not pollute the global style
 body.sb-show-main.dark {
-  &, .light-body {
+  &,
+  .light-body {
     background: $darkWrapperBackground !important;
   }
 

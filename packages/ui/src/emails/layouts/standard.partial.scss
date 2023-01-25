@@ -19,7 +19,8 @@ $darkWrapperBackground: #161616;
     color: #fff !important;
   }
 
-  .light-text, .light-text div {
+  .light-text,
+  .light-text div {
     color: #cecece !important;
   }
 
@@ -28,7 +29,8 @@ $darkWrapperBackground: #161616;
     color: #000091 !important;
   }
 
-  .light-main-section, .light-main-section > table {
+  .light-main-section,
+  .light-main-section > table {
     background: #1e1e1e !important;
   }
 }
