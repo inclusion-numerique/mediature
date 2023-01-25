@@ -23,6 +23,12 @@ const moduleExports = async () => {
       appVersion: await getHumanVersion(),
     },
     i18n: i18n,
+    eslint: {
+      ignoreDuringBuilds: true, // Skip since already done in a specific step of our CI/CD
+    },
+    typescript: {
+      ignoreBuildErrors: true, // Skip since already done in a specific step of our CI/CD
+    },
     experimental: {
       appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
