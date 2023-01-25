@@ -2,6 +2,7 @@
 /**/.*/**/*
 !.github/**/*
 !.vscode/extensions.json
+!.vscode/i18n-ally-reviews.yml
 !.vscode/settings.json
 !.well-known/**/*
 
