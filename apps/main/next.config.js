@@ -3,9 +3,12 @@ const gitRevision = require('git-rev-sync');
 const path = require('path');
 
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
+const { convertHeadersForNextjs, securityHeaders } = require('./src/utils/http.js');
 const { i18n } = require('./next-i18next.config');
 
 const mode = process.env.APP_MODE || 'test';
+
+const nextjsSecurityHeaders = convertHeadersForNextjs(securityHeaders);
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
@@ -35,6 +38,14 @@ const moduleExports = async () => {
         {
           source: '/robots.txt',
           destination: '/api/robots',
+        },
+      ];
+    },
+    async headers() {
+      return [
+        {
+          source: '/:path*', // All routes
+          headers: nextjsSecurityHeaders,
         },
       ];
     },
