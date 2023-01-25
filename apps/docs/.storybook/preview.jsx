@@ -1,4 +1,3 @@
-import { MuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { withLinks } from '@storybook/addon-links';
@@ -16,6 +15,7 @@ import { ThemedDocsContainer } from '@mediature/docs/.storybook/ThemedDocsContai
 import { disableGlobalDsfrStyle } from '@mediature/docs/.storybook/helpers';
 import '@mediature/docs/.storybook/layout.scss';
 import { withDisablingTestRunner } from '@mediature/docs/.storybook/testing';
+import { MuiDsfrThemeProvider } from '@mediature/main/src/app/MuiDsfrThemeProvider';
 // import { useDarkMode } from 'storybook-dark-mode';
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import { Providers } from '@mediature/main/src/app/providers';

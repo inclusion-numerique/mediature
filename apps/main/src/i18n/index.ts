@@ -21,7 +21,7 @@ interface DateLocales {
   [key: string]: Locale;
 }
 
-const dateFnsLocales: DateLocales = { fr: frDateLocale };
+export const dateFnsLocales: DateLocales = { fr: frDateLocale };
 
 i18next.use(LanguageDetector).init(
   {
