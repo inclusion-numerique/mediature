@@ -3,6 +3,7 @@
 !.github/**/*
 !.vscode/extensions.json
 !.vscode/i18n-ally-reviews.yml
+!.vscode/launch.json
 !.vscode/settings.json
 !.well-known/**/*
 
