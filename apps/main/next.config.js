@@ -29,6 +29,10 @@ const moduleExports = async () => {
     async rewrites() {
       return [
         {
+          source: '/.well-known/security.txt',
+          destination: '/api/security',
+        },
+        {
           source: '/robots.txt',
           destination: '/api/robots',
         },
