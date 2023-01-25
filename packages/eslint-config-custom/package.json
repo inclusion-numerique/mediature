@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "eslint": "7.32.0",
+    "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-storybook": "^0.6.8",
     "next": "latest",
     "react": "18.2",

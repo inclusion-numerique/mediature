@@ -1,6 +1,6 @@
 module.exports = {
   extends: ['next', 'turbo', 'prettier', 'plugin:storybook/recommended', 'plugin:jsx-a11y/strict'],
-  plugins: ['jsx-a11y'],
+  plugins: ['jsx-a11y', 'import'],
   rules: {
     '@next/next/no-html-link-for-pages': 'off',
     'interface-name': 'off',
@@ -9,6 +9,10 @@ module.exports = {
     'no-submodule-imports': 'off',
     'no-trailing-spaces': 'error',
     'react/jsx-key': 'off',
+    // When hunting dead code it's useful to use the following:
+    // ---
+    // 'no-unused-vars': 'error',
+    // 'import/no-unused-modules': [1, { unusedExports: true }],
   },
   overrides: [
     {
