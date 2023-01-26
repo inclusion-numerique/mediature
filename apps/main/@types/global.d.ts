@@ -19,6 +19,11 @@ declare module '*.html' {
   export default content;
 }
 
+declare module '*.lexical' {
+  const content: string;
+  export default content;
+}
+
 interface ServerRuntimeConfig {
   //
 }

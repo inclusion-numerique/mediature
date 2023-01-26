@@ -12,7 +12,6 @@ import { ListItemNode, ListNode } from '@lexical/list';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import type { Klass, LexicalNode } from 'lexical';
 
-import { AutocompleteNode } from './AutocompleteNode';
 import { EquationNode } from './EquationNode';
 import { ImageNode } from './ImageNode';
 import { KeywordNode } from './KeywordNode';
@@ -31,7 +30,6 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   ImageNode,
   MentionNode,
   EquationNode,
-  AutocompleteNode,
   KeywordNode,
 ];
 

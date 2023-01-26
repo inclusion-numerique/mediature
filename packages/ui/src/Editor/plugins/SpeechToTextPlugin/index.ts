@@ -28,7 +28,11 @@ const VOICE_COMMANDS: Readonly<Record<string, (arg0: { editor: LexicalEditor; se
 
 export const SUPPORT_SPEECH_RECOGNITION: boolean = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 
-function SpeechToTextPlugin(): null {
+export interface SpeechToTextPluginProps {
+  lang?: string;
+}
+
+function SpeechToTextPlugin(props: SpeechToTextPluginProps): null {
   const [editor] = useLexicalComposerContext();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const SpeechRecognition =
@@ -40,6 +44,7 @@ function SpeechToTextPlugin(): null {
   useEffect(() => {
     if (isEnabled && recognition.current === null) {
       recognition.current = new SpeechRecognition();
+      recognition.current.lang = props.lang;
       recognition.current.continuous = true;
       recognition.current.interimResults = true;
       recognition.current.addEventListener('result', (event: typeof SpeechRecognition) => {
@@ -85,7 +90,7 @@ function SpeechToTextPlugin(): null {
         recognition.current.stop();
       }
     };
-  }, [SpeechRecognition, editor, isEnabled, report]);
+  }, [SpeechRecognition, editor, isEnabled, report, props.lang]);
   useEffect(() => {
     return editor.registerCommand(
       SPEECH_TO_TEXT_COMMAND,
@@ -100,4 +105,4 @@ function SpeechToTextPlugin(): null {
   return null;
 }
 
-export default (SUPPORT_SPEECH_RECOGNITION ? SpeechToTextPlugin : () => null) as () => null;
+export default (SUPPORT_SPEECH_RECOGNITION ? SpeechToTextPlugin : () => null) as (props: SpeechToTextPluginProps) => null;

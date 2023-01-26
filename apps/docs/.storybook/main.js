@@ -60,6 +60,10 @@ module.exports = {
         test: /\.ya?ml$/i,
         use: 'yaml-loader',
       },
+      {
+        test: /\.lexical$/i,
+        use: 'raw-loader',
+      },
     ];
 
     let scssRuleFound = false;

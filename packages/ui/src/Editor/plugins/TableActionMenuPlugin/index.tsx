@@ -24,10 +24,14 @@ import {
   TableCellNode,
   getTableSelectionFromTableElement,
 } from '@lexical/table';
-import { $getRoot, $getSelection, $isRangeSelection, DEPRECATED_$isGridSelection } from 'lexical';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
+import { $addUpdateTag, $getRoot, $getSelection, $isRangeSelection, DEPRECATED_$isGridSelection } from 'lexical';
 import * as React from 'react';
 import { ReactPortal, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+
+import { menuPaperProps } from '../ToolbarPlugin';
 
 type TableCellActionMenuProps = Readonly<{
   contextRef: { current: null | HTMLElement };
@@ -36,7 +40,7 @@ type TableCellActionMenuProps = Readonly<{
   tableCellNode: TableCellNode;
 }>;
 
-function TableActionMenu({ onClose, tableCellNode: _tableCellNode, setIsMenuOpen, contextRef }: TableCellActionMenuProps) {
+function TableActionMenuFromPlugin({ onClose, tableCellNode: _tableCellNode, setIsMenuOpen, contextRef }: TableCellActionMenuProps) {
   const [editor] = useLexicalComposerContext();
   const dropDownRef = useRef<HTMLDivElement | null>(null);
   const [tableCellNode, updateTableCellNode] = useState(_tableCellNode);
@@ -285,51 +289,58 @@ function TableActionMenu({ onClose, tableCellNode: _tableCellNode, setIsMenuOpen
     });
   }, [editor, tableCellNode, clearTableSelection, onClose]);
 
-  return createPortal(
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
-    <div
-      className="dropdown lexical"
-      ref={dropDownRef}
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
-      <button className="item" onClick={() => insertTableRowAtSelection(false)}>
-        <span className="text">Insert {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`} above</span>
-      </button>
-      <button className="item" onClick={() => insertTableRowAtSelection(true)}>
-        <span className="text">Insert {selectionCounts.rows === 1 ? 'row' : `${selectionCounts.rows} rows`} below</span>
-      </button>
-      <hr />
-      <button className="item" onClick={() => insertTableColumnAtSelection(false)}>
-        <span className="text">Insert {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`} left</span>
-      </button>
-      <button className="item" onClick={() => insertTableColumnAtSelection(true)}>
-        <span className="text">Insert {selectionCounts.columns === 1 ? 'column' : `${selectionCounts.columns} columns`} right</span>
-      </button>
-      <hr />
-      <button className="item" onClick={() => deleteTableColumnAtSelection()}>
-        <span className="text">Delete column</span>
-      </button>
-      <button className="item" onClick={() => deleteTableRowAtSelection()}>
-        <span className="text">Delete row</span>
-      </button>
-      <button className="item" onClick={() => deleteTableAtSelection()}>
-        <span className="text">Delete table</span>
-      </button>
-      <hr />
-      <button className="item" onClick={() => toggleTableRowIsHeader()}>
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Remove' : 'Add'} row header
-        </span>
-      </button>
-      <button className="item" onClick={() => toggleTableColumnIsHeader()}>
-        <span className="text">
-          {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN ? 'Remove' : 'Add'} column header
-        </span>
-      </button>
-    </div>,
-    document.body
+  return (
+    <>
+      <MenuItem onClick={() => insertTableRowAtSelection(false)}>
+        Insérer {selectionCounts.rows === 1 ? 'une ligne' : `${selectionCounts.rows} lignes`} au-dessus
+      </MenuItem>
+      <MenuItem onClick={() => insertTableRowAtSelection(true)}>
+        Insérer {selectionCounts.rows === 1 ? 'une ligne' : `${selectionCounts.rows} lignes`} en-dessous
+      </MenuItem>
+      <Divider
+        orientation="horizontal"
+        flexItem
+        sx={{
+          p: 0,
+          mx: 'auto',
+          my: 1,
+        }}
+      />
+      <MenuItem onClick={() => insertTableColumnAtSelection(false)}>
+        Insérer {selectionCounts.columns === 1 ? 'une colonne' : `${selectionCounts.columns} colonnes`} à gauche
+      </MenuItem>
+      <MenuItem onClick={() => insertTableColumnAtSelection(true)}>
+        Insérer {selectionCounts.columns === 1 ? 'une colonne' : `${selectionCounts.columns} colonnes`} à droite
+      </MenuItem>
+      <Divider
+        orientation="horizontal"
+        flexItem
+        sx={{
+          p: 0,
+          mx: 'auto',
+          my: 1,
+        }}
+      />
+      <MenuItem onClick={() => deleteTableColumnAtSelection()}>Supprimer la colonne</MenuItem>
+      <MenuItem onClick={() => deleteTableRowAtSelection()}>Supprimer la ligne</MenuItem>
+      <MenuItem onClick={() => deleteTableAtSelection()}>Supprimer le tableau</MenuItem>
+      <Divider
+        orientation="horizontal"
+        flexItem
+        sx={{
+          p: 0,
+          mx: 'auto',
+          my: 1,
+        }}
+      />
+      <MenuItem onClick={() => toggleTableRowIsHeader()}>
+        {(tableCellNode.__headerState & TableCellHeaderStates.ROW) === TableCellHeaderStates.ROW ? 'Supprimer la' : 'Ajouter une'} ligne d&apos;entête
+      </MenuItem>
+      <MenuItem onClick={() => toggleTableColumnIsHeader()}>
+        {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) === TableCellHeaderStates.COLUMN ? 'Supprimer la' : 'Ajouter une'} colonne
+        d&apos;entête
+      </MenuItem>
+    </>
   );
 }
 
@@ -417,32 +428,52 @@ function TableCellActionMenuContainer({ anchorElem }: { anchorElem: HTMLElement 
     prevTableCellDOM.current = tableCellNode;
   }, [prevTableCellDOM, tableCellNode]);
 
+  const [tableOptionsAnchorEl, tableOptionsSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const tableOptionsOpen = Boolean(tableOptionsAnchorEl);
+  const tableOptionsHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    tableOptionsSetAnchorEl(event.currentTarget);
+  };
+  const tableOptionsHandleClose = () => {
+    tableOptionsSetAnchorEl(null);
+  };
+
   return (
-    <div className="table-cell-action-button-container" ref={menuButtonRef}>
-      {tableCellNode != null && (
-        <>
-          <button
-            className="table-cell-action-button chevron-down"
-            aria-label="ouvrir le menu"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsMenuOpen(!isMenuOpen);
-            }}
-            ref={menuRootRef}
-          >
-            <i className="chevron-down" />
-          </button>
-          {isMenuOpen && (
-            <TableActionMenu
-              contextRef={menuRootRef}
-              setIsMenuOpen={setIsMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
-              tableCellNode={tableCellNode}
-            />
-          )}
-        </>
-      )}
-    </div>
+    <>
+      <div className="table-cell-action-button-container" ref={menuButtonRef}>
+        {tableCellNode != null && (
+          <>
+            <IconButton
+              onClick={tableOptionsHandleClick}
+              aria-controls={tableOptionsOpen ? 'table-options-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={tableOptionsOpen ? 'true' : undefined}
+              title="Options pour le tableau"
+              size="small"
+              sx={{ borderRadius: 0 }}
+            >
+              <ExpandMoreIcon fontSize="small" />
+            </IconButton>
+            <Menu
+              anchorEl={tableOptionsAnchorEl}
+              id="table-options-menu"
+              open={tableOptionsOpen}
+              onClose={tableOptionsHandleClose}
+              onClick={tableOptionsHandleClose}
+              PaperProps={{ ...menuPaperProps }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            >
+              <TableActionMenuFromPlugin
+                contextRef={menuRootRef}
+                setIsMenuOpen={setIsMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                tableCellNode={tableCellNode}
+              />
+            </Menu>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

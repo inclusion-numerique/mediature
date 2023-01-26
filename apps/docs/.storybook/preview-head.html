@@ -11,6 +11,9 @@
       document.documentElement.dataset.theme = themeValue;
       document.documentElement.dataset.frTheme = themeValue;
       document.documentElement.dataset.frScheme = themeValue;
+
+      // [WORKAROUND] At the same time update the "lang" for the iframe so native speech recognition expects french
+      document.documentElement.lang = 'fr';
     }
   }
 

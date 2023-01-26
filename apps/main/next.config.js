@@ -71,6 +71,11 @@ const moduleExports = async () => {
         use: 'yaml-loader',
       });
 
+      config.module.rules.push({
+        test: /\.lexical$/i,
+        use: 'raw-loader',
+      });
+
       return config;
     },
     sentry: {

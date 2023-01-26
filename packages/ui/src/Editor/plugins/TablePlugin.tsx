@@ -5,31 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import {
-  $createNodeSelection,
-  $createParagraphNode,
-  $getSelection,
-  $isRangeSelection,
-  $isRootOrShadowRoot,
-  $setSelection,
-  COMMAND_PRIORITY_EDITOR,
-  EditorThemeClasses,
-  Klass,
-  LexicalCommand,
-  LexicalEditor,
-  LexicalNode,
-  createCommand,
-} from 'lexical';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import * as React from 'react';
+import { EditorThemeClasses, Klass, LexicalEditor, LexicalNode } from 'lexical';
+import { createContext, useMemo, useState } from 'react';
 
-import { $createTableNodeWithDimensions, TableNode } from '../nodes/TableNode';
-import invariant from '../shared/src/invariant';
-import Button from '../ui/Button';
-import { DialogActions } from '../ui/Dialog';
-import TextInput from '../ui/TextInput';
+import { InsertTableModal } from '../Modals';
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string;
@@ -86,21 +65,5 @@ export function TableContext({ children }: { children: JSX.Element }) {
 }
 
 export function InsertTableDialog({ activeEditor, onClose }: { activeEditor: LexicalEditor; onClose: () => void }): JSX.Element {
-  const [rows, setRows] = useState('5');
-  const [columns, setColumns] = useState('5');
-
-  const onClick = () => {
-    activeEditor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows });
-    onClose();
-  };
-
-  return (
-    <>
-      <TextInput label="No of rows" onChange={setRows} value={rows} />
-      <TextInput label="No of columns" onChange={setColumns} value={columns} />
-      <DialogActions data-test-id="table-model-confirm-insert">
-        <Button onClick={onClick}>Confirm</Button>
-      </DialogActions>
-    </>
-  );
+  return <InsertTableModal activeEditor={activeEditor} onClose={onClose} />;
 }

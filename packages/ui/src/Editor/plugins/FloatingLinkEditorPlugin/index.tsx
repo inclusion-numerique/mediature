@@ -8,6 +8,8 @@
 import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { Card, CardContent, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
 import {
   $getSelection,
   $isRangeSelection,
@@ -22,10 +24,8 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
 import { createPortal } from 'react-dom';
 
-import LinkPreview from '../../ui/LinkPreview';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import { sanitizeUrl } from '../../utils/url';
@@ -171,49 +171,57 @@ function FloatingLinkEditor({
   }, [isEditMode]);
 
   return (
-    <div ref={editorRef} className="link-editor">
-      {isEditMode ? (
-        <input
-          ref={inputRef}
-          className="link-input"
-          value={linkUrl}
-          onChange={(event) => {
-            setLinkUrl(event.target.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' || event.key === 'Escape') {
-              event.preventDefault();
-              if (lastSelection !== null) {
-                if (linkUrl !== '') {
-                  editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(linkUrl));
-                }
-                setEditMode(false);
-              }
-            }
-          }}
-        />
-      ) : (
-        <>
-          <div className="link-input">
-            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-              {linkUrl}
-            </a>
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-            <div
-              className="link-edit"
-              role="button"
-              aria-label="éditer"
-              tabIndex={0}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                setEditMode(true);
+    <Card variant="outlined" ref={editorRef} className="link-editor">
+      <CardContent sx={{ p: `0.5rem !important` }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              ref={inputRef}
+              type="url"
+              InputProps={{
+                readOnly: !isEditMode,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {!isEditMode && (
+                      <IconButton
+                        aria-label="éditer le lien"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                          setEditMode(true);
+                        }}
+                      >
+                        <ModeEditIcon />
+                      </IconButton>
+                    )}
+                  </InputAdornment>
+                ),
+                sx: { px: 1 },
               }}
+              onClick={() => {
+                //
+              }}
+              label="URL du lien"
+              value={linkUrl}
+              onChange={(event) => {
+                setLinkUrl(event.target.value);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === 'Escape') {
+                  event.preventDefault();
+                  if (lastSelection !== null) {
+                    if (linkUrl !== '') {
+                      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl(linkUrl));
+                    }
+                    setEditMode(false);
+                  }
+                }
+              }}
+              fullWidth
             />
-          </div>
-          <LinkPreview url={linkUrl} />
-        </>
-      )}
-    </div>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 }
 

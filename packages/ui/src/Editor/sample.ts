@@ -1,9 +1,11 @@
 import { $createLinkNode } from '@lexical/link';
 import { $createListItemNode, $createListNode } from '@lexical/list';
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
-import { $createParagraphNode, $createTextNode, RootNode } from 'lexical';
+import { $createParagraphNode, $createTextNode, $getRoot, RootNode } from 'lexical';
 
-export function contentSampleGenerator(root: RootNode) {
+export function contentSampleGenerator() {
+  const root = $getRoot();
+
   if (root.getFirstChild() === null) {
     const heading = $createHeadingNode('h1');
     heading.append($createTextNode('Welcome to the playground'));

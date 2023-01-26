@@ -8,8 +8,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import * as React from 'react';
 
-import Modal from '../ui/Modal';
-
 export default function useModal(): [JSX.Element | null, (title: string, showModal: (onClose: () => void) => JSX.Element) => void] {
   const [modalContent, setModalContent] = useState<null | {
     closeOnClickOutside: boolean;
@@ -26,12 +24,8 @@ export default function useModal(): [JSX.Element | null, (title: string, showMod
       return null;
     }
     const { title, content, closeOnClickOutside } = modalContent;
-    return (
-      <Modal onClose={onClose} title={title} closeOnClickOutside={closeOnClickOutside}>
-        {content}
-      </Modal>
-    );
-  }, [modalContent, onClose]);
+    return <>{content}</>;
+  }, [modalContent]);
 
   const showModal = useCallback(
     (

@@ -20,8 +20,8 @@ import {
 import { useCallback, useEffect } from 'react';
 import * as React from 'react';
 
+import { InsertEquationModal } from '../../Modals';
 import { $createEquationNode, EquationNode } from '../../nodes/EquationNode';
-import KatexEquationAlterer from '../../ui/KatexEquationAlterer';
 
 type CommandPayload = {
   equation: string;
@@ -39,7 +39,7 @@ export function InsertEquationDialog({ activeEditor, onClose }: { activeEditor: 
     [activeEditor, onClose]
   );
 
-  return <KatexEquationAlterer onConfirm={onEquationConfirm} />;
+  return <InsertEquationModal onConfirm={onEquationConfirm} onClose={onClose} />;
 }
 
 export default function EquationsPlugin(): JSX.Element | null {

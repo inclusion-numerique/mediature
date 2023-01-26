@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { $createCodeNode, $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP, CODE_LANGUAGE_MAP, getLanguageFriendlyName } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import {
@@ -27,11 +28,48 @@ import {
   $setBlocksType_experimental,
 } from '@lexical/selection';
 import { $findMatchingParent, $getNearestBlockElementAncestorOrThrow, $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
+import AddIcon from '@mui/icons-material/Add';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CodeIcon from '@mui/icons-material/Code';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
+import FormatIndentIncreaseIcon from '@mui/icons-material/FormatIndentIncrease';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import FormatShapesIcon from '@mui/icons-material/FormatShapes';
+import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import Looks3Icon from '@mui/icons-material/Looks3';
+import Looks4Icon from '@mui/icons-material/Looks4';
+import Looks5Icon from '@mui/icons-material/Looks5';
+import Looks6Icon from '@mui/icons-material/Looks6';
+import LooksOneIcon from '@mui/icons-material/LooksOne';
+import LooksTwoIcon from '@mui/icons-material/LooksTwo';
+import RedoIcon from '@mui/icons-material/Redo';
+import StrikethroughIcon from '@mui/icons-material/StrikethroughS';
+import SubjectIcon from '@mui/icons-material/Subject';
+import SubscriptIcon from '@mui/icons-material/Subscript';
+import SuperscriptIcon from '@mui/icons-material/Superscript';
+import UndoIcon from '@mui/icons-material/Undo';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import { Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import type { LexicalEditor, NodeKey } from 'lexical';
 import {
   $createParagraphNode,
   $getNodeByKey,
-  $getRoot,
   $getSelection,
   $isRangeSelection,
   $isRootOrShadowRoot,
@@ -48,14 +86,11 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import useModal from '../../hooks/useModal';
-import { $createStickyNode } from '../../nodes/StickyNode';
 import { IS_APPLE } from '../../shared/src/environment';
-import ColorPicker from '../../ui/ColorPicker';
-import DropDown, { DropDownItem } from '../../ui/DropDown';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { sanitizeUrl } from '../../utils/url';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
@@ -63,19 +98,68 @@ import { InsertEquationDialog } from '../EquationsPlugin';
 import { InsertImageDialog } from '../ImagesPlugin';
 import { InsertTableDialog } from '../TablePlugin';
 
+export const menuPaperProps = {
+  elevation: 0,
+  sx: {
+    overflow: 'visible',
+    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+    mt: 1.5,
+    '& .MuiAvatar-root': {
+      width: 32,
+      height: 32,
+      ml: -0.5,
+      mr: 1,
+    },
+    '&:before': {
+      content: '""',
+      display: 'block',
+      position: 'absolute',
+      top: 0,
+      right: 14,
+      width: 10,
+      height: 10,
+      bgcolor: 'background.paper',
+      transform: 'translateY(-50%) rotate(45deg)',
+      zIndex: 0,
+    },
+  },
+};
+
+const blockTypeToBlockIcon = {
+  bullet: <FormatListBulletedIcon />,
+  check: <CheckBoxIcon />,
+  code: <CodeIcon />,
+  h1: <LooksOneIcon />,
+  h2: <LooksTwoIcon />,
+  h3: <Looks3Icon />,
+  h4: <Looks4Icon />,
+  h5: <Looks5Icon />,
+  h6: <Looks6Icon />,
+  number: <FormatListNumberedIcon />,
+  paragraph: <SubjectIcon />,
+  quote: <FormatQuoteIcon />,
+};
+
 const blockTypeToBlockName = {
-  bullet: 'Bulleted List',
-  check: 'Check List',
-  code: 'Code Block',
-  h1: 'Heading 1',
-  h2: 'Heading 2',
-  h3: 'Heading 3',
-  h4: 'Heading 4',
-  h5: 'Heading 5',
-  h6: 'Heading 6',
-  number: 'Numbered List',
+  bullet: 'Liste à puces',
+  check: 'Liste à cocher',
+  code: 'Bloc de code',
+  h1: 'Titre 1',
+  h2: 'Titre 2',
+  h3: 'Titre 3',
+  h4: 'Titre 4',
+  h5: 'Titre 5',
+  h6: 'Titre 6',
+  number: 'Liste numérotée',
   paragraph: 'Normal',
-  quote: 'Quote',
+  quote: 'Citation',
+};
+
+// This is required because MUI does not allow `selected={true}` on `IconButton`,
+// we use thos component because `ToggleButton` they prevent displaying a different variant than `contained`
+const iconButtonPressedBackgroundColors = {
+  light: 'rgba(0, 0, 145, 0.08)',
+  dark: 'rgba(133, 133, 246, 0.16)',
 };
 
 function getCodeLanguageOptions(): [string, string][] {
@@ -89,15 +173,6 @@ function getCodeLanguageOptions(): [string, string][] {
 }
 
 const CODE_LANGUAGE_OPTIONS = getCodeLanguageOptions();
-
-const FONT_FAMILY_OPTIONS: [string, string][] = [
-  ['Arial', 'Arial'],
-  ['Courier New', 'Courier New'],
-  ['Georgia', 'Georgia'],
-  ['Times New Roman', 'Times New Roman'],
-  ['Trebuchet MS', 'Trebuchet MS'],
-  ['Verdana', 'Verdana'],
-];
 
 const FONT_SIZE_OPTIONS: [string, string][] = [
   ['10px', '10px'],
@@ -203,55 +278,102 @@ function BlockFormatDropDown({
     }
   };
 
+  const [textTypeAnchorEl, textTypeSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const textTypeOpen = Boolean(textTypeAnchorEl);
+  const textTypeHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    textTypeSetAnchorEl(event.currentTarget);
+  };
+  const textTypeHandleClose = () => {
+    textTypeSetAnchorEl(null);
+  };
+
   return (
-    <DropDown
-      disabled={disabled}
-      buttonClassName="toolbar-item block-controls"
-      buttonIconClassName={'icon block-type ' + blockType}
-      buttonLabel={blockTypeToBlockName[blockType]}
-      buttonAriaLabel="Formatting options for text style"
-    >
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'paragraph')} onClick={formatParagraph}>
-        <i className="icon paragraph" />
-        <span className="text">Normal</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h1')} onClick={() => formatHeading('h1')}>
-        <i className="icon h1" />
-        <span className="text">Heading 1</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h2')} onClick={() => formatHeading('h2')}>
-        <i className="icon h2" />
-        <span className="text">Heading 2</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'h3')} onClick={() => formatHeading('h3')}>
-        <i className="icon h3" />
-        <span className="text">Heading 3</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'bullet')} onClick={formatBulletList}>
-        <i className="icon bullet-list" />
-        <span className="text">Bullet List</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'number')} onClick={formatNumberedList}>
-        <i className="icon numbered-list" />
-        <span className="text">Numbered List</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'check')} onClick={formatCheckList}>
-        <i className="icon check-list" />
-        <span className="text">Check List</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'quote')} onClick={formatQuote}>
-        <i className="icon quote" />
-        <span className="text">Quote</span>
-      </DropDownItem>
-      <DropDownItem className={'item ' + dropDownActiveClass(blockType === 'code')} onClick={formatCode}>
-        <i className="icon code" />
-        <span className="text">Code Block</span>
-      </DropDownItem>
-    </DropDown>
+    <>
+      <Grid item>
+        <IconButton
+          disabled={disabled}
+          onClick={textTypeHandleClick}
+          aria-controls={textTypeOpen ? 'text-type-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={textTypeOpen ? 'true' : undefined}
+          title="Choisir la présentation du texte"
+          sx={{ borderRadius: 0 }}
+        >
+          {blockTypeToBlockIcon[blockType]}
+          <Typography component="span">&nbsp;{blockTypeToBlockName[blockType]}</Typography>
+          <ExpandMoreIcon fontSize="small" />
+        </IconButton>
+        <Menu
+          anchorEl={textTypeAnchorEl}
+          id="text-type-menu"
+          open={textTypeOpen}
+          onClose={textTypeHandleClose}
+          onClick={textTypeHandleClose}
+          PaperProps={{ ...menuPaperProps }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          <MenuItem onClick={formatParagraph} selected={blockType === 'paragraph'}>
+            <ListItemIcon>
+              <SubjectIcon fontSize="small" />
+            </ListItemIcon>
+            Normal
+          </MenuItem>
+          <MenuItem onClick={() => formatHeading('h1')} selected={blockType === 'h1'}>
+            <ListItemIcon>
+              <LooksOneIcon fontSize="small" />
+            </ListItemIcon>
+            Titre 1
+          </MenuItem>
+          <MenuItem onClick={() => formatHeading('h2')} selected={blockType === 'h2'}>
+            <ListItemIcon>
+              <LooksTwoIcon fontSize="small" />
+            </ListItemIcon>
+            Titre 2
+          </MenuItem>
+          <MenuItem onClick={() => formatHeading('h3')} selected={blockType === 'h3'}>
+            <ListItemIcon>
+              <Looks3Icon fontSize="small" />
+            </ListItemIcon>
+            Titre 3
+          </MenuItem>
+          <MenuItem onClick={formatBulletList} selected={blockType === 'bullet'}>
+            <ListItemIcon>
+              <FormatListBulletedIcon fontSize="small" />
+            </ListItemIcon>
+            Liste à puces
+          </MenuItem>
+          <MenuItem onClick={formatNumberedList} selected={blockType === 'number'}>
+            <ListItemIcon>
+              <FormatListNumberedIcon fontSize="small" />
+            </ListItemIcon>
+            Liste numérotée
+          </MenuItem>
+          <MenuItem onClick={formatCheckList} selected={blockType === 'check'}>
+            <ListItemIcon>
+              <CheckBoxIcon fontSize="small" />
+            </ListItemIcon>
+            Liste à cocher
+          </MenuItem>
+          <MenuItem onClick={formatQuote} selected={blockType === 'quote'}>
+            <ListItemIcon>
+              <FormatQuoteIcon fontSize="small" />
+            </ListItemIcon>
+            Citation
+          </MenuItem>
+          <MenuItem onClick={formatCode} selected={blockType === 'code'}>
+            <ListItemIcon>
+              <CodeIcon fontSize="small" />
+            </ListItemIcon>
+            Bloc de code
+          </MenuItem>
+        </Menu>
+      </Grid>
+    </>
   );
 }
 
-function Divider(): JSX.Element {
+function OldDivider(): JSX.Element {
   return <div className="divider" />;
 }
 
@@ -280,26 +402,48 @@ function FontDropDown({
     [editor, style]
   );
 
-  const buttonAriaLabel = style === 'font-family' ? 'Formatting options for font family' : 'Formatting options for font size';
+  const [fontSizeAnchorEl, fontSizeSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const fontSizeOpen = Boolean(fontSizeAnchorEl);
+  const fontSizeHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    fontSizeSetAnchorEl(event.currentTarget);
+  };
+  const fontSizeHandleClose = () => {
+    fontSizeSetAnchorEl(null);
+  };
 
   return (
-    <DropDown
-      disabled={disabled}
-      buttonClassName={'toolbar-item ' + style}
-      buttonLabel={value}
-      buttonIconClassName={style === 'font-family' ? 'icon block-type font-family' : ''}
-      buttonAriaLabel={buttonAriaLabel}
-    >
-      {(style === 'font-family' ? FONT_FAMILY_OPTIONS : FONT_SIZE_OPTIONS).map(([option, text]) => (
-        <DropDownItem
-          className={`item ${dropDownActiveClass(value === option)} ${style === 'font-size' ? 'fontsize-item' : ''}`}
-          onClick={() => handleClick(option)}
-          key={option}
+    <>
+      <Grid item>
+        <IconButton
+          disabled={disabled}
+          onClick={fontSizeHandleClick}
+          aria-controls={fontSizeOpen ? 'font-size-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={fontSizeOpen ? 'true' : undefined}
+          title="Taille du texte"
+          sx={{ borderRadius: 0 }}
         >
-          <span className="text">{text}</span>
-        </DropDownItem>
-      ))}
-    </DropDown>
+          <Typography component="span">{value.length ? value : '--px'}</Typography>
+          <ExpandMoreIcon fontSize="small" />
+        </IconButton>
+        <Menu
+          anchorEl={fontSizeAnchorEl}
+          id="font-size-menu"
+          open={fontSizeOpen}
+          onClose={fontSizeHandleClose}
+          onClick={fontSizeHandleClose}
+          PaperProps={{ ...menuPaperProps }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          {FONT_SIZE_OPTIONS.map(([option, text]) => (
+            <MenuItem key={option} onClick={() => handleClick(option)} aria-label={option} selected={value === option}>
+              {text}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Grid>
+    </>
   );
 }
 
@@ -432,18 +576,6 @@ export default function ToolbarPlugin(): JSX.Element {
     );
   }, [activeEditor, editor, updateToolbar]);
 
-  const applyStyleText = useCallback(
-    (styles: Record<string, string>) => {
-      activeEditor.update(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          $patchStyleText(selection, styles);
-        }
-      });
-    },
-    [activeEditor]
-  );
-
   const clearFormatting = useCallback(() => {
     activeEditor.update(() => {
       const selection = $getSelection();
@@ -462,20 +594,6 @@ export default function ToolbarPlugin(): JSX.Element {
       }
     });
   }, [activeEditor]);
-
-  const onFontColorSelect = useCallback(
-    (value: string) => {
-      applyStyleText({ color: value });
-    },
-    [applyStyleText]
-  );
-
-  const onBgColorSelect = useCallback(
-    (value: string) => {
-      applyStyleText({ 'background-color': value });
-    },
-    [applyStyleText]
-  );
 
   const insertLink = useCallback(() => {
     if (!isLink) {
@@ -499,321 +617,498 @@ export default function ToolbarPlugin(): JSX.Element {
     [activeEditor, selectedElementKey]
   );
 
+  const [formattingOptionsAnchorEl, formattingOptionsSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const formattingOptionsOpen = Boolean(formattingOptionsAnchorEl);
+  const formattingOptionsHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    formattingOptionsSetAnchorEl(event.currentTarget);
+  };
+  const formattingOptionsHandleClose = () => {
+    formattingOptionsSetAnchorEl(null);
+  };
+
+  const [specializedNodesAnchorEl, specializedNodesSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const specializedNodesOpen = Boolean(specializedNodesAnchorEl);
+  const specializedNodesHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    specializedNodesSetAnchorEl(event.currentTarget);
+  };
+  const specializedNodesHandleClose = () => {
+    specializedNodesSetAnchorEl(null);
+  };
+
+  const [alignmentAnchorEl, alignmentSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const alignmentOpen = Boolean(alignmentAnchorEl);
+  const alignmentHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    alignmentSetAnchorEl(event.currentTarget);
+  };
+  const alignmentHandleClose = () => {
+    alignmentSetAnchorEl(null);
+  };
+
+  const [codeLanguageAnchorEl, codeLanguageSetAnchorEl] = React.useState<null | HTMLElement>(null);
+  const codeLanguageOpen = Boolean(codeLanguageAnchorEl);
+  const codeLanguageHandleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    codeLanguageSetAnchorEl(event.currentTarget);
+  };
+  const codeLanguageHandleClose = () => {
+    codeLanguageSetAnchorEl(null);
+  };
+
+  const theme = useColors();
+  const isDark = theme.isDark;
+
   return (
-    <div className="toolbar">
-      <button
-        disabled={!canUndo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
+    <>
+      <Grid
+        container
+        direction="row"
+        sx={{
+          justifyContent: 'center',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          backgroundColor: theme.decisions.background.overlap.grey.default,
+          p: 1,
         }}
-        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
-        type="button"
-        className="toolbar-item spaced"
-        aria-label="Undo"
       >
-        <i className="format undo" />
-      </button>
-      <button
-        disabled={!canRedo || !isEditable}
-        onClick={() => {
-          activeEditor.dispatchCommand(REDO_COMMAND, undefined);
-        }}
-        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
-        type="button"
-        className="toolbar-item"
-        aria-label="Redo"
-      >
-        <i className="format redo" />
-      </button>
-      <Divider />
-      {blockType in blockTypeToBlockName && activeEditor === editor && (
-        <>
-          <BlockFormatDropDown disabled={!isEditable} blockType={blockType} editor={editor} />
-          <Divider />
-        </>
-      )}
-      {blockType === 'code' ? (
-        <>
-          <DropDown
-            disabled={!isEditable}
-            buttonClassName="toolbar-item code-language"
-            buttonLabel={getLanguageFriendlyName(codeLanguage)}
-            buttonAriaLabel="Select language"
+        <Grid item>
+          <IconButton
+            disabled={!canUndo || !isEditable}
+            onClick={() => {
+              activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
+            }}
+            title={IS_APPLE ? 'Précédent (⌘Z)' : 'Précédent (Ctrl+Z)'}
+            sx={{
+              borderRadius: 0,
+            }}
           >
-            {CODE_LANGUAGE_OPTIONS.map(([value, name]) => {
-              return (
-                <DropDownItem
-                  className={`item ${dropDownActiveClass(value === codeLanguage)}`}
-                  onClick={() => onCodeLanguageSelect(value)}
-                  key={value}
-                >
-                  <span className="text">{name}</span>
-                </DropDownItem>
-              );
-            })}
-          </DropDown>
-        </>
-      ) : (
-        <>
-          <FontDropDown disabled={!isEditable} style={'font-family'} value={fontFamily} editor={editor} />
-          <FontDropDown disabled={!isEditable} style={'font-size'} value={fontSize} editor={editor} />
-          <Divider />
-          <button
+            <UndoIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
+            disabled={!canRedo || !isEditable}
+            onClick={() => {
+              activeEditor.dispatchCommand(REDO_COMMAND, undefined);
+            }}
+            title={IS_APPLE ? 'Suivant (⌘Y)' : 'Suivant (Ctrl+Y)'}
+            sx={{
+              borderRadius: 0,
+            }}
+          >
+            <RedoIcon />
+          </IconButton>
+        </Grid>
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            mx: 1,
+            my: 'auto',
+          }}
+        />
+        {blockType in blockTypeToBlockName && activeEditor === editor && (
+          <>
+            <BlockFormatDropDown disabled={!isEditable} blockType={blockType} editor={editor} />
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                mx: 1,
+                my: 'auto',
+              }}
+            />
+          </>
+        )}
+        {blockType === 'code' ? (
+          <>
+            <Grid item>
+              <IconButton
+                disabled={!isEditable}
+                onClick={codeLanguageHandleClick}
+                aria-controls={codeLanguageOpen ? 'code-language-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={codeLanguageOpen ? 'true' : undefined}
+                title="Selection d'un language"
+                sx={{ borderRadius: 0 }}
+              >
+                <Typography component="span">{getLanguageFriendlyName(codeLanguage)}</Typography>
+                <ExpandMoreIcon fontSize="small" />
+              </IconButton>
+              <Menu
+                anchorEl={codeLanguageAnchorEl}
+                id="code-language-menu"
+                open={codeLanguageOpen}
+                onClose={codeLanguageHandleClose}
+                onClick={codeLanguageHandleClose}
+                PaperProps={{ ...menuPaperProps }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                {CODE_LANGUAGE_OPTIONS.map(([value, name]) => (
+                  <MenuItem key={value} onClick={() => onCodeLanguageSelect(value)} aria-label={value} selected={value === codeLanguage}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Grid>
+          </>
+        ) : (
+          <>
+            <FontDropDown disabled={!isEditable} style={'font-size'} value={fontSize} editor={editor} />
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{
+                mx: 1,
+                my: 'auto',
+              }}
+            />
+          </>
+        )}
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
             }}
-            className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
-            title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
-            type="button"
-            aria-label={`Format text as bold. Shortcut: ${IS_APPLE ? '⌘B' : 'Ctrl+B'}`}
+            title={IS_APPLE ? 'Gras (⌘B)' : 'Gras (Ctrl+B)'}
+            sx={{
+              borderRadius: 0,
+              backgroundColor: isBold ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+            }}
+            aria-pressed={isBold}
           >
-            <i className="format bold" />
-          </button>
-          <button
+            <FormatBoldIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
             }}
-            className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
-            title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
-            type="button"
-            aria-label={`Format text as italics. Shortcut: ${IS_APPLE ? '⌘I' : 'Ctrl+I'}`}
+            title={IS_APPLE ? 'Italique (⌘I)' : 'Italique (Ctrl+I)'}
+            sx={{
+              borderRadius: 0,
+              backgroundColor: isItalic ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+            }}
+            aria-pressed={isBold}
           >
-            <i className="format italic" />
-          </button>
-          <button
+            <FormatItalicIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
             }}
-            className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
-            title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
-            type="button"
-            aria-label={`Format text to underlined. Shortcut: ${IS_APPLE ? '⌘U' : 'Ctrl+U'}`}
+            title={IS_APPLE ? 'Souligné (⌘U)' : 'Souligné (Ctrl+U)'}
+            sx={{
+              borderRadius: 0,
+              backgroundColor: isUnderline ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+            }}
+            aria-pressed={isBold}
           >
-            <i className="format underline" />
-          </button>
-          <button
+            <FormatUnderlinedIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
             onClick={() => {
               activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
             }}
-            className={'toolbar-item spaced ' + (isCode ? 'active' : '')}
-            title="Insert code block"
-            type="button"
-            aria-label="Insert code block"
+            title="Insérer un code sur une ligne"
+            sx={{
+              borderRadius: 0,
+              backgroundColor: isCode ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+            }}
+            aria-pressed={isBold}
           >
-            <i className="format code" />
-          </button>
-          <button
+            <CodeIcon />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
             onClick={insertLink}
-            className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
-            aria-label="Insert link"
-            title="Insert link"
-            type="button"
+            title="Insérer un lien"
+            sx={{
+              borderRadius: 0,
+              backgroundColor: isLink ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+            }}
+            aria-pressed={isBold}
           >
-            <i className="format link" />
-          </button>
-          <ColorPicker
+            <InsertLinkIcon />
+          </IconButton>
+        </Grid>
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            mx: 1,
+            my: 'auto',
+          }}
+        />
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting text color"
-            buttonIconClassName="icon font-color"
-            color={fontColor}
-            onChange={onFontColorSelect}
-            title="text color"
-          />
-          <ColorPicker
-            disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting background color"
-            buttonIconClassName="icon bg-color"
-            color={bgColor}
-            onChange={onBgColorSelect}
-            title="bg color"
-          />
-          <DropDown
-            disabled={!isEditable}
-            buttonClassName="toolbar-item spaced"
-            buttonLabel=""
-            buttonAriaLabel="Formatting options for additional text styles"
-            buttonIconClassName="icon dropdown-more"
+            onClick={formattingOptionsHandleClick}
+            aria-controls={formattingOptionsOpen ? 'formatting-options-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={formattingOptionsOpen ? 'true' : undefined}
+            title="Options additionnelles pour le formattage"
+            sx={{ borderRadius: 0 }}
           >
-            <DropDownItem
+            <FormatShapesIcon />
+            <ExpandMoreIcon fontSize="small" />
+          </IconButton>
+          <Menu
+            anchorEl={formattingOptionsAnchorEl}
+            id="formatting-options-menu"
+            open={formattingOptionsOpen}
+            onClose={formattingOptionsHandleClose}
+            onClick={formattingOptionsHandleClose}
+            PaperProps={{ ...menuPaperProps }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <MenuItem
               onClick={() => {
                 activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
               }}
-              className={'item ' + dropDownActiveClass(isStrikethrough)}
-              title="Strikethrough"
-              aria-label="Format text with a strikethrough"
+              aria-label="Barrer le texte"
             >
-              <i className="icon strikethrough" />
-              <span className="text">Strikethrough</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <StrikethroughIcon fontSize="small" />
+              </ListItemIcon>
+              Barré
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
               }}
-              className={'item ' + dropDownActiveClass(isSubscript)}
-              title="Subscript"
-              aria-label="Format text with a subscript"
+              aria-label="Insérer un indice"
             >
-              <i className="icon subscript" />
-              <span className="text">Subscript</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <SubscriptIcon fontSize="small" />
+              </ListItemIcon>
+              Indice
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
               }}
-              className={'item ' + dropDownActiveClass(isSuperscript)}
-              title="Superscript"
-              aria-label="Format text with a superscript"
+              aria-label="Insérer un exposant"
             >
-              <i className="icon superscript" />
-              <span className="text">Superscript</span>
-            </DropDownItem>
-            <DropDownItem onClick={clearFormatting} className="item" title="Clear text formatting" aria-label="Clear all text formatting">
-              <i className="icon clear" />
-              <span className="text">Clear Formatting</span>
-            </DropDownItem>
-          </DropDown>
-          <Divider />
-          <DropDown
+              <ListItemIcon>
+                <SuperscriptIcon fontSize="small" />
+              </ListItemIcon>
+              Exposant
+            </MenuItem>
+            <MenuItem onClick={clearFormatting} aria-label="Réinitialiser le formattage">
+              <ListItemIcon>
+                <DeleteOutlineIcon fontSize="small" />
+              </ListItemIcon>
+              Réinitialiser le formattage
+            </MenuItem>
+          </Menu>
+        </Grid>
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            mx: 1,
+            my: 'auto',
+          }}
+        />
+        <Grid item>
+          <IconButton
             disabled={!isEditable}
-            buttonClassName="toolbar-item spaced"
-            buttonLabel="Insert"
-            buttonAriaLabel="Insert specialized editor node"
-            buttonIconClassName="icon plus"
+            onClick={specializedNodesHandleClick}
+            aria-controls={specializedNodesOpen ? 'specialized-nodes-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={specializedNodesOpen ? 'true' : undefined}
+            title="Insérer un élément spécial"
+            sx={{ borderRadius: 0 }}
           >
-            <DropDownItem
+            <AddIcon />
+            <ExpandMoreIcon fontSize="small" />
+          </IconButton>
+          <Menu
+            anchorEl={specializedNodesAnchorEl}
+            id="specialized-nodes-menu"
+            open={specializedNodesOpen}
+            onClose={specializedNodesHandleClose}
+            onClick={specializedNodesHandleClose}
+            PaperProps={{ ...menuPaperProps }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <MenuItem
               onClick={() => {
                 activeEditor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined);
               }}
-              className="item"
+              aria-label="Insérer une barre horizontale"
             >
-              <i className="icon horizontal-rule" />
-              <span className="text">Horizontal Rule</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <HorizontalRuleIcon fontSize="small" />
+              </ListItemIcon>
+              Barre horizontale
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 showModal('Insert Image', (onClose) => <InsertImageDialog activeEditor={activeEditor} onClose={onClose} />);
               }}
-              className="item"
+              aria-label="Insérer une image"
             >
-              <i className="icon image" />
-              <span className="text">Image</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <AddPhotoAlternateIcon fontSize="small" />
+              </ListItemIcon>
+              Image
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 showModal('Insert Table', (onClose) => <InsertTableDialog activeEditor={activeEditor} onClose={onClose} />);
               }}
-              className="item"
+              aria-label="Insérer un tableau"
             >
-              <i className="icon table" />
-              <span className="text">Table</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <GridOnIcon fontSize="small" />
+              </ListItemIcon>
+              Tableau
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 showModal('Insert Equation', (onClose) => <InsertEquationDialog activeEditor={activeEditor} onClose={onClose} />);
               }}
-              className="item"
+              aria-label="Insérer une équation"
             >
-              <i className="icon equation" />
-              <span className="text">Equation</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                editor.update(() => {
-                  const root = $getRoot();
-                  const stickyNode = $createStickyNode(0, 0);
-                  root.append(stickyNode);
-                });
-              }}
-              className="item"
-            >
-              <i className="icon sticky" />
-              <span className="text">Sticky Note</span>
-            </DropDownItem>
-            <DropDownItem
+              <ListItemIcon>
+                <CalculateIcon fontSize="small" />
+              </ListItemIcon>
+              Équation
+            </MenuItem>
+            <MenuItem
               onClick={() => {
                 editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
               }}
-              className="item"
+              aria-label="Insérer une zone rétractable"
             >
-              <i className="icon caret-right" />
-              <span className="text">Collapsible container</span>
-            </DropDownItem>
-          </DropDown>
-        </>
-      )}
-      <Divider />
-      <DropDown
-        disabled={!isEditable}
-        buttonLabel="Align"
-        buttonIconClassName="icon left-align"
-        buttonClassName="toolbar-item spaced alignment"
-        buttonAriaLabel="Formatting options for text alignment"
-      >
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
+              <ListItemIcon>
+                <UnfoldLessIcon fontSize="small" />
+              </ListItemIcon>
+              Zone rétractable
+            </MenuItem>
+          </Menu>
+        </Grid>
+        <Divider
+          orientation="vertical"
+          flexItem
+          sx={{
+            mx: 1,
+            my: 'auto',
           }}
-          className="item"
-        >
-          <i className="icon left-align" />
-          <span className="text">Left Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
-          }}
-          className="item"
-        >
-          <i className="icon center-align" />
-          <span className="text">Center Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
-          }}
-          className="item"
-        >
-          <i className="icon right-align" />
-          <span className="text">Right Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
-          }}
-          className="item"
-        >
-          <i className="icon justify-align" />
-          <span className="text">Justify Align</span>
-        </DropDownItem>
-        <Divider />
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
-          }}
-          className="item"
-        >
-          <i className={'icon ' + (isRTL ? 'indent' : 'outdent')} />
-          <span className="text">Outdent</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
-          }}
-          className="item"
-        >
-          <i className={'icon ' + (isRTL ? 'outdent' : 'indent')} />
-          <span className="text">Indent</span>
-        </DropDownItem>
-      </DropDown>
-
+        />
+        <Grid item>
+          <IconButton
+            disabled={!isEditable}
+            onClick={alignmentHandleClick}
+            aria-controls={alignmentOpen ? 'alignment-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={alignmentOpen ? 'true' : undefined}
+            title="Alignement du texte"
+            sx={{ borderRadius: 0 }}
+          >
+            <FormatAlignLeftIcon />
+            <ExpandMoreIcon fontSize="small" />
+          </IconButton>
+          <Menu
+            anchorEl={alignmentAnchorEl}
+            id="alignment-menu"
+            open={alignmentOpen}
+            onClose={alignmentHandleClose}
+            onClick={alignmentHandleClose}
+            PaperProps={{ ...menuPaperProps }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          >
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
+              }}
+              aria-label="Aligner le texte à gauche"
+            >
+              <ListItemIcon>
+                <FormatAlignLeftIcon fontSize="small" />
+              </ListItemIcon>
+              Aligner à gauche
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
+              }}
+              aria-label="Centrer le texte"
+            >
+              <ListItemIcon>
+                <FormatAlignCenterIcon fontSize="small" />
+              </ListItemIcon>
+              Centrer
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
+              }}
+              aria-label="Aligner le texte à droite"
+            >
+              <ListItemIcon>
+                <FormatAlignRightIcon fontSize="small" />
+              </ListItemIcon>
+              Aligner à droite
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
+              }}
+              aria-label="Justifie le texte"
+            >
+              <ListItemIcon>
+                <FormatAlignJustifyIcon fontSize="small" />
+              </ListItemIcon>
+              Justifier
+            </MenuItem>
+            <Divider
+              orientation="horizontal"
+              flexItem
+              sx={{
+                p: 0,
+                mx: 'auto',
+                my: 1,
+              }}
+            />
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
+              }}
+              aria-label="Désindenter le texte"
+            >
+              <ListItemIcon>{isRTL ? <FormatIndentIncreaseIcon fontSize="small" /> : <FormatIndentDecreaseIcon fontSize="small" />}</ListItemIcon>
+              Désindenter
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                activeEditor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
+              }}
+              aria-label="Indenter le texte"
+            >
+              <ListItemIcon>{isRTL ? <FormatIndentDecreaseIcon fontSize="small" /> : <FormatIndentIncreaseIcon fontSize="small" />}</ListItemIcon>
+              Indenter
+            </MenuItem>
+          </Menu>
+        </Grid>
+      </Grid>
       {modal}
-    </div>
+    </>
   );
 }

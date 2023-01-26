@@ -19,13 +19,10 @@ import type { Klass, LexicalNode } from 'lexical';
 import { CollapsibleContainerNode } from '../plugins/CollapsiblePlugin/CollapsibleContainerNode';
 import { CollapsibleContentNode } from '../plugins/CollapsiblePlugin/CollapsibleContentNode';
 import { CollapsibleTitleNode } from '../plugins/CollapsiblePlugin/CollapsibleTitleNode';
-import { AutocompleteNode } from './AutocompleteNode';
 import { EquationNode } from './EquationNode';
 import { ImageNode } from './ImageNode';
 import { KeywordNode } from './KeywordNode';
 import { MentionNode } from './MentionNode';
-import { StickyNode } from './StickyNode';
-import { TableNode as NewTableNode } from './TableNode';
 
 const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   HeadingNode,
@@ -33,7 +30,6 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   ListItemNode,
   QuoteNode,
   CodeNode,
-  NewTableNode,
   TableNode,
   TableCellNode,
   TableRowNode,
@@ -42,11 +38,9 @@ const PlaygroundNodes: Array<Klass<LexicalNode>> = [
   AutoLinkNode,
   LinkNode,
   OverflowNode,
-  StickyNode,
   ImageNode,
   MentionNode,
   EquationNode,
-  AutocompleteNode,
   KeywordNode,
   HorizontalRuleNode,
   MarkNode,

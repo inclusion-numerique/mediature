@@ -21,13 +21,10 @@ import { useState } from 'react';
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
 import ActionsPlugin from './plugins/ActionsPlugin';
 import AutoLinkPlugin from './plugins/AutoLinkPlugin';
-import AutocompletePlugin from './plugins/AutocompletePlugin';
 import ClickableLinkPlugin from './plugins/ClickableLinkPlugin';
 import CodeActionMenuPlugin from './plugins/CodeActionMenuPlugin';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import CollapsiblePlugin from './plugins/CollapsiblePlugin';
-import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
-import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import EquationsPlugin from './plugins/EquationsPlugin';
 import FloatingLinkEditorPlugin from './plugins/FloatingLinkEditorPlugin';
@@ -50,7 +47,7 @@ export default function Editor(): JSX.Element {
   const isRichText = true;
   const showTreeView = true;
   const { historyState } = useSharedHistoryContext();
-  const text = isRichText ? 'Enter some rich text...' : 'Enter some plain text...';
+  const text = 'Saisissez votre texte';
   const placeholder = <Placeholder>{text}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
 
@@ -65,14 +62,12 @@ export default function Editor(): JSX.Element {
       {isRichText && <ToolbarPlugin />}
       <div className={`editor-container ${showTreeView ? 'tree-view' : ''} ${!isRichText ? 'plain-text' : ''}`}>
         {/* <MaxLengthPlugin maxLength={30} /> */}
-        <DragDropPaste />
         <AutoFocusPlugin />
         <ClearEditorPlugin />
-        <ComponentPickerPlugin />
         <MentionsPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
-        <SpeechToTextPlugin />
+        <SpeechToTextPlugin lang="fr" />
         <AutoLinkPlugin />
         {isRichText ? (
           <>
@@ -118,7 +113,6 @@ export default function Editor(): JSX.Element {
             <HistoryPlugin externalHistoryState={historyState} />
           </>
         )}
-        <AutocompletePlugin />
         <ActionsPlugin isRichText={isRichText} />
       </div>
     </>

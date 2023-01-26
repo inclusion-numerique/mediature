@@ -54,7 +54,7 @@ function LinkPreviewContent({
   url: string;
 }>): JSX.Element | null {
   const { preview } = useSuspenseRequest(url);
-  if (preview === null) {
+  if (preview === null || preview === undefined) {
     return null;
   }
   return (

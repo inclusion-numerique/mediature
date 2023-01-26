@@ -5,10 +5,48 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { $isCodeHighlightNode } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
+import AddIcon from '@mui/icons-material/Add';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CodeIcon from '@mui/icons-material/Code';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
+import FormatIndentIncreaseIcon from '@mui/icons-material/FormatIndentIncrease';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import FormatShapesIcon from '@mui/icons-material/FormatShapes';
+import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+import GridOnIcon from '@mui/icons-material/GridOn';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import Looks3Icon from '@mui/icons-material/Looks3';
+import Looks4Icon from '@mui/icons-material/Looks4';
+import Looks5Icon from '@mui/icons-material/Looks5';
+import Looks6Icon from '@mui/icons-material/Looks6';
+import LooksOneIcon from '@mui/icons-material/LooksOne';
+import LooksTwoIcon from '@mui/icons-material/LooksTwo';
+import RedoIcon from '@mui/icons-material/Redo';
+import StrikethroughIcon from '@mui/icons-material/StrikethroughS';
+import SubjectIcon from '@mui/icons-material/Subject';
+import SubscriptIcon from '@mui/icons-material/Subscript';
+import SuperscriptIcon from '@mui/icons-material/Superscript';
+import UndoIcon from '@mui/icons-material/Undo';
+import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
+import { Grid, IconButton } from '@mui/material';
 import {
   $getSelection,
   $isRangeSelection,
@@ -26,6 +64,13 @@ import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import './index.css';
+
+// This is required because MUI does not allow `selected={true}` on `IconButton`,
+// we use thos component because `ToggleButton` they prevent displaying a different variant than `contained`
+const iconButtonPressedBackgroundColors = {
+  light: 'rgba(0, 0, 145, 0.08)',
+  dark: 'rgba(133, 133, 246, 0.16)',
+};
 
 function TextFormatFloatingToolbar({
   editor,
@@ -128,81 +173,162 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, updateTextFormatFloatingToolbar]);
 
+  const theme = useColors();
+  const isDark = theme.isDark;
+
   return (
-    <div ref={popupCharStylesEditorRef} className="floating-text-format-popup">
+    <Grid
+      container
+      direction="row"
+      ref={popupCharStylesEditorRef}
+      className="floating-text-format-popup"
+      sx={{
+        width: 'auto',
+        zIndex: 100,
+        backgroundColor: theme.decisions.background.overlap.grey.default,
+        border: `${theme.decisions.border.default.grey.default} solid 1px`,
+        p: 1,
+      }}
+    >
       {editor.isEditable() && (
         <>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
-            }}
-            className={'popup-item spaced ' + (isBold ? 'active' : '')}
-            aria-label="Format text as bold"
-          >
-            <i className="format bold" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
-            }}
-            className={'popup-item spaced ' + (isItalic ? 'active' : '')}
-            aria-label="Format text as italics"
-          >
-            <i className="format italic" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
-            }}
-            className={'popup-item spaced ' + (isUnderline ? 'active' : '')}
-            aria-label="Format text to underlined"
-          >
-            <i className="format underline" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
-            }}
-            className={'popup-item spaced ' + (isStrikethrough ? 'active' : '')}
-            aria-label="Format text with a strikethrough"
-          >
-            <i className="format strikethrough" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
-            }}
-            className={'popup-item spaced ' + (isSubscript ? 'active' : '')}
-            title="Subscript"
-            aria-label="Format Subscript"
-          >
-            <i className="format subscript" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
-            }}
-            className={'popup-item spaced ' + (isSuperscript ? 'active' : '')}
-            title="Superscript"
-            aria-label="Format Superscript"
-          >
-            <i className="format superscript" />
-          </button>
-          <button
-            onClick={() => {
-              editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
-            }}
-            className={'popup-item spaced ' + (isCode ? 'active' : '')}
-            aria-label="Insert code block"
-          >
-            <i className="format code" />
-          </button>
-          <button onClick={insertLink} className={'popup-item spaced ' + (isLink ? 'active' : '')} aria-label="Insert link">
-            <i className="format link" />
-          </button>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
+              }}
+              title="Gras"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isBold ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+              }}
+            >
+              <FormatBoldIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
+              }}
+              title="Italique"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isItalic ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+              }}
+            >
+              <FormatItalicIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
+              }}
+              title="Souligné"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isUnderline
+                  ? isDark
+                    ? iconButtonPressedBackgroundColors.dark
+                    : iconButtonPressedBackgroundColors.light
+                  : undefined,
+              }}
+            >
+              <FormatUnderlinedIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
+              }}
+              title="Barré"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isStrikethrough
+                  ? isDark
+                    ? iconButtonPressedBackgroundColors.dark
+                    : iconButtonPressedBackgroundColors.light
+                  : undefined,
+              }}
+            >
+              <StrikethroughIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
+              }}
+              title="Indice"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isSubscript
+                  ? isDark
+                    ? iconButtonPressedBackgroundColors.dark
+                    : iconButtonPressedBackgroundColors.light
+                  : undefined,
+              }}
+            >
+              <SubscriptIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'superscript');
+              }}
+              title="Exposant"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isSuperscript
+                  ? isDark
+                    ? iconButtonPressedBackgroundColors.dark
+                    : iconButtonPressedBackgroundColors.light
+                  : undefined,
+              }}
+            >
+              <SuperscriptIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
+              }}
+              title="Code"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isCode ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+              }}
+            >
+              <CodeIcon />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              onClick={insertLink}
+              title="Lien"
+              size="small"
+              sx={{
+                borderRadius: 0,
+                backgroundColor: isLink ? (isDark ? iconButtonPressedBackgroundColors.dark : iconButtonPressedBackgroundColors.light) : undefined,
+              }}
+            >
+              <InsertLinkIcon />
+            </IconButton>
+          </Grid>
         </>
       )}
-    </div>
+    </Grid>
   );
 }
 

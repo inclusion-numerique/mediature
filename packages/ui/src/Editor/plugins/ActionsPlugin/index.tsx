@@ -5,50 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import { Grid, IconButton } from '@mui/material';
 import type { LexicalEditor } from 'lexical';
 import { $getRoot, $isParagraphNode } from 'lexical';
 import { useEffect, useState } from 'react';
 
 import useModal from '../../hooks/useModal';
 import { SPEECH_TO_TEXT_COMMAND, SUPPORT_SPEECH_RECOGNITION } from '../SpeechToTextPlugin';
-
-async function sendEditorState(editor: LexicalEditor): Promise<void> {
-  const stringifiedEditorState = JSON.stringify(editor.getEditorState());
-  try {
-    await fetch('http://localhost:1235/setEditorState', {
-      body: stringifiedEditorState,
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      method: 'POST',
-    });
-  } catch {
-    // NO-OP
-  }
-}
-
-async function validateEditorState(editor: LexicalEditor): Promise<void> {
-  const stringifiedEditorState = JSON.stringify(editor.getEditorState());
-  let response = null;
-  try {
-    response = await fetch('http://localhost:1235/validateEditorState', {
-      body: stringifiedEditorState,
-      headers: {
-        Accept: 'application/json',
-        'Content-type': 'application/json',
-      },
-      method: 'POST',
-    });
-  } catch {
-    // NO-OP
-  }
-  if (response !== null && response.status === 403) {
-    throw new Error('Editor state validation failed! Server did not accept changes.');
-  }
-}
 
 export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -67,11 +37,6 @@ export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): 
 
   useEffect(() => {
     return editor.registerUpdateListener(({ dirtyElements, prevEditorState, tags }) => {
-      // If we are in read only mode, send the editor state
-      // to server and ask for validation if possible.
-      if (!isEditable && dirtyElements.size > 0 && !tags.has('historic') && !tags.has('collaboration')) {
-        validateEditorState(editor);
-      }
       editor.getEditorState().read(() => {
         const root = $getRoot();
         const children = root.getChildren();
@@ -90,36 +55,58 @@ export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): 
     });
   }, [editor, isEditable]);
 
+  const theme = useColors();
+
   return (
-    <div className="actions">
+    <Grid container spacing={2} className="actions" sx={{ width: 'auto' }}>
       {SUPPORT_SPEECH_RECOGNITION && (
-        <button
-          onClick={() => {
-            editor.dispatchCommand(SPEECH_TO_TEXT_COMMAND, !isSpeechToText);
-            setIsSpeechToText(!isSpeechToText);
-          }}
-          className={'action-button action-button-mic ' + (isSpeechToText ? 'active' : '')}
-          title="Speech To Text"
-          aria-label={`${isSpeechToText ? 'Enable' : 'Disable'} speech to text`}
-        >
-          <i className="mic" />
-        </button>
+        <>
+          <Grid item xs="auto">
+            <IconButton
+              onClick={() => {
+                editor.dispatchCommand(SPEECH_TO_TEXT_COMMAND, !isSpeechToText);
+                setIsSpeechToText(!isSpeechToText);
+              }}
+              title="Reconnaissance vocale"
+              aria-label={`${isSpeechToText ? 'Activer' : 'Désactiver'} la reconnaissance vocale`}
+              sx={{
+                borderRadius: 0,
+                color: theme.decisions.text.inverted.blueFrance.default,
+                backgroundColor: isSpeechToText
+                  ? theme.decisions.background.actionHigh.blueFrance.default
+                  : `${theme.decisions.background.actionHigh.blueFrance.default} !important`,
+                '&:hover': {
+                  backgroundColor: theme.decisions.background.actionHigh.blueFrance.default,
+                },
+              }}
+              aria-pressed={isSpeechToText}
+            >
+              {isSpeechToText ? <MicOffIcon /> : <MicIcon />}
+            </IconButton>
+          </Grid>
+        </>
       )}
-      <button
-        className={`action-button ${!isEditable ? 'unlock' : 'lock'}`}
-        onClick={() => {
-          // Send latest editor state to commenting validation server
-          if (isEditable) {
-            sendEditorState(editor);
-          }
-          editor.setEditable(!editor.isEditable());
-        }}
-        title="Read-Only Mode"
-        aria-label={`${!isEditable ? 'Unlock' : 'Lock'} read-only mode`}
-      >
-        <i className={!isEditable ? 'unlock' : 'lock'} />
-      </button>
+      <Grid item xs="auto">
+        <IconButton
+          onClick={() => {
+            editor.setEditable(!editor.isEditable());
+          }}
+          title="Editeur en mode lecture"
+          aria-label={`${isEditable ? 'Activer' : 'Désactiver'} le mode lecture`}
+          sx={{
+            borderRadius: 0,
+            color: theme.decisions.text.inverted.blueFrance.default,
+            backgroundColor: `${theme.decisions.background.actionHigh.blueFrance.default} !important`,
+            '&:hover': {
+              backgroundColor: theme.decisions.background.actionHigh.blueFrance.default,
+            },
+          }}
+          aria-pressed={!isEditable}
+        >
+          {!isEditable ? <LockOpenIcon /> : <LockIcon />}
+        </IconButton>
+      </Grid>
       {modal}
-    </div>
+    </Grid>
   );
 }
