@@ -425,6 +425,7 @@ importers:
       '@lexical/clipboard': 0.7.6
       '@lexical/code': 0.7.6
       '@lexical/hashtag': 0.7.6
+      '@lexical/headless': ^0.7.6
       '@lexical/html': ^0.7.6
       '@lexical/link': 0.7.6
       '@lexical/list': 0.7.6
@@ -473,6 +474,7 @@ importers:
       '@lexical/clipboard': 0.7.6_lexical@0.7.6
       '@lexical/code': 0.7.6_lexical@0.7.6
       '@lexical/hashtag': 0.7.6_lexical@0.7.6
+      '@lexical/headless': 0.7.6_lexical@0.7.6
       '@lexical/html': 0.7.6_lexical@0.7.6
       '@lexical/link': 0.7.6_lexical@0.7.6
       '@lexical/list': 0.7.6_lexical@0.7.6
@@ -3494,6 +3496,14 @@ packages:
       lexical: 0.7.6
     dev: false
 
+  /@lexical/headless/0.7.6_lexical@0.7.6:
+    resolution: {integrity: sha512-75o5ed4XYyXcK5IQZ+cgxjlw+RMj+oTq9wJogc7XVaNy5tzoesa5R2Ku0dJurijR1IC2VhsXmWpKYcAyz6Gnjw==}
+    peerDependencies:
+      lexical: 0.7.6
+    dependencies:
+      lexical: 0.7.6
+    dev: false
+
   /@lexical/history/0.7.6_lexical@0.7.6:
     resolution: {integrity: sha512-3V2B9GscujPM8r9WcBN6Lhn0HzhW0E3lCTTCMmpxXE2ZcMSsPyB/irquaBzQjSGqtF31T4wsLGtzoWXWDhWbcQ==}
     peerDependencies:
@@ -3872,7 +3882,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       '@types/react': 18.0.26
       react: 18.2.0
 
@@ -3908,7 +3918,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
-    dev: true
 
   /@mui/material/5.10.16_lskpmcsdi7ipu6qpuapyu56ihm:
     resolution: {integrity: sha512-JSHcDQQ+k30NKkCM/0KX6jq4F5LOrbFKZpS+cEl7scZWOCJpUPH5ccAT5a7O8wzrgNZ8Y9PnwzNvWBrfShpJFw==}
@@ -3944,6 +3953,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+    dev: false
 
   /@mui/private-theming/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-0MArkJaOHRCKqL/GWjngGZmyOeRz+uxffhx82bKcewr8swqV7xx7EFP02pk0L/gLdfcvYdqwH4YTVjG/+TaKrg==}
@@ -3981,6 +3991,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/styled-engine/5.10.16_react@18.2.0:
     resolution: {integrity: sha512-ZMSjXvtiGwGDKqrSlXhpxK2voUaF2/lpC/pSTfFmZvKH9j9a9h1/iwo3ybgjFVYGgbfNeW4h0xEchiRohu9xsw==}
@@ -4000,7 +4011,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -4028,7 +4038,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_ogriz7mfahdh34qnfautfro5yu:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -4058,6 +4067,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/types/7.2.2_@types+react@18.0.26:
     resolution: {integrity: sha512-siex8cZDtWeC916cXOoUOnEQQejuMYmHtc4hM6VkKVYaBICz3VIiqyiAomRboTQHt2jchxQ5Q5ATlbcDekTxDA==}
@@ -5957,8 +5967,8 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
 
-  /@storybook/client-logger/7.0.0-beta.34:
-    resolution: {integrity: sha512-iZNo30lSan/sQuN0Dcx57UVksXRbEvJU8c8WCZGB426htC5yjHiDLLhQuBrNahN4V1IkhvSCNtiGzEYG6KIf1A==}
+  /@storybook/client-logger/7.0.0-beta.35:
+    resolution: {integrity: sha512-0ZHXrJ0pof4FUyNME8ZDd7tKFXFuBySKjqtUj7yqmBC6QbTLrKI6M8Ut/+LJQ7omQ+h3IJcuu2g7P7lA3BNVmw==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -6827,7 +6837,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.34
+      '@storybook/client-logger': 7.0.0-beta.35
       '@storybook/instrumenter': 7.0.0-beta.19
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei
@@ -15838,7 +15848,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
-      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
