@@ -5,6 +5,7 @@ import {
   MjmlBody,
   MjmlButton,
   MjmlColumn,
+  MjmlDivider,
   MjmlGroup,
   MjmlHead,
   MjmlImage,
@@ -41,6 +42,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
         <MjmlAttributes>
           <MjmlSection padding="10px 0px"></MjmlSection>
           <MjmlColumn padding="0px 0px"></MjmlColumn>
+          <MjmlDivider css-class="divider" border-width="1px" border-color="#000000"></MjmlDivider>
           <MjmlAll fontFamily='"Marianne", arial, sans-serif'></MjmlAll>
           <MjmlText cssClass="light-text" color="#3a3a3a" fontSize="14px" lineHeight="24px"></MjmlText>
           <MjmlButton

@@ -10,7 +10,30 @@ Notes:
 
 $darkWrapperBackground: #161616;
 
+hr {
+  color: #000000; // Otherwise it's grey
+}
+
+th {
+  background: none !important; // Prevent the heading column/row to have a color
+}
+
+a {
+  color: #000091;
+  text-underline-offset: 3px;
+}
+
+h1,
+h2 {
+  // Bigger headings were rendering all tight on multiple lines
+  line-height: 1.2em;
+}
+
 @mixin darkStyle {
+  a {
+    color: #8585f6 !important;
+  }
+
   h1 {
     color: #fff !important;
   }
@@ -32,5 +55,18 @@ $darkWrapperBackground: #161616;
   .light-main-section,
   .light-main-section > table {
     background: #1e1e1e !important;
+  }
+
+  hr {
+    color: #fff !important;
+  }
+
+  .divider > p {
+    border-color: #fff !important;
+  }
+
+  th,
+  td {
+    border-color: #fff !important;
   }
 }
