@@ -39,8 +39,9 @@ export const Empty = prepareStory(EmptyStory);
 
 const LoremStory = Template.bind({});
 LoremStory.args = {
+  title: 'Quia sunt eum.',
   children: (
-    <StandardLayout title="Quia sunt eum.">
+    <>
       <MjmlText>
         <h1>Fuga quis qui</h1>
         <p>Labore sint et. Porro non doloremque vel magnam eaque adipisci. Sit sint ducimus magnam sint eaque cum laborum.</p>
@@ -55,7 +56,7 @@ LoremStory.args = {
           reprehenderit aperiam et est. Quia et provident ex quaerat aliquid voluptatem vel.
         </p>
       </MjmlText>
-    </StandardLayout>
+    </>
   ),
 };
 LoremStory.play = async ({ canvasElement }) => {
