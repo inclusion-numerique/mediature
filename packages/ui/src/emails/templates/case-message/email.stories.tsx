@@ -3,9 +3,9 @@ import { Meta, StoryFn } from '@storybook/react';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import sampleAllElement from '@mediature/ui/src/Editor/sample-all-elements.lexical';
-import { inlineEditorStateToHtml } from '@mediature/ui/src/LexicalRenderer';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { CaseMessageEmail } from '@mediature/ui/src/emails/templates/case-message/email';
+import { inlineEditorStateToHtml } from '@mediature/ui/src/utils/lexical';
 
 type ComponentType = typeof CaseMessageEmail;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
