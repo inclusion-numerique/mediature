@@ -10,7 +10,7 @@ export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 export const CaseStatusSchema = z.enum(['TO_PROCESS', 'MAKE_XXX_CALL', 'SYNC_WITH_CITIZEN', 'SYNC_WITH_ADMINISTATION', 'ABOUT_TO_CLOSE', 'STUCK']);
 export type CaseStatusSchemaType = z.infer<typeof CaseStatusSchema>;
 
-export const CaseSchema = z
+export const incompleteCaseSchema = z
   .object({
     id: z.string().uuid(),
     humanId: z.number(),
@@ -19,7 +19,6 @@ export const CaseSchema = z
     agentId: z.string().uuid().nullable(),
     alreadyRequestedInThePast: z.boolean(),
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
-    // TODO: if first false, second should be null... use superRefine() to manage this?
     description: z.string().min(100),
     units: z.string(),
     emailCopyWanted: z.boolean(),
@@ -34,6 +33,14 @@ export const CaseSchema = z
     deletedAt: z.date().nullable(),
   })
   .strict();
+export const CaseSchema = incompleteCaseSchema.superRefine((data, ctx) => {
+  if (data && data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant.`,
+    });
+  }
+});
 export type CaseSchemaType = z.infer<typeof CaseSchema>;
 
 export const CaseNoteSchema = z

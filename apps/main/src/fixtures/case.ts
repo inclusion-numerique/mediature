@@ -9,7 +9,7 @@ export const cases: CaseSchemaType[] = [
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e21',
     agentId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e31',
     alreadyRequestedInThePast: false,
-    gotAnswerFromPreviousRequest: true,
+    gotAnswerFromPreviousRequest: null,
     description: `Veritatis ducimus quas atque. Velit cumque sunt tempore laboriosam nesciunt beatae aut. Blanditiis explicabo sint ut omnis doloribus necessitatibus magni molestias perspiciatis. Eveniet enim optio tenetur non voluptatum facilis. Harum reprehenderit quos nesciunt tenetur ut quo qui. Eos non est illo et dolorum ipsa.
 
 Ad quasi cum ut ipsa harum accusantium minima quo magnam. Similique repellendus ab dolor magnam officiis laboriosam repudiandae vitae. Rem aut quasi. Repudiandae vel aut commodi. Ullam deserunt nesciunt ullam quibusdam consequatur dolor reiciendis.
@@ -34,7 +34,7 @@ Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat l
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e22',
     agentId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e32',
     alreadyRequestedInThePast: false,
-    gotAnswerFromPreviousRequest: true,
+    gotAnswerFromPreviousRequest: null,
     description:
       'Saepe itaque autem. Quibusdam magnam aliquid nihil. Autem mollitia ab. Blanditiis beatae odit molestiae dolores inventore tempora in blanditiis. Error tempore unde ex neque temporibus occaecati. Quia consectetur tenetur aut nam id.',
     units: '',
@@ -56,7 +56,7 @@ Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat l
     authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e23',
     agentId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e33',
     alreadyRequestedInThePast: false,
-    gotAnswerFromPreviousRequest: true,
+    gotAnswerFromPreviousRequest: null,
     description:
       'Quidem maxime natus veritatis voluptatem molestiae similique omnis voluptas voluptas. Consequatur nam vero architecto reiciendis qui quis vitae odio dolore. Ut odio illo quaerat vel maxime sit vitae. Velit velit id perspiciatis consequatur velit veniam non.',
     units: '',

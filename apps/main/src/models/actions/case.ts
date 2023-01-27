@@ -5,22 +5,22 @@ import { AddressInputSchema } from '@mediature/main/src/models/entities/address'
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { CaseAttachmentTypeSchema, CaseNoteSchema, CaseSchema } from '@mediature/main/src/models/entities/case';
+import { CaseAttachmentTypeSchema, CaseNoteSchema, incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
 
 export const RequestCaseSchema = z
   .object({
-    authorityId: CaseSchema.shape.authorityId,
+    authorityId: incompleteCaseSchema.shape.authorityId,
     email: CitizenSchema.shape.email,
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
     // address: AddressInputSchema,
     // phone: PhoneInputSchema,
-    alreadyRequestedInThePast: CaseSchema.shape.alreadyRequestedInThePast,
-    gotAnswerFromPreviousRequest: CaseSchema.shape.gotAnswerFromPreviousRequest,
-    description: CaseSchema.shape.description,
-    emailCopyWanted: CaseSchema.shape.emailCopyWanted,
+    alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
+    gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
+    description: incompleteCaseSchema.shape.description,
+    emailCopyWanted: incompleteCaseSchema.shape.emailCopyWanted,
     // TODO: attachements
   })
   .strict();
@@ -31,14 +31,14 @@ export type RequestCasePrefillSchemaType = z.infer<typeof RequestCasePrefillSche
 
 export const UpdateCaseSchema = z
   .object({
-    initiatedFrom: CaseSchema.shape.initiatedFrom,
-    caseId: CaseSchema.shape.id,
-    units: CaseSchema.shape.units,
-    termReminderAt: CaseSchema.shape.termReminderAt,
-    status: CaseSchema.shape.status,
+    initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
+    caseId: incompleteCaseSchema.shape.id,
+    units: incompleteCaseSchema.shape.units,
+    termReminderAt: incompleteCaseSchema.shape.termReminderAt,
+    status: incompleteCaseSchema.shape.status,
     close: z.boolean(),
-    finalConclusion: CaseSchema.shape.finalConclusion,
-    nextRequirements: CaseSchema.shape.nextRequirements,
+    finalConclusion: incompleteCaseSchema.shape.finalConclusion,
+    nextRequirements: incompleteCaseSchema.shape.nextRequirements,
   })
   .strict();
 export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
@@ -48,7 +48,7 @@ export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema
 
 export const AssignCaseSchema = z
   .object({
-    caseId: CaseSchema.shape.id,
+    caseId: incompleteCaseSchema.shape.id,
     agentIds: z.array(AgentSchema.shape.id).min(1),
   })
   .strict();
@@ -59,7 +59,7 @@ export type AssignCasePrefillSchemaType = z.infer<typeof AssignCasePrefillSchema
 
 export const UnassignCaseSchema = z
   .object({
-    caseId: CaseSchema.shape.id,
+    caseId: incompleteCaseSchema.shape.id,
     agentIds: z.array(AgentSchema.shape.id).min(1),
   })
   .strict();
@@ -70,7 +70,7 @@ export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSc
 
 export const GetCaseSchema = z
   .object({
-    id: CaseSchema.shape.id,
+    id: incompleteCaseSchema.shape.id,
   })
   .strict();
 export type GetCaseSchemaType = z.infer<typeof GetCaseSchema>;
@@ -89,7 +89,7 @@ export type ListCasesPrefillSchemaType = z.infer<typeof ListCasesPrefillSchema>;
 
 export const GeneratePdfFromCaseSchema = z
   .object({
-    caseId: CaseSchema.shape.id,
+    caseId: incompleteCaseSchema.shape.id,
   })
   .strict();
 export type GeneratePdfFromCaseSchemaType = z.infer<typeof GeneratePdfFromCaseSchema>;
@@ -99,7 +99,7 @@ export type GeneratePdfFromCasePrefillSchemaType = z.infer<typeof GeneratePdfFro
 
 export const AddNoteToCaseSchema = z
   .object({
-    caseId: CaseSchema.shape.id,
+    caseId: incompleteCaseSchema.shape.id,
     date: CaseNoteSchema.shape.date,
     content: CaseNoteSchema.shape.content,
   })
@@ -134,7 +134,7 @@ export type UpdateCaseNotePrefillSchemaType = z.infer<typeof UpdateCaseNotePrefi
 export const AddAttachmentToCaseSchema = z
   .object({
     attachmentId: AttachmentSchema.shape.id,
-    caseId: CaseSchema.shape.id,
+    caseId: incompleteCaseSchema.shape.id,
     transmitter: CaseAttachmentTypeSchema,
   })
   .strict();
