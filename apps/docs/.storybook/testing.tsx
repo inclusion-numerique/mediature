@@ -61,5 +61,5 @@ export async function playFindProgressBar(parentElement: HTMLElement, name: stri
 }
 
 export async function playFindEmailStructure(parentElement: HTMLElement): Promise<HTMLElement> {
-  return await within(parentElement).findByText('©');
+  return await within(parentElement).findByText(/©/i);
 }
