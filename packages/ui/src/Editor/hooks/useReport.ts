@@ -17,10 +17,12 @@ const getElement = (): HTMLElement => {
     element.style.top = '50%';
     element.style.left = '50%';
     element.style.fontSize = '32px';
+    element.style.lineHeight = '40px';
     element.style.transform = 'translate(-50%, -50px)';
     element.style.padding = '20px';
     element.style.background = 'rgba(240, 240, 240, 0.4)';
     element.style.borderRadius = '20px';
+    element.style.zIndex = '1500';
 
     if (document.body) {
       document.body.appendChild(element);

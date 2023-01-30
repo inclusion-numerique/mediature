@@ -81,21 +81,6 @@ Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat l
   }),
 ];
 
-export const casesWrappers: CaseWrapperSchemaType[] = [
-  CaseWrapperSchema.parse({
-    case: cases[0],
-    citizen: citizens[0],
-  }),
-  CaseWrapperSchema.parse({
-    case: cases[1],
-    citizen: citizens[1],
-  }),
-  CaseWrapperSchema.parse({
-    case: cases[2],
-    citizen: citizens[2],
-  }),
-];
-
 export const notes: CaseNoteSchemaType[] = [
   CaseNoteSchema.parse({
     id: 'd79cb3ba-745e-5d9a-8903-4a02327a7e01',
@@ -123,5 +108,23 @@ export const notes: CaseNoteSchemaType[] = [
     createdAt: new Date('December 17, 2022 03:24:00'),
     updatedAt: new Date('December 19, 2022 04:33:00'),
     deletedAt: null,
+  }),
+];
+
+export const casesWrappers: CaseWrapperSchemaType[] = [
+  CaseWrapperSchema.parse({
+    case: cases[0],
+    citizen: citizens[0],
+    notes: [notes[0], notes[1], notes[2]],
+  }),
+  CaseWrapperSchema.parse({
+    case: cases[1],
+    citizen: citizens[1],
+    notes: [notes[0], notes[1], notes[2]],
+  }),
+  CaseWrapperSchema.parse({
+    case: cases[2],
+    citizen: citizens[2],
+    notes: [notes[0], notes[1], notes[2]],
   }),
 ];

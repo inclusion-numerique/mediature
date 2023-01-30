@@ -6,10 +6,13 @@
  *
  */
 
+.MuiDialog-paper .editor-scroller {
+  max-height: 50vh !important;
+}
+
 .editor-shell {
   border-radius: 0px;
   width: 100%;
-  max-width: 1100px;
   color: #000;
   position: relative;
   line-height: 1.7;
@@ -36,6 +39,7 @@
 
   .editor-scroller {
     min-height: 150px;
+    max-height: 70vh;
     border: 0;
     resize: none;
     cursor: text;

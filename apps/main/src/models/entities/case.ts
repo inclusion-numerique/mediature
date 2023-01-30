@@ -76,6 +76,7 @@ export const CaseWrapperSchema = z
   .object({
     case: CaseSchema,
     citizen: CitizenSchema,
+    notes: z.array(CaseNoteSchema).nullable(),
   })
   .strict();
 export type CaseWrapperSchemaType = z.infer<typeof CaseWrapperSchema>;

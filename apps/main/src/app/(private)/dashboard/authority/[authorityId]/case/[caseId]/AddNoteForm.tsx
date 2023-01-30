@@ -10,7 +10,12 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { AddNoteToCasePrefillSchemaType, AddNoteToCaseSchema, AddNoteToCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { EditorWrapper } from '@mediature/ui/src/Editor/EditorWrapper';
 
-export function AddNoteForm({ prefill }: { prefill?: AddNoteToCasePrefillSchemaType }) {
+export interface AddNoteFormProps {
+  prefill?: AddNoteToCasePrefillSchemaType;
+  onSuccess?: () => void;
+}
+
+export function AddNoteForm(props: AddNoteFormProps) {
   const addNoteToCase = trpc.addNoteToCase.useMutation();
 
   const {
@@ -22,16 +27,23 @@ export function AddNoteForm({ prefill }: { prefill?: AddNoteToCasePrefillSchemaT
     control,
   } = useForm<AddNoteToCaseSchemaType>({
     resolver: zodResolver(AddNoteToCaseSchema),
-    defaultValues: prefill,
+    defaultValues: {
+      date: new Date(),
+      ...props.prefill,
+    },
   });
 
   const onSubmit = async (input: AddNoteToCaseSchemaType) => {
     await addNoteToCase.mutateAsync(input);
+
+    if (props.onSuccess) {
+      props.onSuccess();
+    }
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="ajouter une note au dossier">
-      <Grid item xs={12} sm={6}>
+    <BaseForm onSubmit={handleSubmit(onSubmit)} preventParentFormTrigger control={control} ariaLabel="ajouter une note au dossier">
+      <Grid item xs={12} sm={6} md={4}>
         <DateTimePicker
           label="Date de la note"
           value={watch('date') || null}

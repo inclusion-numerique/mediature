@@ -38,7 +38,11 @@ const Template: StoryFn<ComponentType> = (args) => {
 };
 
 const EmptyStory = Template.bind({});
-EmptyStory.args = {};
+EmptyStory.args = {
+  prefill: {
+    caseId: '00000000-0000-0000-0000-000000000000',
+  },
+};
 EmptyStory.parameters = { ...defaultMswParameters };
 EmptyStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);

@@ -3,26 +3,52 @@
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
-import { Button, Card, CardContent, Chip, Collapse, Divider, Grid, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Collapse,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { useMemo, useRef, useState } from 'react';
+import { createContext, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { AddNoteForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
+import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CasePlatformSchema, CaseStatusSchema } from '@mediature/main/src/models/entities/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
-import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
+
+export const CasePageContext = createContext({
+  ContextualNoteCard: NoteCard,
+  ContextualAddNoteForm: AddNoteForm,
+});
 
 export interface CasePageProps {
   params: {
@@ -33,6 +59,7 @@ export interface CasePageProps {
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const { t } = useTranslation('common');
+  const { ContextualNoteCard, ContextualAddNoteForm } = useContext(CasePageContext);
 
   const { data, error, isInitialLoading, isLoading } = trpc.getCase.useQuery({
     id: caseId,
@@ -78,6 +105,14 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const [reminderMinimumDate, setReminderMinimumDate] = useState<Date>(new Date());
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
 
+  const [addNoteModalOpen, setAddNoteModalOpen] = useState<boolean>(false);
+  const handeOpenAddNoteModal = () => {
+    setAddNoteModalOpen(true);
+  };
+  const handleCloseAddNoteModal = () => {
+    setAddNoteModalOpen(false);
+  };
+
   if (error) {
     return <span>Error TODO</span>;
   } else if (isInitialLoading) {
@@ -91,6 +126,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
 
   const targetedCase = caseWrapper.case;
   const citizen = caseWrapper.citizen;
+  const notes = caseWrapper.notes;
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
     await updateCase.mutateAsync(input);
@@ -426,12 +462,45 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   <CardContent>
                     <Grid container direction={'column'} spacing={2}>
                       <Grid item xs={12}>
-                        <Typography component="span" variant="h6">
-                          Notes
-                        </Typography>
+                        <Grid container spacing={1} justifyContent="space-between" alignItems="center">
+                          <Grid item xs="auto">
+                            <Typography component="span" variant="h6">
+                              Notes
+                            </Typography>
+                          </Grid>
+                          <Grid item xs="auto">
+                            <Button onClick={handeOpenAddNoteModal} size="large" variant="contained" startIcon={<AddCircleOutlineIcon />}>
+                              Ajouter une note
+                            </Button>
+                            <Dialog open={addNoteModalOpen} onClose={handleCloseAddNoteModal} fullWidth maxWidth="lg">
+                              <DialogTitle>
+                                <Grid container spacing={2} justifyContent="space-between" alignItems="center">
+                                  <Grid item xs="auto">
+                                    Édition de note
+                                  </Grid>
+                                  <Grid item xs="auto">
+                                    <IconButton onClick={handleCloseAddNoteModal} size="small">
+                                      <CloseIcon />
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              </DialogTitle>
+                              <DialogContent>
+                                <ContextualAddNoteForm prefill={{ caseId: targetedCase.id }} onSuccess={handleCloseAddNoteModal} />
+                              </DialogContent>
+                            </Dialog>
+                          </Grid>
+                        </Grid>
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField type="email" label="Email" fullWidth />
+                        <Grid container component="ul" spacing={2} sx={ulComponentResetStyles}>
+                          {notes &&
+                            notes.map((note) => (
+                              <Grid key={note.id} item component="li" xs={12} sm={6} md={4}>
+                                <ContextualNoteCard note={note} />
+                              </Grid>
+                            ))}
+                        </Grid>
                       </Grid>
                     </Grid>
                   </CardContent>

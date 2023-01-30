@@ -1,4 +1,4 @@
-import { Agent, Authority, Case, Citizen, User } from '@prisma/client';
+import { Agent, Authority, Case, Citizen, Note, User } from '@prisma/client';
 
 export function agentPrismaToModel(
   agent: Agent & {
@@ -68,5 +68,16 @@ export function citizenPrismaToModel(citizen: Citizen) {
     createdAt: citizen.createdAt,
     updatedAt: citizen.updatedAt,
     deletedAt: citizen.deletedAt,
+  };
+}
+
+export function caseNotePrismaToModel(note: Note) {
+  return {
+    id: note.id,
+    date: note.date,
+    content: note.content,
+    createdAt: note.createdAt,
+    updatedAt: note.updatedAt,
+    deletedAt: note.deletedAt,
   };
 }

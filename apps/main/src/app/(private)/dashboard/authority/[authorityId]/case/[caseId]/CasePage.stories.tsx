@@ -5,7 +5,9 @@ import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm, playFindFormInMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { CasePage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/CasePage';
+import { Empty as AddNoteFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm.stories';
+import { CasePage, CasePageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/CasePage';
+import { Normal as NoteCardNormalStory } from '@mediature/main/src/components/NoteCard.stories';
 import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
@@ -67,7 +69,15 @@ NormalStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
 
-export const Normal = prepareStory(NormalStory, {});
+export const Normal = prepareStory(NormalStory, {
+  childrenContext: {
+    context: CasePageContext,
+    value: {
+      ContextualNoteCard: NoteCardNormalStory,
+      ContextualAddNoteForm: AddNoteFormEmptyStory,
+    },
+  },
+});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
@@ -83,4 +93,11 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutNormalStory,
+  childrenContext: {
+    context: CasePageContext,
+    value: {
+      ContextualNoteCard: NoteCardNormalStory,
+      ContextualAddNoteForm: AddNoteFormEmptyStory,
+    },
+  },
 });

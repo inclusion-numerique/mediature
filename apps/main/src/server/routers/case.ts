@@ -1,3 +1,5 @@
+import { Note } from '@prisma/client';
+
 import { prisma } from '@mediature/main/prisma/client';
 import {
   AddAttachmentToCaseSchema,
@@ -17,7 +19,7 @@ import {
 import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
-import { casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import { caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export async function isAgentPartOfAuthority(authorityId: string, agentId: string): Promise<boolean> {
@@ -259,6 +261,7 @@ export const caseRouter = router({
       },
       include: {
         citizen: true,
+        Note: true,
       },
     });
 
@@ -272,6 +275,7 @@ export const caseRouter = router({
       caseWrapper: CaseWrapperSchema.parse({
         case: casePrismaToModel(targetedCase),
         citizen: citizenPrismaToModel(targetedCase.citizen),
+        notes: targetedCase.Note.map((note: Note) => caseNotePrismaToModel(note)),
       }),
     };
   }),
@@ -345,6 +349,7 @@ export const caseRouter = router({
         return {
           case: casePrismaToModel(iterationCase),
           citizen: citizenPrismaToModel(iterationCase.citizen),
+          notes: null,
         };
       }),
     };
@@ -396,7 +401,7 @@ export const caseRouter = router({
       },
     });
 
-    return true;
+    return;
   }),
   updateCaseNote: privateProcedure.input(UpdateCaseNoteSchema).mutation(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findFirst({
