@@ -55,6 +55,14 @@ const moduleExports = async () => {
         },
       ];
     },
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'via.placeholder.com',
+        },
+      ],
+    },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
       config.module.rules.push({
         test: /\.woff2$/,
