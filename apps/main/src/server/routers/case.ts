@@ -358,21 +358,19 @@ export const caseRouter = router({
   addNoteToCase: privateProcedure.input(AddNoteToCaseSchema).mutation(async ({ ctx, input }) => {
     await canUserManageThisCase(ctx.user.id, input.caseId);
 
-    const note = await prisma.case.update({
-      where: {
-        id: input.caseId,
-      },
+    const note = await prisma.note.create({
       data: {
-        Note: {
-          create: {
-            date: input.date,
-            content: input.content,
+        date: input.date,
+        content: input.content,
+        case: {
+          connect: {
+            id: input.caseId,
           },
         },
       },
     });
 
-    return { note };
+    return { note: note };
   }),
   removeNoteFromCase: privateProcedure.input(RemoveNoteFromCaseSchema).mutation(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findFirst({

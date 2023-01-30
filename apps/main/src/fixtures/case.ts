@@ -1,5 +1,13 @@
 import { citizens } from '@mediature/main/src/fixtures/citizen';
-import { CaseSchema, CaseSchemaType, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
+import {
+  CaseNoteSchema,
+  CaseNoteSchemaType,
+  CaseSchema,
+  CaseSchemaType,
+  CaseWrapperSchema,
+  CaseWrapperSchemaType,
+} from '@mediature/main/src/models/entities/case';
+import sampleHello from '@mediature/ui/src/Editor/sample-hello.lexical';
 
 export const cases: CaseSchemaType[] = [
   CaseSchema.parse({
@@ -85,5 +93,35 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
   CaseWrapperSchema.parse({
     case: cases[2],
     citizen: citizens[2],
+  }),
+];
+
+export const notes: CaseNoteSchemaType[] = [
+  CaseNoteSchema.parse({
+    id: 'd79cb3ba-745e-5d9a-8903-4a02327a7e01',
+    caseId: 'd79cb3ba-745e-5d9a-8903-4a02327a7e11',
+    date: new Date('December 15, 2022 03:24:00'),
+    content: sampleHello,
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
+  }),
+  CaseNoteSchema.parse({
+    id: 'd79cb3ba-745e-5d9a-8903-4a02327a7e02',
+    caseId: 'd79cb3ba-745e-5d9a-8903-4a02327a7e12',
+    date: new Date('December 15, 2022 03:24:00'),
+    content: sampleHello,
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
+  }),
+  CaseNoteSchema.parse({
+    id: 'd79cb3ba-745e-5d9a-8903-4a02327a7e03',
+    caseId: 'd79cb3ba-745e-5d9a-8903-4a02327a7e13',
+    date: new Date('December 15, 2022 03:24:00'),
+    content: sampleHello,
+    createdAt: new Date('December 17, 2022 03:24:00'),
+    updatedAt: new Date('December 19, 2022 04:33:00'),
+    deletedAt: null,
   }),
 ];

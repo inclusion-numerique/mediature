@@ -7,7 +7,10 @@
  */
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { InitialEditorStateType, LexicalComposer } from '@lexical/react/LexicalComposer';
-import { Card } from '@mui/material';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { Card, FormControl, FormControlLabel, FormHelperText } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { EditorState, LexicalEditor } from 'lexical';
 
 import Editor from './Editor';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
@@ -18,6 +21,8 @@ import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 
 export interface EditorWrapperProps {
   initialEditorState?: InitialEditorStateType;
+  onChange: (stringifiedEditorState: string) => void;
+  error?: string;
 }
 
 // The whole `Editor` folder is based on the `lexical-playground` since there is for now no all-in-one solution
@@ -35,16 +40,37 @@ export function EditorWrapper(props: EditorWrapperProps): JSX.Element {
   };
 
   const theme = useColors();
+  const muiTheme = useTheme();
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <SharedHistoryContext>
         <TableContext>
-          <Card variant="outlined" className="editor-shell" sx={{ pt: 0, backgroundColor: theme.decisions.background.overlap.grey.default }}>
-            <Editor />
-          </Card>
+          <FormControl error={!!props.error} sx={{ width: '100%' }}>
+            <Card
+              variant="outlined"
+              className="editor-shell"
+              sx={{
+                pt: 0,
+                backgroundColor: theme.decisions.background.overlap.grey.default,
+                borderColor: !!props.error ? muiTheme.palette.error.main : undefined,
+              }}
+            >
+              <Editor />
+            </Card>
+            <FormHelperText>{props.error}</FormHelperText>
+          </FormControl>
         </TableContext>
       </SharedHistoryContext>
+      <OnChangePlugin
+        onChange={(editorState: EditorState, editor: LexicalEditor) => {
+          const inlineEditorState = JSON.stringify(editorState.toJSON());
+
+          props.onChange(inlineEditorState);
+        }}
+        ignoreHistoryMergeTagChange={true}
+        ignoreSelectionChange={true}
+      />
     </LexicalComposer>
   );
 }

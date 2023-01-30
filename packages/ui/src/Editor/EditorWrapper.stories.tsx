@@ -31,7 +31,9 @@ const Template: StoryFn<ComponentType> = (args) => {
 };
 
 const EmptyStory = Template.bind({});
-EmptyStory.args = {};
+EmptyStory.args = {
+  onChange: (content: string) => {},
+};
 EmptyStory.parameters = {};
 EmptyStory.play = async ({ canvasElement }) => {
   await playFindElements(canvasElement);
@@ -42,6 +44,7 @@ export const Empty = prepareStory(EmptyStory);
 const LoremStory = Template.bind({});
 LoremStory.args = {
   initialEditorState: contentSampleGenerator,
+  onChange: (content: string) => {},
 };
 LoremStory.play = async ({ canvasElement }) => {
   await playFindElements(canvasElement);
@@ -52,6 +55,7 @@ export const Lorem = prepareStory(LoremStory);
 const TableStory = Template.bind({});
 TableStory.args = {
   initialEditorState: sampleTable,
+  onChange: (content: string) => {},
 };
 TableStory.parameters = {
   a11y: {
@@ -69,6 +73,7 @@ export const Table = prepareStory(TableStory);
 const EveryElementStory = Template.bind({});
 EveryElementStory.args = {
   initialEditorState: sampleAllElement,
+  onChange: (content: string) => {},
 };
 EveryElementStory.parameters = {
   a11y: {
@@ -82,3 +87,15 @@ EveryElementStory.play = async ({ canvasElement }) => {
 };
 
 export const EveryElement = prepareStory(EveryElementStory);
+
+const WithErrorStory = Template.bind({});
+WithErrorStory.args = {
+  error: 'this is just an example error',
+  onChange: (content: string) => {},
+};
+WithErrorStory.parameters = {};
+WithErrorStory.play = async ({ canvasElement }) => {
+  await playFindElements(canvasElement);
+};
+
+export const WithError = prepareStory(WithErrorStory);
