@@ -32,6 +32,7 @@
   "pnpm": {
     "overrides": {
       "@codegouvfr/react-dsfr": "^0.25.4",
+      "@glen/jest-raw-loader": "^2.0.0",
       "@lhci/cli": "^0.10.0",
       "@mui/icons-material": "^5.10.16",
       "@mui/material": "^5.10.16",

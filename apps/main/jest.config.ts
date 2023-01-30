@@ -21,12 +21,16 @@ const customJestConfig = {
       : undefined,
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react',
+  transform: {
+    '\\.[jt]sx?$': [
+      'ts-jest',
+      {
+        tsconfig: {
+          jsx: 'react',
+        },
       },
-    },
+    ],
+    '\\.lexical$': '@glen/jest-raw-loader',
   },
 };
 

@@ -97,6 +97,7 @@
     "@anatine/zod-mock": "^3.6.0",
     "@cypress/webpack-preprocessor": "^5.15.5",
     "@faker-js/faker": "^7.6.0",
+    "@glen/jest-raw-loader": "^2.0.0",
     "@hookform/devtools": "^4.3.0",
     "@lhci/cli": "^0.10.0",
     "@octokit/rest": "^19.0.5",
