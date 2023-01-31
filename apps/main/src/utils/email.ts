@@ -4,15 +4,23 @@ import { StartedGenericContainer } from 'testcontainers/dist/generic-container/s
 
 import { bindContainerLogs } from '@mediature/main/src/utils/testcontainers';
 
-export interface PostgresContainer {
-  container: StartedGenericContainer;
-  url: string;
+export interface EmailServerSettings {
+  host: string;
+  port: number;
+  user: string;
+  password: string;
 }
 
-export async function setupPostgres(): Promise<PostgresContainer> {
-  const dummyUser = 'postgres';
-  const dummyPassword = 'postgres';
-  const dummyDatabase = 'postgres';
+export interface MailcatcherContainer {
+  container: StartedGenericContainer;
+  settings: EmailServerSettings;
+}
+
+export async function setupMailcatcher(): Promise<MailcatcherContainer> {
+  const dummyHost = '127.0.0.1';
+  const dummyUser = '';
+  const dummyPassword = '';
+  const dummyPort = '1025';
 
   const isPipelineWorker = process.env.CI === 'true';
   if (isPipelineWorker) {
@@ -21,14 +29,15 @@ export async function setupPostgres(): Promise<PostgresContainer> {
 
   const composeFilePath = path.resolve(__dirname, '../../../../');
   const composeFile = 'docker-compose.yaml';
-  const serviceName = 'postgres';
-  const containerName = 'postgres_container';
+  const serviceName = 'mailcatcher';
+  const containerName = 'mailcatcher_container';
 
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
-      POSTGRES_USER: dummyUser,
-      POSTGRES_PASSWORD: dummyPassword,
-      POSTGRES_DB: dummyDatabase,
+      EMAIL_HOST: dummyHost,
+      EMAIL_HOST_USER: dummyUser,
+      EMAIL_HOST_PASSWORD: dummyPassword,
+      EMAIL_PORT: dummyPort,
     })
     .withWaitStrategy(serviceName, Wait.forHealthCheck())
     .up([serviceName]);
@@ -40,12 +49,17 @@ export async function setupPostgres(): Promise<PostgresContainer> {
   });
 
   const ip = container.getHost();
-  const mappedPort = container.getMappedPort(5432);
+  const mappedPort = container.getMappedPort(1025);
 
-  const url = `postgresql://${dummyUser}:${dummyPassword}@${ip}:${mappedPort}/${dummyDatabase}`;
+  const settings: EmailServerSettings = {
+    host: ip,
+    port: mappedPort,
+    user: dummyUser,
+    password: dummyPassword,
+  };
 
   return {
     container,
-    url,
+    settings,
   };
 }

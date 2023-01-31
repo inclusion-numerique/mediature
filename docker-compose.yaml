@@ -40,6 +40,24 @@ services:
       - postgres
     restart: unless-stopped
 
+  mailcatcher:
+    container_name: mailcatcher_container
+    image: aerzas/mailcatcher:2.0.1
+    environment:
+      EMAIL_HOST: ${EMAIL_HOST:-127.0.0.1}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+      EMAIL_PORT: ${EMAIL_PORT:-1025}
+    ports:
+      - '1080:1080'
+      - '11025:1025' # We set `11025` on the host because we had the case where a local email software had taken this port already and Docker didn't warn us (it was really tricky to find the cause...)
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', '/scripts/docker-healthcheck.sh']
+      interval: 1s
+      timeout: 3s
+      retries: 5
+
 networks:
   postgres:
     driver: bridge
