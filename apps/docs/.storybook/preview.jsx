@@ -127,15 +127,13 @@ export const decorators = [
     }, [locale]);
 
     if (context.kind.startsWith('Emails/')) {
-      // We are in the email templating context, a specific wrapper is needed to render
+      // We are in the email templating context, they don't need other stuff and they will use a specific decorator per-story
 
       disableGlobalDsfrStyle(true); // Workaround for global style leaking
 
       return (
         <I18nextProvider i18n={i18n}>
-          <StorybookRendererLayout>
-            <Story />
-          </StorybookRendererLayout>
+          <Story />
         </I18nextProvider>
       );
     } else {

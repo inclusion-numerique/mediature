@@ -8,12 +8,17 @@ export type ComponentProps<F extends (props: any) => JSX.Element> = F extends (.
 // on our other stories like email stories. It's due to importing the `DsfrHead` so there is no
 // easy workdaround like moving the decorator elsewhere because it would be still in the Storybook project
 export function disableGlobalDsfrStyle(value: boolean): void {
-  // Storybook styles are annoted `[data-s]`, the rest should be leaking global style since we use none in our business components
+  // 1. Storybook styles are annoted `[data-s]`
+  // 2. Our own Storybook style is injected after the DSFR style, but we cannot rely on "search between" because we had cases it was not
+  //
+  // So to disable DSFR style we exclude those criterias + we add another check on the content to detect our own style
   const styleElements = document.querySelectorAll('head > meta[name="next-head-count"] ~ style:not([data-s])');
 
   if (value) {
     styleElements.forEach((styleElement) => {
-      styleElement.setAttribute('media', 'not all');
+      if (!styleElement.innerHTML.includes('protectedFromStyleSwitchWorkaround')) {
+        styleElement.setAttribute('media', 'not all');
+      }
     });
   } else {
     styleElements.forEach((styleElement) => {

@@ -117,6 +117,23 @@ scalingo -a ${SCALINGO_APP_NAME} run bash
 scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 ```
 
+### IDE
+
+Since the most used IDE as of today is Visual Studio Code we decided to go we it. Using it as well will make you benefit from all the settings we set for this project.
+
+#### Manual steps
+
+Every settings should work directly when opening the project with `vscode`, except for TypeScript.
+
+Even if your project uses a TypeScript program located inside your `node_modules`, the IDE generally uses its own. Which may imply differences since it's not the same version. We do recommend using the exact same, for this it's simple:
+
+1. Open a project TypeScript file
+2. Open the IDE command input
+3. Type `TypeScript` and click on the item `TypeScript: Select TypeScript Version...`
+4. Then select `Use Workspace Version`
+
+In addition, using the workspace TypeScript will load `compilerOptions.plugins` specified in your `tsconfig.json` files, which is not the case otherwise. Those plugins will bring more confort while developing!
+
 ### Tips
 
 #### Frontend development

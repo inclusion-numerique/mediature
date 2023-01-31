@@ -19,7 +19,8 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

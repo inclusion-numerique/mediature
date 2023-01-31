@@ -8,6 +8,10 @@ declare module '*.scss?raw' {
   export default content;
 }
 
+// It extracts style types automatically thanks to the `tsconfig.json` plugin `typescript-plugin-css-modules`
+declare module '*.module.css';
+declare module '*.module.scss';
+
 declare module '*.svg?inline' {
   const value: any;
   export default value;

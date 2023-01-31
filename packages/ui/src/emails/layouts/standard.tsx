@@ -38,7 +38,8 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
     <Mjml>
       <MjmlHead>
         <MjmlTitle>{props.title}</MjmlTitle>
-        <MjmlPreview>{props.title}</MjmlPreview>
+        {/* TODO: the preview can be interesting but it would add transpiling the context one more time and convert the html to plaintext to keep only the first valuable line (not the "Hello Thomas,"...) (ref: https://www.litmus.com/blog/the-ultimate-guide-to-preview-text-support) */}
+        {/* <MjmlPreview>{props.title}</MjmlPreview> */}
         <MjmlAttributes>
           <MjmlSection padding="10px 0px"></MjmlSection>
           <MjmlColumn padding="0px 0px"></MjmlColumn>
@@ -70,7 +71,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
         <MjmlWrapper cssClass="light-body">
           <MjmlSection>
             <MjmlGroup>
-              <MjmlColumn verticalAlign="middle" width="120px">
+              <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="120px">
                 {/* TODO: upload images on our own CDN, or use public folder of the app... */}
                 <MjmlImage src="https://upload.wikimedia.org/wikipedia/commons/4/44/Logo_republique_francaise.png" alt="Logo" paddingRight={0} />
               </MjmlColumn>
@@ -95,7 +96,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
                 <MjmlText align="center" color="#666666" fontSize={12} paddingTop={2} paddingBottom={0}>
                   {currentYear} © Médiature
                 </MjmlText>
-                <MjmlSocial fontSize="15px" iconSize="30px" mode="horizontal" borderRadius={20} paddingTop={2}>
+                <MjmlSocial cssClass="social-network-section" fontSize="15px" iconSize="30px" mode="horizontal" borderRadius={20} paddingTop={2}>
                   <MjmlSocialElement
                     name="twitter"
                     href="https://twitter.com/AmctMediation"

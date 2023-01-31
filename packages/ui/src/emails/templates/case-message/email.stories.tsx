@@ -1,10 +1,11 @@
 import { Meta, StoryFn } from '@storybook/react';
 
+import { withEmailClientOverviewFactory, withEmailRenderer } from '@mediature/docs/.storybook/email';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import sampleAllElement from '@mediature/ui/src/Editor/sample-all-elements.lexical';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
-import { CaseMessageEmail } from '@mediature/ui/src/emails/templates/case-message/email';
+import { CaseMessageEmail, formatTitle } from '@mediature/ui/src/emails/templates/case-message/email';
 import { inlineEditorStateToHtml } from '@mediature/ui/src/utils/lexical';
 
 type ComponentType = typeof CaseMessageEmail;
@@ -44,8 +45,20 @@ NormalStory.parameters = {
     disable: true,
   },
 };
+NormalStory.decorators = [withEmailRenderer];
 NormalStory.play = async ({ canvasElement }) => {
   await playFindEmailStructure(canvasElement);
 };
 
 export const Normal = prepareStory(NormalStory);
+
+const ClientOverviewStory = Template.bind({});
+ClientOverviewStory.args = {
+  ...NormalStory.args,
+};
+ClientOverviewStory.decorators = [withEmailRenderer, withEmailClientOverviewFactory(formatTitle())];
+ClientOverviewStory.play = async ({ canvasElement }) => {
+  await playFindEmailStructure(canvasElement);
+};
+
+export const ClientOverview = prepareStory(ClientOverviewStory);

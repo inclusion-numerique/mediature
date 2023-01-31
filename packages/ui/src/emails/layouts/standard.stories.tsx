@@ -2,6 +2,7 @@ import { MjmlButton, MjmlText } from '@luma-team/mjml-react';
 import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
+import { withEmailRenderer } from '@mediature/docs/.storybook/email';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
@@ -31,6 +32,7 @@ const Template: StoryFn<ComponentType> = (args) => {
 
 const EmptyStory = Template.bind({});
 EmptyStory.args = {};
+EmptyStory.decorators = [withEmailRenderer];
 EmptyStory.play = async ({ canvasElement }) => {
   await playFindEmailStructure(canvasElement);
 };
@@ -59,6 +61,7 @@ LoremStory.args = {
     </>
   ),
 };
+LoremStory.decorators = [withEmailRenderer];
 LoremStory.play = async ({ canvasElement }) => {
   await playFindEmailStructure(canvasElement);
 };

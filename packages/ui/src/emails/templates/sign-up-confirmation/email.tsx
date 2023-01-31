@@ -3,13 +3,17 @@ import { PropsWithChildren } from 'react';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
+export function formatTitle() {
+  return `Confirmation d'inscription`;
+}
+
 export interface StandardLayoutProps {
   firstname: string;
   signInUrl: string;
 }
 
 export function SignUpConfirmationEmail(props: PropsWithChildren<StandardLayoutProps>) {
-  const title = `Confirmation d'inscription`;
+  const title = formatTitle();
 
   return (
     <StandardLayout title={title}>

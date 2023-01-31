@@ -3,6 +3,10 @@ import { PropsWithChildren } from 'react';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
+export function formatTitle() {
+  return `Nouveau message pour votre dossier`;
+}
+
 export interface StandardLayoutProps {
   firstname: string;
   lastname: string;
@@ -12,7 +16,7 @@ export interface StandardLayoutProps {
 }
 
 export function CaseMessageEmail(props: PropsWithChildren<StandardLayoutProps>) {
-  const title = `Nouveau message pour votre dossier`;
+  const title = formatTitle();
 
   return (
     <StandardLayout title={title}>
