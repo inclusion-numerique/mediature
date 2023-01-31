@@ -7,7 +7,7 @@ export interface PostgresContainer {
   url: string;
 }
 
-export async function setupProgres(): Promise<PostgresContainer> {
+export async function setupPostgres(): Promise<PostgresContainer> {
   const dummyUser = 'postgres';
   const dummyPassword = 'postgres';
   const dummyDatabase = 'postgres';

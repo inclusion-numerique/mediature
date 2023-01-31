@@ -3,14 +3,14 @@ import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';
 
 import { seedDatabase } from '@mediature/main/prisma/seed';
-import { PostgresContainer, setupProgres } from '@mediature/main/src/utils/database';
+import { PostgresContainer, setupPostgres } from '@mediature/main/src/utils/database';
 
 describe('database', () => {
   let postgres: PostgresContainer;
   let prisma: PrismaClient;
 
   beforeAll(async () => {
-    postgres = await setupProgres();
+    postgres = await setupPostgres();
 
     process.env.DATABASE_URL = postgres.url;
     prisma = new PrismaClient();
