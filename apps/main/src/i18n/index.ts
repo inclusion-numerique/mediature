@@ -67,3 +67,23 @@ i18next.use(LanguageDetector).init(
 );
 
 export const i18n = i18next;
+
+export interface UseServerTranslationOptions {
+  lng?: string;
+}
+
+export const useServerTranslation = (ns?: string, options?: UseServerTranslationOptions) => {
+  const scopedI18n = i18n.cloneInstance();
+
+  if (ns) {
+    scopedI18n.setDefaultNamespace(ns);
+  }
+
+  if (options) {
+    if (options.lng) {
+      scopedI18n.changeLanguage(options.lng);
+    }
+  }
+
+  return scopedI18n;
+};
