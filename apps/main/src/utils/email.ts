@@ -3,7 +3,7 @@ import { DockerComposeEnvironment, Wait } from 'testcontainers';
 import { StartedGenericContainer } from 'testcontainers/dist/generic-container/started-generic-container';
 
 import { EmailServerSettings } from '@mediature/main/src/emails/mailer';
-import { bindContainerLogs } from '@mediature/main/src/utils/testcontainers';
+import { bindContainerLogs, defaultEnvironment, formatContainerNameWithSuffix } from '@mediature/main/src/utils/testcontainers';
 
 export interface MailcatcherContainer {
   container: StartedGenericContainer;
@@ -24,10 +24,11 @@ export async function setupMailcatcher(): Promise<MailcatcherContainer> {
   const composeFilePath = path.resolve(__dirname, '../../../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'mailcatcher';
-  const containerName = 'mailcatcher_container';
+  const containerName = formatContainerNameWithSuffix('mailcatcher_container');
 
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
+      ...defaultEnvironment,
       EMAIL_HOST: dummyHost,
       EMAIL_HOST_USER: dummyUser,
       EMAIL_HOST_PASSWORD: dummyPassword,

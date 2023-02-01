@@ -13,3 +13,15 @@ export async function bindContainerLogs(container: StartedGenericContainer, opti
       .on('end', () => console.log('Stream closed'));
   }
 }
+
+export function getContainerNameSuffix(): string {
+  return process.env.JEST_WORKER_ID !== undefined ? 'jest' : '';
+}
+
+export const defaultEnvironment = {
+  DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX: getContainerNameSuffix(),
+};
+
+export function formatContainerNameWithSuffix(containerNameBase: string) {
+  return `${containerNameBase}_${getContainerNameSuffix()}`;
+}

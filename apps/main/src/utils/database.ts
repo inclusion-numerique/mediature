@@ -2,7 +2,7 @@ import path from 'path';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
 import { StartedGenericContainer } from 'testcontainers/dist/generic-container/started-generic-container';
 
-import { bindContainerLogs } from '@mediature/main/src/utils/testcontainers';
+import { bindContainerLogs, defaultEnvironment, formatContainerNameWithSuffix } from '@mediature/main/src/utils/testcontainers';
 
 export interface PostgresContainer {
   container: StartedGenericContainer;
@@ -22,10 +22,11 @@ export async function setupPostgres(): Promise<PostgresContainer> {
   const composeFilePath = path.resolve(__dirname, '../../../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'postgres';
-  const containerName = 'postgres_container';
+  const containerName = formatContainerNameWithSuffix('postgres_container');
 
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
+      ...defaultEnvironment,
       POSTGRES_USER: dummyUser,
       POSTGRES_PASSWORD: dummyPassword,
       POSTGRES_DB: dummyDatabase,
