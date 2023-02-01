@@ -1,5 +1,4 @@
-import { MjmlButton, MjmlDivider, MjmlRaw, MjmlStyle, MjmlText } from '@luma-team/mjml-react';
-import { PropsWithChildren } from 'react';
+import { MjmlDivider, MjmlRaw, MjmlText } from '@luma-team/mjml-react';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
@@ -7,7 +6,7 @@ export function formatTitle() {
   return `Nouveau message pour votre dossier`;
 }
 
-export interface StandardLayoutProps {
+export interface CaseMessageEmailProps {
   firstname: string;
   lastname: string;
   dossierIdentifier: string;
@@ -15,7 +14,7 @@ export interface StandardLayoutProps {
   attachments?: string[]; // TODO
 }
 
-export function CaseMessageEmail(props: PropsWithChildren<StandardLayoutProps>) {
+export function CaseMessageEmail(props: CaseMessageEmailProps) {
   const title = formatTitle();
 
   return (

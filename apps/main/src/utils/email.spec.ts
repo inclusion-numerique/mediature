@@ -1,31 +1,30 @@
 /**
  * @jest-environment node
  */
-import nodemailer, { Transporter } from 'nodemailer';
-
+import { Mailer } from '@mediature/main/src/emails/mailer';
 import { MailcatcherContainer, setupMailcatcher } from '@mediature/main/src/utils/email';
 
 describe('email', () => {
   let mailcatcher: MailcatcherContainer;
-  let transporter: Transporter;
+  let mailer: Mailer;
 
   beforeAll(async () => {
     mailcatcher = await setupMailcatcher();
 
-    transporter = nodemailer.createTransport({
-      host: mailcatcher.settings.host,
-      port: mailcatcher.settings.port,
-      auth: {
+    mailer = new Mailer({
+      defaultSender: 'Jean <noreply@derrien.fr>',
+      smtp: {
+        host: mailcatcher.settings.host,
+        port: mailcatcher.settings.port,
         user: mailcatcher.settings.user,
-        pass: mailcatcher.settings.password,
+        password: mailcatcher.settings.password,
       },
     });
   }, 30 * 1000);
 
   afterAll(async () => {
-    if (transporter) {
-      transporter.removeAllListeners();
-      transporter.close();
+    if (mailer) {
+      mailer.close();
     }
 
     if (mailcatcher) {
@@ -34,13 +33,11 @@ describe('email', () => {
   });
 
   describe('send', () => {
-    it('example', async () => {
-      const info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: 'bar@example.com, baz@example.com', // list of receivers
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-        html: '<b>Hello world?</b>', // html body
+    it('SignUpConfirmation', async () => {
+      await mailer.sendSignUpConfirmation({
+        recipient: 'albert@mail.com',
+        firstname: 'Albert',
+        signInUrl: 'http://localhost:8080/#',
       });
     });
   });

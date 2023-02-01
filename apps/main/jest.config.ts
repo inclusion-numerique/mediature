@@ -15,10 +15,12 @@ if (!fullTsconfig) {
 const customJestConfig = {
   setupFilesAfterEnv: [],
   moduleDirectories: ['node_modules', '<rootDir>/'],
-  moduleNameMapper:
-    fullTsconfig.config.compilerOptions && fullTsconfig.config.compilerOptions.paths
+  moduleNameMapper: {
+    '^.+\\.(scss)\\?raw$': require.resolve('next/dist/build/jest/__mocks__/styleMock.js'), // `createJestConfig` mocks all styles but not our specific `?raw` (note order over other mappers matters)
+    ...(fullTsconfig.config.compilerOptions && fullTsconfig.config.compilerOptions.paths
       ? pathsToModuleNameMapper(fullTsconfig.config.compilerOptions.paths, { prefix: '<rootDir>/' })
-      : undefined,
+      : {}),
+  },
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transform: {

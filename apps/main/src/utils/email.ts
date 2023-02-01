@@ -2,14 +2,8 @@ import path from 'path';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
 import { StartedGenericContainer } from 'testcontainers/dist/generic-container/started-generic-container';
 
+import { EmailServerSettings } from '@mediature/main/src/emails/mailer';
 import { bindContainerLogs } from '@mediature/main/src/utils/testcontainers';
-
-export interface EmailServerSettings {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-}
 
 export interface MailcatcherContainer {
   container: StartedGenericContainer;

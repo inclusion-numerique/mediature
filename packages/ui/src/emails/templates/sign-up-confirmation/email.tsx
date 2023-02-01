@@ -1,5 +1,4 @@
 import { MjmlButton, MjmlText } from '@luma-team/mjml-react';
-import { PropsWithChildren } from 'react';
 
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
@@ -7,12 +6,12 @@ export function formatTitle() {
   return `Confirmation d'inscription`;
 }
 
-export interface StandardLayoutProps {
+export interface SignUpConfirmationEmailProps {
   firstname: string;
   signInUrl: string;
 }
 
-export function SignUpConfirmationEmail(props: PropsWithChildren<StandardLayoutProps>) {
+export function SignUpConfirmationEmail(props: SignUpConfirmationEmailProps) {
   const title = formatTitle();
 
   return (
