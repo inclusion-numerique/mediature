@@ -3,23 +3,21 @@ import { Meta, StoryFn } from '@storybook/react';
 import { withEmailClientOverviewFactory, withEmailRenderer } from '@mediature/docs/.storybook/email';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
-import sampleAllElement from '@mediature/ui/src/Editor/sample-all-elements.lexical';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
-import { CaseMessageEmail, formatTitle } from '@mediature/ui/src/emails/templates/case-message/email';
-import { inlineEditorStateToHtml } from '@mediature/ui/src/utils/lexical';
+import { WelcomeAuthorityAgentEmail, formatTitle } from '@mediature/ui/src/emails/templates/welcome-authority-agent/email';
 
-type ComponentType = typeof CaseMessageEmail;
+type ComponentType = typeof WelcomeAuthorityAgentEmail;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
-  title: 'Emails/Templates/CaseMessage',
-  component: CaseMessageEmail,
+  title: 'Emails/Templates/WelcomeAuthorityAgent',
+  component: WelcomeAuthorityAgentEmail,
   ...generateMetaDefault({
     parameters: {
       ...commonEmailsParameters,
       docs: {
         description: {
-          component: 'Email sent when an agent send a message.',
+          component: 'Email sent when a user is being promoted the access to an authority.',
         },
       },
     },
@@ -27,23 +25,16 @@ export default {
 } as Meta<ComponentType>;
 
 const Template: StoryFn<ComponentType> = (args) => {
-  return <CaseMessageEmail {...args} />;
+  return <WelcomeAuthorityAgentEmail {...args} />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
   firstname: 'Thomas',
-  lastname: 'Derrien',
-  dossierIdentifier: '286',
-  htmlMessageContent: inlineEditorStateToHtml(sampleAllElement),
-  attachments: ['example.jpg', 'example2.pdf'],
-};
-NormalStory.parameters = {
-  a11y: {
-    // TODO: once solution found, adjust to exclude the email lexical content at the general level
-    // Ref: https://github.com/storybookjs/storybook/issues/20813
-    disable: true,
-  },
+  originatorFirstname: 'Jean',
+  originatorLastname: 'Derrien',
+  authorityName: 'Bretagne',
+  authorityDashboardUrl: '',
 };
 NormalStory.decorators = [withEmailRenderer];
 NormalStory.play = async ({ canvasElement }) => {

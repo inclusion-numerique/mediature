@@ -1,5 +1,6 @@
 import { MjmlDivider, MjmlRaw, MjmlText } from '@luma-team/mjml-react';
 
+import { useServerTranslation } from '@mediature/main/src/i18n';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
 export function formatTitle() {
@@ -15,6 +16,7 @@ export interface CaseMessageEmailProps {
 }
 
 export function CaseMessageEmail(props: CaseMessageEmailProps) {
+  const { t } = useServerTranslation('common');
   const title = formatTitle();
 
   return (
@@ -25,7 +27,13 @@ export function CaseMessageEmail(props: CaseMessageEmailProps) {
           Bonjour {props.firstname} {props.lastname},
         </p>
         <p>Votre médiateur vient d&apos;apporter une nouvelle réponse à votre dossier n°{props.dossierIdentifier}.</p>
-        {!!props.attachments?.length && <p>Vous trouverez ci-joint à cet email {props.attachments.length} document(s).</p>}
+        {!!props.attachments?.length && (
+          <p
+            dangerouslySetInnerHTML={{
+              __html: t('email.template.CaseMessageEmail.attachmentsInThisEmail', { count: props.attachments.length }),
+            }}
+          />
+        )}
       </MjmlText>
       <MjmlDivider />
       <MjmlText>

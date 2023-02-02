@@ -3,6 +3,7 @@ import { addMinutes } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { mailer } from '@mediature/main/src/emails/mailer';
 import { ChangePasswordSchema, RequestNewPasswordSchema, ResetPasswordSchema, SignUpSchema } from '@mediature/main/src/models/actions/auth';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserStatusSchema, VerificationTokenActionSchema } from '@mediature/main/src/models/entities/user';
@@ -133,7 +134,11 @@ export const authRouter = router({
       },
     });
 
-    // TODO: send email for confirmation
+    mailer.sendSignUpConfirmation({
+      recipient: createdUser.email,
+      firstname: createdUser.firstname,
+      signInUrl: 'https://todo.com/auth/sign-in',
+    });
 
     // TODO: exclude hashed password
     return { createdUser };

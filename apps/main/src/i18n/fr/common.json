@@ -7,6 +7,21 @@
     "relative": "{{ date, relative }}",
     "short": "{{ date, short }}"
   },
+  "email": {
+    "template": {
+      "AgentActivitySumUpEmail": {
+        "cases_html": "Il y a actuellement <span style='font-weight:bold;'>11 dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
+        "casesNotAssigned_one": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
+        "casesNotAssigned_other": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossiers</span> ne sont pas encore assignés à un médiateur de la collectivité.",
+        "followingCasesHaveReminder_one": "Le dossier suivant a bientôt un rappel :",
+        "followingCasesHaveReminder_other": "Les dossiers suivants ont bientôt un rappel :"
+      },
+      "CaseMessageEmail": {
+        "attachmentsInThisEmail_one": "Vous trouverez ci-joint à cet email {{count}} document.",
+        "attachmentsInThisEmail_other": "Vous trouverez ci-joint à cet email {{count}} documents."
+      }
+    }
+  },
   "model": {
     "authority": {
       "type": {
