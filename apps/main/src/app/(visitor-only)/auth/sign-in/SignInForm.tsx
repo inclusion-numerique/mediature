@@ -25,6 +25,7 @@ import { useForm } from 'react-hook-form';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/src/models/actions/auth';
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 function errorCodeToError(errorCode: string): string {
   let error: string;
@@ -149,7 +150,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
       </Grid>
       <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
-          <Link component={NextLink} href="/auth/password/retrieve" variant="subtitle2" underline="none">
+          <Link component={NextLink} href={linkRegistry.get('forgottenPassword', undefined)} variant="subtitle2" underline="none">
             Mot de passe oublié ?
           </Link>
         </Typography>

@@ -6,6 +6,7 @@ import { PropsWithChildren } from 'react';
 
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
@@ -25,7 +26,7 @@ export function PublicLayout(props: PropsWithChildren) {
       {
         iconId: 'fr-icon-lock-line',
         linkProps: {
-          href: '/auth/sign-in',
+          href: linkRegistry.get('signIn', undefined),
         },
         text: 'Se connecter',
       },

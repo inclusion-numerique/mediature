@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -52,7 +53,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
           <Grid item xs={12} md={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
             <Button
               component={NextLink}
-              href={`/dashboard/authority/${authorityId}/agent/add`}
+              href={linkRegistry.get('addAgentToAuthority', { authorityId: authorityId })}
               size="large"
               variant="contained"
               startIcon={<AddCircleOutlineIcon />}

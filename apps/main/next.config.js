@@ -1,7 +1,18 @@
+const path = require('path');
+const tsImport = require('ts-import');
+
+const { generateRewrites, localizedRoutes } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/routes/list.ts`), {
+  mode: tsImport.LoadMode.Compile,
+  compilerOptions: {
+    paths: {
+      // Paths are not working, we modified inside files to use relative ones where needed
+      '@mediature/main/*': ['../../apps/main/*'],
+    },
+  },
+});
+
 const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
-const path = require('path');
-
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
 const { convertHeadersForNextjs, securityHeaders } = require('./src/utils/http.js');
 const { i18n } = require('./next-i18next.config');
@@ -37,6 +48,7 @@ const moduleExports = async () => {
     },
     async rewrites() {
       return [
+        ...generateRewrites('en', localizedRoutes),
         {
           source: '/.well-known/security.txt',
           destination: '/api/security',

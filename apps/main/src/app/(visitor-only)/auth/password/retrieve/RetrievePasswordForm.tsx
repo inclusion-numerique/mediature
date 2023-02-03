@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { RequestNewPasswordPrefillSchemaType, RequestNewPasswordSchema, RequestNewPasswordSchemaType } from '@mediature/main/src/models/actions/auth';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPasswordPrefillSchemaType }) {
   const requestNewPassword = trpc.requestNewPassword.useMutation();
@@ -41,7 +42,7 @@ export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPassword
       </Grid>
       <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
-          <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
+          <Link component={NextLink} href={linkRegistry.get('signIn', undefined)} variant="subtitle2" underline="none">
             Retourner à la page de connexion
           </Link>
         </Typography>

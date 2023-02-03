@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { SignUpPrefillSchemaType, SignUpSchema, SignUpSchemaType } from '@mediature/main/src/models/actions/auth';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   const signUp = trpc.signUp.useMutation();
@@ -94,7 +95,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
             label={
               <span>
                 J&apos;accepte les&nbsp;
-                <Link href="/terms-of-use" variant="subtitle2" underline="none">
+                <Link href={linkRegistry.get('termsOfUse', undefined)} variant="subtitle2" underline="none">
                   conditions générales d&apos;utilisation
                 </Link>
               </span>
@@ -112,7 +113,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
       <Grid item xs={12}>
         <Typography color="textSecondary" variant="body2">
           Vous possédez déjà un compte ?&nbsp;
-          <Link component={NextLink} href="/auth/sign-in" variant="subtitle2" underline="none">
+          <Link component={NextLink} href={linkRegistry.get('signIn', undefined)} variant="subtitle2" underline="none">
             Se connecter
           </Link>
         </Typography>

@@ -10,6 +10,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -64,7 +65,13 @@ export function AuthorityListPage() {
             </Typography>
           </Grid>
           <Grid item xs={12} md={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
-            <Button component={NextLink} href="/dashboard/authority/create" size="large" variant="contained" startIcon={<AddCircleOutlineIcon />}>
+            <Button
+              component={NextLink}
+              href={linkRegistry.get('authorityCreation', undefined)}
+              size="large"
+              variant="contained"
+              startIcon={<AddCircleOutlineIcon />}
+            >
               Ajouter une collectivité
             </Button>
           </Grid>

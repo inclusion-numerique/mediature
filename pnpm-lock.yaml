@@ -286,12 +286,14 @@ importers:
       superjson: ^1.12.0
       swiper: ^8.4.6
       testcontainers: ^9.0.0
+      ts-import: 4.0.0-beta.10
       ts-jest: ^29.0.3
       ts-node: ^10.9.1
       tsconfig: workspace:*
       tsconfig-paths-webpack-plugin: ^4.0.0
       tss-react: ^4.4.5
       tsx: ^3.12.1
+      type-route: ^1.0.1
       typescript: ^4.5.3
       uuid: ^9.0.0
       yaml-loader: ^0.8.0
@@ -340,7 +342,9 @@ importers:
       rrweb: 1.1.3
       superjson: 1.12.0
       swiper: 8.4.6
+      ts-import: 4.0.0-beta.10_typescript@4.9.3
       tss-react: 4.4.5_7gkcoq2nf4xufkduddb7kah6jm
+      type-route: 1.0.1
       uuid: 9.0.0
       zod: 3.19.1
     devDependencies:
@@ -6864,8 +6868,8 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
 
-  /@storybook/client-logger/7.0.0-beta.38:
-    resolution: {integrity: sha512-B2Q+rmZj+QbPFWpHwqI4Llf842jiZe2JuTNd8zaeuTYf4WS/gWKicOL6VtDxUF3mfCftrQT9gNEdjBwwca1HsQ==}
+  /@storybook/client-logger/7.0.0-beta.41:
+    resolution: {integrity: sha512-0ZvWt7t4NoPJBS3joMnrWeXiPGLZ4eqJFNLoujTLmJJzQbuJ6JY+Bt5WTCuSS/eD1Uqil9euf4vE8tSqkOesPg==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -7734,7 +7738,7 @@ packages:
   /@storybook/testing-library/0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.38
+      '@storybook/client-logger': 7.0.0-beta.41
       '@storybook/instrumenter': 7.0.0-beta.19
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei
@@ -10685,6 +10689,11 @@ packages:
     resolution: {integrity: sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==}
     engines: {node: ^12.20.0 || >=14}
     dev: true
+
+  /comment-parser/1.3.1:
+    resolution: {integrity: sha512-B52sN2VNghyq5ofvUsqZjmk6YkihBX5vMSChmSK9v4ShjKf3Vk5Xcmgpw4o+iIgtrnM/u5FiMpz9VKb8lpBveA==}
+    engines: {node: '>= 12.0.0'}
+    dev: false
 
   /common-path-prefix/3.0.0:
     resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
@@ -14197,6 +14206,12 @@ packages:
     deprecated: Support has ended for 9.x series. Upgrade to @latest
     requiresBuild: true
     dev: true
+
+  /history/5.3.0:
+    resolution: {integrity: sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==}
+    dependencies:
+      '@babel/runtime': 7.20.6
+    dev: false
 
   /hmac-drbg/1.0.1:
     resolution: {integrity: sha512-Tti3gMqLdZfhOQY1Mzf/AanLiqh1WTiJgEj26ZuYQ9fbkLomzGchCws4FyrSd4VkpBfiNhaE1On+lOz894jvXg==}
@@ -18788,6 +18803,10 @@ packages:
       type-check: 0.4.0
       word-wrap: 1.2.3
 
+  /options-defaults/2.0.40:
+    resolution: {integrity: sha512-a0oW0AMaP/Uqk1gU7s3unE83wzs/MACy3wsCnNREn4wqp4KCcxRdulRjf0d2FeIxENbGJ4EBGtHTQ6J30XB6Cw==}
+    dev: false
+
   /ora/5.4.1:
     resolution: {integrity: sha512-5b6Y85tPxZZ7QytO+BQzysW31HJku27cRIlkbAXaNx+BdcVi+LlRFmVXzeF6a7JCwJpyw5c4b+YSVImQIrBpuQ==}
     engines: {node: '>=10'}
@@ -22540,6 +22559,18 @@ packages:
     resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
     engines: {node: '>=6.10'}
 
+  /ts-import/4.0.0-beta.10_typescript@4.9.3:
+    resolution: {integrity: sha512-9AbXC09MF6rOxy4zMo75iu0daETf4DPqEDt8UU/S6HU2yXWcf4xQqAexJCOcGZzGwtViuRdB6p48YhdPLttQJw==}
+    engines: {node: '>=14.14.0'}
+    peerDependencies:
+      typescript: '4'
+    dependencies:
+      comment-parser: 1.3.1
+      options-defaults: 2.0.40
+      tslib: 2.4.1
+      typescript: 4.9.3
+    dev: false
+
   /ts-interface-checker/0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: false
@@ -22879,6 +22910,12 @@ packages:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
+
+  /type-route/1.0.1:
+    resolution: {integrity: sha512-8mVNfsQeMxlG2BoSU//VrDjNo74NeKAEI9p/7BH6H1VMYFJF8MgM+Q1eeTu1UsjZtr7jGA1whHVUe82fJb0V8w==}
+    dependencies:
+      history: 5.3.0
+    dev: false
 
   /typed-styles/0.0.7:
     resolution: {integrity: sha512-pzP0PWoZUhsECYjABgCGQlRGL1n7tOHsgwYv3oIiEpJwGhFTuty/YNeduxQYzXXa3Ge5BdT6sHYIQYpl4uJ+5Q==}
