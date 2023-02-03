@@ -4,10 +4,85 @@ import nodemailer, { Transporter } from 'nodemailer';
 import type { Options as MailOptions } from 'nodemailer/lib/mailer/index';
 
 import {
+  AdminRoleGrantedEmail,
+  formatTitle as AdminRoleGrantedEmailFormatTitle,
+  AdminRoleGrantedEmailProps,
+} from '@mediature/ui/src/emails/templates/admin-role-granted/email';
+import {
+  AdminRoleRevokedEmail,
+  formatTitle as AdminRoleRevokedEmailFormatTitle,
+  AdminRoleRevokedEmailProps,
+} from '@mediature/ui/src/emails/templates/admin-role-revoked/email';
+import {
+  AgentActivitySumUpEmail,
+  formatTitle as AgentActivitySumUpEmailFormatTitle,
+  AgentActivitySumUpEmailProps,
+} from '@mediature/ui/src/emails/templates/agent-activity-sum-up/email';
+import {
+  AuthorityAgentRemovedEmail,
+  formatTitle as AuthorityAgentRemovedEmailFormatTitle,
+  AuthorityAgentRemovedEmailProps,
+} from '@mediature/ui/src/emails/templates/authority-agent-removed/email';
+import {
+  CaseAssignedBySomeoneEmail,
+  formatTitle as CaseAssignedBySomeoneEmailFormatTitle,
+  CaseAssignedBySomeoneEmailProps,
+} from '@mediature/ui/src/emails/templates/case-assigned-by-someone/email';
+import {
+  CaseClosedEmail,
+  formatTitle as CaseClosedEmailFormatTitle,
+  CaseClosedEmailProps,
+} from '@mediature/ui/src/emails/templates/case-closed/email';
+import {
+  CaseMessageEmail,
+  formatTitle as CaseMessageEmailFormatTitle,
+  CaseMessageEmailProps,
+} from '@mediature/ui/src/emails/templates/case-message/email';
+import {
+  CaseRequestConfirmationEmail,
+  formatTitle as CaseRequestConfirmationEmailFormatTitle,
+  CaseRequestConfirmationEmailProps,
+} from '@mediature/ui/src/emails/templates/case-request-confirmation/email';
+import {
+  NewPasswordRequestEmail,
+  formatTitle as NewPasswordRequestEmailFormatTitle,
+  NewPasswordRequestEmailProps,
+} from '@mediature/ui/src/emails/templates/new-password-request/email';
+import {
+  PasswordChangedEmail,
+  formatTitle as PasswordChangedEmailFormatTitle,
+  PasswordChangedEmailProps,
+} from '@mediature/ui/src/emails/templates/password-changed/email';
+import {
+  PasswordResetEmail,
+  formatTitle as PasswordResetEmailFormatTitle,
+  PasswordResetEmailProps,
+} from '@mediature/ui/src/emails/templates/password-reset/email';
+import {
   SignUpConfirmationEmail,
   formatTitle as SignUpConfirmationEmailFormatTitle,
   SignUpConfirmationEmailProps,
 } from '@mediature/ui/src/emails/templates/sign-up-confirmation/email';
+import {
+  SignUpInvitationAsAdminEmail,
+  formatTitle as SignUpInvitationAsAdminEmailFormatTitle,
+  SignUpInvitationAsAdminEmailProps,
+} from '@mediature/ui/src/emails/templates/sign-up-invitation-as-admin/email';
+import {
+  SignUpInvitationAsAgentEmail,
+  formatTitle as SignUpInvitationAsAgentEmailFormatTitle,
+  SignUpInvitationAsAgentEmailProps,
+} from '@mediature/ui/src/emails/templates/sign-up-invitation-as-agent/email';
+import {
+  UserDeletedEmail,
+  formatTitle as UserDeletedEmailFormatTitle,
+  UserDeletedEmailProps,
+} from '@mediature/ui/src/emails/templates/user-deleted/email';
+import {
+  WelcomeAuthorityAgentEmail,
+  formatTitle as WelcomeAuthorityAgentEmailFormatTitle,
+  WelcomeAuthorityAgentEmailProps,
+} from '@mediature/ui/src/emails/templates/welcome-authority-agent/email';
 import { convertHtmlEmailToText } from '@mediature/ui/src/utils/email';
 
 export interface EmailServerSettings {
@@ -110,6 +185,126 @@ export class Mailer {
       recipients: [parameters.recipient],
       subject: SignUpConfirmationEmailFormatTitle(),
       emailComponent: SignUpConfirmationEmail(parameters),
+    });
+  }
+
+  public async sendAdminRoleGranted(parameters: AdminRoleGrantedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: AdminRoleGrantedEmailFormatTitle(),
+      emailComponent: AdminRoleGrantedEmail(parameters),
+    });
+  }
+
+  public async sendAdminRoleRevoked(parameters: AdminRoleRevokedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: AdminRoleRevokedEmailFormatTitle(),
+      emailComponent: AdminRoleRevokedEmail(parameters),
+    });
+  }
+
+  public async sendAgentActivitySumUp(parameters: AgentActivitySumUpEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: AgentActivitySumUpEmailFormatTitle(),
+      emailComponent: AgentActivitySumUpEmail(parameters),
+    });
+  }
+
+  public async sendAuthorityAgentRemoved(parameters: AuthorityAgentRemovedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: AuthorityAgentRemovedEmailFormatTitle(),
+      emailComponent: AuthorityAgentRemovedEmail(parameters),
+    });
+  }
+
+  public async sendCaseAssignedBySomeone(parameters: CaseAssignedBySomeoneEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: CaseAssignedBySomeoneEmailFormatTitle(),
+      emailComponent: CaseAssignedBySomeoneEmail(parameters),
+    });
+  }
+
+  public async sendCaseClosed(parameters: CaseClosedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: CaseClosedEmailFormatTitle(),
+      emailComponent: CaseClosedEmail(parameters),
+    });
+  }
+
+  public async sendCaseMessage(parameters: CaseMessageEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: CaseMessageEmailFormatTitle(),
+      emailComponent: CaseMessageEmail(parameters),
+    });
+  }
+
+  public async sendCaseRequestConfirmation(parameters: CaseRequestConfirmationEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: CaseRequestConfirmationEmailFormatTitle(),
+      emailComponent: CaseRequestConfirmationEmail(parameters),
+    });
+  }
+
+  public async sendNewPasswordRequest(parameters: NewPasswordRequestEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: NewPasswordRequestEmailFormatTitle(),
+      emailComponent: NewPasswordRequestEmail(parameters),
+    });
+  }
+
+  public async sendPasswordChanged(parameters: PasswordChangedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: PasswordChangedEmailFormatTitle(),
+      emailComponent: PasswordChangedEmail(parameters),
+    });
+  }
+
+  public async sendPasswordReset(parameters: PasswordResetEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: PasswordResetEmailFormatTitle(),
+      emailComponent: PasswordResetEmail(parameters),
+    });
+  }
+
+  public async sendSignUpInvitationAsAdmin(parameters: SignUpInvitationAsAdminEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: SignUpInvitationAsAdminEmailFormatTitle(),
+      emailComponent: SignUpInvitationAsAdminEmail(parameters),
+    });
+  }
+
+  public async sendSignUpInvitationAsAgent(parameters: SignUpInvitationAsAgentEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: SignUpInvitationAsAgentEmailFormatTitle(),
+      emailComponent: SignUpInvitationAsAgentEmail(parameters),
+    });
+  }
+
+  public async sendUserDeleted(parameters: UserDeletedEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: UserDeletedEmailFormatTitle(),
+      emailComponent: UserDeletedEmail(parameters),
+    });
+  }
+
+  public async sendWelcomeAuthorityAgent(parameters: WelcomeAuthorityAgentEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: WelcomeAuthorityAgentEmailFormatTitle(),
+      emailComponent: WelcomeAuthorityAgentEmail(parameters),
     });
   }
 }
