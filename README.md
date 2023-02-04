@@ -4,7 +4,7 @@
 
 ### AlwaysData
 
-This helps for DNS delegation (to configure domains, emails...).
+This helps for DNS delegation (to configure domains, emails...). Configuration steps will be specified below for each service that needs specific DNS records.
 
 ### GitHub
 
@@ -68,6 +68,14 @@ You can create this token at https://${SENTRY_URL}/settings/account/api/auth-tok
 
 We enabled the Postgres addon and the "review apps" feature.
 
+#### Domains
+
+For each environment you need to configure the domain DNS records to target the Scalingo instance when accessing the domain. It should look like:
+
+- Type: `CNAME`
+- Hostname: `www`
+- Value: `xxxxxxxxxx.scalingo.io` _(depending on the environment)_
+
 #### Postgres
 
 ##### Extensions
@@ -96,6 +104,15 @@ For each build and runtime (since they are shared), you should have set some env
 - `NEXT_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note that if this secret is lost, all users will have to log in again)_
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
+- `MAILER_DEFAULT_DOMAIN`: [TO_DEFINE] _(format `xxx.yyy.zzz` depending on the environment application URL)_
+- `MAILER_SMTP_HOST`: [SECRET]
+- `MAILER_SMTP_PORT`: [SECRET]
+- `MAILER_SMTP_USER`: [SECRET]
+- `MAILER_SMTP_PASSWORD`: [SECRET]
+- `MAILER_FALLBACK_SMTP_HOST`: [SECRET]
+- `MAILER_FALLBACK_SMTP_PORT`: [SECRET]
+- `MAILER_FALLBACK_SMTP_USER`: [SECRET]
+- `MAILER_FALLBACK_SMTP_PASSWORD`: [SECRET]
 
 #### Review apps
 
@@ -116,6 +133,19 @@ scalingo -a ${SCALINGO_APP_NAME} logs --addon ${SCALING_ADDON_ID}
 scalingo -a ${SCALINGO_APP_NAME} run bash
 scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 ```
+
+### Emails
+
+We use 2 providers to send emails:
+
+- the main one (Mailjet)
+- the fallback one (SendInBlue) in case the main one is not reachable it keeps our delivary reactive
+
+Sending verified emails must be taken seriously so they don't end into the spam inbox. Keeping a good reputation by sending necessary content so users don't flag you as spam.
+
+Also you need to configure your DNS records to handle from both providers on the 2 environments (development and production): DMARC/DKIM/SPF. It's well explained when adding sending domains on their interface. It will make your emails signed according to your domain.
+
+When creating SMTP credentials make sure sure to use different ones between the development and the production environment.
 
 ### IDE
 
