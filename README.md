@@ -105,6 +105,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
 - `MAILER_DEFAULT_DOMAIN`: [TO_DEFINE] _(format `xxx.yyy.zzz` depending on the environment application URL)_
+- `MAILER_DOMAINS_TO_CATCH`: `domain.demo` _(this should only be set in the development environment)_
 - `MAILER_SMTP_HOST`: [SECRET]
 - `MAILER_SMTP_PORT`: [SECRET]
 - `MAILER_SMTP_USER`: [SECRET]

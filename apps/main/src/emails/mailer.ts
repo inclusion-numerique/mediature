@@ -96,6 +96,7 @@ export interface MailerOptions {
   defaultSender: string;
   smtp: EmailServerSettings;
   fallbackSmtp?: EmailServerSettings;
+  domainsToCatch?: string[]; // Useful in development environment to avoid sending emails to demo accounts (to not stain domain reputation)
 }
 
 export interface SendOptions {
@@ -110,9 +111,11 @@ export class Mailer {
   protected transporter: Transporter;
   protected fallbackTransporter: Transporter | null = null;
   protected defaultSender: string;
+  protected domainsToCatch?: string[];
 
   constructor(options: MailerOptions) {
     this.defaultSender = options.defaultSender;
+    this.domainsToCatch = options.domainsToCatch;
 
     this.transporter = nodemailer.createTransport({
       host: options.smtp.host,
@@ -146,6 +149,25 @@ export class Mailer {
   }
 
   protected async send(options: SendOptions) {
+    // Check if sending the email should be skipped or not
+    if (this.domainsToCatch && this.domainsToCatch.length) {
+      options.recipients = options.recipients.filter((recipient) => {
+        const recipientDomain = recipient.split('@').pop();
+
+        if (!recipientDomain || (this.domainsToCatch as string[]).includes(recipientDomain)) {
+          console.log(`sending an email to ${recipient} is skipped due to his email domain being voluntarily catched`);
+
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    if (options.recipients.length === 0) {
+      return;
+    }
+
     const mjmlHtmlContent = renderToMjml(options.emailComponent);
     const transformResult = mjml2html(mjmlHtmlContent);
 
@@ -328,4 +350,6 @@ export const mailer = new Mailer({
         password: process.env.MAILER_FALLBACK_SMTP_PASSWORD || '',
       }
     : undefined,
+  domainsToCatch:
+    !!process.env.MAILER_DOMAINS_TO_CATCH && process.env.MAILER_DOMAINS_TO_CATCH !== '' ? process.env.MAILER_DOMAINS_TO_CATCH.split(',') : undefined,
 });

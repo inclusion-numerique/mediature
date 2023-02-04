@@ -33,7 +33,7 @@ export async function seedDatabase(prismaClient: PrismaClient) {
       id: testUserId,
       firstname: 'John',
       lastname: 'Doe',
-      email: 'john@doe.com',
+      email: 'john@domain.demo',
       passwordHash: '$2a$11$L2SjShQuoJoYqMPmoINuWeRLRWnzNuQf22.VgculPIlpnS8bleLEG', // Value: "test"
       status: 'CONFIRMED',
       profilePicture: null,

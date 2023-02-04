@@ -41,4 +41,26 @@ describe('email', () => {
       });
     });
   });
+
+  describe('catcher', () => {
+    it('should catch an email', async () => {
+      // Since skipped no matter the settings it should not throw an error
+      mailer = new Mailer({
+        defaultSender: 'Jean <noreply@derrien.fr>',
+        smtp: {
+          host: '',
+          port: 10000,
+          user: '',
+          password: '',
+        },
+        domainsToCatch: ['domain.demo'],
+      });
+
+      await mailer.sendSignUpConfirmation({
+        recipient: 'alice@domain.demo',
+        firstname: 'Albert',
+        signInUrl: 'http://localhost:8080/#',
+      });
+    });
+  });
 });
