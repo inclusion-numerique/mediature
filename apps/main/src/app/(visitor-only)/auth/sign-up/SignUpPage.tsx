@@ -43,7 +43,7 @@ export function SignUpPage() {
           </Typography>
           <ContextualSignUpForm
             prefill={SignUpPrefillSchema.parse({
-              invitationToken: 'abc',
+              invitationToken: invitationToken,
             })}
           />
         </Grid>
