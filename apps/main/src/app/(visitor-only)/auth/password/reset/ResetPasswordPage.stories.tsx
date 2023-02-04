@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
+import { playFindAlert, playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
 import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
 import { Empty as ResetPasswordFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordForm.stories';
 import { ResetPasswordPage, ResetPasswordPageContext } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordPage';
@@ -17,12 +17,23 @@ export default {
   }),
 } as Meta<ComponentType>;
 
+const tokenProvidedParameters = {
+  nextjs: {
+    navigation: {
+      query: {
+        token: 'abc',
+      },
+    },
+  },
+};
+
 const Template: StoryFn<ComponentType> = (args) => {
   return <ResetPasswordPage />;
 };
 
 const NormalStory = Template.bind({});
 NormalStory.args = {};
+NormalStory.parameters = { ...tokenProvidedParameters };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
@@ -36,10 +47,27 @@ export const Normal = prepareStory(NormalStory, {
   },
 });
 
+const MissingInvitationTokenStory = Template.bind({});
+MissingInvitationTokenStory.args = {};
+MissingInvitationTokenStory.parameters = {};
+MissingInvitationTokenStory.play = async ({ canvasElement }) => {
+  await playFindAlert(canvasElement);
+};
+
+export const MissingInvitationToken = prepareStory(MissingInvitationTokenStory, {
+  childrenContext: {
+    context: ResetPasswordPageContext,
+    value: {
+      ContextualResetPasswordForm: ResetPasswordFormEmptyStory,
+    },
+  },
+});
+
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {};
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
+  ...tokenProvidedParameters,
 };
 WithLayoutStory.play = async ({ canvasElement }) => {
   await playFindFormInMain(canvasElement);

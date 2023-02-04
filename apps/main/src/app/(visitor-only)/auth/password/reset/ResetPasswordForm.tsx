@@ -30,8 +30,6 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
     // TODO: success message? And/or redirect?
   };
 
-  // TODO: add condition if no token
-
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
