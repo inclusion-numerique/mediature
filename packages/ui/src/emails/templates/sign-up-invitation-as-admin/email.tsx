@@ -7,8 +7,8 @@ export function formatTitle() {
 }
 
 export interface SignUpInvitationAsAdminEmailProps {
-  firstname: string;
-  lastname: string;
+  firstname?: string;
+  lastname?: string;
   originatorFirstname: string;
   originatorLastname: string;
   signUpUrlWithToken: string;
@@ -32,9 +32,13 @@ export function SignUpInvitationAsAdminEmail(props: SignUpInvitationAsAdminEmail
     <StandardLayout title={title}>
       <MjmlText>
         <h1>{title}</h1>
-        <p>
-          Bonjour {props.firstname} {props.lastname},
-        </p>
+        {!!props.firstname && !!props.lastname ? (
+          <p>
+            Bonjour {props.firstname} {props.lastname},
+          </p>
+        ) : (
+          <p>Bonjour,</p>
+        )}
         <p>
           {props.originatorFirstname} {props.originatorLastname} vous invite sur la plateforme Médiature pour y devenir administrateur.
         </p>

@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { mailer } from '@mediature/main/src/emails/mailer';
 import {
   DeleteUserSchema,
   GrantAdminSchema,
@@ -11,6 +12,7 @@ import {
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export const adminRouter = router({
   grantAdmin: privateProcedure.input(GrantAdminSchema).mutation(async ({ ctx, input }) => {
@@ -26,26 +28,56 @@ export const adminRouter = router({
       },
     });
 
-    if (!existingAdmin) {
-      await prisma.user.update({
-        where: {
-          id: input.userId,
-        },
-        data: {
-          Admin: {
-            create: {
-              canEverything: true,
-            },
-          },
-        },
-      });
-
+    if (existingAdmin) {
       return;
     }
+
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
+    const grantedUser = await prisma.user.update({
+      where: {
+        id: input.userId,
+      },
+      data: {
+        Admin: {
+          create: {
+            canEverything: true,
+          },
+        },
+      },
+    });
+
+    await mailer.sendAdminRoleGranted({
+      recipient: grantedUser.email,
+      firstname: grantedUser.firstname,
+      originatorFirstname: originatorUser.firstname,
+      originatorLastname: originatorUser.lastname,
+      adminDashboardUrl: linkRegistry.get('dashboard', undefined, { absolute: true }),
+    });
   }),
   revokeAdmin: privateProcedure.input(RevokeAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
+    const revokedUser = await prisma.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
+    if (!revokedUser) {
+      throw new Error(`l'utilisateur que vous avez renseigné n'existe pas`);
     }
 
     await prisma.admin.deleteMany({
@@ -56,7 +88,12 @@ export const adminRouter = router({
       },
     });
 
-    return;
+    await mailer.sendAdminRoleRevoked({
+      recipient: revokedUser.email,
+      firstname: revokedUser.firstname,
+      originatorFirstname: originatorUser.firstname,
+      originatorLastname: originatorUser.lastname,
+    });
   }),
   inviteAdmin: privateProcedure.input(InviteAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
@@ -86,7 +123,13 @@ export const adminRouter = router({
       throw new Error(`une invitation pour devenir administrateur a déjà été envoyée à cette personne`);
     }
 
-    await prisma.invitation.create({
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
+    const invitation = await prisma.invitation.create({
       data: {
         issuer: {
           connect: {
@@ -106,9 +149,14 @@ export const adminRouter = router({
       },
     });
 
-    // TODO: send invitation email
-
-    return;
+    await mailer.sendSignUpInvitationAsAdmin({
+      recipient: invitation.inviteeEmail,
+      firstname: invitation.inviteeFirstname || undefined,
+      lastname: invitation.inviteeLastname || undefined,
+      originatorFirstname: originatorUser.firstname,
+      originatorLastname: originatorUser.lastname,
+      signUpUrlWithToken: linkRegistry.get('signUp', { token: invitation.token }, { absolute: true }),
+    });
   }),
   deleteUser: privateProcedure.input(DeleteUserSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
@@ -129,10 +177,15 @@ export const adminRouter = router({
       throw new Error(`vous ne pouvez pas supprimer une collectivité qui contient des agents`);
     }
 
-    await prisma.user.delete({
+    const deletedUser = await prisma.user.delete({
       where: {
         id: input.userId,
       },
+    });
+
+    await mailer.sendUserDeleted({
+      recipient: deletedUser.email,
+      firstname: deletedUser.firstname,
     });
 
     return;

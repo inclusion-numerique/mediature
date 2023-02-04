@@ -8,8 +8,8 @@ export function formatTitle() {
 }
 
 export interface SignUpInvitationAsAgentEmailProps {
-  firstname: string;
-  lastname: string;
+  firstname?: string;
+  lastname?: string;
   originatorFirstname: string;
   originatorLastname: string;
   authorityName: string;
@@ -23,9 +23,13 @@ export function SignUpInvitationAsAgentEmail(props: SignUpInvitationAsAgentEmail
     <StandardLayout title={title}>
       <MjmlText>
         <h1>{title}</h1>
-        <p>
-          Bonjour {props.firstname} {props.lastname},
-        </p>
+        {!!props.firstname && !!props.lastname ? (
+          <p>
+            Bonjour {props.firstname} {props.lastname},
+          </p>
+        ) : (
+          <p>Bonjour,</p>
+        )}
         <p>
           {props.originatorFirstname} {props.originatorLastname} vous invite sur la plateforme Médiature pour y devenir médiateur de la collectivité{' '}
           {props.authorityName}.

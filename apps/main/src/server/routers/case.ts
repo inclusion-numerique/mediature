@@ -1,6 +1,7 @@
 import { Note } from '@prisma/client';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { mailer } from '@mediature/main/src/emails/mailer';
 import {
   AddAttachmentToCaseSchema,
   AddNoteToCaseSchema,
@@ -21,6 +22,7 @@ import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export async function isAgentPartOfAuthority(authorityId: string, agentId: string): Promise<boolean> {
   const agent = await prisma.agent.findFirst({
@@ -133,16 +135,34 @@ export const caseRouter = router({
           },
         },
       },
+      include: {
+        citizen: true,
+        authority: true,
+      },
+    });
+
+    await mailer.sendCaseRequestConfirmation({
+      recipient: newCase.citizen.email,
+      firstname: newCase.citizen.firstname,
+      lastname: newCase.citizen.lastname,
+      caseHumanId: newCase.humanId.toString(),
+      authorityName: newCase.authority.name,
     });
 
     // TODO: since public should return almost nothing? or nothing at all
 
-    return { case: newCase };
+    return {
+      case: casePrismaToModel(newCase),
+    };
   }),
   updateCase: privateProcedure.input(UpdateCaseSchema).mutation(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findUnique({
       where: {
         id: input.caseId,
+      },
+      include: {
+        citizen: true,
+        authority: true,
       },
     });
 
@@ -155,11 +175,13 @@ export const caseRouter = router({
     }
 
     let closedAt: Date | null = null;
+    let statusSwitchedToClose = false;
     if (input.close) {
       if (targetedCase.closedAt) {
         closedAt = targetedCase.closedAt;
       } else {
         closedAt = new Date();
+        statusSwitchedToClose = true;
       }
     }
 
@@ -177,6 +199,16 @@ export const caseRouter = router({
         nextRequirements: input.nextRequirements,
       },
     });
+
+    if (statusSwitchedToClose) {
+      await mailer.sendCaseClosed({
+        recipient: targetedCase.citizen.email,
+        firstname: targetedCase.citizen.firstname,
+        lastname: targetedCase.citizen.lastname,
+        caseHumanId: targetedCase.humanId.toString(),
+        authorityName: targetedCase.authority.name,
+      });
+    }
 
     return { case: updatedCase };
   }),
@@ -203,6 +235,15 @@ export const caseRouter = router({
 
     if (!(await isAgentThisUser(ctx.user.id, agentIdToAssign))) {
       throw new Error(`vous ne pouvez assigner que vous-même à un dossier`);
+
+      // await mailer.sendCaseAssignedBySomeone({
+      //   recipient: assignedUser.email,
+      //   firstname: assignedUser.firstname,
+      //   originatorFirstname: originatorUser.firstname,
+      //   originatorLastname: originatorUser.lastname,
+      //   caseUrl: linkRegistry.get('case', { authorityId: targetedCase.authorityId, caseId: targetedCase.id }, { absolute: true }),
+      //   caseHumanId: targetedCase.humanId.toString(),
+      // });
     }
 
     const assignedCase = await prisma.case.update({

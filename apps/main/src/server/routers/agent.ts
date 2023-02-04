@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { mailer } from '@mediature/main/src/emails/mailer';
 import { AddAgentSchema, GetAgentSchema, InviteAgentSchema, ListAgentsSchema, RemoveAgentSchema } from '@mediature/main/src/models/actions/agent';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 import { AgentWrapperSchemaType } from '../../models/entities/agent';
 
@@ -50,6 +52,12 @@ export const agentRouter = router({
       throw new Error(`cet agent fait déjà partie de la collectivité`);
     }
 
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
     const agent = await prisma.agent.create({
       data: {
         user: {
@@ -63,6 +71,20 @@ export const agentRouter = router({
           },
         },
       },
+      include: {
+        user: true,
+        authority: true,
+      },
+    });
+
+    await mailer.sendWelcomeAuthorityAgent({
+      recipient: agent.user.email,
+      firstname: agent.user.firstname,
+      originatorFirstname: originatorUser.firstname,
+      originatorLastname: originatorUser.lastname,
+      authorityName: agent.authority.name,
+      authorityDashboardUrl: linkRegistry.get('dashboard', undefined, { absolute: true }), // TODO: use below when the page exists
+      // authorityDashboardUrl: linkRegistry.get('authority', { authorityId: agent.authorityId }, { absolute: true }),
     });
 
     return { agent };
@@ -73,7 +95,7 @@ export const agentRouter = router({
     }
 
     // We unassign the agent from all cases where he was
-    await prisma.agent.update({
+    const agent = await prisma.agent.update({
       where: {
         id: input.agentId,
       },
@@ -81,6 +103,13 @@ export const agentRouter = router({
         Case: {
           set: [],
         },
+      },
+      include: { user: true },
+    });
+
+    const authority = await prisma.authority.findUniqueOrThrow({
+      where: {
+        id: input.authorityId,
       },
     });
 
@@ -90,7 +119,11 @@ export const agentRouter = router({
       },
     });
 
-    return;
+    await mailer.sendAuthorityAgentRemoved({
+      recipient: agent.user.email,
+      firstname: agent.user.firstname,
+      authorityName: authority.name,
+    });
   }),
   getAgent: privateProcedure.input(GetAgentSchema).mutation(async ({ ctx, input }) => {
     const agent = await prisma.agent.findUnique({
@@ -182,7 +215,19 @@ export const agentRouter = router({
       throw new Error(`une invitation pour devenir agent de cette collectivité a déjà été envoyée à cette personne`);
     }
 
-    await prisma.invitation.create({
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
+
+    const authority = await prisma.authority.findUniqueOrThrow({
+      where: {
+        id: input.authorityId,
+      },
+    });
+
+    const invitation = await prisma.invitation.create({
       data: {
         issuer: {
           connect: {
@@ -202,8 +247,14 @@ export const agentRouter = router({
       },
     });
 
-    // TODO: send invitation email
-
-    return;
+    await mailer.sendSignUpInvitationAsAgent({
+      recipient: invitation.inviteeEmail,
+      firstname: invitation.inviteeFirstname || undefined,
+      lastname: invitation.inviteeLastname || undefined,
+      originatorFirstname: originatorUser.firstname,
+      originatorLastname: originatorUser.lastname,
+      authorityName: authority.name,
+      signUpUrlWithToken: linkRegistry.get('signUp', { token: invitation.token }, { absolute: true }),
+    });
   }),
 });

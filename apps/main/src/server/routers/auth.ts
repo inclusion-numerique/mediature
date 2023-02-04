@@ -8,6 +8,7 @@ import { ChangePasswordSchema, RequestNewPasswordSchema, ResetPasswordSchema, Si
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserStatusSchema, VerificationTokenActionSchema } from '@mediature/main/src/models/entities/user';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export async function hashPassword(password: string) {
   return await bcrypt.hash(password, 10);
@@ -134,10 +135,10 @@ export const authRouter = router({
       },
     });
 
-    mailer.sendSignUpConfirmation({
+    await mailer.sendSignUpConfirmation({
       recipient: createdUser.email,
       firstname: createdUser.firstname,
-      signInUrl: 'https://todo.com/auth/sign-in',
+      signInUrl: linkRegistry.get('signIn', undefined, { absolute: true }),
     });
 
     // TODO: exclude hashed password
@@ -157,7 +158,7 @@ export const authRouter = router({
     const durationMinutesToValidateTheToken = 60;
     const expiresAt = addMinutes(new Date(), durationMinutesToValidateTheToken);
 
-    await prisma.verificationToken.create({
+    const verificationToken = await prisma.verificationToken.create({
       data: {
         action: VerificationTokenActionSchema.Values.RESET_PASSWORD,
         token: uuidv4(),
@@ -166,7 +167,17 @@ export const authRouter = router({
       },
     });
 
-    // TODO: send email for reset
+    await mailer.sendNewPasswordRequest({
+      recipient: user.email,
+      firstname: user.firstname,
+      resetPasswordUrlWithToken: linkRegistry.get(
+        'resetPassword',
+        {
+          token: verificationToken.token,
+        },
+        { absolute: true }
+      ),
+    });
 
     return;
   }),
@@ -188,7 +199,7 @@ export const authRouter = router({
 
     const hashedPassword = await hashPassword(input.password);
 
-    await prisma.user.update({
+    const user = await prisma.user.update({
       where: {
         id: verificationToken.identifier,
       },
@@ -202,6 +213,12 @@ export const authRouter = router({
       where: {
         token: input.token,
       },
+    });
+
+    await mailer.sendPasswordReset({
+      recipient: user.email,
+      firstname: user.firstname,
+      signInUrl: linkRegistry.get('signIn', undefined, { absolute: true }),
     });
 
     return;
@@ -232,7 +249,10 @@ export const authRouter = router({
       },
     });
 
-    // TODO: send email for pwd change confirmation
+    await mailer.sendPasswordChanged({
+      recipient: user.email,
+      firstname: user.firstname,
+    });
 
     return;
   }),

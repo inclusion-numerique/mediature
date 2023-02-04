@@ -97,7 +97,9 @@ export const localizedRoutes = {
     }
   ),
   resetPassword: defineLocalizedRoute(
-    {},
+    {
+      token: param.query.string,
+    },
     {
       en: (p) => `/auth/password/reset`,
       fr: (p) => `/authentification/mot-de-passe/reinitialiser`,
@@ -118,7 +120,9 @@ export const localizedRoutes = {
     }
   ),
   signUp: defineLocalizedRoute(
-    {},
+    {
+      token: param.query.string,
+    },
     {
       en: (p) => `/auth/sign-up`,
       fr: (p) => `/authentification/inscription`,

@@ -317,10 +317,12 @@ export const mailer = new Mailer({
     user: process.env.MAILER_SMTP_USER || '',
     password: process.env.MAILER_SMTP_PASSWORD || '',
   },
-  fallbackSmtp: {
-    host: process.env.MAILER_FALLBACK_SMTP_HOST || '',
-    port: process.env.MAILER_FALLBACK_SMTP_PORT ? parseInt(process.env.MAILER_FALLBACK_SMTP_PORT, 10) : 0,
-    user: process.env.MAILER_FALLBACK_SMTP_USER || '',
-    password: process.env.MAILER_FALLBACK_SMTP_PASSWORD || '',
-  },
+  fallbackSmtp: !!process.env.MAILER_FALLBACK_SMTP_HOST
+    ? {
+        host: process.env.MAILER_FALLBACK_SMTP_HOST || '',
+        port: process.env.MAILER_FALLBACK_SMTP_PORT ? parseInt(process.env.MAILER_FALLBACK_SMTP_PORT, 10) : 0,
+        user: process.env.MAILER_FALLBACK_SMTP_USER || '',
+        password: process.env.MAILER_FALLBACK_SMTP_PASSWORD || '',
+      }
+    : undefined,
 });
