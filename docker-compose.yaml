@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - '5432:5432'
+      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-5432:}5432'
     networks:
       - postgres
     restart: unless-stopped
@@ -35,7 +35,7 @@ services:
       - pgadmin:/var/lib/pgadmin
 
     ports:
-      - '${PGADMIN_PORT:-5050}:80'
+      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-5050:}80'
     networks:
       - postgres
     restart: unless-stopped
@@ -49,8 +49,8 @@ services:
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
       EMAIL_PORT: ${EMAIL_PORT:-1025}
     ports:
-      - '1080:1080'
-      - '11025:1025' # We set `11025` on the host because we had the case where a local email software had taken this port already and Docker didn't warn us (it was really tricky to find the cause...)
+      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-1080:}1080'
+      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-11025:}1025' # We set `11025` on the host because we had the case where a local email software had taken this port already and Docker didn't warn us (it was really tricky to find the cause...)
     restart: unless-stopped
     healthcheck:
       test: ['CMD', '/scripts/docker-healthcheck.sh']
