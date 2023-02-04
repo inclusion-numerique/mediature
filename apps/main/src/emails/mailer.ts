@@ -109,8 +109,11 @@ export interface SendOptions {
 export class Mailer {
   protected transporter: Transporter;
   protected fallbackTransporter: Transporter | null = null;
+  protected defaultSender: string;
 
   constructor(options: MailerOptions) {
+    this.defaultSender = options.defaultSender;
+
     this.transporter = nodemailer.createTransport({
       host: options.smtp.host,
       port: options.smtp.port,
@@ -156,7 +159,7 @@ export class Mailer {
     const plaintextVersion = convertHtmlEmailToText(rawHtmlVersion);
 
     const parameters: MailOptions = {
-      from: options.sender,
+      from: options.sender || this.defaultSender,
       to: options.recipients.join(','),
       subject: options.subject,
       html: rawHtmlVersion,
