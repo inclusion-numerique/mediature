@@ -3,7 +3,7 @@ version: '3.5'
 services:
   postgres:
     container_name: postgres_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
-    image: postgres:13.7
+    image: postgres:14.6
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
