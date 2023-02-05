@@ -35,7 +35,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="redéfinir son mot de passe">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="redéfinir son mot de passe">
       <Grid item xs={12}>
         <TextField
           type={showPassword ? 'text' : 'password'}

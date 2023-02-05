@@ -42,7 +42,7 @@ export function AddNoteForm(props: AddNoteFormProps) {
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} preventParentFormTrigger control={control} ariaLabel="ajouter une note au dossier">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} preventParentFormTrigger control={control} ariaLabel="ajouter une note au dossier">
       <Grid item xs={12} sm={6} md={4}>
         <DateTimePicker
           label="Date de la note"

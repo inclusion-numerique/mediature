@@ -278,7 +278,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="column">
-            <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="modifier un dossier">
+            <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="modifier un dossier">
               <Grid
                 item
                 xs={12}

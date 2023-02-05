@@ -34,7 +34,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="créer une collectivité">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="créer une collectivité">
       {/* TODO: 2 columns, set logo on the right */}
       <input type="hidden" {...register('logoAttachmentId')} value="d58ac4a3-7672-403c-ad04-112f5927e2be"></input>
       <Grid item xs={12}>

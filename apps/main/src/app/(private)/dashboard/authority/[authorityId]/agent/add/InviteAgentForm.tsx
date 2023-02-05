@@ -26,7 +26,7 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
   };
 
   return (
-    <BaseForm onSubmit={handleSubmit(onSubmit)} control={control} ariaLabel="inviter un médiateur">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="inviter un médiateur">
       <Grid item xs={12} sm={6}>
         <TextField
           label="Prénom"
