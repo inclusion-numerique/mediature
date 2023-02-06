@@ -150,7 +150,7 @@ model Phone {
 /// @@Gen.model(hide: true)
 model Citizen {
   id        String @id @default(uuid()) @db.Uuid
-  email     String @unique
+  email     String
   firstname String
   lastname  String
   addressId String @unique @db.Uuid
