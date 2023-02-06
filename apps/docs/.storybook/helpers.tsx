@@ -170,10 +170,14 @@ export function prepareStory<ComponentType, ContextValueType extends MatchingCon
             story.parameters.msw.handlers = [...childStory.parameters.msw.handlers, ...story.parameters.msw.handlers];
           }
 
-          (options.childrenContext.value[key] as any) = () => {
+          (options.childrenContext.value[key] as any) = (props: any) => {
+            // `props` are the attributes set by the parent story directly on the contextual component
+            // whereas `childStory.args` are "default" arguments of the story.
+            // So the logic is the first one overrides the second one (to make the parent working correctly)
+
             return (
               <>
-                <ChildStory {...childStory.args} />
+                <ChildStory {...childStory.args} {...props} />
               </>
             );
           };
