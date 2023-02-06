@@ -2,13 +2,17 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Grid, TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { InviteAgentPrefillSchemaType, InviteAgentSchema, InviteAgentSchemaType } from '@mediature/main/src/models/actions/agent';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchemaType }) {
+  const router = useRouter();
+
   const inviteAgent = trpc.inviteAgent.useMutation();
 
   const {
@@ -23,6 +27,10 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
 
   const onSubmit = async (input: InviteAgentSchemaType) => {
     await inviteAgent.mutateAsync(input);
+
+    if (prefill?.authorityId) {
+      router.push(linkRegistry.get('authorityAgentList', { authorityId: prefill.authorityId }));
+    }
   };
 
   return (

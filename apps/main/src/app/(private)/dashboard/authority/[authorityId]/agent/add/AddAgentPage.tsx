@@ -49,7 +49,11 @@ export function AddAgentPage({ params: { authorityId } }: AddAgentPageProps) {
       <Typography component="h1" {...formTitleProps}>
         Ajouter un médiateur à &quot;{authority.name}&quot;
       </Typography>
-      <ContextualInviteAgentForm />
+      <ContextualInviteAgentForm
+        prefill={{
+          authorityId: authority.id,
+        }}
+      />
     </Grid>
   );
 }
