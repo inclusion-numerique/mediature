@@ -41,8 +41,9 @@ import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CasePlatformSchema, CaseStatusSchema } from '@mediature/main/src/models/entities/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
-import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const CasePageContext = createContext({
@@ -61,7 +62,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const { t } = useTranslation('common');
   const { ContextualNoteCard, ContextualAddNoteForm } = useContext(CasePageContext);
 
-  const { data, error, isInitialLoading, isLoading } = trpc.getCase.useQuery({
+  const { data, error, isInitialLoading, isLoading, refetch } = trpc.getCase.useQuery({
     id: caseId,
   });
 
@@ -114,7 +115,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   };
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isInitialLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!caseWrapper) {

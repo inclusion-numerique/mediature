@@ -60,6 +60,7 @@
     "@mui/material": "^5.10.16",
     "@storybook/react": "7.0.0-beta.19",
     "@storybook/testing-library": "0.0.14-next.1",
+    "@tanstack/query-core": "^4.19.1",
     "@types/html-to-text": "^9.0.0",
     "@types/jest": "^29.4.0",
     "@types/katex": "^0.16.0",

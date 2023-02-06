@@ -33,6 +33,16 @@ export const mdCenteredFormContainerGridProps = {
   },
 };
 
+export const centeredAlertContainerGridProps: GridProps = {
+  direction: 'column',
+  sx: {
+    ...wideContainerGridProps.sx,
+    maxWidth: 'md',
+    mx: 'auto',
+    justifyContent: 'center',
+  },
+};
+
 export const ulComponentResetStyles = {
   listStyle: 'none',
   paddingInlineStart: 0,

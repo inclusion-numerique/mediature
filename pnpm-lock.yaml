@@ -477,6 +477,7 @@ importers:
       '@mui/material': ^5.10.16
       '@storybook/react': 7.0.0-beta.19
       '@storybook/testing-library': 0.0.14-next.1
+      '@tanstack/query-core': ^4.19.1
       '@types/html-to-text': ^9.0.0
       '@types/jest': ^29.4.0
       '@types/katex': ^0.16.0
@@ -555,6 +556,7 @@ importers:
       '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       '@storybook/react': 7.0.0-beta.19_lb6du3saekb5anf2gjv3wxj3oq
       '@storybook/testing-library': 0.0.14-next.1
+      '@tanstack/query-core': 4.19.1
       '@types/html-to-text': 9.0.0
       '@types/jest': 29.4.0
       '@types/katex': 0.16.0
@@ -3992,7 +3994,7 @@ packages:
     peerDependencies:
       jest: '>=28'
     dependencies:
-      jest: 29.3.1_2263m44mchjafa7bz7l52hbcpa
+      jest: 29.3.1_@types+node@17.0.45
     dev: true
 
   /@hapi/hoek/9.3.0:
@@ -5008,7 +5010,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       '@types/react': 18.0.26
       react: 18.2.0
 
@@ -5044,7 +5046,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
-    dev: true
 
   /@mui/material/5.10.16_lskpmcsdi7ipu6qpuapyu56ihm:
     resolution: {integrity: sha512-JSHcDQQ+k30NKkCM/0KX6jq4F5LOrbFKZpS+cEl7scZWOCJpUPH5ccAT5a7O8wzrgNZ8Y9PnwzNvWBrfShpJFw==}
@@ -5080,6 +5081,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+    dev: false
 
   /@mui/private-theming/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-0MArkJaOHRCKqL/GWjngGZmyOeRz+uxffhx82bKcewr8swqV7xx7EFP02pk0L/gLdfcvYdqwH4YTVjG/+TaKrg==}
@@ -5117,6 +5119,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/styled-engine/5.10.16_react@18.2.0:
     resolution: {integrity: sha512-ZMSjXvtiGwGDKqrSlXhpxK2voUaF2/lpC/pSTfFmZvKH9j9a9h1/iwo3ybgjFVYGgbfNeW4h0xEchiRohu9xsw==}
@@ -5136,7 +5139,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5164,7 +5166,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_ogriz7mfahdh34qnfautfro5yu:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5194,6 +5195,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/types/7.2.2_@types+react@18.0.26:
     resolution: {integrity: sha512-siex8cZDtWeC916cXOoUOnEQQejuMYmHtc4hM6VkKVYaBICz3VIiqyiAomRboTQHt2jchxQ5Q5ATlbcDekTxDA==}
@@ -7830,7 +7832,6 @@ packages:
 
   /@tanstack/query-core/4.19.1:
     resolution: {integrity: sha512-Zp0aIose5C8skBzqbVFGk9HJsPtUhRVDVNWIqVzFbGQQgYSeLZMd3Sdb4+EnA5wl1J7X+bre2PJGnQg9x/zHOA==}
-    dev: false
 
   /@tanstack/react-query/4.19.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-5dvHvmc0vrWI03AJugzvKfirxCyCLe+qawrWFCXdu8t7dklIhJ7D5ZhgTypv7mMtIpdHPcECtCiT/+V74wCn2A==}
@@ -17004,7 +17005,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
-      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false

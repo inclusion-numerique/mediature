@@ -1,13 +1,12 @@
 'use client';
 
 import { Grid, Typography } from '@mui/material';
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
 import { createContext, useContext } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredFormContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const RequestCasePageContext = createContext({
@@ -21,14 +20,18 @@ export interface RequestCasePageProps {
 export function RequestCasePage({ params: { authority: authoritySlug } }: RequestCasePageProps) {
   const { ContextualRequestCaseForm } = useContext(RequestCasePageContext);
 
-  const { data, error, isLoading } = trpc.getPublicFacingAuthority.useQuery({
+  const { data, error, isLoading, refetch } = trpc.getPublicFacingAuthority.useQuery({
     slug: authoritySlug,
   });
 
   const authority = data?.authority;
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!authority) {

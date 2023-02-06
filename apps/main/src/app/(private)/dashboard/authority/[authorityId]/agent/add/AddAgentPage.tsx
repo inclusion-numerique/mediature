@@ -8,7 +8,8 @@ import { createContext, useContext } from 'react';
 import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { formTitleProps } from '@mediature/main/src/utils/form';
-import { centeredFormContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const AddAgentPageContext = createContext({
@@ -22,14 +23,18 @@ export interface AddAgentPageProps {
 export function AddAgentPage({ params: { authorityId } }: AddAgentPageProps) {
   const { ContextualInviteAgentForm } = useContext(AddAgentPageContext);
 
-  const { data, error, isLoading } = trpc.getAuthority.useQuery({
+  const { data, error, isLoading, refetch } = trpc.getAuthority.useQuery({
     id: authorityId,
   });
 
   const authority = data?.authority;
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!authority) {

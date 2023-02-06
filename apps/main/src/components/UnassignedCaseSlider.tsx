@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import { A11y, Keyboard, Mousewheel, Pagination, Scrollbar } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/scrollbar';
@@ -5,6 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import styles from '@mediature/main/src/components/UnassignedCaseSlider.module.scss';
+import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
 
@@ -14,7 +17,7 @@ export interface UnassignedCaseSliderProps {
 }
 
 export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCaseSliderProps) {
-  const { data, error, isInitialLoading, isLoading } = trpc.listCases.useQuery({
+  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
@@ -25,7 +28,11 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
   const casesWrappers = data?.casesWrappers || [];
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="liste des dossiers non-assignés" />;
   }

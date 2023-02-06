@@ -5,9 +5,10 @@ import { Button, Grid, Typography } from '@mui/material';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export interface AgentListPageProps {
@@ -26,7 +27,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
     // TODO: success message? And/or redirect?
   };
 
-  const { data, error, isInitialLoading, isLoading } = trpc.listAgents.useQuery({
+  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listAgents.useQuery({
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
@@ -36,7 +37,11 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
   const agentsWrappers = data?.agentsWrappers || [];
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   }

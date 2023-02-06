@@ -7,8 +7,9 @@ import debounce from 'lodash.debounce';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export interface CaseListPageProps {
@@ -20,7 +21,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
 
-  const { data, error, isInitialLoading, isLoading } = trpc.listCases.useQuery({
+  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
@@ -49,7 +50,11 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   });
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isInitialLoading && !searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }

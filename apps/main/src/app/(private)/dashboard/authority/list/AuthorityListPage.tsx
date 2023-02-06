@@ -9,9 +9,10 @@ import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export function AuthorityListPage() {
@@ -19,7 +20,7 @@ export function AuthorityListPage() {
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
 
-  const { data, error, isInitialLoading, isLoading } = trpc.listAuthorities.useQuery({
+  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listAuthorities.useQuery({
     orderBy: {},
     filterBy: {
       query: searchQuery,
@@ -41,7 +42,11 @@ export function AuthorityListPage() {
   const authoritiesWrappers = data?.authoritiesWrappers || [];
 
   if (error) {
-    return <span>Error TODO</span>;
+    return (
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+      </Grid>
+    );
   } else if (isInitialLoading && !searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
