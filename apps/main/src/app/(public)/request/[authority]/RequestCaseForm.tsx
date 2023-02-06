@@ -29,6 +29,7 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
     control,
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
@@ -103,21 +104,14 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
           <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
           <RadioGroup
             defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
+            onChange={(event) => {
+              setValue('alreadyRequestedInThePast', event.target.value === 'true');
+            }}
             aria-labelledby="previous-request-radio-buttons-group-label"
             aria-describedby="previous-request-helper-text"
           >
-            <FormControlLabel
-              value="true"
-              control={<Radio />}
-              {...register('alreadyRequestedInThePast', reactHookFormBooleanRadioGroupRegisterOptions)}
-              label="Oui, j'ai effectué un premier recours à l'amiable"
-            />
-            <FormControlLabel
-              value="false"
-              control={<Radio />}
-              {...register('alreadyRequestedInThePast', reactHookFormBooleanRadioGroupRegisterOptions)}
-              label="Non, je n'ai pas effectué de premier recours à l'amiable"
-            />
+            <FormControlLabel value="true" control={<Radio />} label="Oui, j'ai effectué un premier recours à l'amiable" />
+            <FormControlLabel value="false" control={<Radio />} label="Non, je n'ai pas effectué de premier recours à l'amiable" />
           </RadioGroup>
           <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
         </FormControl>
@@ -130,20 +124,13 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
           </FormLabel>
           <RadioGroup
             defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
+            onChange={(event) => {
+              setValue('gotAnswerFromPreviousRequest', event.target.value === 'true');
+            }}
             aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
           >
-            <FormControlLabel
-              value="true"
-              control={<Radio />}
-              {...register('gotAnswerFromPreviousRequest', reactHookFormBooleanRadioGroupRegisterOptions)}
-              label="Oui, j'ai obtenu une réponse"
-            />
-            <FormControlLabel
-              value="false"
-              control={<Radio />}
-              {...register('gotAnswerFromPreviousRequest', reactHookFormBooleanRadioGroupRegisterOptions)}
-              label="Non, je n'ai pas obtenu de réponse"
-            />
+            <FormControlLabel value="true" control={<Radio />} label="Oui, j'ai obtenu une réponse" />
+            <FormControlLabel value="false" control={<Radio />} label="Non, je n'ai pas obtenu de réponse" />
           </RadioGroup>
           <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
         </FormControl>
