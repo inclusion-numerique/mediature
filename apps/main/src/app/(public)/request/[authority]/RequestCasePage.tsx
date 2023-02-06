@@ -49,7 +49,11 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
       <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ mb: 5 }}>
         Lancer ma démarche de médiation
       </Typography>
-      <ContextualRequestCaseForm />
+      <ContextualRequestCaseForm
+        prefill={{
+          authorityId: authority.id,
+        }}
+      />
     </Grid>
   );
 }
