@@ -8,7 +8,7 @@ describe('route list', () => {
 
     expect(generated).toStrictEqual([
       {
-        source: '/tableau-de-bord/collectivite/:authorityId/mediateur/add',
+        source: '/tableau-de-bord/collectivite/:authorityId/mediateur/ajouter',
         destination: '/dashboard/authority/:authorityId/agent/add',
       },
     ]);

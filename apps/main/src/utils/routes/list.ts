@@ -9,7 +9,7 @@ export const localizedRoutes = {
     { authorityId: param.path.string },
     {
       en: (p) => `/dashboard/authority/${p.authorityId}/agent/add`,
-      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/mediateur/add`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/mediateur/ajouter`,
     }
   ),
   authorityAgentList: defineLocalizedRoute(
@@ -72,7 +72,7 @@ export const localizedRoutes = {
     {},
     {
       en: (p) => `/acessibility`,
-      fr: (p) => `/accessibile`,
+      fr: (p) => `/accessibilite`,
     }
   ),
   termsOfUse: defineLocalizedRoute(

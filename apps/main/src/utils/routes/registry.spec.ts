@@ -10,7 +10,7 @@ describe('routes', () => {
 
   it('should get default language link', async () => {
     const link = linkRegistry.get('addAgentToAuthority', { authorityId: 'hello' });
-    expect(link).toBe('/tableau-de-bord/collectivite/hello/mediateur/add');
+    expect(link).toBe('/tableau-de-bord/collectivite/hello/mediateur/ajouter');
   });
 
   it('should get overridden language link', async () => {
@@ -20,6 +20,6 @@ describe('routes', () => {
 
   it('should get an absolute link', async () => {
     const link = linkRegistry.get('addAgentToAuthority', { authorityId: 'hello' }, { absolute: true });
-    expect(link).toBe('http://localhost:3000/tableau-de-bord/collectivite/hello/mediateur/add');
+    expect(link).toBe('http://localhost:3000/tableau-de-bord/collectivite/hello/mediateur/ajouter');
   });
 });
