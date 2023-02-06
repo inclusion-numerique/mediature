@@ -24,7 +24,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
       agentId: agentId,
     });
 
-    // TODO: success message? And/or redirect?
+    // TODO: success message?
   };
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listAgents.useQuery({

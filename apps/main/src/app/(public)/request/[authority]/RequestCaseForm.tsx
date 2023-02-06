@@ -22,7 +22,12 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { RequestCasePrefillSchemaType, RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 
-export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchemaType }) {
+export interface RequestCaseFormProps {
+  prefill?: RequestCasePrefillSchemaType;
+  onSuccess?: () => Promise<void>;
+}
+
+export function RequestCaseForm(props: RequestCaseFormProps) {
   const requestCase = trpc.requestCase.useMutation();
 
   const {
@@ -33,11 +38,15 @@ export function RequestCaseForm({ prefill }: { prefill?: RequestCasePrefillSchem
     control,
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
-    defaultValues: prefill,
+    defaultValues: props.prefill,
   });
 
   const onSubmit = async (input: RequestCaseSchemaType) => {
     await requestCase.mutateAsync(input);
+
+    if (props.onSuccess) {
+      await props.onSuccess();
+    }
   };
 
   return (

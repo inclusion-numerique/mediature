@@ -136,7 +136,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
     await updateCase.mutateAsync(input);
 
-    // TODO: success message? And/or redirect?
+    // TODO: success message?
   };
 
   const onSubmit = async (input: UpdateCaseSchemaType) => {

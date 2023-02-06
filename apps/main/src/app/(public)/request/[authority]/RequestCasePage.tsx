@@ -1,7 +1,7 @@
 'use client';
 
-import { Grid, Typography } from '@mui/material';
-import { createContext, useContext } from 'react';
+import { Alert, Grid, Typography } from '@mui/material';
+import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
@@ -19,6 +19,8 @@ export interface RequestCasePageProps {
 
 export function RequestCasePage({ params: { authority: authoritySlug } }: RequestCasePageProps) {
   const { ContextualRequestCaseForm } = useContext(RequestCasePageContext);
+
+  const [requestCommitted, setRequestCommitted] = useState<boolean>(false);
 
   const { data, error, isLoading, refetch } = trpc.getPublicFacingAuthority.useQuery({
     slug: authoritySlug,
@@ -43,17 +45,30 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
 
   return (
     <Grid container {...mdCenteredFormContainerGridProps}>
-      <Typography component="h2" variant="h6" align="center">
-        {authority.name}
-      </Typography>
-      <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ mb: 5 }}>
-        Lancer ma démarche de médiation
-      </Typography>
-      <ContextualRequestCaseForm
-        prefill={{
-          authorityId: authority.id,
-        }}
-      />
+      {requestCommitted ? (
+        <>
+          <Grid item xs={12}>
+            <Alert severity="success">Votre demande a bien été prise en compte, un médiateur va prendre contact avec vous sous quelques jours.</Alert>
+          </Grid>
+        </>
+      ) : (
+        <>
+          <Typography component="h2" variant="h6" align="center">
+            {authority.name}
+          </Typography>
+          <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ mb: 5 }}>
+            Lancer ma démarche de médiation
+          </Typography>
+          <ContextualRequestCaseForm
+            prefill={{
+              authorityId: authority.id,
+            }}
+            onSuccess={async () => {
+              setRequestCommitted(true);
+            }}
+          />
+        </>
+      )}
     </Grid>
   );
 }

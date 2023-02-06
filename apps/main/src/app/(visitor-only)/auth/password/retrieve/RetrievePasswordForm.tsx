@@ -11,7 +11,12 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { RequestNewPasswordPrefillSchemaType, RequestNewPasswordSchema, RequestNewPasswordSchemaType } from '@mediature/main/src/models/actions/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPasswordPrefillSchemaType }) {
+export interface RetrievePasswordFormProps {
+  prefill?: RequestNewPasswordPrefillSchemaType;
+  onSuccess?: () => Promise<void>;
+}
+
+export function RetrievePasswordForm(props: RetrievePasswordFormProps) {
   const requestNewPassword = trpc.requestNewPassword.useMutation();
 
   const {
@@ -21,13 +26,15 @@ export function RetrievePasswordForm({ prefill }: { prefill?: RequestNewPassword
     control,
   } = useForm<RequestNewPasswordSchemaType>({
     resolver: zodResolver(RequestNewPasswordSchema),
-    defaultValues: prefill,
+    defaultValues: props.prefill,
   });
 
   const onSubmit = async (input: RequestNewPasswordSchemaType) => {
     await requestNewPassword.mutateAsync(input);
 
-    // TODO: success message? And/or redirect?
+    if (props.onSuccess) {
+      await props.onSuccess();
+    }
   };
 
   return (

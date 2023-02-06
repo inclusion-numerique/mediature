@@ -4,15 +4,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Button, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { ResetPasswordPrefillSchemaType, ResetPasswordSchema, ResetPasswordSchemaType } from '@mediature/main/src/models/actions/auth';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillSchemaType }) {
   const resetPassword = trpc.resetPassword.useMutation();
+  const router = useRouter();
 
   const {
     register,
@@ -27,7 +30,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
   const onSubmit = async (input: ResetPasswordSchemaType) => {
     await resetPassword.mutateAsync(input);
 
-    // TODO: success message? And/or redirect?
+    router.push(linkRegistry.get('signIn', undefined));
   };
 
   const [showPassword, setShowPassword] = useState(false);

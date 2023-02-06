@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import SaveIcon from '@mui/icons-material/Save';
 import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -11,9 +12,11 @@ import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CreateAuthorityPrefillSchemaType, CreateAuthoritySchema, CreateAuthoritySchemaType } from '@mediature/main/src/models/actions/authority';
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPrefillSchemaType }) {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   const createAuthority = trpc.createAuthority.useMutation();
 
@@ -30,7 +33,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
   const onSubmit = async (input: CreateAuthoritySchemaType) => {
     await createAuthority.mutateAsync(input);
 
-    // TODO: success message? And/or redirect?
+    router.push(linkRegistry.get('authorityList', undefined));
   };
 
   return (

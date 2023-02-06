@@ -26,7 +26,7 @@ export function CaseAssignationPage({ params: { authorityId } }: CaseAssignation
       agentIds: ['TODO'], // TODO: from here we should have the agentId of this user for this specific collectivity
     });
 
-    // TODO: success message? And/or redirect?
+    // TODO: success message?
   };
 
   return (

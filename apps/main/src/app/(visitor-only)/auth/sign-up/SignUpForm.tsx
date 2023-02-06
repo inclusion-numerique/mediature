@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import NextLink from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -26,6 +27,8 @@ import { SignUpPrefillSchemaType, SignUpSchema, SignUpSchemaType } from '@mediat
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
+  const router = useRouter();
+
   const signUp = trpc.signUp.useMutation();
 
   const {
@@ -41,7 +44,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   const onSubmit = async (input: SignUpSchemaType) => {
     await signUp.mutateAsync(input);
 
-    // TODO: success message? And/or redirect?
+    router.push(linkRegistry.get('signIn', undefined));
   };
 
   const [showPassword, setShowPassword] = useState(false);
