@@ -79,7 +79,7 @@
     "material-ui-confirm": "^3.0.7",
     "mjml": "^4.13.0",
     "msw": "^0.49.1",
-    "next": "^13.0.7",
+    "next": "^13.1.6",
     "next-auth": "^4.18.0",
     "next-i18next": "^13.0.3",
     "next-superjson-plugin": "^0.5.2",

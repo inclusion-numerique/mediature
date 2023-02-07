@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 overrides:
-  '@codegouvfr/react-dsfr': ^0.25.4
+  '@codegouvfr/react-dsfr': 0.24.0
   '@glen/jest-raw-loader': ^2.0.0
   '@lhci/cli': ^0.10.0
   '@luma-team/mjml-react': ^0.2.0
@@ -35,7 +35,7 @@ overrides:
   testcontainers: ^9.0.0
   ts-jest: ^29.0.3
   tsconfig-paths-webpack-plugin: ^4.0.0
-  typescript: ^4.5.3
+  typescript: ^4.9.3
   typescript-plugin-css-modules: ^4.1.1
   yaml-loader: ^0.8.0
 
@@ -48,7 +48,7 @@ importers:
       eslint-config-custom: workspace:*
       prettier: ^2.5.1
       turbo: 1.6.3
-      typescript: ^4.5.3
+      typescript: ^4.9.3
     devDependencies:
       '@trivago/prettier-plugin-sort-imports': 4.0.0_prettier@2.7.1
       eslint: 7.32.0
@@ -60,7 +60,7 @@ importers:
   apps/docs:
     specifiers:
       '@anatine/zod-mock': ^3.6.0
-      '@codegouvfr/react-dsfr': ^0.25.4
+      '@codegouvfr/react-dsfr': 0.24.0
       '@mdx-js/react': 1.6.22
       '@mediature/main': workspace:main@*
       '@mediature/ui': workspace:ui@*
@@ -125,12 +125,12 @@ importers:
       ts-jest: ^29.0.3
       tsconfig: workspace:*
       tsconfig-paths-webpack-plugin: ^4.0.0
-      typescript: ^4.5.3
+      typescript: ^4.9.3
       typescript-plugin-css-modules: ^4.1.1
       yaml-loader: ^0.8.0
     dependencies:
       '@anatine/zod-mock': 3.6.0
-      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
+      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
       '@mediature/main': link:../main
       '@mediature/ui': link:../../packages/ui
       '@storybook/addon-interactions': 6.5.15_qs7bkq7q37abor2mq6p2ts4x4m
@@ -203,7 +203,7 @@ importers:
   apps/main:
     specifiers:
       '@anatine/zod-mock': ^3.6.0
-      '@codegouvfr/react-dsfr': ^0.25.4
+      '@codegouvfr/react-dsfr': 0.24.0
       '@cypress/webpack-preprocessor': ^5.15.5
       '@emotion/react': ^11.10.5
       '@emotion/server': ^11.10.0
@@ -294,12 +294,12 @@ importers:
       tss-react: ^4.4.5
       tsx: ^3.12.1
       type-route: ^1.0.1
-      typescript: ^4.5.3
+      typescript: ^4.9.3
       uuid: ^9.0.0
       yaml-loader: ^0.8.0
       zod: ^3.19.1
     dependencies:
-      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
+      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
       '@emotion/react': 11.10.5_kzbn2opkn2327fwg5yzwzya5o4
       '@emotion/server': 11.10.0
       '@emotion/styled': 11.10.5_qvatmowesywn4ye42qoh247szu
@@ -411,7 +411,7 @@ importers:
       next: ^13.1.6
       react: ^18.2.0
       react-dom: ^18.2.0
-      typescript: ^4.5.3
+      typescript: ^4.9.3
     dependencies:
       eslint-config-next: 12.3.3_77fvizpdb3y4icyeo2mf4eo7em
       eslint-config-prettier: 8.5.0_eslint@7.32.0
@@ -454,7 +454,7 @@ importers:
     specifiers:
       '@babel/core': ^7.20.12
       '@babel/preset-env': ^7.20.2
-      '@codegouvfr/react-dsfr': ^0.25.4
+      '@codegouvfr/react-dsfr': 0.24.0
       '@glen/jest-raw-loader': ^2.0.0
       '@lexical/clipboard': 0.7.6
       '@lexical/code': 0.7.6
@@ -513,10 +513,10 @@ importers:
       ts-jest: ^29.0.3
       tsconfig: workspace:*
       tslib: ^2.5.0
-      typescript: ^4.5.3
+      typescript: ^4.9.3
       typescript-plugin-css-modules: ^4.1.1
     dependencies:
-      '@codegouvfr/react-dsfr': 0.25.4_react@18.2.0
+      '@codegouvfr/react-dsfr': 0.24.0_kzbn2opkn2327fwg5yzwzya5o4
       '@lexical/clipboard': 0.7.6_lexical@0.7.6
       '@lexical/code': 0.7.6_lexical@0.7.6
       '@lexical/hashtag': 0.7.6_lexical@0.7.6
@@ -3309,12 +3309,17 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@codegouvfr/react-dsfr/0.25.4_react@18.2.0:
-    resolution: {integrity: sha512-RQnZej4K+H/S/sIBkmyq9pJNNfpEcK7tLzzoLxiJe8HS4/Cx6LlRir3SET+TjZXRF3jzZVjL51AcM3xidimdjg==}
+  /@codegouvfr/react-dsfr/0.24.0_kzbn2opkn2327fwg5yzwzya5o4:
+    resolution: {integrity: sha512-5Uos8tZdgUNCWyzgOv8l4UU3F53ffyZZvLeSi3jAsu7DLeLUGQNJhybX7Xg74HcTcB0lEm4Ky4c237HIM3A8Xw==}
     hasBin: true
     peerDependencies:
+      '@types/react': ^16.0.0 || ^17.0.0 || ^18.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
+      '@types/react': 18.0.26
       react: 18.2.0
       tsafe: 1.4.1
     dev: false
@@ -3994,7 +3999,7 @@ packages:
     peerDependencies:
       jest: '>=28'
     dependencies:
-      jest: 29.3.1_@types+node@17.0.45
+      jest: 29.3.1_2263m44mchjafa7bz7l52hbcpa
     dev: true
 
   /@hapi/hoek/9.3.0:
@@ -5010,7 +5015,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
       '@types/react': 18.0.26
       react: 18.2.0
 
@@ -5046,6 +5051,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+    dev: true
 
   /@mui/material/5.10.16_lskpmcsdi7ipu6qpuapyu56ihm:
     resolution: {integrity: sha512-JSHcDQQ+k30NKkCM/0KX6jq4F5LOrbFKZpS+cEl7scZWOCJpUPH5ccAT5a7O8wzrgNZ8Y9PnwzNvWBrfShpJFw==}
@@ -5081,7 +5087,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
-    dev: false
 
   /@mui/private-theming/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-0MArkJaOHRCKqL/GWjngGZmyOeRz+uxffhx82bKcewr8swqV7xx7EFP02pk0L/gLdfcvYdqwH4YTVjG/+TaKrg==}
@@ -5119,7 +5124,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: false
 
   /@mui/styled-engine/5.10.16_react@18.2.0:
     resolution: {integrity: sha512-ZMSjXvtiGwGDKqrSlXhpxK2voUaF2/lpC/pSTfFmZvKH9j9a9h1/iwo3ybgjFVYGgbfNeW4h0xEchiRohu9xsw==}
@@ -5139,6 +5143,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: true
 
   /@mui/system/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5166,6 +5171,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: true
 
   /@mui/system/5.10.16_ogriz7mfahdh34qnfautfro5yu:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5195,7 +5201,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: false
 
   /@mui/types/7.2.2_@types+react@18.0.26:
     resolution: {integrity: sha512-siex8cZDtWeC916cXOoUOnEQQejuMYmHtc4hM6VkKVYaBICz3VIiqyiAomRboTQHt2jchxQ5Q5ATlbcDekTxDA==}
@@ -17005,7 +17010,7 @@ packages:
       react: ^17.0.0 || ^18.0.0
       react-dom: ^17.0.0 || ^18.0.0
     dependencies:
-      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -22819,6 +22824,7 @@ packages:
   /typescript/4.9.3:
     resolution: {integrity: sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==}
     engines: {node: '>=4.2.0'}
+    hasBin: true
 
   /uglify-js/3.17.4:
     resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
