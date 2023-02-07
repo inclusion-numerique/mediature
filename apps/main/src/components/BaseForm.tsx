@@ -35,7 +35,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
       <form onSubmit={onSubmit} aria-label={props.ariaLabel}>
         <Grid container spacing={2}>
           {Object.keys(errors).length > 0 && (
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ py: 2 }}>
               <Alert severity="error">{t('components.BaseForm.form_contains_errors', { count: Object.keys(errors).length })}</Alert>
             </Grid>
           )}
