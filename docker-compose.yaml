@@ -19,7 +19,7 @@ services:
     healthcheck:
       # Note: at start we tried `pg_isready` but it's not efficient since the postgres container restarts the server at startup (to init some scripts) so we ended with broken connections...
       # The best is to try a real query to be sure it's up and running as advised in https://github.com/docker-library/postgres/issues/146#issuecomment-872486465
-      test: ['CMD-SHELL', 'psql', '-h', 'localhost', '-U', '$$POSTGRES_USER', '-c', 'select 1', '-d', '$$POSTGRES_DB']
+      test: ['CMD-SHELL', 'psql -h localhost -U $${POSTGRES_USER} -c select 1 -d $${POSTGRES_DB}']
       interval: 1s
       timeout: 3s
       retries: 5
