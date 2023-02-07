@@ -28,6 +28,7 @@ i18next.use(LanguageDetector).init(
     detection: {
       order: ['cookie', 'localStorage', 'navigator'],
     },
+    supportedLngs: ['fr'],
     fallbackLng: 'fr',
     defaultNS: defaultNamespace,
     returnEmptyString: false,
