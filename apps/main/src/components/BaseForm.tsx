@@ -35,14 +35,14 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
             setOnSubmitError(err as any); // The default case is good enough for now
           }
 
-          formRef.current?.scrollIntoView();
+          formRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
       },
       (errors) => {
         // Only triggered on inputs validation errors
         setValidationErrors(errors);
 
-        formRef.current?.scrollIntoView();
+        formRef.current?.scrollIntoView({ behavior: 'smooth' });
       }
     );
 
