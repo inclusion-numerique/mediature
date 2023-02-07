@@ -70,14 +70,12 @@ export function NoteCard(props: NoteCardProps) {
       return;
     }
 
-    await removeNoteFromCase.mutateAsync({
+    const result = await removeNoteFromCase.mutateAsync({
       noteId: props.note.id,
     });
 
     handleCloseMenu();
     handleCloseModal();
-
-    // TODO: success message?
   };
 
   return (

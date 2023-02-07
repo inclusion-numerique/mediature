@@ -42,7 +42,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   });
 
   const onSubmit = async (input: SignUpSchemaType) => {
-    await signUp.mutateAsync(input);
+    const result = await signUp.mutateAsync(input);
 
     router.push(linkRegistry.get('signIn', undefined));
   };

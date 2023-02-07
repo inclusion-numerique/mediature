@@ -42,7 +42,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
   });
 
   const onSubmit = async (input: RequestCaseSchemaType) => {
-    await requestCase.mutateAsync(input);
+    const result = await requestCase.mutateAsync(input);
 
     if (props.onSuccess) {
       await props.onSuccess();

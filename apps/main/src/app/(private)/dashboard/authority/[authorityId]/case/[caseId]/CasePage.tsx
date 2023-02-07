@@ -134,9 +134,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const notes = caseWrapper.notes;
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
-    await updateCase.mutateAsync(input);
-
-    // TODO: success message?
+    const result = await updateCase.mutateAsync(input);
   };
 
   const onSubmit = async (input: UpdateCaseSchemaType) => {

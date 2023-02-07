@@ -30,7 +30,7 @@ export function RetrievePasswordForm(props: RetrievePasswordFormProps) {
   });
 
   const onSubmit = async (input: RequestNewPasswordSchemaType) => {
-    await requestNewPassword.mutateAsync(input);
+    const result = await requestNewPassword.mutateAsync(input);
 
     if (props.onSuccess) {
       await props.onSuccess();

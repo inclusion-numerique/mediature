@@ -21,12 +21,10 @@ export function CaseAssignationPage({ params: { authorityId } }: CaseAssignation
   const assignCase = trpc.assignCase.useMutation();
 
   const assignCaseAction = async (caseId: string) => {
-    await assignCase.mutateAsync({
+    const result = await assignCase.mutateAsync({
       caseId: caseId,
       agentIds: ['TODO'], // TODO: from here we should have the agentId of this user for this specific collectivity
     });
-
-    // TODO: success message?
   };
 
   return (

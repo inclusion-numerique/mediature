@@ -35,7 +35,7 @@ export function UpdateNoteForm(props: UpdateNoteFormProps) {
   });
 
   const onSubmit = async (input: UpdateCaseNoteSchemaType) => {
-    await updateCaseNote.mutateAsync(input);
+    const result = await updateCaseNote.mutateAsync(input);
   };
 
   return (

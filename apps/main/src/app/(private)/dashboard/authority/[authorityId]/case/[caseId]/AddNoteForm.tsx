@@ -34,7 +34,7 @@ export function AddNoteForm(props: AddNoteFormProps) {
   });
 
   const onSubmit = async (input: AddNoteToCaseSchemaType) => {
-    await addNoteToCase.mutateAsync(input);
+    const result = await addNoteToCase.mutateAsync(input);
 
     if (props.onSuccess) {
       props.onSuccess();

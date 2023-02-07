@@ -19,12 +19,10 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
   const removeAgent = trpc.removeAgent.useMutation();
 
   const removeAgentAction = async (agentId: string) => {
-    await removeAgent.mutateAsync({
+    const result = await removeAgent.mutateAsync({
       authorityId: authorityId,
       agentId: agentId,
     });
-
-    // TODO: success message?
   };
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listAgents.useQuery({

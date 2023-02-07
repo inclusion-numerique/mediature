@@ -26,7 +26,7 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
   });
 
   const onSubmit = async (input: InviteAgentSchemaType) => {
-    await inviteAgent.mutateAsync(input);
+    const result = await inviteAgent.mutateAsync(input);
 
     if (prefill?.authorityId) {
       router.push(linkRegistry.get('authorityAgentList', { authorityId: prefill.authorityId }));

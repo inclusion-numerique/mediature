@@ -28,7 +28,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
   });
 
   const onSubmit = async (input: ResetPasswordSchemaType) => {
-    await resetPassword.mutateAsync(input);
+    const result = await resetPassword.mutateAsync(input);
 
     router.push(linkRegistry.get('signIn', undefined));
   };

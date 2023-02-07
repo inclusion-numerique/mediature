@@ -31,7 +31,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
   });
 
   const onSubmit = async (input: CreateAuthoritySchemaType) => {
-    await createAuthority.mutateAsync(input);
+    const result = await createAuthority.mutateAsync(input);
 
     router.push(linkRegistry.get('authorityList', undefined));
   };
