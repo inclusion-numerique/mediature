@@ -3,8 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { LoadingButton as Button } from '@mui/lab';
 import {
-  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -109,7 +109,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={signUp.isLoading} size="large" variant="contained" fullWidth>
           S&apos;enregistrer
         </Button>
       </Grid>

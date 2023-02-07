@@ -9,8 +9,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
+import { LoadingButton as Button } from '@mui/lab';
 import {
-  Button,
   Card,
   CardContent,
   Chip,
@@ -301,7 +301,15 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   </Grid>
                   {isDirty ? (
                     <Grid item xs>
-                      <Button type="submit" size="large" variant="contained" color="warning" fullWidth startIcon={<SaveIcon />}>
+                      <Button
+                        type="submit"
+                        loading={updateCase.isLoading}
+                        size="large"
+                        variant="contained"
+                        color="warning"
+                        fullWidth
+                        startIcon={<SaveIcon />}
+                      >
                         Enregistrer les modifications en cours
                       </Button>
                     </Grid>

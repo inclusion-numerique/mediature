@@ -3,9 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { LoadingButton as Button } from '@mui/lab';
 import {
   Alert,
-  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -17,6 +17,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Mutex } from 'locks';
 import NextLink from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
@@ -57,6 +58,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const [error, setError] = useState<string | null>(() => {
     return attemptErrorCode ? errorCodeToError(attemptErrorCode) : null;
   });
+  const [mutex] = useState<Mutex>(new Mutex());
 
   const {
     register,
@@ -73,28 +75,38 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const onSubmit = async ({ email, password, rememberMe }: any) => {
     // TODO: should remove the "session_end" from the URL... or to be simpler the logout page should be elsewhere?
 
-    const result = await signIn(
-      'credentials',
-      {
-        redirect: false,
-        callbackUrl: callbackUrl || undefined,
-        email,
-        password,
-      },
-      {
-        prompt: rememberMe === true ? 'none' : 'login',
-        login_hint: email,
+    // If it's already running, quit
+    if (!mutex.tryLock()) {
+      return;
+    }
+
+    try {
+      const result = await signIn(
+        'credentials',
+        {
+          redirect: false,
+          callbackUrl: callbackUrl || undefined,
+          email,
+          password,
+        },
+        {
+          prompt: rememberMe === true ? 'none' : 'login',
+          login_hint: email,
+        }
+      );
+
+      if (result && !result.ok && result.error) {
+        setError(errorCodeToError(result.error));
+      } else if (result && result.ok && result.url) {
+        setError(null);
+
+        router.push(result.url);
+      } else {
+        setError('default');
       }
-    );
-
-    if (result && !result.ok && result.error) {
-      setError(errorCodeToError(result.error));
-    } else if (result && result.ok && result.url) {
-      setError(null);
-
-      router.push(result.url);
-    } else {
-      setError('default');
+    } finally {
+      // Unlock to allow a new submit
+      mutex.unlock();
     }
   };
 
@@ -144,7 +156,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={mutex.isLocked} size="large" variant="contained" fullWidth>
           Se connecter
         </Button>
       </Grid>

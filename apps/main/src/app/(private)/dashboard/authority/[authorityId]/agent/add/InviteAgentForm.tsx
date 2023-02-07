@@ -1,7 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, TextField } from '@mui/material';
+import { LoadingButton as Button } from '@mui/lab';
+import { Grid, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
@@ -64,7 +65,7 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
         />
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={inviteAgent.isLoading} size="large" variant="contained" fullWidth>
           Envoyer
         </Button>
       </Grid>

@@ -28,11 +28,11 @@ export const formTitleProps: TypographyProps<'h1'> = {
 // When a form is inside another form its submission will submit also the parent one.
 // The only solution is to stop the event propagation... it should remains rare (only when using dialogs for example)
 export function stopSubmitPropagation(callback: React.FormEventHandler<HTMLFormElement>) {
-  return (event: React.FormEvent<HTMLFormElement>) => {
+  return async (event: React.FormEvent<HTMLFormElement>) => {
     if (event && event.stopPropagation) {
       event.stopPropagation();
     }
 
-    callback(event);
+    await callback(event);
   };
 }

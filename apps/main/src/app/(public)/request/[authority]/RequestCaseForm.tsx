@@ -1,19 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { LoadingButton as Button } from '@mui/lab';
+import { Checkbox, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -177,7 +166,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={requestCase.isLoading} size="large" variant="contained" fullWidth>
           Envoyer
         </Button>
       </Grid>

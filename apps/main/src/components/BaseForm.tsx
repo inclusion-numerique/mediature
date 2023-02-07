@@ -1,5 +1,6 @@
 import { DevTool } from '@hookform/devtools';
 import { Alert, Grid } from '@mui/material';
+import { Mutex } from 'locks';
 import { FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -21,32 +22,44 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
   const [validationErrors, setValidationErrors] = useState<Partial<FieldErrorsImpl<any>>>(props.control._formState.errors);
   const [onSubmitError, setOnSubmitError] = useState<Error | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
+  const [mutex] = useState<Mutex>(new Mutex());
 
   // Some forms in dialogs need to force stopping submit propagation leakage on parent forms
-  const onSubmit: FormEventHandler<HTMLFormElement> = (...args) => {
-    const submitChain = props.handleSubmit(
-      async (input: FormSchemaType) => {
-        try {
-          await props.onSubmit(input);
-        } catch (err: unknown) {
-          if (err instanceof Error) {
-            setOnSubmitError(err);
-          } else {
-            setOnSubmitError(err as any); // The default case is good enough for now
+  const onSubmit: FormEventHandler<HTMLFormElement> = async (...args) => {
+    // If it's already running, quit
+    if (!mutex.tryLock()) {
+      args[0].preventDefault();
+      return;
+    }
+
+    try {
+      const submitChain = props.handleSubmit(
+        async (input: FormSchemaType) => {
+          try {
+            await props.onSubmit(input);
+          } catch (err: unknown) {
+            if (err instanceof Error) {
+              setOnSubmitError(err);
+            } else {
+              setOnSubmitError(err as any); // The default case is good enough for now
+            }
+
+            formRef.current?.scrollIntoView({ behavior: 'smooth' });
           }
+        },
+        (errors) => {
+          // Only triggered on inputs validation errors
+          setValidationErrors(errors);
 
           formRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
-      },
-      (errors) => {
-        // Only triggered on inputs validation errors
-        setValidationErrors(errors);
+      );
 
-        formRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }
-    );
-
-    (props.preventParentFormTrigger ? stopSubmitPropagation(submitChain) : submitChain).apply(null, args);
+      await (props.preventParentFormTrigger ? stopSubmitPropagation(submitChain) : submitChain).apply(null, args);
+    } finally {
+      // Unlock to allow a new submit
+      mutex.unlock();
+    }
   };
 
   return (

@@ -2,7 +2,8 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import SaveIcon from '@mui/icons-material/Save';
-import { Button, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { LoadingButton as Button } from '@mui/lab';
+import { Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -71,7 +72,7 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
         />
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" startIcon={<SaveIcon />} fullWidth>
+        <Button type="submit" loading={createAuthority.isLoading} size="large" variant="contained" startIcon={<SaveIcon />} fullWidth>
           Sauvegarder
         </Button>
       </Grid>

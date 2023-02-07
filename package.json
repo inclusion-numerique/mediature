@@ -37,6 +37,7 @@
       "@lhci/cli": "^0.10.0",
       "@luma-team/mjml-react": "^0.2.0",
       "@mui/icons-material": "^5.10.16",
+      "@mui/lab": "5.0.0-alpha.118",
       "@mui/material": "^5.10.16",
       "@storybook/instrumenter": "7.0.0-beta.19",
       "@storybook/react": "7.0.0-beta.19",

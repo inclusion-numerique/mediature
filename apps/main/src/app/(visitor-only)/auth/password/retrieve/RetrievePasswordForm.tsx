@@ -1,7 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { LoadingButton as Button } from '@mui/lab';
+import { Grid, Link, TextField, Typography } from '@mui/material';
 import NextLink from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,7 +44,7 @@ export function RetrievePasswordForm(props: RetrievePasswordFormProps) {
         <TextField type="email" label="Email" {...register('email')} error={!!errors.email} helperText={errors?.email?.message} fullWidth />
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={requestNewPassword.isLoading} size="large" variant="contained" fullWidth>
           Valider
         </Button>
       </Grid>

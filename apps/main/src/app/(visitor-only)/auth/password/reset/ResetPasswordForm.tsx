@@ -3,7 +3,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { Button, Grid, IconButton, InputAdornment, TextField } from '@mui/material';
+import { LoadingButton as Button } from '@mui/lab';
+import { Grid, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -63,7 +64,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
         />
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" size="large" variant="contained" fullWidth>
+        <Button type="submit" loading={resetPassword.isLoading} size="large" variant="contained" fullWidth>
           Mettre à jour
         </Button>
       </Grid>
