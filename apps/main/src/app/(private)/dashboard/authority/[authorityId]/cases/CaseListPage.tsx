@@ -70,7 +70,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
 
   return (
     <>
-      <Grid container {...centeredContainerGridProps}>
+      <Grid container {...centeredContainerGridProps} alignContent="flex-start">
         <Grid item xs={12} sx={{ pb: 3 }}>
           <Typography component="h1" variant="h5">
             {/* TODO: manage multiple ones when main agent */}

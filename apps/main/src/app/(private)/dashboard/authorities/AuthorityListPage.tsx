@@ -63,7 +63,7 @@ export function AuthorityListPage() {
   return (
     <>
       <Grid container {...centeredContainerGridProps}>
-        <Grid container spacing={1} sx={{ pb: 3 }}>
+        <Grid container spacing={1} sx={{ pb: 3 }} alignContent="flex-start">
           <Grid item xs={12} md={7} sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography component="h1" variant="h5">
               Gérer les collectivités
