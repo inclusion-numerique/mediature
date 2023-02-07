@@ -55,6 +55,8 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const loginHint = searchParams.get('login_hint');
   const sessionEnd = searchParams.has('session_end');
 
+  const [showSessionEndBlock, setShowSessionEndBlock] = useState<boolean>(sessionEnd);
+
   const [error, setError] = useState<string | null>(() => {
     return attemptErrorCode ? errorCodeToError(attemptErrorCode) : null;
   });
@@ -72,9 +74,14 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
     },
   });
 
-  const onSubmit = async ({ email, password, rememberMe }: any) => {
-    // TODO: should remove the "session_end" from the URL... or to be simpler the logout page should be elsewhere?
+  const enhancedHandleSubmit: typeof handleSubmit = (...args) => {
+    // Hide messages set by any query parameter (we trying replacing the URL to remove them but it takes around 200ms, it was not smooth enough)
+    setShowSessionEndBlock(false);
 
+    return handleSubmit(...args);
+  };
+
+  const onSubmit = async ({ email, password, rememberMe }: any) => {
     // If it's already running, quit
     if (!mutex.tryLock()) {
       return;
@@ -115,11 +122,11 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   return (
-    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="se connecter">
+    <BaseForm handleSubmit={enhancedHandleSubmit} onSubmit={onSubmit} control={control} ariaLabel="se connecter">
       {(!!error || !!sessionEnd) && (
         <Grid item xs={12}>
           {!!error && <Alert severity="error">{error}</Alert>}
-          {!!sessionEnd && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
+          {!!sessionEnd && showSessionEndBlock && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
         </Grid>
       )}
       <Grid item xs={12}>
