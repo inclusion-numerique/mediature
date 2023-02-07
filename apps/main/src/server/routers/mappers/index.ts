@@ -1,5 +1,9 @@
 import { Agent, Authority, Case, Citizen, Note, User } from '@prisma/client';
 
+import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
+import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+
 export function agentPrismaToModel(
   agent: Agent & {
     user: User;
@@ -19,7 +23,7 @@ export function agentPrismaToModel(
   };
 }
 
-export function authorityPrismaToModel(authority: Authority) {
+export function authorityPrismaToModel(authority: Authority): AuthoritySchemaType {
   return {
     id: authority.id,
     name: authority.name,
@@ -33,7 +37,7 @@ export function authorityPrismaToModel(authority: Authority) {
   };
 }
 
-export function casePrismaToModel(targetedCase: Case) {
+export function casePrismaToModel(targetedCase: Case): CaseSchemaType {
   return {
     id: targetedCase.id,
     humanId: targetedCase.humanId,
@@ -57,23 +61,24 @@ export function casePrismaToModel(targetedCase: Case) {
   };
 }
 
-export function citizenPrismaToModel(citizen: Citizen) {
+export function citizenPrismaToModel(citizen: Citizen): CitizenSchemaType {
   return {
     id: citizen.id,
     email: citizen.email,
     firstname: citizen.firstname,
     lastname: citizen.lastname,
-    addressId: citizen.addressId,
-    phoneId: citizen.phoneId,
+    // address: citizen.address,
+    // phone: citizen.phone,
     createdAt: citizen.createdAt,
     updatedAt: citizen.updatedAt,
     deletedAt: citizen.deletedAt,
   };
 }
 
-export function caseNotePrismaToModel(note: Note) {
+export function caseNotePrismaToModel(note: Note): CaseNoteSchemaType {
   return {
     id: note.id,
+    caseId: note.caseId,
     date: note.date,
     content: note.content,
     createdAt: note.createdAt,
