@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@anatine/zod-mock": "^3.6.0",
-    "@codegouvfr/react-dsfr": "0.24.0",
+    "@codegouvfr/react-dsfr": "0.31.1",
     "@mediature/main": "workspace:main@*",
     "@mediature/ui": "workspace:ui@*",
     "@storybook/addon-interactions": "^6.5.15",

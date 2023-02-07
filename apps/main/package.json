@@ -50,7 +50,7 @@
     "seed": "tsx --tsconfig ../../packages/tsconfig/tsx-fallback.json prisma/seed.script.ts"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "0.24.0",
+    "@codegouvfr/react-dsfr": "0.31.1",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",

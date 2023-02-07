@@ -19,7 +19,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "0.24.0",
+    "@codegouvfr/react-dsfr": "0.31.1",
     "@lexical/clipboard": "0.7.6",
     "@lexical/code": "0.7.6",
     "@lexical/hashtag": "0.7.6",
