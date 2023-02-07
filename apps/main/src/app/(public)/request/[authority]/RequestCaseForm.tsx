@@ -25,6 +25,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
     formState: { errors },
     setValue,
     control,
+    watch,
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
     defaultValues: props.prefill,
@@ -103,7 +104,13 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           <RadioGroup
             defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
             onChange={(event) => {
-              setValue('alreadyRequestedInThePast', event.target.value === 'true');
+              const value = event.target.value === 'true';
+
+              setValue('alreadyRequestedInThePast', value);
+
+              if (!value) {
+                setValue('gotAnswerFromPreviousRequest', null);
+              }
             }}
             aria-labelledby="previous-request-radio-buttons-group-label"
             aria-describedby="previous-request-helper-text"
@@ -115,8 +122,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <FormControl error={!!errors.gotAnswerFromPreviousRequest}>
-          {/* TODO: if above */}
+        <FormControl disabled={watch('alreadyRequestedInThePast') === false} error={!!errors.gotAnswerFromPreviousRequest}>
           <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
             Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
           </FormLabel>
