@@ -44,7 +44,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
   const onSubmit = async (input: SignUpSchemaType) => {
     const result = await signUp.mutateAsync(input);
 
-    router.push(linkRegistry.get('signIn', undefined));
+    router.push(linkRegistry.get('signIn', { registered: true }));
   };
 
   const [showPassword, setShowPassword] = useState(false);

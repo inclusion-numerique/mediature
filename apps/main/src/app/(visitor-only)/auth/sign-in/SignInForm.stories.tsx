@@ -58,3 +58,20 @@ LoggedOutStory.play = async ({ canvasElement }) => {
 };
 
 export const LoggedOut = prepareStory(LoggedOutStory);
+
+const JustRegisteredStory = Template.bind({});
+JustRegisteredStory.parameters = {
+  nextjs: {
+    navigation: {
+      query: {
+        registered: true,
+      },
+    },
+  },
+};
+JustRegisteredStory.args = {};
+JustRegisteredStory.play = async ({ canvasElement }) => {
+  await playFindForm(canvasElement);
+};
+
+export const JustRegistered = prepareStory(JustRegisteredStory);

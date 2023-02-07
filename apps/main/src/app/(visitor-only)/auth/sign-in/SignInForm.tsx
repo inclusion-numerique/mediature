@@ -54,8 +54,10 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const attemptErrorCode = searchParams.get('error');
   const loginHint = searchParams.get('login_hint');
   const sessionEnd = searchParams.has('session_end');
+  const registered = searchParams.has('registered');
 
   const [showSessionEndBlock, setShowSessionEndBlock] = useState<boolean>(sessionEnd);
+  const [showRegisteredBlock, setShowRegisteredBlock] = useState<boolean>(registered);
 
   const [error, setError] = useState<string | null>(() => {
     return attemptErrorCode ? errorCodeToError(attemptErrorCode) : null;
@@ -77,6 +79,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const enhancedHandleSubmit: typeof handleSubmit = (...args) => {
     // Hide messages set by any query parameter (we trying replacing the URL to remove them but it takes around 200ms, it was not smooth enough)
     setShowSessionEndBlock(false);
+    setShowRegisteredBlock(false);
 
     return handleSubmit(...args);
   };
@@ -123,10 +126,15 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
 
   return (
     <BaseForm handleSubmit={enhancedHandleSubmit} onSubmit={onSubmit} control={control} ariaLabel="se connecter">
-      {(!!error || !!sessionEnd) && (
+      {(!!error || showSessionEndBlock || showRegisteredBlock) && (
         <Grid item xs={12}>
           {!!error && <Alert severity="error">{error}</Alert>}
-          {!!sessionEnd && showSessionEndBlock && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
+          {showSessionEndBlock && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
+          {showRegisteredBlock && (
+            <Alert severity="success">
+              Votre inscription a bien été prise en compte. Vous pouvez dès à présent vous connecter pour accéder au tableau de bord.
+            </Alert>
+          )}
         </Grid>
       )}
       <Grid item xs={12}>

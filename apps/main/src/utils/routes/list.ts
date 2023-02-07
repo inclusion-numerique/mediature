@@ -113,7 +113,10 @@ export const localizedRoutes = {
     }
   ),
   signIn: defineLocalizedRoute(
-    {},
+    {
+      session_end: param.query.optional.boolean,
+      registered: param.query.optional.boolean,
+    },
     {
       en: (p) => `/auth/sign-in`,
       fr: (p) => `/authentification/connexion`,
