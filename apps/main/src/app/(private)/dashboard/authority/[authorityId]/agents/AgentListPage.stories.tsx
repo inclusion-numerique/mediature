@@ -4,7 +4,7 @@ import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMainTitle } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { AgentListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/list/AgentListPage';
+import { AgentListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agents/AgentListPage';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 

@@ -6,7 +6,7 @@ import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(pri
 import {
   CaseAssignationPage,
   CaseAssignationPageContext,
-} from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/list/unassigned/CaseAssignationPage';
+} from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/unassigned/CaseAssignationPage';
 import { Normal as UnassignedCaseSliderNormalStory } from '@mediature/main/src/components/UnassignedCaseSlider.stories';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';

@@ -15,8 +15,8 @@ export const localizedRoutes = {
   authorityAgentList: defineLocalizedRoute(
     { authorityId: param.path.string },
     {
-      en: (p) => `/dashboard/authority/${p.authorityId}/agent/list`,
-      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/mediateur/liste`,
+      en: (p) => `/dashboard/authority/${p.authorityId}/agents`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/mediateurs`,
     }
   ),
   case: defineLocalizedRoute(
@@ -29,15 +29,15 @@ export const localizedRoutes = {
   caseList: defineLocalizedRoute(
     { authorityId: param.path.string },
     {
-      en: (p) => `/dashboard/authority/${p.authorityId}/case/list`,
-      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossier/liste`,
+      en: (p) => `/dashboard/authority/${p.authorityId}/cases`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers`,
     }
   ),
   unassignedCaseList: defineLocalizedRoute(
     { authorityId: param.path.string },
     {
-      en: (p) => `/dashboard/authority/${p.authorityId}/case/list/unassigned`,
-      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossier/liste/non-assignes`,
+      en: (p) => `/dashboard/authority/${p.authorityId}/cases/unassigned`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers/non-assignes`,
     }
   ),
   authorityCreation: defineLocalizedRoute(
@@ -50,8 +50,8 @@ export const localizedRoutes = {
   authorityList: defineLocalizedRoute(
     {},
     {
-      en: (p) => `/dashboard/authority/list`,
-      fr: (p) => `/tableau-de-bord/collectivite/liste`,
+      en: (p) => `/dashboard/authoritys`,
+      fr: (p) => `/tableau-de-bord/collectivites`,
     }
   ),
   // authority: defineLocalizedRoute(

@@ -5,7 +5,7 @@ import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { CaseListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/list/CaseListPage';
+import { CaseListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/CaseListPage';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
