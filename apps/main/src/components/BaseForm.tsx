@@ -1,6 +1,6 @@
 import { DevTool } from '@hookform/devtools';
 import { Alert, Grid } from '@mui/material';
-import { FormEventHandler, PropsWithChildren, useState } from 'react';
+import { FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -20,6 +20,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
   const { t } = useTranslation('common');
   const [validationErrors, setValidationErrors] = useState<Partial<FieldErrorsImpl<any>>>(props.control._formState.errors);
   const [onSubmitError, setOnSubmitError] = useState<Error | null>(null);
+  const formRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
 
   // Some forms in dialogs need to force stopping submit propagation leakage on parent forms
   const onSubmit: FormEventHandler<HTMLFormElement> = (...args) => {
@@ -33,11 +34,15 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
           } else {
             setOnSubmitError(err as any); // The default case is good enough for now
           }
+
+          formRef.current?.scrollIntoView();
         }
       },
       (errors) => {
         // Only triggered on inputs validation errors
         setValidationErrors(errors);
+
+        formRef.current?.scrollIntoView();
       }
     );
 
@@ -49,7 +54,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
       {/* <DevTool control={props.control} /> */}
 
       <form onSubmit={onSubmit} aria-label={props.ariaLabel}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} ref={formRef}>
           {!!onSubmitError && (
             <Grid item xs={12} sx={{ py: 2 }}>
               <ErrorAlert errors={[onSubmitError]} />
