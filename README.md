@@ -132,8 +132,16 @@ scalingo -a ${SCALINGO_APP_NAME} addons
 scalingo -a ${SCALINGO_APP_NAME} logs
 scalingo -a ${SCALINGO_APP_NAME} logs --addon ${SCALING_ADDON_ID}
 scalingo -a ${SCALINGO_APP_NAME} run bash
+scalingo -a ${SCALINGO_APP_NAME} pgsql-console
 scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 ```
+
+Note that:
+
+- `pgsql-console` command will logs you onto the database but it's shell only (it uses the default Scalingo user)
+- `db-tunnel` command sets up a SSH tunnel first, so you need to configure your public SSH key in your Scalingo account settings, but then you will be able to use local software to navigate through the database, or even migrating the schema with custom scripts.
+
+To debug a remote database we advise creating a specific user (because you are not suppose to store credentials of super users). Make sure the user created has been granted needed roles on business tables (through the `psql-console` command), something like `GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA $SCHEMA TO $USERNAME;` that you can customize as needed ;) . (If you still see no table that's probably because you logged into the wrong database)
 
 ### Emails
 
