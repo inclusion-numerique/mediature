@@ -224,9 +224,6 @@ export function generateRewrites(technicalLang: Lang, routes: { [key in keyof ty
         continue;
       }
 
-      route.params;
-      route.paths['fr'];
-
       const nextjsParameters: any = {};
 
       for (const [parameterName, parameterValue] of Object.entries(route.params)) {
