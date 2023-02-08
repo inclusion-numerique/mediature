@@ -38,10 +38,7 @@ export function AddAgentPage({ params: { authorityId } }: AddAgentPageProps) {
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!authority) {
-    // TODO: in case of error... do the right thing, "notFound() / error500..."
-    // Error: <head> cannot appear as a child of <div>
-    // notFound();
-    return <span role="alert">Not found TODO</span>;
+    return notFound();
   }
 
   return (

@@ -28,6 +28,7 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
+import { notFound } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useForm } from 'react-hook-form';
@@ -123,10 +124,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   } else if (isInitialLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!caseWrapper) {
-    // TODO: in case of error... do the right thing, "notFound() / error500..."
-    // Error: <head> cannot appear as a child of <div>
-    // notFound();
-    return <span role="alert">Not found TODO</span>;
+    return notFound();
   }
 
   const targetedCase = caseWrapper.case;

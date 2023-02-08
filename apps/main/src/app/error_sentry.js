@@ -13,6 +13,8 @@
 import * as Sentry from '@sentry/nextjs';
 import NextErrorComponent from 'next/error';
 
+// TODO: this is not yet compatible with `appDir`, but then it will be merged into `error.tsx`
+
 const CustomErrorComponent = (props) => {
   return <NextErrorComponent statusCode={props.statusCode} />;
 };

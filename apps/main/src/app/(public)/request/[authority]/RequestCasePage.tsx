@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Grid, Typography } from '@mui/material';
+import { notFound } from 'next/navigation';
 import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
@@ -37,10 +38,7 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
   } else if (isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!authority) {
-    // TODO: in case of error... do the right thing, "notFound() / error500..."
-    // Error: <head> cannot appear as a child of <div>
-    // notFound();
-    return <span role="alert">Not found TODO</span>;
+    return notFound();
   }
 
   return (
