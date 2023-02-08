@@ -83,6 +83,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     setValue,
     control,
     reset,
+    watch,
   } = form;
 
   useMemo(() => {
@@ -106,6 +107,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const reminderAnchorRef = useRef<HTMLButtonElement | null>(null);
   const [reminderMinimumDate, setReminderMinimumDate] = useState<Date>(new Date());
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
+  const mainContainerRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
+  const [manualSubmitError, setManualSubmitError] = useState<Error | null>(null);
 
   const [addNoteModalOpen, setAddNoteModalOpen] = useState<boolean>(false);
   const handeOpenAddNoteModal = () => {
@@ -139,11 +142,29 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     await updateCaseAction(input);
   };
 
+  const submitOutsideBaseForm = async (input: UpdateCaseSchemaType) => {
+    try {
+      await updateCaseAction(input);
+
+      setManualSubmitError(null);
+    } catch (err) {
+      setManualSubmitError(err as unknown as Error);
+      mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+      throw err;
+    }
+  };
+
   const onClick = () => {};
 
   return (
     <>
-      <Grid container {...centeredContainerGridProps} spacing={2}>
+      <Grid container {...centeredContainerGridProps} spacing={2} ref={mainContainerRef}>
+        {!!manualSubmitError && (
+          <Grid item xs={12} sx={{ py: 2 }}>
+            <ErrorAlert errors={[manualSubmitError]} />
+          </Grid>
+        )}
         <Grid
           item
           xs={12}
@@ -163,7 +184,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
           <DatePicker
             open={reminderPickerOpen}
             label="Date de la demande"
-            value={targetedCase.termReminderAt}
+            value={watch('termReminderAt') || null}
             minDate={reminderMinimumDate}
             onChange={() => {}}
             onClose={() => {
@@ -175,7 +196,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               });
 
               try {
-                await updateCaseAction({
+                await submitOutsideBaseForm({
                   termReminderAt: control._formValues.termReminderAt,
                   status: control._formValues.status,
                   // Do not update values that need a form submit
@@ -188,9 +209,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                 });
               } catch (err) {
                 setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
-                // TODO: manage error
-
-                throw err;
               }
             }}
             componentsProps={{
@@ -239,7 +257,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               select
               aria-label="avancement du dossier"
               hiddenLabel={true}
-              defaultValue={control._defaultValues.status || ''}
+              value={watch('status') || ''}
               onChange={async (event) => {
                 const value = event.target.value as CaseStatusSchemaType;
 
@@ -248,7 +266,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                 });
 
                 try {
-                  await updateCaseAction({
+                  await submitOutsideBaseForm({
                     termReminderAt: control._formValues.termReminderAt,
                     status: control._formValues.status,
                     // Do not update values that need a form submit
@@ -261,9 +279,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   });
                 } catch (err) {
                   setValue('status', control._defaultValues.status || targetedCase.status);
-                  // TODO: manage error
-
-                  throw err;
                 }
               }}
               error={!!errors.status}
@@ -534,7 +549,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   closeAction={async (value: boolean) => {
                     setValue('close', value);
 
-                    await updateCaseAction({
+                    await submitOutsideBaseForm({
                       termReminderAt: control._formValues.termReminderAt,
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
