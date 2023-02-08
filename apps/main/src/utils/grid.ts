@@ -43,6 +43,16 @@ export const centeredAlertContainerGridProps: GridProps = {
   },
 };
 
+export const centeredErrorContainerGridProps: GridProps = {
+  direction: 'column',
+  sx: {
+    ...wideContainerGridProps.sx,
+    maxWidth: 'xl',
+    mx: 'auto',
+    justifyContent: 'center',
+  },
+};
+
 export const ulComponentResetStyles = {
   listStyle: 'none',
   paddingInlineStart: 0,

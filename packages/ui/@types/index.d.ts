@@ -12,7 +12,13 @@ declare module '*.scss?raw' {
 declare module '*.module.css';
 declare module '*.module.scss';
 
+declare module '*.svg' {
+  const value: any;
+  export default value;
+}
+
 declare module '*.svg?inline' {
+  // TODO: force using a raw loader
   const value: any;
   export default value;
 }

@@ -10,9 +10,13 @@ import '@mediature/main/src/app/layout.scss';
 import { Providers } from '@mediature/main/src/app/providers';
 import { defaultColorScheme } from '@mediature/main/src/utils/dsfr';
 
-export function RootLayout(props: PropsWithChildren) {
+export interface RootLayoutProps {
+  workaroundForNextJsPages?: boolean;
+}
+
+function MainStructure(props: PropsWithChildren) {
   return (
-    <html lang="fr" {...getColorSchemeHtmlAttributes({ defaultColorScheme })}>
+    <>
       <head>
         <StartDsfr />
         <DsfrHead defaultColorScheme={defaultColorScheme} />
@@ -25,6 +29,21 @@ export function RootLayout(props: PropsWithChildren) {
           <Display />
         </DsfrProvider>
       </body>
+    </>
+  );
+}
+
+export function RootLayout(props: PropsWithChildren<RootLayoutProps>) {
+  if (props.workaroundForNextJsPages === true) {
+    // When embedded through a server-side only page (for errors for example) `<html>` and `<body>`
+    // are already included by Next.js (the browser can ajust the structure but in our case `<html>` duplication
+    // throws a visible error in development so we avoid it (it does not change things that much since it's only specific pages))
+    return <MainStructure {...props} />;
+  }
+
+  return (
+    <html lang="fr" {...getColorSchemeHtmlAttributes({ defaultColorScheme })}>
+      <MainStructure {...props} />
     </html>
   );
 }
