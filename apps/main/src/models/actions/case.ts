@@ -33,6 +33,7 @@ export const UpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
+    description: incompleteCaseSchema.shape.description,
     units: incompleteCaseSchema.shape.units,
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,

@@ -96,6 +96,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: caseWrapper?.case.initiatedFrom,
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
+      description: caseWrapper?.case.description,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
       finalConclusion: caseWrapper?.case.finalConclusion,
@@ -202,6 +203,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   // Do not update values that need a form submit
                   initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                   caseId: control._defaultValues.caseId || targetedCase.id,
+                  description: control._defaultValues.description || targetedCase.description,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -272,6 +274,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
+                    description: control._defaultValues.description || targetedCase.description,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -422,11 +425,10 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
-                          inputProps={{
-                            readOnly: true,
-                          }}
                           label="Motif de la demande"
-                          value={targetedCase.description}
+                          {...register('description')}
+                          error={!!errors.description}
+                          helperText={errors?.description?.message}
                           multiline
                           minRows={3}
                           maxRows={10}
@@ -554,6 +556,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
+                      description: control._formValues.description,
                       units: control._formValues.units,
                       close: control._formValues.close,
                       finalConclusion: control._formValues.finalConclusion,
