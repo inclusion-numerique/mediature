@@ -70,11 +70,21 @@ We enabled the Postgres addon and the "review apps" feature.
 
 #### Domains
 
-For each environment you need to configure the domain DNS records to target the Scalingo instance when accessing the domain. It should look like:
+For each environment you need to configure the domain DNS records to target the Scalingo instance when accessing the domain.
+
+For the `www` subdomain:
 
 - Type: `CNAME`
 - Hostname: `www`
 - Value: `xxxxxxxxxx.scalingo.io` _(depending on the environment)_
+
+And since the root domain cannnot use a `CNAME` we have to use fixed IPs:
+
+- Type: `A`
+- Hostname: ``
+- Value: `xxx.xxx.xxx.xxx` _(depending on the environment)_
+
+_(you can find those IPs at https://doc.scalingo.com/platform/app/domain#configure-your-domain-name . There is a low risk they change so we should be fine... another dynamic solution would have been to use an `ALIAS` record if the DNS provider is compatible but it disables the `DNSSEC` and we are not confident yet of the real underlying risks so we stick we `A` records for now)_
 
 #### Postgres
 
