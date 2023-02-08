@@ -40,7 +40,7 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
-import { CasePlatformSchema, CaseStatusSchema } from '@mediature/main/src/models/entities/case';
+import { CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
@@ -240,8 +240,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               aria-label="avancement du dossier"
               hiddenLabel={true}
               defaultValue={control._defaultValues.status || ''}
-              inputProps={register('status')}
               onChange={async (event) => {
+                const value = event.target.value as CaseStatusSchemaType;
+
+                setValue('status', value, {
+                  shouldDirty: false, // To keeping simple the isDirty for the manual part
+                });
+
                 try {
                   await updateCaseAction({
                     termReminderAt: control._formValues.termReminderAt,
