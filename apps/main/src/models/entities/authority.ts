@@ -2,7 +2,7 @@ import z from 'zod';
 
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 
-export const AuthorityTypeSchema = z.enum(['CITY', 'SUBDIVISION', 'REGION']);
+export const AuthorityTypeSchema = z.enum(['CITY', 'FEDERATION_OF_CITIES', 'SUBDIVISION', 'REGION']);
 export type AuthorityTypeSchemaType = z.infer<typeof AuthorityTypeSchema>;
 
 export const AuthoritySchema = z

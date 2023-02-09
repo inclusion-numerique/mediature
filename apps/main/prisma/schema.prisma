@@ -290,7 +290,7 @@ model Attachment {
 
 enum AuthorityType {
   CITY
-  // TODO: inter-commune ?
+  FEDERATION_OF_CITIES
   SUBDIVISION // TODO: trad pour département
   REGION // TODO: trad pour région
 }

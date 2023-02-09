@@ -35,7 +35,7 @@ export const authorities: AuthoritySchemaType[] = [
     name: 'Bordeaux',
     slug: 'bordeaux',
     mainAgentId: null,
-    type: AuthorityTypeSchema.Values.CITY,
+    type: AuthorityTypeSchema.Values.FEDERATION_OF_CITIES,
     logo: null,
     createdAt: new Date('December 17, 2022 03:24:00'),
     updatedAt: new Date('December 19, 2022 04:33:00'),

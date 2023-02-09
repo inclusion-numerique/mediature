@@ -37,6 +37,7 @@
       "type": {
         "enum": {
           "CITY": "Ville",
+          "FEDERATION_OF_CITIES": "Intercommunalité",
           "REGION": "Région",
           "SUBDIVISION": "Département"
         }
