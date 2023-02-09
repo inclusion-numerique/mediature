@@ -92,15 +92,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          label="Téléphone"
-          placeholder="ex: 06 66 66 66 66"
-          // {...register('phone')}
-          // error={!!errors.phone}
-          // helperText={errors?.phone?.message}
-          fullWidth
-        />
-        {/* TODO: split into multiple components */}
+        <PhoneField />
       </Grid>
       <Grid item xs={12}>
         <TextField

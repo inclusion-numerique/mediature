@@ -11,14 +11,18 @@ overrides:
   '@storybook/instrumenter': 7.0.0-beta.19
   '@storybook/react': 7.0.0-beta.19
   '@storybook/testing-library': 0.0.14-next.1
+  '@types/country-data': ^0.0.2
+  '@types/google-libphonenumber': ^7.4.23
   '@types/lodash.debounce': ^4.0.7
   '@types/mjml': ^4.7.0
   '@types/mjml-react': ^2.0.6
   '@types/react': ^18.0.26
+  country-data: ^0.0.31
   date-fns: ^2.29.3
   dotenv: ^16.0.3
   dotenv-run-script: ^0.2.0
   get-tsconfig: ^4.2.0
+  google-libphonenumber: ^3.2.32
   i18next: ^22.4.5
   jest: ^29.3.1
   jest-environment-jsdom: ^29.3.1
@@ -236,6 +240,7 @@ importers:
       '@trpc/server': ^10.4.2
       '@types/bcrypt': ^5.0.0
       '@types/country-data': ^0.0.2
+      '@types/google-libphonenumber': ^7.4.23
       '@types/locks': ^0.2.1
       '@types/lodash.debounce': ^4.0.7
       '@types/mjml': ^4.7.0
@@ -260,6 +265,7 @@ importers:
       eventemitter3: ^5.0.0
       get-tsconfig: ^4.2.0
       git-rev-sync: ^3.0.2
+      google-libphonenumber: ^3.2.32
       i18next: ^22.4.5
       i18next-browser-languagedetector: ^7.0.1
       jest: ^29.3.1
@@ -329,6 +335,7 @@ importers:
       country-data: 0.0.31
       date-fns: 2.29.3
       eventemitter3: 5.0.0
+      google-libphonenumber: 3.2.32
       i18next: 22.4.9
       i18next-browser-languagedetector: 7.0.1
       locks: 0.2.2
@@ -366,6 +373,7 @@ importers:
       '@testing-library/user-event': 14.4.3
       '@types/bcrypt': 5.0.0
       '@types/country-data': 0.0.2
+      '@types/google-libphonenumber': 7.4.23
       '@types/locks': 0.2.1
       '@types/lodash.debounce': 4.0.7
       '@types/mjml': 4.7.0
@@ -488,6 +496,8 @@ importers:
       '@storybook/react': 7.0.0-beta.19
       '@storybook/testing-library': 0.0.14-next.1
       '@tanstack/query-core': ^4.19.1
+      '@types/country-data': ^0.0.2
+      '@types/google-libphonenumber': ^7.4.23
       '@types/html-to-text': ^9.0.0
       '@types/jest': ^29.4.0
       '@types/katex': ^0.16.0
@@ -499,10 +509,12 @@ importers:
       '@types/react-dom': ^18.0.7
       '@types/react-show-more-text': ^1.4.2
       babel-jest: ^29.4.1
+      country-data: ^0.0.31
       date-fns: ^2.29.3
       eslint: ^7.32.0
       eslint-config-custom: workspace:*
       get-tsconfig: ^4.2.0
+      google-libphonenumber: ^3.2.32
       html-to-text: ^9.0.3
       i18next: ^22.4.5
       jest: ^29.3.1
@@ -518,6 +530,7 @@ importers:
       react: ^18.2.0
       react-dom: ^18.2.0
       react-i18next: ^12.1.1
+      react-imask: ^6.4.3
       react-show-more-text: ^1.6.2
       ts-jest: ^29.0.3
       tsconfig: workspace:*
@@ -542,7 +555,9 @@ importers:
       '@lexical/table': 0.7.6_lexical@0.7.6
       '@lexical/utils': 0.7.6_lexical@0.7.6
       '@luma-team/mjml-react': 0.2.0_biqbaboplfbrettd7655fr4n2y
+      country-data: 0.0.31
       date-fns: 2.29.3
+      google-libphonenumber: 3.2.32
       html-to-text: 9.0.3
       i18next: 22.4.9
       katex: 0.15.6
@@ -554,6 +569,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-i18next: 12.1.1_iakk3dtjhjpukdoa4oua5khgci
+      react-imask: 6.4.3_react@18.2.0
       react-show-more-text: 1.6.2_react@18.2.0
     devDependencies:
       '@babel/core': 7.20.12
@@ -567,6 +583,8 @@ importers:
       '@storybook/react': 7.0.0-beta.19_lb6du3saekb5anf2gjv3wxj3oq
       '@storybook/testing-library': 0.0.14-next.1
       '@tanstack/query-core': 4.19.1
+      '@types/country-data': 0.0.2
+      '@types/google-libphonenumber': 7.4.23
       '@types/html-to-text': 9.0.0
       '@types/jest': 29.4.0
       '@types/katex': 0.16.0
@@ -4001,7 +4019,7 @@ packages:
     peerDependencies:
       jest: '>=28'
     dependencies:
-      jest: 29.3.1_2263m44mchjafa7bz7l52hbcpa
+      jest: 29.3.1_@types+node@17.0.45
     dev: true
 
   /@gouvfr/dsfr/1.8.5:
@@ -5045,7 +5063,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@mui/material': 5.10.16_lskpmcsdi7ipu6qpuapyu56ihm
+      '@mui/material': 5.10.16_ib3m5ricvtkl2cll7qpr2f6lvq
       '@types/react': 18.0.26
       react: 18.2.0
 
@@ -5147,7 +5165,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
-    dev: true
 
   /@mui/material/5.10.16_lskpmcsdi7ipu6qpuapyu56ihm:
     resolution: {integrity: sha512-JSHcDQQ+k30NKkCM/0KX6jq4F5LOrbFKZpS+cEl7scZWOCJpUPH5ccAT5a7O8wzrgNZ8Y9PnwzNvWBrfShpJFw==}
@@ -5183,6 +5200,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-is: 18.2.0
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+    dev: false
 
   /@mui/private-theming/5.11.7_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-XzRTSZdc8bhuUdjablTNv3kFkZ/XIMlKkOqqJCU0G8W3tWGXpau2DXkafPd1ddjPhF9zF3qLKNGgKCChYItjgA==}
@@ -5220,6 +5238,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/styled-engine/5.11.0_react@18.2.0:
     resolution: {integrity: sha512-AF06K60Zc58qf0f7X+Y/QjaHaZq16znliLnGc9iVrV/+s8Ln/FCoeNuFvhlCbZZQ5WQcJvcy59zp0nXrklGGPQ==}
@@ -5239,7 +5258,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5267,7 +5285,6 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
-    dev: true
 
   /@mui/system/5.10.16_ogriz7mfahdh34qnfautfro5yu:
     resolution: {integrity: sha512-OqI9B1jZ9zQ/dmoqseku4CzdEs9DbLiiMOaWxC3WeAJxM1UavlCgXz0encqm93LIlmSL7TjuHN1/rW8BJCnU8A==}
@@ -5297,6 +5314,7 @@ packages:
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 18.2.0
+    dev: false
 
   /@mui/system/5.11.7_kzbn2opkn2327fwg5yzwzya5o4:
     resolution: {integrity: sha512-uGB6hBxGlAdlmbLdTtUZYNPXkgQGGnKxHdkRATqsu7UlCxNsc/yS5NCEWy/3c4pnelD1LDLD39WrntP9mwhfkQ==}
@@ -8346,6 +8364,10 @@ packages:
     dependencies:
       '@types/minimatch': 5.1.2
       '@types/node': 17.0.45
+    dev: true
+
+  /@types/google-libphonenumber/7.4.23:
+    resolution: {integrity: sha512-C3ydakLTQa8HxtYf9ge4q6uT9krDX8smSIxmmW3oACFi5g5vv6T068PRExF7UyWbWpuYiDG8Nm24q2X5XhcZWw==}
     dev: true
 
   /@types/graceful-fs/4.1.5:
@@ -14154,6 +14176,11 @@ packages:
     dev: true
     optional: true
 
+  /google-libphonenumber/3.2.32:
+    resolution: {integrity: sha512-mcNgakausov/B/eTgVeX8qc8IwWjRrupk9UzZZ/QDEvdh5fAjE7Aa211bkZpZj42zKkeS6MTT8avHUwjcLxuGQ==}
+    engines: {node: '>=0.10'}
+    dev: false
+
   /gopd/1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
     dependencies:
@@ -14676,6 +14703,11 @@ packages:
   /image-ssim/0.2.0:
     resolution: {integrity: sha512-W7+sO6/yhxy83L0G7xR8YAc5Z5QFtYEXXRV6EaE8tuYBZJnA3gVgp3q7X7muhLZVodeb9UfvjSbwt9VJwjIYAg==}
     dev: true
+
+  /imask/6.4.3:
+    resolution: {integrity: sha512-aH2GHemGkr3cbRBfhogHMIx05eUxdHrZNlKTTLmz8VxpSopuHHJ8+85FsDlBVQqxPlDLhZuwj4lpHHWbLOdBSw==}
+    engines: {npm: '>=4.0.0'}
+    dev: false
 
   /immediate/3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
@@ -20398,6 +20430,17 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /react-imask/6.4.3_react@18.2.0:
+    resolution: {integrity: sha512-5WyCbubQErO8Wr/zLDyUyC1zCqQXP979QXW6BNirUGsM1VxFmVG0nNfXA1PSXlgdbaXWBiBj+VJBvg/8BDzieA==}
+    engines: {npm: '>=4.0.0'}
+    peerDependencies:
+      react: '>=0.14.0'
+    dependencies:
+      imask: 6.4.3
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /react-inspector/6.0.1_react@18.2.0:
     resolution: {integrity: sha512-cxKSeFTf7jpSSVddm66sKdolG90qURAX3g1roTeaN6x0YEbtWc8JpmFN9+yIqLNH2uEkYerWLtJZIXRIFuBKrg==}
     peerDependencies:
@@ -22653,7 +22696,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.3.1_2263m44mchjafa7bz7l52hbcpa
+      jest: 29.3.1
       jest-util: 29.3.1
       json5: 2.2.1
       lodash.memoize: 4.1.2

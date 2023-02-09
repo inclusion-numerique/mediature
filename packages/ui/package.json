@@ -36,7 +36,9 @@
     "@lexical/table": "0.7.6",
     "@lexical/utils": "0.7.6",
     "@luma-team/mjml-react": "^0.2.0",
+    "country-data": "^0.0.31",
     "date-fns": "^2.29.3",
+    "google-libphonenumber": "^3.2.32",
     "html-to-text": "^9.0.3",
     "i18next": "^22.4.5",
     "katex": "^0.15.2",
@@ -48,6 +50,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.1.1",
+    "react-imask": "^6.4.3",
     "react-show-more-text": "^1.6.2"
   },
   "devDependencies": {
@@ -62,6 +65,8 @@
     "@storybook/react": "7.0.0-beta.19",
     "@storybook/testing-library": "0.0.14-next.1",
     "@tanstack/query-core": "^4.19.1",
+    "@types/country-data": "^0.0.2",
+    "@types/google-libphonenumber": "^7.4.23",
     "@types/html-to-text": "^9.0.0",
     "@types/jest": "^29.4.0",
     "@types/katex": "^0.16.0",
