@@ -1,11 +1,11 @@
 'use client';
 
 import { Alert, Grid, Typography } from '@mui/material';
-import { notFound } from 'next/navigation';
 import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';

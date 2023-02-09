@@ -2,11 +2,11 @@
 
 import { Grid, Typography } from '@mui/material';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
 import { createContext, useContext } from 'react';
 
 import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';

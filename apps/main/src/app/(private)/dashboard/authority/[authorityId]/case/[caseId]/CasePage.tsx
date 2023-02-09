@@ -28,7 +28,6 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
-import { notFound } from 'next/navigation';
 import { useMemo, useRef, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useForm } from 'react-hook-form';
@@ -41,6 +40,7 @@ import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
