@@ -22,8 +22,11 @@ export const AddressInputSchema = z
     street: AddressSchema.shape.street,
     city: AddressSchema.shape.city,
     postalCode: AddressSchema.shape.postalCode,
-    countryCode: AddressSchema.shape.countryCode,
-    subdivision: AddressSchema.shape.subdivision,
+    // Since the tool is scoped to France we force the country to simplify the forms and the UI
+    countryCode: AddressSchema.shape.countryCode.default('FR'),
+    subdivision: AddressSchema.shape.subdivision.default(''),
+    // countryCode: AddressSchema.shape.countryCode,
+    // subdivision: AddressSchema.shape.subdivision,
   })
   .strict();
-export type AddressInputSchemaType = z.infer<typeof AddressInputSchema>;
+export type AddressInputSchemaType = z.input<typeof AddressInputSchema>;

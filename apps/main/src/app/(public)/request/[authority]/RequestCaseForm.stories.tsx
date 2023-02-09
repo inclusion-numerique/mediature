@@ -56,7 +56,11 @@ FilledStory.args = {
     email: 'jean@france.fr',
     firstname: 'Jean',
     lastname: 'Derrien',
-    // address: AddressInputSchema,
+    address: {
+      street: '3 rue de la Gare',
+      city: 'Rennes',
+      postalCode: '35000',
+    },
     // phone: PhoneInputSchema,
     alreadyRequestedInThePast: true,
     gotAnswerFromPreviousRequest: true,

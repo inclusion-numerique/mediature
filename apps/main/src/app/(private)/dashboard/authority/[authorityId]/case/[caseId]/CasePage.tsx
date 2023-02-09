@@ -96,6 +96,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: caseWrapper?.case.initiatedFrom,
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
+      address: {
+        street: caseWrapper?.citizen.address.street,
+        city: caseWrapper?.citizen.address.city,
+        postalCode: caseWrapper?.citizen.address.postalCode,
+      },
       description: caseWrapper?.case.description,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
@@ -203,6 +208,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   // Do not update values that need a form submit
                   initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                   caseId: control._defaultValues.caseId || targetedCase.id,
+                  address: {
+                    street: control._defaultValues.address?.street || citizen.address.street,
+                    postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
+                    city: control._defaultValues.address?.city || citizen.address.city,
+                    subdivision: undefined as unknown as string,
+                    countryCode: undefined as unknown as string,
+                  },
                   description: control._defaultValues.description || targetedCase.description,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
@@ -274,6 +286,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
+                    address: {
+                      street: control._defaultValues.address?.street || citizen.address.street,
+                      postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
+                      city: control._defaultValues.address?.city || citizen.address.city,
+                      subdivision: undefined as unknown as string,
+                      countryCode: undefined as unknown as string,
+                    },
                     description: control._defaultValues.description || targetedCase.description,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
@@ -395,7 +414,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Coordonnées
                         </Typography>
                       </Grid>
-                      {/* TODO: address+phone */}
+                      {/* TODO: phone */}
                       <Grid item xs={12}>
                         <TextField
                           inputProps={{
@@ -404,6 +423,36 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           type="email"
                           label="Email"
                           value={citizen.email}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          label="Adresse"
+                          placeholder="20 rue de la ..."
+                          {...register('address.street')}
+                          error={!!errors.address?.street}
+                          helperText={errors?.address?.street?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Code postal"
+                          placeholder="75000"
+                          {...register('address.postalCode')}
+                          error={!!errors.address?.postalCode}
+                          helperText={errors?.address?.postalCode?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          label="Ville"
+                          placeholder="Paris"
+                          {...register('address.city')}
+                          error={!!errors.address?.city}
+                          helperText={errors?.address?.city?.message}
                           fullWidth
                         />
                       </Grid>
@@ -556,6 +605,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
+                      address: {
+                        street: control._formValues.address.street,
+                        postalCode: control._formValues.address.postalCode,
+                        city: control._formValues.address.city,
+                        subdivision: undefined as unknown as string,
+                        countryCode: undefined as unknown as string,
+                      },
                       description: control._formValues.description,
                       units: control._formValues.units,
                       close: control._formValues.close,

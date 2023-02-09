@@ -105,18 +105,18 @@ export const caseRouter = router({
         finalConclusion: null,
         nextRequirements: null,
         citizen: {
-          // TODO: get real address/phone from the form
+          // TODO: get real phone from the form
           create: {
             email: input.email,
             firstname: input.firstname,
             lastname: input.lastname,
             address: {
               create: {
-                street: '',
-                city: '',
-                postalCode: '',
-                countryCode: '',
-                subdivision: '',
+                street: input.address.street,
+                city: input.address.city,
+                postalCode: input.address.postalCode,
+                countryCode: input.address.countryCode,
+                subdivision: input.address.subdivision,
               },
             },
             phone: {
@@ -198,6 +198,19 @@ export const caseRouter = router({
         closedAt: closedAt,
         finalConclusion: input.finalConclusion,
         nextRequirements: input.nextRequirements,
+        citizen: {
+          update: {
+            address: {
+              update: {
+                street: input.address.street,
+                city: input.address.city,
+                postalCode: input.address.postalCode,
+                countryCode: input.address.countryCode,
+                subdivision: input.address.subdivision,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -302,7 +315,11 @@ export const caseRouter = router({
         id: input.id,
       },
       include: {
-        citizen: true,
+        citizen: {
+          include: {
+            address: true,
+          },
+        },
         Note: true,
       },
     });
@@ -382,7 +399,11 @@ export const caseRouter = router({
         },
       },
       include: {
-        citizen: true,
+        citizen: {
+          include: {
+            address: true,
+          },
+        },
       },
     });
 

@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { withEmailClientOverviewFactory, withEmailRenderer } from '@mediature/docs/.storybook/email';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
+import { addresses } from '@mediature/main/src/fixtures/address';
 import { RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { CaseRequestConfirmationEmail, formatTitle } from '@mediature/ui/src/emails/templates/case-request-confirmation/email';
@@ -40,7 +41,9 @@ NormalStory.args = {
     email: 'jean@france.fr',
     firstname: 'Théodora',
     lastname: 'Aubert',
-    // address: AddressInputSchema,
+    address: {
+      ...addresses[0],
+    },
     // phone: PhoneInputSchema,
     alreadyRequestedInThePast: true,
     gotAnswerFromPreviousRequest: true,
@@ -71,7 +74,7 @@ const WithSubmittedDataStory = Template.bind({});
 WithSubmittedDataStory.args = {
   ...NormalStory.args,
   submittedRequestData: {
-    ...(NormalStory.args.submittedRequestData as RequestCaseSchemaType),
+    ...((NormalStory.args ? NormalStory.args.submittedRequestData : {}) as RequestCaseSchemaType),
     emailCopyWanted: true,
   },
 };

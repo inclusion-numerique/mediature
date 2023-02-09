@@ -64,13 +64,32 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
       <Grid item xs={12}>
         <TextField
           label="Adresse"
-          placeholder="ex: 20 rue de la ..."
-          // {...register('address')}
-          // error={!!errors.address}
-          // helperText={errors?.address?.message}
+          placeholder="20 rue de la ..."
+          {...register('address.street')}
+          error={!!errors.address?.street}
+          helperText={errors?.address?.street?.message}
           fullWidth
         />
-        {/* TODO: split into multiple components */}
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Code postal"
+          placeholder="75000"
+          {...register('address.postalCode')}
+          error={!!errors.address?.postalCode}
+          helperText={errors?.address?.postalCode?.message}
+          fullWidth
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Ville"
+          placeholder="Paris"
+          {...register('address.city')}
+          error={!!errors.address?.city}
+          helperText={errors?.address?.city?.message}
+          fullWidth
+        />
       </Grid>
       <Grid item xs={12}>
         <TextField

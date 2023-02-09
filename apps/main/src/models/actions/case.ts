@@ -15,7 +15,7 @@ export const RequestCaseSchema = z
     email: CitizenSchema.shape.email,
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
-    // address: AddressInputSchema,
+    address: AddressInputSchema,
     // phone: PhoneInputSchema,
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
     gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
@@ -33,6 +33,8 @@ export const UpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
+    address: AddressInputSchema,
+    // phone: PhoneInputSchema,
     description: incompleteCaseSchema.shape.description,
     units: incompleteCaseSchema.shape.units,
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,

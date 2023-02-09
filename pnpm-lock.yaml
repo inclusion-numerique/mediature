@@ -235,6 +235,7 @@ importers:
       '@trpc/react-query': ^10.4.2
       '@trpc/server': ^10.4.2
       '@types/bcrypt': ^5.0.0
+      '@types/country-data': ^0.0.2
       '@types/locks': ^0.2.1
       '@types/lodash.debounce': ^4.0.7
       '@types/mjml': ^4.7.0
@@ -248,6 +249,7 @@ importers:
       babel-plugin-import: ^1.13.6
       bcrypt: ^5.1.0
       concurrently: ^7.6.0
+      country-data: ^0.0.31
       cross-env: ^7.0.3
       cypress: ^11.2.0
       date-fns: ^2.29.3
@@ -324,6 +326,7 @@ importers:
       '@trpc/react-query': 10.4.3_x72ucuwg27nhluiflrpycjcdya
       '@trpc/server': 10.4.3
       bcrypt: 5.1.0
+      country-data: 0.0.31
       date-fns: 2.29.3
       eventemitter3: 5.0.0
       i18next: 22.4.9
@@ -362,6 +365,7 @@ importers:
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@testing-library/user-event': 14.4.3
       '@types/bcrypt': 5.0.0
+      '@types/country-data': 0.0.2
       '@types/locks': 0.2.1
       '@types/lodash.debounce': 4.0.7
       '@types/mjml': 4.7.0
@@ -8248,6 +8252,10 @@ packages:
   /@types/cookie/0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
 
+  /@types/country-data/0.0.2:
+    resolution: {integrity: sha512-9TtlOfoHEMWojmAV1IoisMlM9kXGw4QDAamkXUiCZBtU9sY3187naTc1OXwD3QVE1mMkPZbBVdyjVdBu7wJlNA==}
+    dev: true
+
   /@types/cross-spawn/6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
@@ -11096,6 +11104,13 @@ packages:
       path-type: 4.0.0
       yaml: 1.10.2
 
+  /country-data/0.0.31:
+    resolution: {integrity: sha512-YqlY/i6ikZwoBFfdjK+hJTGaBdTgDpXLI15MCj2UsXZ2cPBb+Kx86AXmDH7PRGt0LUleck0cCgNdWeIhfbcxkQ==}
+    dependencies:
+      currency-symbol-map: 2.2.0
+      underscore: 1.13.6
+    dev: false
+
   /cpu-features/0.0.4:
     resolution: {integrity: sha512-fKiZ/zp1mUwQbnzb9IghXtHtDoTMtNeb8oYGx6kX2SYfhnG0HNdBEBIzB9b5KlXu5DQPhfy3mInbBxFcgwAr3A==}
     engines: {node: '>=10.0.0'}
@@ -11445,6 +11460,10 @@ packages:
 
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
+
+  /currency-symbol-map/2.2.0:
+    resolution: {integrity: sha512-fPZJ3jqM68+AAgqQ7UaGbgHL/39rp6l7GyqS2k1HJPu/kpS8D07x/+Uup6a9tCUKIlOFcRrDCf1qxSt8jnI5BA==}
+    dev: false
 
   /cwd/0.10.0:
     resolution: {integrity: sha512-YGZxdTTL9lmLkCUTpg4j0zQ7IhRB5ZmqNBbGCl3Tg6MP/d5/6sY7L5mmTjzbc6JKgVZYiqTQTNhPFsbXNGlRaA==}
@@ -22634,7 +22653,7 @@ packages:
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.3.1
+      jest: 29.3.1_2263m44mchjafa7bz7l52hbcpa
       jest-util: 29.3.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -23005,6 +23024,10 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+
+  /underscore/1.13.6:
+    resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
+    dev: false
 
   /undici/5.11.0:
     resolution: {integrity: sha512-oWjWJHzFet0Ow4YZBkyiJwiK5vWqEYoH7BINzJAJOLedZ++JpAlCbUktW2GQ2DS2FpKmxD/JMtWUUWl1BtghGw==}
