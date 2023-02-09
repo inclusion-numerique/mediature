@@ -1,0 +1,91 @@
+import { LoadingButton as Button } from '@mui/lab';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@mui/material';
+import React, { useRef, useState } from 'react';
+
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
+
+export interface ConfirmationDialogProps {
+  open: boolean;
+  title?: string;
+  description?: string | JSX.Element;
+  onConfirm: () => Promise<void>;
+  onCancel?: () => Promise<void>;
+  onClose: () => void;
+}
+
+export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [actionError, setActionError] = useState<Error | null>(null);
+  const dialogContentRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
+
+  return (
+    <Dialog
+      fullWidth
+      open={props.open}
+      onClose={() => {
+        if (isLoading) {
+          // Prevent closing if the user just confirms an action
+          return;
+        }
+
+        props.onClose();
+      }}
+    >
+      <DialogTitle>{props.title || 'Confirmation'}</DialogTitle>
+      <DialogContent ref={dialogContentRef}>
+        <DialogContentText>
+          <Grid container direction="column" spacing={2}>
+            {!!actionError && (
+              <Grid item xs={12}>
+                <ErrorAlert errors={[actionError]} />
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              {props.description || 'Êtes-vous sûr de vouloir continuer ?'}
+            </Grid>
+          </Grid>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions sx={{ p: 2 }}>
+        <Button
+          onClick={async () => {
+            if (props.onCancel) {
+              await props.onCancel();
+            }
+
+            props.onClose();
+          }}
+          disabled={isLoading}
+        >
+          Annuler
+        </Button>
+        <Button
+          color="primary"
+          onClick={async () => {
+            setIsLoading(true);
+
+            try {
+              await props.onConfirm();
+
+              props.onClose();
+            } catch (err) {
+              if (err instanceof Error) {
+                setActionError(err);
+              } else {
+                setActionError(err as any); // The default case is good enough for now
+              }
+
+              dialogContentRef.current?.scrollIntoView({ behavior: 'smooth' });
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+          loading={isLoading}
+          variant="contained"
+        >
+          Confirmer
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
