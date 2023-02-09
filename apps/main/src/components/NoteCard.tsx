@@ -17,13 +17,13 @@ import {
   MenuItem,
   Tooltip,
 } from '@mui/material';
-import { useConfirm } from 'material-ui-confirm';
 import { useState } from 'react';
 import { createContext, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseNoteSchemaType } from '@mediature/main/src/models/entities/case';
+import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 import { UpdateNoteForm } from '../app/(private)/dashboard/authority/[authorityId]/case/[caseId]/UpdateNoteForm';
@@ -59,23 +59,20 @@ export function NoteCard(props: NoteCardProps) {
     setAnchorEl(null);
   };
 
-  const askRemovalConfirmation = useConfirm();
+  const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
   const removeAction = async () => {
-    try {
-      await askRemovalConfirmation({
-        description: <>Êtes-vous sûr de vouloir supprimer de cette note ?</>,
-      });
-    } catch (e) {
-      return;
-    }
+    showConfirmationDialog({
+      description: <>Êtes-vous sûr de vouloir supprimer de cette note ?</>,
+      onConfirm: async () => {
+        const result = await removeNoteFromCase.mutateAsync({
+          noteId: props.note.id,
+        });
 
-    const result = await removeNoteFromCase.mutateAsync({
-      noteId: props.note.id,
+        handleCloseMenu();
+        handleCloseModal();
+      },
     });
-
-    handleCloseMenu();
-    handleCloseModal();
   };
 
   return (

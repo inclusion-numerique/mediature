@@ -42,7 +42,6 @@
     "katex": "^0.15.2",
     "lexical": "0.7.6",
     "lodash.debounce": "^4.0.8",
-    "material-ui-confirm": "^3.0.7",
     "mjml": "^4.13.0",
     "next": "^13.1.6",
     "prettier": "^2.3.2",

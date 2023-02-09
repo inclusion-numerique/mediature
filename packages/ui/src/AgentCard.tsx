@@ -3,11 +3,11 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { Alert, Card, CardContent, CardHeader, Grid, IconButton, ListItemIcon, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
-import { useConfirm } from 'material-ui-confirm';
 import Image from 'next/image';
 import { useState } from 'react';
 
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
+import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface AgentCardProps {
@@ -27,26 +27,23 @@ export function AgentCard(props: AgentCardProps) {
     setAnchorEl(null);
   };
 
-  const askRemovalConfirmation = useConfirm();
+  const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
   const removeAction = async () => {
-    try {
-      await askRemovalConfirmation({
-        description: (
-          <>
-            Êtes-vous sûr de vouloir supprimer{' '}
-            <Typography component="span" sx={{ fontWeight: 'bold' }}>
-              {props.agent.firstname} {props.agent.lastname}
-            </Typography>{' '}
-            de la collectivité ?
-          </>
-        ),
-      });
-    } catch (e) {
-      return;
-    }
-
-    await props.removeAction();
+    showConfirmationDialog({
+      description: (
+        <>
+          Êtes-vous sûr de vouloir supprimer{' '}
+          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+            {props.agent.firstname} {props.agent.lastname}
+          </Typography>{' '}
+          de la collectivité ?
+        </>
+      ),
+      onConfirm: async () => {
+        await props.removeAction();
+      },
+    });
   };
 
   return (

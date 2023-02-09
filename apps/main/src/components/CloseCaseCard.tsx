@@ -4,13 +4,13 @@ import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { Button, Card, CardContent, Collapse, Grid, TextField, Tooltip, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
-import { useConfirm } from 'material-ui-confirm';
 import { PropsWithChildren, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
   case: CaseSchemaType;
@@ -23,8 +23,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
 
   const [closeAreaExpanded, setCloseAreaExpanded] = useState<boolean>(!!props.case.closedAt);
 
-  const askCloseCaseConfirmation = useConfirm();
-  const askReopenCaseConfirmation = useConfirm();
+  const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
   const {
     register,
@@ -54,24 +53,21 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
             {!!props.case.closedAt && (
               <Button
                 onClick={async () => {
-                  try {
-                    await askReopenCaseConfirmation({
-                      description: (
-                        <>
-                          Êtes-vous vous sûr de vouloir réouvrir le dossier ?
-                          <br />
-                          <br />
-                          <Typography component="span" sx={{ fontStyle: 'italic' }}>
-                            Dans le cas d&apos;une simple modification de texte vous pouvez manipuler le dossier même s&apos;il est fermé.
-                          </Typography>
-                        </>
-                      ),
-                    });
-                  } catch (e) {
-                    return;
-                  }
-
-                  await props.closeAction(true);
+                  showConfirmationDialog({
+                    description: (
+                      <>
+                        Êtes-vous vous sûr de vouloir réouvrir le dossier ?
+                        <br />
+                        <br />
+                        <Typography component="span" sx={{ fontStyle: 'italic' }}>
+                          Dans le cas d&apos;une simple modification de texte vous pouvez manipuler le dossier même s&apos;il est fermé.
+                        </Typography>
+                      </>
+                    ),
+                    onConfirm: async () => {
+                      await props.closeAction(true);
+                    },
+                  });
                 }}
                 color="error"
                 size="large"
@@ -116,24 +112,21 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   <Grid item xs={12}>
                     <Button
                       onClick={async () => {
-                        try {
-                          await askCloseCaseConfirmation({
-                            description: (
-                              <>
-                                Êtes-vous sûr de vouloir clôturer ce dossier ?
-                                <br />
-                                <br />
-                                <Typography component="span" sx={{ fontStyle: 'italic' }}>
-                                  Le requérant sera notifié de la fermerture du dossier.
-                                </Typography>
-                              </>
-                            ),
-                          });
-                        } catch (e) {
-                          return;
-                        }
-
-                        await props.closeAction(true);
+                        showConfirmationDialog({
+                          description: (
+                            <>
+                              Êtes-vous sûr de vouloir clôturer ce dossier ?
+                              <br />
+                              <br />
+                              <Typography component="span" sx={{ fontStyle: 'italic' }}>
+                                Le requérant sera notifié de la fermerture du dossier.
+                              </Typography>
+                            </>
+                          ),
+                          onConfirm: async () => {
+                            await props.closeAction(true);
+                          },
+                        });
                       }}
                       size="large"
                       variant="contained"

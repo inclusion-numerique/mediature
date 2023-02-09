@@ -4,7 +4,6 @@ import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { Button, Card, CardContent, Chip, Divider, Grid, Typography, alpha } from '@mui/material';
 import { format } from 'date-fns';
-import { useConfirm } from 'material-ui-confirm';
 import { useTranslation } from 'react-i18next';
 import ShowMoreText from 'react-show-more-text';
 
@@ -13,6 +12,7 @@ import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
+import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface UnassignedCaseSliderCardProps {
   case: CaseSchemaType;
@@ -27,26 +27,23 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
 
   const theme = useColors();
 
-  const askAssignmentConfirmation = useConfirm();
+  const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
   const assignAction = async (caseId: string) => {
-    try {
-      await askAssignmentConfirmation({
-        description: (
-          <>
-            Voulez-vous vous attribuer le dossier de{' '}
-            <Typography component="span" sx={{ fontWeight: 'bold' }}>
-              {props.citizen.firstname} {props.citizen.lastname}
-            </Typography>{' '}
-            ?
-          </>
-        ),
-      });
-    } catch (e) {
-      return;
-    }
-
-    await props.assignAction(caseId);
+    showConfirmationDialog({
+      description: (
+        <>
+          Voulez-vous vous attribuer le dossier de{' '}
+          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+            {props.citizen.firstname} {props.citizen.lastname}
+          </Typography>{' '}
+          ?
+        </>
+      ),
+      onConfirm: async () => {
+        await props.assignAction(caseId);
+      },
+    });
   };
 
   return (

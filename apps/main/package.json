@@ -79,7 +79,6 @@
     "i18next": "^22.4.5",
     "i18next-browser-languagedetector": "^7.0.1",
     "locks": "^0.2.2",
-    "material-ui-confirm": "^3.0.7",
     "mjml": "^4.13.0",
     "msw": "^0.49.1",
     "next": "^13.1.6",
