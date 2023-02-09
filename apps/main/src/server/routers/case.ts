@@ -147,6 +147,7 @@ export const caseRouter = router({
       lastname: newCase.citizen.lastname,
       caseHumanId: newCase.humanId.toString(),
       authorityName: newCase.authority.name,
+      submittedRequestData: input,
     });
 
     // TODO: since public should return almost nothing? or nothing at all
