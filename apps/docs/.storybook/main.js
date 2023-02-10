@@ -69,7 +69,7 @@ module.exports = {
     let scssRuleFound = false;
     for (const originalRule of originalRules) {
       // If for `sass` we add our additional one (they cannot colocate on the same level because they would be played both... resulting in CSS parsing errors)
-      if (originalRule.test.test('.scss')) {
+      if (originalRule.test && originalRule.test.test('.scss')) {
         scssRuleFound = true;
 
         config.module.rules.push({
