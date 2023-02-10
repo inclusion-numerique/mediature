@@ -10,6 +10,7 @@ import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { RequestCasePrefillSchemaType, RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
+import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export interface RequestCaseFormProps {
   prefill?: RequestCasePrefillSchemaType;
@@ -92,7 +93,15 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <PhoneField />
+        <PhoneField
+          initialPhoneNumber={props.prefill?.phone}
+          onGlobalChange={(phoneNumber) => {
+            setValue('phone', phoneNumber);
+          }}
+          error={!!errors.phone}
+          helperText={errors?.phone?.message}
+          fullWidth
+        />
       </Grid>
       <Grid item xs={12}>
         <TextField

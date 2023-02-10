@@ -29,6 +29,7 @@ export const PhoneInputSchema = z
     countryCode: PhoneSchema.shape.countryCode,
     number: PhoneSchema.shape.number,
   })
+  .required()
   .strict()
   .superRefine((data, ctx) => {
     if (data) {
@@ -44,7 +45,7 @@ export const PhoneInputSchema = z
         if (!phoneNumberUtil.isValidNumber(parsedPhone)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `le numéro de téléphone doit avoir une combinaison valide, peut-être un oubli du code de zone`,
+            message: `le numéro de téléphone doit avoir une combinaison valide`,
           });
         }
 

@@ -105,7 +105,6 @@ export const caseRouter = router({
         finalConclusion: null,
         nextRequirements: null,
         citizen: {
-          // TODO: get real phone from the form
           create: {
             email: input.email,
             firstname: input.firstname,
@@ -121,10 +120,10 @@ export const caseRouter = router({
             },
             phone: {
               create: {
-                phoneType: PhoneTypeSchema.Values.UNSPECIFIED,
-                callingCode: '',
-                countryCode: '',
-                number: '',
+                phoneType: input.phone.phoneType,
+                callingCode: input.phone.callingCode,
+                countryCode: input.phone.countryCode,
+                number: input.phone.number,
               },
             },
           },
@@ -207,6 +206,14 @@ export const caseRouter = router({
                 postalCode: input.address.postalCode,
                 countryCode: input.address.countryCode,
                 subdivision: input.address.subdivision,
+              },
+            },
+            phone: {
+              update: {
+                phoneType: input.phone.phoneType,
+                callingCode: input.phone.callingCode,
+                countryCode: input.phone.countryCode,
+                number: input.phone.number,
               },
             },
           },
@@ -318,6 +325,7 @@ export const caseRouter = router({
         citizen: {
           include: {
             address: true,
+            phone: true,
           },
         },
         Note: true,
@@ -402,6 +410,7 @@ export const caseRouter = router({
         citizen: {
           include: {
             address: true,
+            phone: true,
           },
         },
       },

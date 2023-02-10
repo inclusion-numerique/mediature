@@ -4,6 +4,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm } from '@mediature/docs/.storybook/testing';
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
+import { phoneInputs } from '@mediature/main/src/fixtures/phone';
 import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/case';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
@@ -61,7 +62,9 @@ FilledStory.args = {
       city: 'Rennes',
       postalCode: '35000',
     },
-    // phone: PhoneInputSchema,
+    phone: {
+      ...phoneInputs[0],
+    },
     alreadyRequestedInThePast: true,
     gotAnswerFromPreviousRequest: true,
     description:

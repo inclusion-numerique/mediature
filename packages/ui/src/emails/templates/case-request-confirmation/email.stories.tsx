@@ -4,6 +4,7 @@ import { withEmailClientOverviewFactory, withEmailRenderer } from '@mediature/do
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { addresses } from '@mediature/main/src/fixtures/address';
+import { phoneInputs } from '@mediature/main/src/fixtures/phone';
 import { RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { CaseRequestConfirmationEmail, formatTitle } from '@mediature/ui/src/emails/templates/case-request-confirmation/email';
@@ -44,7 +45,9 @@ NormalStory.args = {
     address: {
       ...addresses[0],
     },
-    // phone: PhoneInputSchema,
+    phone: {
+      ...phoneInputs[0],
+    },
     alreadyRequestedInThePast: true,
     gotAnswerFromPreviousRequest: true,
     description:

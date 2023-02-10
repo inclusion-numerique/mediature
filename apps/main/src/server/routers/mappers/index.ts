@@ -1,4 +1,4 @@
-import { Address, Agent, Authority, Case, Citizen, Note, User } from '@prisma/client';
+import { Address, Agent, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
 
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
@@ -61,14 +61,14 @@ export function casePrismaToModel(targetedCase: Case): CaseSchemaType {
   };
 }
 
-export function citizenPrismaToModel(citizen: Citizen & { address: Address }): CitizenSchemaType {
+export function citizenPrismaToModel(citizen: Citizen & { address: Address; phone: Phone }): CitizenSchemaType {
   return {
     id: citizen.id,
     email: citizen.email,
     firstname: citizen.firstname,
     lastname: citizen.lastname,
     address: citizen.address,
-    // phone: citizen.phone,
+    phone: citizen.phone,
     createdAt: citizen.createdAt,
     updatedAt: citizen.updatedAt,
     deletedAt: citizen.deletedAt,

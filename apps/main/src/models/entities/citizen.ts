@@ -10,7 +10,7 @@ export const CitizenSchema = z
     firstname: z.string().min(1),
     lastname: z.string().min(1),
     address: AddressSchema,
-    // phone: PhoneSchema,
+    phone: PhoneSchema,
     createdAt: z.date(),
     updatedAt: z.date(),
     deletedAt: z.date().nullable(),

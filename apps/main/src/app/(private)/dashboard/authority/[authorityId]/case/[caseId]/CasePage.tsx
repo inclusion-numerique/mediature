@@ -46,6 +46,7 @@ import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponen
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
+import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export const CasePageContext = createContext({
   ContextualNoteCard: NoteCard,
@@ -100,6 +101,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         street: caseWrapper?.citizen.address.street,
         city: caseWrapper?.citizen.address.city,
         postalCode: caseWrapper?.citizen.address.postalCode,
+      },
+      phone: {
+        phoneType: caseWrapper?.citizen.phone.phoneType,
+        callingCode: caseWrapper?.citizen.phone.callingCode,
+        countryCode: caseWrapper?.citizen.phone.countryCode,
+        number: caseWrapper?.citizen.phone.number,
       },
       description: caseWrapper?.case.description,
       units: caseWrapper?.case.units,
@@ -215,6 +222,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     subdivision: undefined as unknown as string,
                     countryCode: undefined as unknown as string,
                   },
+                  phone: {
+                    phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
+                    callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
+                    countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
+                    number: control._defaultValues.phone?.number || citizen.phone.number,
+                  },
                   description: control._defaultValues.description || targetedCase.description,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
@@ -292,6 +305,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       city: control._defaultValues.address?.city || citizen.address.city,
                       subdivision: undefined as unknown as string,
                       countryCode: undefined as unknown as string,
+                    },
+                    phone: {
+                      phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
+                      callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
+                      countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
+                      number: control._defaultValues.phone?.number || citizen.phone.number,
                     },
                     description: control._defaultValues.description || targetedCase.description,
                     units: control._defaultValues.units || targetedCase.units,
@@ -456,6 +475,25 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           fullWidth
                         />
                       </Grid>
+                      <Grid item xs={12}>
+                        <PhoneField
+                          initialPhoneNumber={{
+                            phoneType: citizen.phone.phoneType,
+                            callingCode: citizen.phone.callingCode,
+                            countryCode: citizen.phone.countryCode,
+                            number: citizen.phone.number,
+                          }}
+                          onGlobalChange={(phoneNumber) => {
+                            setValue('phone', phoneNumber, {
+                              // shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                          error={!!errors.phone}
+                          helperText={errors?.phone?.message}
+                          fullWidth
+                        />
+                      </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
@@ -611,6 +649,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         city: control._formValues.address.city,
                         subdivision: undefined as unknown as string,
                         countryCode: undefined as unknown as string,
+                      },
+                      phone: {
+                        phoneType: control._formValues.phone.phoneType,
+                        callingCode: control._formValues.phone.callingCode,
+                        countryCode: control._formValues.phone.countryCode,
+                        number: control._formValues.phone.number,
                       },
                       description: control._formValues.description,
                       units: control._formValues.units,
