@@ -4,7 +4,7 @@ import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 
-export const CasePlatformSchema = z.enum(['WEB']);
+export const CasePlatformSchema = z.enum(['MAIL', 'PHONE', 'WEB']);
 export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 
 export const CaseStatusSchema = z.enum(['TO_PROCESS', 'MAKE_XXX_CALL', 'SYNC_WITH_CITIZEN', 'SYNC_WITH_ADMINISTATION', 'ABOUT_TO_CLOSE', 'STUCK']);

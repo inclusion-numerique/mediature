@@ -46,6 +46,8 @@
     "case": {
       "platform": {
         "enum": {
+          "MAIL": "Courrier postal",
+          "PHONE": "Téléphone",
           "WEB": "Formulaire internet"
         }
       },

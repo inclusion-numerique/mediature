@@ -191,6 +191,8 @@ enum CaseStatus {
 }
 
 enum CaseInitialPlatform {
+  MAIL
+  PHONE
   WEB
 }
 
