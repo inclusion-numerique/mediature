@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
-import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
+import { AsAdmin as PrivateLayoutAsAdminStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import {
   AuthorityCreationPage,
   AuthorityCreationPageContext,
@@ -49,7 +49,7 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {
-  layoutStory: PrivateLayoutNormalStory,
+  layoutStory: PrivateLayoutAsAdminStory,
   childrenContext: {
     context: AuthorityCreationPageContext,
     value: {

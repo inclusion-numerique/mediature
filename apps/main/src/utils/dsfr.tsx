@@ -3,7 +3,9 @@ import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import type { DefaultColorScheme } from '@codegouvfr/react-dsfr/next-appdir';
 import { EventEmitter } from 'eventemitter3';
 
+import { HeaderAuthoritySwitchItem, HeaderAuthoritySwitchItemProps } from '@mediature/main/src/components/HeaderAuthoritySwitchItem';
 import { HeaderUserItem } from '@mediature/main/src/components/HeaderUserItem';
+import { PublicFacingAuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
 
 export const defaultColorScheme: DefaultColorScheme = 'system';
@@ -21,7 +23,9 @@ export const homeLinkProps = {
   title: 'Accueil - Médiature',
 };
 
-export const logoutQuickAccessItem = (user: TokenUserSchemaType): HeaderProps.QuickAccessItem => {
+export interface AuthoritySwitchQuickAccessItemOptions extends Omit<HeaderAuthoritySwitchItemProps, 'eventEmitter'> {}
+
+export const authoritySwichQuickAccessItem = (props: AuthoritySwitchQuickAccessItemOptions): HeaderProps.QuickAccessItem => {
   const eventEmitter = new EventEmitter();
 
   return {
@@ -31,7 +35,25 @@ export const logoutQuickAccessItem = (user: TokenUserSchemaType): HeaderProps.Qu
         eventEmitter.emit('click', event);
       },
     },
-    text: <HeaderUserItem user={user} eventEmitter={eventEmitter} />,
+    text: <HeaderAuthoritySwitchItem eventEmitter={eventEmitter} {...props} />,
+  };
+};
+
+export interface UserQuickAccessItemOptions {
+  showDashboardMenuItem?: boolean;
+}
+
+export const userQuickAccessItem = (user: TokenUserSchemaType, options?: UserQuickAccessItemOptions): HeaderProps.QuickAccessItem => {
+  const eventEmitter = new EventEmitter();
+
+  return {
+    iconId: undefined as any,
+    buttonProps: {
+      onClick: (event) => {
+        eventEmitter.emit('click', event);
+      },
+    },
+    text: <HeaderUserItem user={user} eventEmitter={eventEmitter} showDashboardMenuItem={options?.showDashboardMenuItem} />,
   };
 };
 

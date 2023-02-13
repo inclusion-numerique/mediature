@@ -8,18 +8,19 @@ import { EventEmitter } from 'eventemitter3';
 import NextLink from 'next/link';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
-import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
+import { UserInterfaceAuthoritySchemaType } from '@mediature/main/src/models/entities/ui';
 import { logout } from '@mediature/main/src/utils/auth';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { Avatar } from '@mediature/ui/src/Avatar';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
-export interface HeaderUserItemProps {
-  user: TokenUserSchemaType;
+export interface HeaderAuthoritySwitchItemProps {
+  authorities: UserInterfaceAuthoritySchemaType[];
+  currentAuthority?: UserInterfaceAuthoritySchemaType;
   eventEmitter: EventEmitter;
-  showDashboardMenuItem?: boolean;
 }
 
-export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
+export function HeaderAuthoritySwitchItem(props: PropsWithChildren<HeaderAuthoritySwitchItemProps>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -46,12 +47,17 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
   return (
     <Box aria-label="options" aria-controls={open ? 'account-menu' : undefined} aria-haspopup="true" aria-expanded={open ? 'true' : undefined}>
       <Grid container direction="row" alignItems="center" spacing={1}>
-        <Grid item>
-          <Avatar fullName={`${props.user.firstname} ${props.user.lastname}`} />
-        </Grid>
-        <Grid item>
-          {props.user.firstname} {props.user.lastname}
-        </Grid>
+        {!!props.currentAuthority ? (
+          <>
+            {/* TODO: logo? */}
+            {/* <Grid item>
+              <Avatar fullName={`${props.currentAuthority.name}`} />
+            </Grid> */}
+            <Grid item>{props.currentAuthority.name}</Grid>
+          </>
+        ) : (
+          <Grid item>Sélectionner une collectivité</Grid>
+        )}
       </Grid>
       <FocusTrap open={open}>
         <Menu
@@ -66,26 +72,20 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           sx={{ zIndex: 2000 }} // Needed to be displayed over the navbar on mobile devices
         >
-          {props.showDashboardMenuItem === true && (
-            <MenuItem component={NextLink} href="#">
-              <ListItemIcon>
-                <SettingsIcon fontSize="small" />
-              </ListItemIcon>
-              Tableau de bord
-            </MenuItem>
-          )}
-          <MenuItem component={NextLink} href="#">
-            <ListItemIcon>
-              <SettingsIcon fontSize="small" />
-            </ListItemIcon>
-            Paramètres
-          </MenuItem>
-          <MenuItem onClick={logout}>
-            <ListItemIcon>
-              <LogoutIcon fontSize="small" />
-            </ListItemIcon>
-            Se déconnecter
-          </MenuItem>
+          {props.authorities.map((authority) => {
+            return (
+              <MenuItem
+                key={authority.id}
+                component={NextLink}
+                href={linkRegistry.get('authority', {
+                  authorityId: authority.id,
+                })}
+                selected={authority.id === props.currentAuthority?.id}
+              >
+                {authority.name}
+              </MenuItem>
+            );
+          })}
         </Menu>
       </FocusTrap>
     </Box>

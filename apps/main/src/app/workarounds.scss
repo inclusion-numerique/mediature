@@ -16,3 +16,15 @@
     background-color: var(--background-active-blue-france-active) !important;
   }
 }
+
+a.MuiMenuItem-root {
+  background-image: none !important;
+
+  &:hover {
+    background-color: var(--background-default-grey-hover) !important;
+  }
+
+  &:active {
+    background-color: var(--background-default-grey-active) !important;
+  }
+}

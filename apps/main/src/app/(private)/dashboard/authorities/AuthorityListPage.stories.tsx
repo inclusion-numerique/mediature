@@ -4,7 +4,7 @@ import { userEvent, within } from '@storybook/testing-library';
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
-import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
+import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { AuthorityListPage } from '@mediature/main/src/app/(private)/dashboard/authorities/AuthorityListPage';
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
@@ -69,7 +69,7 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {
-  layoutStory: PrivateLayoutNormalStory,
+  layoutStory: PrivateLayoutAsMainAgentStory,
 });
 
 const SearchLoadingWithLayoutStory = Template.bind({});
@@ -110,5 +110,5 @@ SearchLoadingWithLayoutStory.play = async ({ canvasElement }) => {
 };
 
 export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory, {
-  layoutStory: PrivateLayoutNormalStory,
+  layoutStory: PrivateLayoutAsMainAgentStory,
 });

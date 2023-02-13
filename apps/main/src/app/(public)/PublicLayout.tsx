@@ -5,7 +5,7 @@ import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import { PropsWithChildren } from 'react';
 
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
-import { commonFooterAttributes, commonHeaderAttributes, logoutQuickAccessItem } from '@mediature/main/src/utils/dsfr';
+import { commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
@@ -20,7 +20,11 @@ export function PublicLayout(props: PropsWithChildren) {
   // TODO: display a loading... maybe on the whole layout?
   let quickAccessItems: HeaderProps.QuickAccessItem[] | undefined;
   if (sessionWrapper.status === 'authenticated') {
-    quickAccessItems = [logoutQuickAccessItem(sessionWrapper.data?.user)];
+    quickAccessItems = [
+      userQuickAccessItem(sessionWrapper.data?.user, {
+        showDashboardMenuItem: true,
+      }),
+    ];
   } else {
     quickAccessItems = [
       {

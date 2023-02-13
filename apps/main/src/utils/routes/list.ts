@@ -54,13 +54,13 @@ export const localizedRoutes = {
       fr: (p) => `/tableau-de-bord/collectivites`,
     }
   ),
-  // authority: defineLocalizedRoute(
-  //   { authorityId: param.path.string },
-  //   {
-  //     en: (p) => `/dashboard/authority/${p.authorityId}`,
-  //     fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}`,
-  //   }
-  // ),
+  authority: defineLocalizedRoute(
+    { authorityId: param.path.string },
+    {
+      en: (p) => `/dashboard/authority/${p.authorityId}`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}`,
+    }
+  ),
   dashboard: defineLocalizedRoute(
     {},
     {
@@ -173,7 +173,7 @@ export const routes = {
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.en),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.en),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.en),
-    // authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.en),
+    authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.en),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.en),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.en),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.en),
@@ -192,7 +192,7 @@ export const routes = {
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.fr),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.fr),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.fr),
-    // authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.fr),
+    authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.fr),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.fr),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.fr),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.fr),

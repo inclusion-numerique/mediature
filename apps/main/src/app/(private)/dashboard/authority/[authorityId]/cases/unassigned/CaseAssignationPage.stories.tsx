@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { Normal as PrivateLayoutNormalStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
+import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import {
   CaseAssignationPage,
   CaseAssignationPageContext,
@@ -83,7 +83,7 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 };
 
 export const WithLayout = prepareStory(WithLayoutStory, {
-  layoutStory: PrivateLayoutNormalStory,
+  layoutStory: PrivateLayoutAsMainAgentStory,
   childrenContext: {
     context: CaseAssignationPageContext,
     value: {
