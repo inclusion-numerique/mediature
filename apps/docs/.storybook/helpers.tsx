@@ -143,6 +143,17 @@ export function prepareStory<ComponentType, ContextValueType extends MatchingCon
         </LayoutStory>
       );
     });
+
+    // It we detect some network mocking from the layout story, make sure to reuse it
+    if (LayoutStory.parameters?.msw) {
+      if (!story.parameters.msw) {
+        story.parameters.msw = {
+          handlers: [],
+        };
+      }
+
+      story.parameters.msw.handlers = [...LayoutStory.parameters.msw.handlers, ...story.parameters.msw.handlers];
+    }
   }
 
   if (options?.childrenContext) {
