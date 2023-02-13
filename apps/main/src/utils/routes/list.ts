@@ -50,7 +50,7 @@ export const localizedRoutes = {
   authorityList: defineLocalizedRoute(
     {},
     {
-      en: (p) => `/dashboard/authoritys`,
+      en: (p) => `/dashboard/authorities`,
       fr: (p) => `/tableau-de-bord/collectivites`,
     }
   ),
