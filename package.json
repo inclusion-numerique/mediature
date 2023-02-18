@@ -75,7 +75,7 @@
       "yaml-loader": "^0.8.0"
     }
   },
-  "packageManager": "pnpm@7.16.0",
+  "packageManager": "pnpm@7.27.1",
   "engines": {
     "node": "16.15.0"
   }

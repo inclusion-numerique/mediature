@@ -10,7 +10,7 @@ env:
   CONTAINER_IMAGE_FOLDER: ghcr.io/${{ github.repository }}
   NODE_OPTIONS: --max_old_space_size=4096
   NODE_VERSION: 16.15.0
-  PNPM_VERSION: 7.16.0
+  PNPM_VERSION: 7.27.1
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
   PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX: .cache/ms-playwright
 jobs:
