@@ -64,8 +64,13 @@ import SubscriptIcon from '@mui/icons-material/Subscript';
 import SuperscriptIcon from '@mui/icons-material/Superscript';
 import UndoIcon from '@mui/icons-material/Undo';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import { Grid, IconButton, ListItemIcon, Menu, MenuItem, Typography } from '@mui/material';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 import type { LexicalEditor, NodeKey } from 'lexical';
 import {
   $createParagraphNode,

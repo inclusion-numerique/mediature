@@ -2,8 +2,8 @@
 
 import { createMuiDsfrThemeProvider } from '@codegouvfr/react-dsfr/mui';
 import { frFR as coreFrFR } from '@mui/material/locale';
-// import { DataGrid, frFR as dataGridFrFR } from '@mui/x-data-grid';
-import { frFR as datePickerFrFR } from '@mui/x-date-pickers';
+// import { frFR as dataGridFrFR } from '@mui/x-data-grid/locales/frFR';
+import { frFR as datePickerFrFR } from '@mui/x-date-pickers/locales/frFR';
 
 export const { MuiDsfrThemeProvider } = createMuiDsfrThemeProvider({
   augmentMuiTheme: ({ nonAugmentedMuiTheme, frColorTheme }) => {

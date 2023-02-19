@@ -1,10 +1,8 @@
-import { Box, Button } from '@mui/material';
 import { Meta, StoryFn } from '@storybook/react';
-import { screen, userEvent, within } from '@storybook/testing-library';
-import { EventEmitter } from 'eventemitter3';
+import { within } from '@storybook/testing-library';
 
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { UnassignedCaseSlider, UnassignedCaseSliderProps } from '@mediature/main/src/components/UnassignedCaseSlider';
+import { UnassignedCaseSlider } from '@mediature/main/src/components/UnassignedCaseSlider';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 

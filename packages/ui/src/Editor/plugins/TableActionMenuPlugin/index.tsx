@@ -25,7 +25,10 @@ import {
   getTableSelectionFromTableElement,
 } from '@lexical/table';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { $addUpdateTag, $getRoot, $getSelection, $isRangeSelection, DEPRECATED_$isGridSelection } from 'lexical';
 import * as React from 'react';
 import { ReactPortal, useCallback, useEffect, useRef, useState } from 'react';

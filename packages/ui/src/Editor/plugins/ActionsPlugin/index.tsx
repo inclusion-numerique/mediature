@@ -12,8 +12,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
-import { Grid, IconButton } from '@mui/material';
-import type { LexicalEditor } from 'lexical';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import { $getRoot, $isParagraphNode } from 'lexical';
 import { useEffect, useState } from 'react';
 

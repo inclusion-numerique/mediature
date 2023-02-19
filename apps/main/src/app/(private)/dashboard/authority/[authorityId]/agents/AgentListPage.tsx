@@ -1,7 +1,9 @@
 'use client';
 
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { Button, Grid, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';

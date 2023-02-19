@@ -1,7 +1,7 @@
 'use client';
 
-import { Grid, Typography } from '@mui/material';
-import Image from 'next/image';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { createContext, useContext } from 'react';
 
 import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm';

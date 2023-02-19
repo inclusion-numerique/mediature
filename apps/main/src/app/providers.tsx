@@ -1,7 +1,7 @@
 'use client';
 
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PropsWithChildren } from 'react';
 import { createContext, useContext } from 'react';
 import { I18nextProvider } from 'react-i18next';

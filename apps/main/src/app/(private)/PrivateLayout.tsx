@@ -4,7 +4,7 @@ import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header } from '@codegouvfr/react-dsfr/Header';
 import { MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation';
 import { MenuProps } from '@codegouvfr/react-dsfr/MainNavigation/Menu';
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';

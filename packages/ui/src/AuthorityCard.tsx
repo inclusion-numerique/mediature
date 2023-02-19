@@ -1,6 +1,10 @@
 'use client';
 
-import { Alert, Card, CardContent, Grid, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';

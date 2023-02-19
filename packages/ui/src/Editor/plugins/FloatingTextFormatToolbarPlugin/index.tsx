@@ -46,7 +46,8 @@ import SubscriptIcon from '@mui/icons-material/Subscript';
 import SuperscriptIcon from '@mui/icons-material/Superscript';
 import UndoIcon from '@mui/icons-material/Undo';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import { Grid, IconButton } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import {
   $getSelection,
   $isRangeSelection,

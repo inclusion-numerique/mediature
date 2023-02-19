@@ -1,5 +1,6 @@
 import { DevTool } from '@hookform/devtools';
-import { Alert, Grid } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
 import { Mutex } from 'locks';
 import { FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';

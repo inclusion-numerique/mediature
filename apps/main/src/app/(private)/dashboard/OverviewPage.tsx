@@ -1,9 +1,6 @@
 'use client';
 
-import { Link, Typography } from '@mui/material';
-import NextLink from 'next/link';
-
-import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import Typography from '@mui/material/Typography';
 
 export function OverviewPage() {
   return (

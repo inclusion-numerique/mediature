@@ -1,14 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoadingButton as Button } from '@mui/lab';
-import { Grid, TextField } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import Button from '@mui/lab/LoadingButton';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
-import { UpdateCaseNotePrefillSchemaType, UpdateCaseNoteSchema, UpdateCaseNoteSchemaType } from '@mediature/main/src/models/actions/case';
+import { UpdateCaseNoteSchema, UpdateCaseNoteSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseNoteSchemaType } from '@mediature/main/src/models/entities/case';
 import { EditorWrapper } from '@mediature/ui/src/Editor/EditorWrapper';
 

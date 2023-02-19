@@ -1,6 +1,7 @@
 'use client';
 
-import { Grid, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { createContext, useContext } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';

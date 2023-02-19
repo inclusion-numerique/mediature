@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 import { Meta, StoryFn } from '@storybook/react';
 import { screen, userEvent, within } from '@storybook/testing-library';
 import { EventEmitter } from 'eventemitter3';

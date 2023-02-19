@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import addDays from 'date-fns/addDays';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,4 +1,3 @@
-import { Box, CircularProgress } from '@mui/material';
 import MuiAvatar from '@mui/material/Avatar';
 import * as React from 'react';
 

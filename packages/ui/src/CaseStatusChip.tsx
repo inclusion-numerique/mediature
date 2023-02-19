@@ -1,7 +1,8 @@
 'use client';
 
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
-import { Avatar, Chip } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
 
 import { CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';

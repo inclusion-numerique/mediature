@@ -1,8 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoadingButton as Button } from '@mui/lab';
-import { Grid, Link, TextField, Typography } from '@mui/material';
+import Button from '@mui/lab/LoadingButton';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';

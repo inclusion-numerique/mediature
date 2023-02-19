@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
-import { addHours } from 'date-fns';
+import addHours from 'date-fns/addHours';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { cases } from '@mediature/main/src/fixtures/case';

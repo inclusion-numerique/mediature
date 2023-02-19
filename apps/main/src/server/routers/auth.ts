@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { addMinutes } from 'date-fns';
+import addMinutes from 'date-fns/addMinutes';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';

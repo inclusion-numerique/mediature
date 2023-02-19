@@ -2,7 +2,11 @@
 
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Box, Grid, Link, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import FocusTrap from '@mui/material/Unstable_TrapFocus';
 import { EventEmitter } from 'eventemitter3';
 import NextLink from 'next/link';

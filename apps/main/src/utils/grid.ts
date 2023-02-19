@@ -1,4 +1,4 @@
-import { GridProps } from '@mui/material';
+import { GridProps } from '@mui/material/Grid';
 
 export const wideContainerGridProps: GridProps = {
   sx: {

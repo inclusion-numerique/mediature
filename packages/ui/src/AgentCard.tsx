@@ -2,7 +2,17 @@
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { Alert, Card, CardContent, CardHeader, Grid, IconButton, ListItemIcon, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useState } from 'react';
 

@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
-import { A11y, Keyboard, Mousewheel, Pagination, Scrollbar } from 'swiper';
+import Grid from '@mui/material/Grid';
+import { A11y, Keyboard, Mousewheel, Scrollbar } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/scrollbar';
 import { Swiper, SwiperSlide } from 'swiper/react';

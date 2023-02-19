@@ -1,6 +1,9 @@
-import { format as formatDate, formatDistance, formatRelative, isDate } from 'date-fns';
-import { Locale } from 'date-fns';
-import { fr as frDateLocale } from 'date-fns/locale';
+import type { Locale } from 'date-fns';
+import formatDate from 'date-fns/format';
+import formatDistance from 'date-fns/formatDistance';
+import formatRelative from 'date-fns/formatRelative';
+import isDate from 'date-fns/isDate';
+import frDateLocale from 'date-fns/locale/fr';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 

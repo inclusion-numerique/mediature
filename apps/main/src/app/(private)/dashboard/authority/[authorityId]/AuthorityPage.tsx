@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export interface AuthorityPageProps {
   params: { authorityId: string };

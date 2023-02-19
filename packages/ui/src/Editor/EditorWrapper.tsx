@@ -8,7 +8,9 @@
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import { InitialEditorStateType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
-import { Card, FormControl, FormControlLabel, FormHelperText } from '@mui/material';
+import Card from '@mui/material/Card';
+import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import { useTheme } from '@mui/material/styles';
 import { EditorState, LexicalEditor } from 'lexical';
 

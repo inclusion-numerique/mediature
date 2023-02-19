@@ -1,6 +1,7 @@
 'use client';
 
-import { Grid, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { createContext, useContext } from 'react';
 
 import { SignInForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-in/SignInForm';

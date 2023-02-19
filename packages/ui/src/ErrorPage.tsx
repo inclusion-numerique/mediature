@@ -1,7 +1,8 @@
 // import { fr } from '@codegouvfr/react-dsfr';
 import ovoidSprite from '@gouvfr/dsfr/dist/artwork/background/ovoid.svg';
 import technicalErrorSprite from '@gouvfr/dsfr/dist/artwork/pictograms/system/technical-error.svg';
-import { Button, Grid } from '@mui/material';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import NextLink from 'next/link';
 import React from 'react';
 

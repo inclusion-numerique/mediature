@@ -45,17 +45,6 @@ const moduleExports = async () => {
       outputFileTracingRoot: path.join(__dirname, '../../'),
       swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
       transpilePackages: ['@mediature/ui'],
-      modularizeImports: {
-        '@mui/material/?(((\\w*)?/?)*)': {
-          transform: '@mui/material/{{ matches.[1] }}/{{member}}',
-        },
-        '@mui/lab/?(((\\w*)?/?)*)': {
-          transform: '@mui/lab/{{ matches.[1] }}/{{member}}',
-        },
-        '@mui/icons-material/?(((\\w*)?/?)*)': {
-          transform: '@mui/icons-material/{{ matches.[1] }}/{{member}}',
-        },
-      },
     },
     async rewrites() {
       return [

@@ -1,6 +1,8 @@
 'use client';
 
-import { Alert, Grid, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
