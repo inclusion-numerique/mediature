@@ -158,7 +158,7 @@ export const authorityRouter = router({
       throw new Error(`aucune collectivité trouvée`);
     }
 
-    return { authority: PublicFacingAuthoritySchema.parse({ ...authority, logo: authority.logo ? authority.logo.fileUrl : null }) };
+    return { authority: PublicFacingAuthoritySchema.parse({ ...authority, logo: authority.logo ? `https://TODO.com/${authority.logo.id}` : null }) };
   }),
   listAuthorities: privateProcedure.input(ListAuthoritiesSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {

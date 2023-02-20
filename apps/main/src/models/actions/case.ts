@@ -3,12 +3,13 @@ import z from 'zod';
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
 import { AddressInputSchema } from '@mediature/main/src/models/entities/address';
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
-import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
+import { AttachmentInputSchema, AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { CaseAttachmentTypeSchema, CaseNoteSchema, incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
 
+export const requestCaseAttachmentsMax = 10;
 export const RequestCaseSchema = z
   .object({
     authorityId: incompleteCaseSchema.shape.authorityId,
@@ -21,7 +22,7 @@ export const RequestCaseSchema = z
     gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
     description: incompleteCaseSchema.shape.description,
     emailCopyWanted: incompleteCaseSchema.shape.emailCopyWanted,
-    // TODO: attachements
+    attachments: z.array(AttachmentInputSchema).max(requestCaseAttachmentsMax),
   })
   .strict();
 export type RequestCaseSchemaType = z.infer<typeof RequestCaseSchema>;
@@ -29,6 +30,7 @@ export type RequestCaseSchemaType = z.infer<typeof RequestCaseSchema>;
 export const RequestCasePrefillSchema = RequestCaseSchema.deepPartial();
 export type RequestCasePrefillSchemaType = z.infer<typeof RequestCasePrefillSchema>;
 
+export const updateCaseAttachmentsMax = 100;
 export const UpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
@@ -42,6 +44,7 @@ export const UpdateCaseSchema = z
     close: z.boolean(),
     finalConclusion: incompleteCaseSchema.shape.finalConclusion,
     nextRequirements: incompleteCaseSchema.shape.nextRequirements,
+    attachments: z.array(AttachmentInputSchema).max(updateCaseAttachmentsMax),
   })
   .strict();
 export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
@@ -136,7 +139,7 @@ export type UpdateCaseNotePrefillSchemaType = z.infer<typeof UpdateCaseNotePrefi
 
 export const AddAttachmentToCaseSchema = z
   .object({
-    attachmentId: AttachmentSchema.shape.id,
+    attachmentId: AttachmentInputSchema,
     caseId: incompleteCaseSchema.shape.id,
     transmitter: CaseAttachmentTypeSchema,
   })
@@ -148,7 +151,7 @@ export type AddAttachmentToCasePrefillSchemaType = z.infer<typeof AddAttachmentT
 
 export const RemoveAttachmentFromCaseSchema = z
   .object({
-    attachmentId: AttachmentSchema.shape.id,
+    attachmentId: AttachmentInputSchema,
   })
   .strict();
 export type RemoveAttachmentFromCaseSchemaType = z.infer<typeof RemoveAttachmentFromCaseSchema>;

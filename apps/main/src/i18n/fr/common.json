@@ -9,6 +9,13 @@
       "form_contains_errors_other": "Le formulaire soumi contient plusieurs erreurs. Les champs invalides ont été marqués en rouge."
     }
   },
+  "file": {
+    "allowedExtensions_one": "Format supporté : {{extensions}}.",
+    "allowedExtensions_other": "Formats supportés : {{extensions}}.",
+    "size": "{{ size, humanFileSize }}",
+    "upToMaxfiles_one": "Un seul fichier autorisé.",
+    "upToMaxfiles_other": "Jusqu'à {{count}} fichiers autorisés."
+  },
   "date": {
     "ago": "{{ date, ago }}",
     "default": "{{ date }}",

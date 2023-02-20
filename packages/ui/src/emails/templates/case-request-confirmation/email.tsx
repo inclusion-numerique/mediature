@@ -72,7 +72,7 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
                 <li>
                   {formatListHeader('Description :')} {props.submittedRequestData.description}
                 </li>
-                {/* TODO: add the number of attachements? Or their name? */}
+                {/* TODO: add the number of attachments? Or their name? */}
               </ul>
             </p>
           </MjmlText>

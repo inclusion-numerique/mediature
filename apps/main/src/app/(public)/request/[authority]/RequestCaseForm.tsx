@@ -16,7 +16,15 @@ import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
-import { RequestCasePrefillSchemaType, RequestCaseSchema, RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
+import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
+import {
+  RequestCasePrefillSchemaType,
+  RequestCaseSchema,
+  RequestCaseSchemaType,
+  requestCaseAttachmentsMax,
+} from '@mediature/main/src/models/actions/case';
+import { AttachmentKindSchema, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
 
@@ -37,7 +45,10 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
     watch,
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
-    defaultValues: props.prefill,
+    defaultValues: {
+      attachments: [],
+      ...props.prefill,
+    },
   });
 
   const onSubmit = async (input: RequestCaseSchemaType) => {
@@ -179,15 +190,21 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <FormControl>
-          <FormHelperText id="upload-helper-text">
-            Si vous avez des documents susceptibles de nous aider, merci de les envoyer en cliquant sur le bouton ci-dessous :{' '}
-          </FormHelperText>
-          <Button variant="contained" aria-describedby="upload-helper-text">
-            {/* TODO: improve + extensions */}
-            Joindre un fichier
-            <input hidden accept="image/*" multiple type="file" />
-          </Button>
+        <FormControl error={!!errors.attachments}>
+          <FormLabel id="upload-label" sx={{ mb: 1 }}>
+            Si vous avez des documents susceptibles de nous aider, merci de les joindre à votre demande :
+          </FormLabel>
+          <Uploader
+            attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
+            maxFiles={requestCaseAttachmentsMax}
+            onCommittedFilesChanged={async (attachments: UiAttachmentSchemaType[]) => {
+              setValue(
+                'attachments',
+                attachments.map((attachment) => attachment.id)
+              );
+            }}
+          />
+          <FormHelperText>{errors?.attachments?.message}</FormHelperText>
         </FormControl>
       </Grid>
       <Grid item xs={12}>

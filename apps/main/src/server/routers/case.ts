@@ -1,4 +1,4 @@
-import { Note } from '@prisma/client';
+import { AttachmentKind, AttachmentStatus, CaseAttachmentType, Note } from '@prisma/client';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
@@ -17,9 +17,11 @@ import {
   UpdateCaseNoteSchema,
   UpdateCaseSchema,
 } from '@mediature/main/src/models/actions/case';
+import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import { caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -91,6 +93,12 @@ export async function canUserManageThisCase(userId: string, caseId: string): Pro
 
 export const caseRouter = router({
   requestCase: publicProcedure.input(RequestCaseSchema).mutation(async ({ ctx, input }) => {
+    const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
+      AttachmentKindSchema.Values.CASE_DOCUMENT,
+      input.attachments,
+      []
+    );
+
     const newCase = await prisma.case.create({
       data: {
         alreadyRequestedInThePast: input.alreadyRequestedInThePast,
@@ -133,6 +141,17 @@ export const caseRouter = router({
             id: input.authorityId,
           },
         },
+        AttachmentsOnCases: {
+          createMany: {
+            skipDuplicates: true,
+            data: attachmentsToAdd.map((attachmentId) => {
+              return {
+                attachmentId: attachmentId,
+                transmitter: CaseAttachmentType.CITIZEN,
+              };
+            }),
+          },
+        },
       },
       include: {
         citizen: true,
@@ -148,6 +167,8 @@ export const caseRouter = router({
       authorityName: newCase.authority.name,
       submittedRequestData: input,
     });
+
+    await markNewAttachmentsAsUsed();
 
     // TODO: since public should return almost nothing? or nothing at all
 

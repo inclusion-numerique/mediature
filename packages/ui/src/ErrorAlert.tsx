@@ -1,10 +1,10 @@
 import ReplayIcon from '@mui/icons-material/Replay';
-import Alert from '@mui/material/Alert';
+import Alert, { AlertProps } from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 
 // import { QueryObserverResult, RefetchOptions } from '@tansack/query-core';
 
-export interface ErrorAlertProps {
+export interface ErrorAlertProps extends Pick<AlertProps, 'sx'> {
   errors: (Error | any)[];
   // TODO: impossible to import types... why?
   // refetchs: (options?: RefetchOptions) => Promise<QueryObserverResult<unknown, unknown>>[];
@@ -43,6 +43,7 @@ export function ErrorAlert(props: ErrorAlertProps) {
     <Alert
       severity="error"
       sx={{
+        ...(props.sx || {}),
         '& .MuiAlert-message': {
           width: '100%',
         },

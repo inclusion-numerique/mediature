@@ -6,6 +6,7 @@ import isDate from 'date-fns/isDate';
 import frDateLocale from 'date-fns/locale/fr';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import prettyBytes from 'pretty-bytes';
 
 import frCommonTranslations from '@mediature/main/src/i18n/fr/common.json';
 
@@ -55,6 +56,12 @@ i18next.use(LanguageDetector).init(
             }
 
             return formatDate(value, format, { locale });
+          } else if (typeof value === 'number') {
+            if (format === 'humanFileSize') {
+              return prettyBytes(value, {
+                locale: lng,
+              });
+            }
           }
         }
 

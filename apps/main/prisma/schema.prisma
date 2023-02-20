@@ -263,21 +263,27 @@ model Agent {
 
 // TODO: Admin model?
 
-enum AttachementStatus {
+enum AttachmentStatus {
   PENDING_UPLOAD
   VALID
   EXPIRED
 }
 
+enum AttachmentKind {
+  CASE_DOCUMENT
+  AUTHORITY_LOGO
+  MESSAGE_DOCUMENT
+}
+
 /// @@Gen.model(hide: true)
 model Attachment {
-  id            String            @id @default(uuid()) @db.Uuid
-  contentType   String // TODO: enum?
-  fileUrl       String
-  fileUrlSecret String
-  size          Int // TODO: set max from here
-  name          String?
-  status        AttachementStatus @default(VALID)
+  id          String           @id @default(uuid()) @db.Uuid
+  kind        AttachmentKind
+  contentType String
+  value       Bytes            @db.ByteA
+  size        Int
+  name        String?
+  status      AttachmentStatus @default(PENDING_UPLOAD)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -286,8 +292,6 @@ model Attachment {
   Authority              Authority[] // TODO: Prevent this because there is no sens retrieving authority from attachment?
   AttachmentsOnCases     AttachmentsOnCases[]
   AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
-
-  @@unique([fileUrl])
 }
 
 enum AuthorityType {
@@ -317,7 +321,7 @@ model Authority {
   Agent           Agent[]
 }
 
-enum CaseAttachementType {
+enum CaseAttachmentType {
   AGENT
   ADMINISTRATION
   CITIZEN
@@ -325,9 +329,9 @@ enum CaseAttachementType {
 
 /// @@Gen.model(hide: true)
 model AttachmentsOnCases {
-  caseId       String              @db.Uuid
-  attachmentId String              @db.Uuid
-  transmitter  CaseAttachementType @default(CITIZEN)
+  caseId       String             @db.Uuid
+  attachmentId String             @db.Uuid
+  transmitter  CaseAttachmentType @default(CITIZEN)
 
   case       Case       @relation(fields: [caseId], references: [id])
   attachment Attachment @relation(fields: [attachmentId], references: [id])
@@ -337,9 +341,9 @@ model AttachmentsOnCases {
 
 /// @@Gen.model(hide: true)
 model AttachmentsOnCaseNotes {
-  noteId       String              @db.Uuid
-  attachmentId String              @db.Uuid
-  transmitter  CaseAttachementType @default(CITIZEN)
+  noteId       String             @db.Uuid
+  attachmentId String             @db.Uuid
+  transmitter  CaseAttachmentType @default(CITIZEN)
 
   note       Note       @relation(fields: [noteId], references: [id])
   attachment Attachment @relation(fields: [attachmentId], references: [id])

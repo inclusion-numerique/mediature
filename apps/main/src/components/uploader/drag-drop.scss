@@ -1,0 +1,88 @@
+.uppy-Container {
+  .uppy-Root {
+    color: var(--text-default-grey) !important;
+  }
+
+  button {
+    color: var(--text-default-grey) !important;
+    font-size: 1rem !important;
+  }
+
+  // Workaround to customise the icon of the drag-and-drop area
+  .uppy-DragDrop-inner {
+    & > svg {
+      display: none;
+    }
+
+    &::before {
+      width: 32px;
+      height: 32px;
+      background: var(--text-title-grey);
+      display: inline-block;
+      content: '';
+      -webkit-mask: url(./upload-icon.svg) no-repeat 50% 50%;
+      mask: url(./upload-icon.svg) no-repeat 50% 50%;
+      -webkit-mask-size: cover;
+      mask-size: cover;
+    }
+  }
+}
+
+.uppy-DragDrop-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  cursor: pointer;
+
+  // firefox fix: removes thin dotted outline
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.uppy-DragDrop-inner {
+  margin: 0;
+  padding: 3rem 2rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.uppy-DragDrop-arrow {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 17px;
+}
+
+.uppy-DragDrop--isDragDropSupported {
+  border: 1px solid var(--border-default-grey);
+}
+
+.uppy-DragDrop--isDraggingOver {
+  border: 1px dashed var(--text-action-high-blue-france);
+}
+
+.uppy-DragDrop-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.uppy-DragDrop-browse {
+  color: var(--text-action-high-blue-france);
+  cursor: pointer;
+
+  // Underline with DSFR
+  background-image: var(--underline-img), var(--underline-img);
+  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - 0.0625em);
+  background-repeat: no-repeat, no-repeat;
+  background-size: var(--underline-hover-width) 0.125em, var(--underline-idle-width) 0.0625em;
+  transition: background-size 0s;
+
+  &:hover {
+    --underline-hover-width: var(--underline-max-width);
+  }
+}
