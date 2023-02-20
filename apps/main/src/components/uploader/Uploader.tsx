@@ -29,7 +29,7 @@ export interface UploaderProps {
   maxFiles: number;
   onCommittedFilesChanged: (attachments: UiAttachmentSchemaType[]) => Promise<void>;
   // TODO: onError (useful if the list is not displayed... the parent can use a custom error) ... throw error if one of the two not enabled
-  // isLoadingChanged
+  isUploadingChanged?: (value: boolean) => void;
 }
 
 export function Uploader(props: UploaderProps) {
@@ -41,6 +41,7 @@ export function Uploader(props: UploaderProps) {
 
   const [uppy, setUppy] = useState<UppyEntity>(setupUppy(props));
   const [files, setFiles] = useState<UppyFile[]>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
     const updateFiles = () => {
@@ -113,10 +114,18 @@ export function Uploader(props: UploaderProps) {
       setGlobalError(null);
     };
 
+    const handleUploadStarts = (data: { id: string; fileIDs: string[] }) => {
+      setIsUploading(true);
+    };
+
+    const handleAllUploadsComplete = (result: UploadResult) => {
+      setIsUploading(false);
+    };
+
     // TODO: notify parent... how to know if it's "is loading" for any file? Watch the progress and parse all files to see if finish or not?
     // Make sure to notify only if it changes... but it rerenders the parent... maybe better to have the reference? not sure...
 
-    const registerListeners = (uppy: UppyEntity) => {
+    const registerListeners = () => {
       // All possibility listed on https://github.com/transloadit/uppy/blob/master/website/src/docs/uppy.md#events
       uppy.on('file-added', handleFileAdded);
       uppy.on('file-removed', handleFileRemoved);
@@ -126,9 +135,11 @@ export function Uploader(props: UploaderProps) {
       uppy.on('restriction-failed', handleRestrictionFailed);
       uppy.on('info-visible', handleInfoVisible);
       uppy.on('info-hidden', handleInfoHidden);
+      uppy.on('upload', handleUploadStarts);
+      uppy.on('complete', handleAllUploadsComplete);
     };
 
-    const unregisterListeners = (uppy: UppyEntity) => {
+    const unregisterListeners = () => {
       uppy.off('file-added', handleFileAdded);
       uppy.off('file-removed', handleFileRemoved);
       uppy.off('upload-progress', handleUploadProgress);
@@ -136,17 +147,25 @@ export function Uploader(props: UploaderProps) {
       uppy.off('upload-error', handleUploadError);
       uppy.off('restriction-failed', handleRestrictionFailed);
       uppy.off('info-hidden', handleInfoHidden);
+      uppy.off('upload', handleUploadStarts);
+      uppy.off('complete', handleAllUploadsComplete);
     };
 
     setupTus(uppy);
     setupDragDrop(uppy, dragAndDropRef);
-    registerListeners(uppy);
+    registerListeners();
 
     return () => {
-      unregisterListeners(uppy);
+      unregisterListeners();
       uppy.close({ reason: 'unmount' });
     };
   }, [uppy, props.onCommittedFilesChanged]);
+
+  useEffect(() => {
+    if (props.isUploadingChanged) {
+      props.isUploadingChanged(isUploading);
+    }
+  }, [isUploading]);
 
   const cancelUpload = useCallback(
     (file: UppyFile) => {

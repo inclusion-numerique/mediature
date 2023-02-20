@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
@@ -35,6 +35,8 @@ export interface RequestCaseFormProps {
 
 export function RequestCaseForm(props: RequestCaseFormProps) {
   const requestCase = trpc.requestCase.useMutation();
+
+  const [isUploadingAttachments, setIsUploadingAttachments] = useState<boolean>(false);
 
   const {
     register,
@@ -203,6 +205,8 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
                 attachments.map((attachment) => attachment.id)
               );
             }}
+            // TODO: enable once https://github.com/transloadit/uppy/issues/4130#issuecomment-1437198535 is fixed
+            // isUploadingChanged={setIsUploadingAttachments}
           />
           <FormHelperText>{errors?.attachments?.message}</FormHelperText>
         </FormControl>
@@ -217,7 +221,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         </FormControl>
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" loading={requestCase.isLoading} size="large" variant="contained" fullWidth>
+        <Button type="submit" disabled={isUploadingAttachments} loading={requestCase.isLoading} size="large" variant="contained" fullWidth>
           Envoyer
         </Button>
       </Grid>
