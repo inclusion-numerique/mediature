@@ -110,6 +110,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       termReminderAt: caseWrapper?.case.termReminderAt,
       finalConclusion: caseWrapper?.case.finalConclusion,
       nextRequirements: caseWrapper?.case.nextRequirements,
+      attachments: [], // TODO
     });
   }, [caseWrapper, isDirty, reset]);
 
@@ -230,6 +231,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   close: control._defaultValues.close || !!targetedCase.closedAt,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                   nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+                  attachments: [], // TODO
                 });
               } catch (err) {
                 setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
@@ -314,6 +316,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     close: control._defaultValues.close || !!targetedCase.closedAt,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                     nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+                    attachments: [], // TODO
                   });
                 } catch (err) {
                   setValue('status', control._defaultValues.status || targetedCase.status);
@@ -658,6 +661,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       close: control._formValues.close,
                       finalConclusion: control._formValues.finalConclusion,
                       nextRequirements: control._formValues.nextRequirements,
+                      attachments: [], // TODO
                     });
                   }}
                 />

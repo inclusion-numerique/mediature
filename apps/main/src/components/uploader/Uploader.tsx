@@ -32,14 +32,14 @@ export interface UploaderProps {
   isUploadingChanged?: (value: boolean) => void;
 }
 
-export function Uploader(props: UploaderProps) {
+export function Uploader({ attachmentKindRequirements, minFiles, maxFiles, onCommittedFilesChanged, isUploadingChanged }: UploaderProps) {
   const { t } = useTranslation('common');
   const { ContextualUploaderFileList } = useContext(UploaderContext);
 
   const dragAndDropRef = useRef<HTMLElement | null>(null); // This is used to scroll to the error message
   const [globalError, setGlobalError] = useState<Error | null>(null);
 
-  const [uppy, setUppy] = useState<UppyEntity>(setupUppy(props));
+  const [uppy, setUppy] = useState<UppyEntity>(setupUppy({ attachmentKindRequirements, minFiles, maxFiles }));
   const [files, setFiles] = useState<UppyFile[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
@@ -89,7 +89,7 @@ export function Uploader(props: UploaderProps) {
           } as UiAttachmentSchemaType;
         });
 
-      props.onCommittedFilesChanged(attachments);
+      onCommittedFilesChanged(attachments);
     };
 
     const handleUploadError = (file: UppyFile | undefined, error: Error, response: ErrorResponse | undefined) => {
@@ -159,13 +159,13 @@ export function Uploader(props: UploaderProps) {
       unregisterListeners();
       uppy.close({ reason: 'unmount' });
     };
-  }, [uppy, props.onCommittedFilesChanged]);
+  }, [uppy, onCommittedFilesChanged]);
 
   useEffect(() => {
-    if (props.isUploadingChanged) {
-      props.isUploadingChanged(isUploading);
+    if (isUploadingChanged) {
+      isUploadingChanged(isUploading);
     }
-  }, [isUploading]);
+  }, [isUploading, isUploadingChanged]);
 
   const cancelUpload = useCallback(
     (file: UppyFile) => {
@@ -188,16 +188,16 @@ export function Uploader(props: UploaderProps) {
     [uppy]
   );
 
-  const allowedExtensions = getExtensionsFromFileKinds(props.attachmentKindRequirements.allowedFileTypes);
+  const allowedExtensions = getExtensionsFromFileKinds(attachmentKindRequirements.allowedFileTypes);
 
   return (
     <div>
       {!!uppy && (
         <>
           <Typography component="div" variant="caption">
-            Taille maximale : {t('file.size', { size: props.attachmentKindRequirements.maxSize })}.{' '}
+            Taille maximale : {t('file.size', { size: attachmentKindRequirements.maxSize })}.{' '}
             {t('file.allowedExtensions', { extensions: allowedExtensions.join(', '), count: allowedExtensions.length })}
-            {props.maxFiles > 1 && <> {t('file.upToMaxfiles', { count: props.maxFiles })}</>}
+            {maxFiles > 1 && <> {t('file.upToMaxfiles', { count: maxFiles })}</>}
           </Typography>
           <Box className="uppy-Container">
             <Box ref={dragAndDropRef} />
@@ -218,7 +218,7 @@ export function Uploader(props: UploaderProps) {
   );
 }
 
-function setupUppy(props: UploaderProps): UppyEntity {
+function setupUppy(props: Pick<UploaderProps, 'attachmentKindRequirements' | 'minFiles' | 'maxFiles'>): UppyEntity {
   return new Uppy({
     id: 'uppy',
     autoProceed: true,

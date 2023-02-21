@@ -53,6 +53,7 @@ NormalStory.args = {
     description:
       'Et velit itaque et ea. Nobis eveniet quo incidunt ut tempora placeat. Quis repellat quod reprehenderit provident ut vero veritatis repellat. Necessitatibus provident blanditiis exercitationem accusantium. Laboriosam quae harum rerum et corrupti rem sed.',
     emailCopyWanted: false,
+    attachments: [],
   },
 };
 NormalStory.decorators = [withEmailRenderer];
