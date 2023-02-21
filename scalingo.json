@@ -10,6 +10,9 @@
     "APP_MODE": {
       "value": "test"
     },
+    "FILE_AUTH_SECRET": {
+      "value": "seed-to-forge-jwt-tokens-not-sensitive-in-temporary-environments"
+    },
     "NEXT_AUTH_SECRET": {
       "value": "seed-to-forge-jwt-tokens-not-sensitive-in-temporary-environments"
     },

@@ -395,6 +395,12 @@ importers:
       i18next-browser-languagedetector:
         specifier: ^7.0.1
         version: 7.0.1
+      jose:
+        specifier: ^4.12.0
+        version: 4.12.0
+      jwt-check-expiry:
+        specifier: ^1.0.10
+        version: 1.0.10
       locks:
         specifier: ^0.2.2
         version: 0.2.2
@@ -17627,8 +17633,8 @@ packages:
       '@sideway/pinpoint': 2.0.0
     dev: true
 
-  /jose@4.11.1:
-    resolution: {integrity: sha512-YRv4Tk/Wlug8qicwqFNFVEZSdbROCHRAC6qu/i0dyNKr5JQdoa2pIGoS04lLO/jXQX7Z9omoNewYIVIxqZBd9Q==}
+  /jose@4.12.0:
+    resolution: {integrity: sha512-wW1u3cK81b+SFcHjGC8zw87yuyUweEFe0UJirrXEw1NasW00eF7sZjeG3SLBGz001ozxQ46Y9sofDvhBmWFtXQ==}
     dev: false
 
   /jpeg-js@0.4.4:
@@ -17831,6 +17837,10 @@ packages:
       web-resource-inliner: 5.0.0
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /jwt-check-expiry@1.0.10:
+    resolution: {integrity: sha512-DaqnmxMu9WSmCnCiL6mblrSxNwG5K7F8xbP9FVXhDlttglbxfluLRIzUqQE8W0mr5SU246HFMJEln/RXjWZkNQ==}
     dev: false
 
   /katex@0.15.6:
@@ -19596,7 +19606,7 @@ packages:
       '@babel/runtime': 7.20.6
       '@panva/hkdf': 1.0.2
       cookie: 0.5.0
-      jose: 4.11.1
+      jose: 4.12.0
       next: 13.1.6(react-dom@18.2.0)(react@18.2.0)
       nodemailer: 6.9.1
       oauth: 0.9.15
@@ -20062,7 +20072,7 @@ packages:
   /openid-client@5.3.1:
     resolution: {integrity: sha512-RLfehQiHch9N6tRWNx68cicf3b1WR0x74bJWHRc25uYIbSRwjxYcTFaRnzbbpls5jroLAaB/bFIodTgA5LJMvw==}
     dependencies:
-      jose: 4.11.1
+      jose: 4.12.0
       lru-cache: 6.0.0
       object-hash: 2.2.0
       oidc-token-hash: 5.0.1

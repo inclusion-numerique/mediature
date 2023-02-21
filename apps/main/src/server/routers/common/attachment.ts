@@ -1,8 +1,91 @@
 import { AttachmentStatus } from '@prisma/client';
+import getUnixTime from 'date-fns/getUnixTime';
+import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { diff } from 'fast-array-diff';
+import { SignJWT, jwtVerify } from 'jose';
+import isJwtTokenExpired from 'jwt-check-expiry';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { AttachmentKindSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { getBaseUrl } from '@mediature/main/src/utils/url';
+
+export const fileAuthSecret = new TextEncoder().encode(process.env.FILE_AUTH_SECRET);
+
+// We use a symetric key since the encode/decode is done in the same program
+const algorithm = 'HS256';
+
+export const tokenFileIdClaim = 'urn:claim:file_id';
+export const attachmentLinkExpiresIn = minutesToSeconds(15); // Must be less than the validity
+export const attachmentLinkModuloIntervalMinutes = 10;
+
+// Round the time to the last X-minute mark
+export const getLastModuloTime = () => {
+  const currentTime = new Date();
+  const d = new Date(currentTime);
+
+  d.setMinutes(Math.floor(d.getMinutes() / attachmentLinkModuloIntervalMinutes) * attachmentLinkModuloIntervalMinutes);
+  d.setSeconds(0);
+  d.setMilliseconds(0);
+
+  return d;
+};
+
+export async function generateSignedAttachmentLink(attachmentId: string, secret: Uint8Array): Promise<string> {
+  // Since generating signed URLs for the same attachment will result in different URLs due to expiration time
+  // we need to shift a bit the expiration in the past at "a modulo" so some URLs are the same to be cached by the browser
+  const lastModuloTimestamp = getUnixTime(getLastModuloTime());
+
+  const jwt = await new SignJWT({ [tokenFileIdClaim]: attachmentId })
+    .setProtectedHeader({ alg: algorithm })
+    .setIssuedAt(lastModuloTimestamp)
+    .setExpirationTime(lastModuloTimestamp + attachmentLinkExpiresIn)
+    .sign(secret);
+
+  const url = new URL(getBaseUrl());
+  url.pathname = `/api/file/${attachmentId}`;
+  url.searchParams.append('token', jwt);
+
+  return url.toString();
+}
+
+export interface SignedAttachmentLinkVerification {
+  isVerified: boolean;
+  isExpired: boolean;
+}
+
+export async function verifySignedAttachmentLink(
+  expectedAttachmentId: string,
+  secret: Uint8Array,
+  token: string
+): Promise<SignedAttachmentLinkVerification> {
+  try {
+    if (isJwtTokenExpired(token)) {
+      return {
+        isVerified: false,
+        isExpired: true,
+      };
+    }
+
+    const { payload } = await jwtVerify(token, secret);
+
+    if (payload[tokenFileIdClaim] !== expectedAttachmentId) {
+      return {
+        isVerified: false,
+        isExpired: false,
+      };
+    }
+
+    return {
+      isVerified: true,
+      isExpired: false,
+    };
+  } catch (err) {
+    return {
+      isVerified: false,
+      isExpired: false,
+    };
+  }
+}
 
 export interface SafeAttachmentsToProcess {
   markNewAttachmentsAsUsed: () => Promise<void>;

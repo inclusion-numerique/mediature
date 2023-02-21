@@ -86,6 +86,8 @@
     "human-filetypes": "^0.2.1",
     "i18next": "^22.4.5",
     "i18next-browser-languagedetector": "^7.0.1",
+    "jose": "^4.12.0",
+    "jwt-check-expiry": "^1.0.10",
     "locks": "^0.2.2",
     "magic-bytes.js": "^1.0.14",
     "mjml": "^4.13.0",

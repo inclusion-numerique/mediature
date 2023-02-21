@@ -1,8 +1,10 @@
-import { Address, Agent, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
+import { Address, Agent, Attachment, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
 
+import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { fileAuthSecret, generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
 
 export function agentPrismaToModel(
   agent: Agent & {
@@ -84,5 +86,12 @@ export function caseNotePrismaToModel(note: Note): CaseNoteSchemaType {
     createdAt: note.createdAt,
     updatedAt: note.updatedAt,
     deletedAt: note.deletedAt,
+  };
+}
+
+export async function attachmentPrismaToModel(attachment: Pick<Attachment, 'id' | 'kind' | 'name'>): Promise<UiAttachmentSchemaType> {
+  return {
+    id: attachment.id,
+    url: await generateSignedAttachmentLink(attachment.id, fileAuthSecret),
   };
 }
