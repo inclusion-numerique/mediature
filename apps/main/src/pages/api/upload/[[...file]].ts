@@ -5,11 +5,13 @@ import fs from 'fs';
 import { fromMime } from 'human-filetypes';
 import { filetypeinfo } from 'magic-bytes.js';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getToken as nextAuthGetToken } from 'next-auth/jwt';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
+import { nextAuthOptions } from '@mediature/main/src/pages/api/auth/[...nextauth]';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 
 // export const uploadSuccessHeaders = {
@@ -87,18 +89,15 @@ const tusServer = new Server({
       throw { status_code: 500, body: `the file type is not allowed` };
     }
 
-    // // Check if the user must be authenticated with a specific role
-    // if (attachmentKind.requiresAuthToUpload) {
-    //   // Check the access token validity
-    //   const authorizationHeader = req.headers?.authorization || '';
-    //   const authorizationSplit = authorizationHeader.split('Bearer ');
-    //   if (authorizationSplit.length !== 2) {
-    //     throw { status_code: 500, body: `unauthorized` };
-    //   }
+    // Check if the user must be authenticated
+    if (attachmentKind.requiresAuthToUpload) {
+      const nextjsReq = req as NextApiRequest;
+      const token = await nextAuthGetToken({ req: nextjsReq, secret: nextAuthOptions.secret });
 
-    //   const accessTokenString = authorizationSplit[1];
-    //   // TODO: check validity and return error if needed
-    // }
+      if (!token) {
+        throw { status_code: 401, body: `you don't have the rights to upload this kind of file` };
+      }
+    }
 
     console.debug('upload authorization granted');
 

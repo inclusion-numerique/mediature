@@ -256,10 +256,13 @@ function setupTus(uppy: UppyEntity) {
     headers: {
       // Authorization: 'WILL_BE_PATCHED_BEFORE_EACH_UPLOAD_IF_NEEDED',
     },
-    withCredentials: false,
+    withCredentials: true,
     allowedMetaFields: ['kind', 'type', 'name'], // Allow only certain metadata to be transmitted
     // autoRetry: true,
     // limit: 0,
+    onBeforeRequest: async (req, file) => {
+      // Session token is passed through cookie (and `withCredentials`), no need of a `Authorization` header
+    },
     // onProgress: () => {},
     // onSuccess: () => {},
     // onError: () => {},
