@@ -3,7 +3,8 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm } from '@mediature/docs/.storybook/testing';
-import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
+import { RequestCaseForm, RequestCaseFormContext } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
+import { Normal as UploaderNormalStory } from '@mediature/main/src/components/uploader/Uploader.stories';
 import { phoneInputs } from '@mediature/main/src/fixtures/phone';
 import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/case';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
@@ -48,7 +49,14 @@ EmptyStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
 
-export const Empty = prepareStory(EmptyStory);
+export const Empty = prepareStory(EmptyStory, {
+  childrenContext: {
+    context: RequestCaseFormContext,
+    value: {
+      ContextualUploader: UploaderNormalStory,
+    },
+  },
+});
 
 const FilledStory = Template.bind({});
 FilledStory.args = {
@@ -77,4 +85,11 @@ FilledStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
 
-export const Filled = prepareStory(FilledStory);
+export const Filled = prepareStory(FilledStory, {
+  childrenContext: {
+    context: RequestCaseFormContext,
+    value: {
+      ContextualUploader: UploaderNormalStory,
+    },
+  },
+});

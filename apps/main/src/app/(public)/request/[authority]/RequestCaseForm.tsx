@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
@@ -28,12 +28,18 @@ import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
 
+export const RequestCaseFormContext = createContext({
+  ContextualUploader: Uploader,
+});
+
 export interface RequestCaseFormProps {
   prefill?: RequestCasePrefillSchemaType;
   onSuccess?: () => Promise<void>;
 }
 
 export function RequestCaseForm(props: RequestCaseFormProps) {
+  const { ContextualUploader } = useContext(RequestCaseFormContext);
+
   const requestCase = trpc.requestCase.useMutation();
 
   const [isUploadingAttachments, setIsUploadingAttachments] = useState<boolean>(false);
@@ -196,7 +202,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           <FormLabel id="upload-label" sx={{ mb: 1 }}>
             Si vous avez des documents susceptibles de nous aider, merci de les joindre à votre demande :
           </FormLabel>
-          <Uploader
+          <ContextualUploader
             attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
             maxFiles={requestCaseAttachmentsMax}
             onCommittedFilesChanged={async (attachments: UiAttachmentSchemaType[]) => {
