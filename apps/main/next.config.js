@@ -40,11 +40,11 @@ const moduleExports = async () => {
     typescript: {
       ignoreBuildErrors: true, // Skip since already done in a specific step of our CI/CD
     },
+    transpilePackages: ['@mediature/ui'],
     experimental: {
       appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
       swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
-      transpilePackages: ['@mediature/ui'],
     },
     async rewrites() {
       return [
