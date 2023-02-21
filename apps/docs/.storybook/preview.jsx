@@ -107,6 +107,11 @@ export const parameters = {
           id: 'color-contrast',
           selector: '*:not(.MuiAvatar-circular.UserAvatar)',
         },
+        {
+          // TODO: can be removed once https://github.com/corygibbons/react-file-icon/issues/40 is fixed
+          id: 'duplicate-id',
+          selector: '*:not(MuiListItemIcon-root.disabledA11y)',
+        },
       ],
     },
   },

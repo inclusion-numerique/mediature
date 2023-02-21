@@ -89,7 +89,7 @@ export function UploaderFileListItem(props: UploaderFileListItemProps) {
         }
         ref={itemRef}
       >
-        <ListItemIcon sx={{ minWidth: 0, width: 30, mr: 2 }}>
+        <ListItemIcon className="disabledA11y" sx={{ minWidth: 0, width: 30, mr: 2 }}>
           <FileIcon
             fold={true}
             foldColor={theme.decisions.background.contrast.grey.default}
