@@ -1,6 +1,32 @@
 import { UppyFile } from '@uppy/core';
 import { base64StringToBlob } from 'blob-util';
 
+import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
+
+export const uiAttachments: UiAttachmentSchemaType[] = [
+  {
+    id: '13422339-278f-400d-9b25-5399e9fe6231',
+    url: 'https://via.placeholder.com/300x150',
+    contentType: 'image/jpeg',
+    size: 16171,
+    name: 'sample-1.jpg',
+  },
+  {
+    id: '13422339-278f-400d-9b25-5399e9fe6232',
+    url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+    contentType: 'application/pdf',
+    size: 16171,
+    name: 'sample-2.pdf',
+  },
+  {
+    id: '13422339-278f-400d-9b25-5399e9fe6233',
+    url: 'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3',
+    contentType: 'audio/mpeg',
+    size: 16171,
+    name: 'sample-3.mp3',
+  },
+];
+
 const contentType = 'image/png';
 const b64Data = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 const blob = base64StringToBlob(b64Data, contentType);

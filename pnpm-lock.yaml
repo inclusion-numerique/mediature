@@ -371,6 +371,9 @@ importers:
       blob-util:
         specifier: ^2.0.2
         version: 2.0.2
+      content-disposition:
+        specifier: ^0.5.4
+        version: 0.5.4
       country-data:
         specifier: ^0.0.31
         version: 0.0.31
@@ -513,6 +516,9 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.0
         version: 5.0.0
+      '@types/content-disposition':
+        specifier: ^0.5.5
+        version: 0.5.5
       '@types/country-data':
         specifier: ^0.0.2
         version: 0.0.2
@@ -9478,6 +9484,10 @@ packages:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
       '@types/node': 17.0.45
+
+  /@types/content-disposition@0.5.5:
+    resolution: {integrity: sha512-v6LCdKfK6BwcqMo+wYW05rLS12S0ZO0Fl4w1h4aaZMD7bqT3gVUns6FvLJKGZHQmYn3SX55JWGpziwJRwVgutA==}
+    dev: true
 
   /@types/cookie@0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}

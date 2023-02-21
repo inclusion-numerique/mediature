@@ -25,6 +25,9 @@ export const UiAttachmentSchema = z
   .object({
     id: AttachmentSchema.shape.id,
     url: z.string().url(),
+    contentType: AttachmentSchema.shape.contentType.nullish(),
+    size: AttachmentSchema.shape.size.nullish(),
+    name: AttachmentSchema.shape.name.nullish(),
   })
   .strict();
 export type UiAttachmentSchemaType = z.infer<typeof UiAttachmentSchema>;

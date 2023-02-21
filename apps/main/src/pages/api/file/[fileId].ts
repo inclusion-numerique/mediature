@@ -1,3 +1,5 @@
+import { Attachment } from '@prisma/client';
+import contentDisposition from 'content-disposition';
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Readable } from 'stream';
@@ -5,6 +7,16 @@ import { Readable } from 'stream';
 import { prisma } from '@mediature/main/prisma/client';
 import { fileAuthSecret, verifySignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
+
+export function setCommonFileHeaders(res: NextApiResponse, attachment: Attachment) {
+  res.setHeader('Content-Type', attachment.contentType);
+  res.setHeader(
+    'Content-Disposition',
+    contentDisposition(attachment.name || undefined, {
+      type: 'inline',
+    })
+  );
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const fileId = req.query.fileId;
@@ -33,9 +45,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const fileContentBuffer = Readable.from(attachment.value);
 
     await new Promise<void>(async function (resolve) {
-      res.setHeader('Content-Type', attachment.contentType);
+      // We set file headers only if we are sure the user is able to display it (otherwise sensitive information could leak)
 
       if (attachmentKind.isAttachmentPublic) {
+        setCommonFileHeaders(res, attachment);
         res.setHeader('Cache-Control', 'public, immutable, no-transform, max-age=0');
       } else {
         const verification = await verifySignedAttachmentLink(fileId, fileAuthSecret, typeof token === 'string' ? token : '');
@@ -52,6 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return resolve();
         }
 
+        setCommonFileHeaders(res, attachment);
         res.setHeader('Cache-Control', `private, max-age=${minutesToSeconds(15)}`); // We allow caching for a few minutes even if the link token has expired, we could have set the expiration token time, but it doesn't matter, the platform would have refreshed the link
       }
 

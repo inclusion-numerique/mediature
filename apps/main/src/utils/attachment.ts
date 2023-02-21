@@ -52,3 +52,7 @@ export function getExtensionsFromFileKinds(fileKinds: FileKind[]) {
 
   return [...new Set(allExtensions)].map((extensionWithDot) => extensionWithDot?.substring(1));
 }
+
+export function getExtensionsFromMime(contentType: string): string[] {
+  return mimeData[contentType]?.extensions || [];
+}

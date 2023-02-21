@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
+import { AttachmentSchema, UiAttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 
@@ -77,6 +77,7 @@ export const CaseWrapperSchema = z
     case: CaseSchema,
     citizen: CitizenSchema,
     notes: z.array(CaseNoteSchema).nullable(),
+    attachments: z.array(UiAttachmentSchema).nullable(),
   })
   .strict();
 export type CaseWrapperSchemaType = z.infer<typeof CaseWrapperSchema>;

@@ -116,15 +116,18 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
     case: cases[0],
     citizen: citizens[0],
     notes: [notes[0], notes[1], notes[2]],
+    attachments: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[1],
     citizen: citizens[1],
     notes: [notes[0], notes[1], notes[2]],
+    attachments: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[2],
     citizen: citizens[2],
     notes: [notes[0], notes[1], notes[2]],
+    attachments: null,
   }),
 ];

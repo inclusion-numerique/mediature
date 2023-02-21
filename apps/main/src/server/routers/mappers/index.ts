@@ -89,9 +89,19 @@ export function caseNotePrismaToModel(note: Note): CaseNoteSchemaType {
   };
 }
 
-export async function attachmentPrismaToModel(attachment: Pick<Attachment, 'id' | 'kind' | 'name'>): Promise<UiAttachmentSchemaType> {
+export interface AttachmentPrismaInput {
+  id: Attachment['id'];
+  contentType?: Attachment['contentType'];
+  size?: Attachment['size'];
+  name?: Attachment['name'];
+}
+
+export async function attachmentPrismaToModel(attachment: AttachmentPrismaInput): Promise<UiAttachmentSchemaType> {
   return {
     id: attachment.id,
     url: await generateSignedAttachmentLink(attachment.id, fileAuthSecret),
+    contentType: attachment.contentType,
+    size: attachment.size,
+    name: attachment.name,
   };
 }

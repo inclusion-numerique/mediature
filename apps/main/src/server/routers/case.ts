@@ -22,7 +22,7 @@ import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSch
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
-import { caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import { attachmentPrismaToModel, caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -350,6 +350,18 @@ export const caseRouter = router({
           },
         },
         Note: true,
+        AttachmentsOnCases: {
+          include: {
+            attachment: {
+              select: {
+                id: true,
+                contentType: true,
+                name: true,
+                size: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -359,11 +371,18 @@ export const caseRouter = router({
       throw new Error(`en tant qu'agent vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
     }
 
+    const attachments = await Promise.all(
+      targetedCase.AttachmentsOnCases.map(async (attachmentOnCase) => {
+        return await attachmentPrismaToModel(attachmentOnCase.attachment);
+      })
+    );
+
     return {
       caseWrapper: CaseWrapperSchema.parse({
         case: casePrismaToModel(targetedCase),
         citizen: citizenPrismaToModel(targetedCase.citizen),
         notes: targetedCase.Note.map((note: Note) => caseNotePrismaToModel(note)),
+        attachments: attachments,
       }),
     };
   }),
@@ -443,6 +462,7 @@ export const caseRouter = router({
           case: casePrismaToModel(iterationCase),
           citizen: citizenPrismaToModel(iterationCase.citizen),
           notes: null,
+          attachments: null,
         };
       }),
     };

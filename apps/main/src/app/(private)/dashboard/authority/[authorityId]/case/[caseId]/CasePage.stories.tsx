@@ -1,13 +1,12 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { userEvent, within } from '@storybook/testing-library';
 
-import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { playFindForm, playFindFormInMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
+import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/testing';
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { Empty as AddNoteFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm.stories';
 import { CasePage, CasePageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/CasePage';
 import { Normal as NoteCardNormalStory } from '@mediature/main/src/components/NoteCard.stories';
+import { Normal as UploaderNormalStory } from '@mediature/main/src/components/uploader/Uploader.stories';
 import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
@@ -75,6 +74,7 @@ export const Normal = prepareStory(NormalStory, {
     value: {
       ContextualNoteCard: NoteCardNormalStory,
       ContextualAddNoteForm: AddNoteFormEmptyStory,
+      ContextualUploader: UploaderNormalStory,
     },
   },
 });
@@ -98,6 +98,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
     value: {
       ContextualNoteCard: NoteCardNormalStory,
       ContextualAddNoteForm: AddNoteFormEmptyStory,
+      ContextualUploader: UploaderNormalStory,
     },
   },
 });

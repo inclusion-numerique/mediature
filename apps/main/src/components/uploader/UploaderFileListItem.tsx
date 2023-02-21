@@ -1,4 +1,3 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -8,11 +7,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { UppyFile } from '@uppy/core';
-import '@uppy/core/dist/style.min.css';
 import { useMemo, useRef } from 'react';
-import { DefaultExtensionType, FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 
+import { FileIcon } from '@mediature/main/src/components/FileIcon';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface UploaderFileListItemProps {
@@ -24,7 +22,6 @@ export interface UploaderFileListItemProps {
 
 export function UploaderFileListItem(props: UploaderFileListItemProps) {
   const { t } = useTranslation('common');
-  const theme = useColors();
 
   const itemRef = useRef<HTMLLIElement | null>(null); // This is used to scroll to the error messages
 
@@ -90,18 +87,7 @@ export function UploaderFileListItem(props: UploaderFileListItemProps) {
         ref={itemRef}
       >
         <ListItemIcon className="disabledA11y" sx={{ minWidth: 0, width: 30, mr: 2 }}>
-          <FileIcon
-            fold={true}
-            foldColor={theme.decisions.background.contrast.grey.default}
-            color={theme.decisions.background.alt.grey.default}
-            glyphColor={theme.decisions.border.default.grey.default}
-            gradientColor="transparent"
-            labelColor={theme.decisions.text.label.blueFrance.default}
-            labelTextColor={theme.decisions.background.overlap.grey.default}
-            radius={0}
-            extension={props.file.extension}
-            type={defaultStyles[props.file.extension as DefaultExtensionType]?.type}
-          />
+          <FileIcon extension={props.file.extension} />
         </ListItemIcon>
         <ListItemText
           primary={props.file.name}

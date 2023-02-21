@@ -34,10 +34,14 @@ import { AddNoteForm } from '@mediature/main/src/app/(private)/dashboard/authori
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
+import { FileList } from '@mediature/main/src/components/FileList';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
-import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
+import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
+import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
+import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
+import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
@@ -48,6 +52,7 @@ import { PhoneField } from '@mediature/ui/src/PhoneField';
 export const CasePageContext = createContext({
   ContextualNoteCard: NoteCard,
   ContextualAddNoteForm: AddNoteForm,
+  ContextualUploader: Uploader,
 });
 
 export interface CasePageProps {
@@ -59,7 +64,7 @@ export interface CasePageProps {
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const { t } = useTranslation('common');
-  const { ContextualNoteCard, ContextualAddNoteForm } = useContext(CasePageContext);
+  const { ContextualNoteCard, ContextualAddNoteForm, ContextualUploader } = useContext(CasePageContext);
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.getCase.useQuery({
     id: caseId,
@@ -144,6 +149,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const targetedCase = caseWrapper.case;
   const citizen = caseWrapper.citizen;
   const notes = caseWrapper.notes;
+  const attachments = caseWrapper.attachments;
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
     const result = await updateCase.mutateAsync(input);
@@ -627,7 +633,43 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               <Grid item xs={12}>
                 <Divider variant="fullWidth" sx={{ p: 0 }} />
               </Grid>
-              {/* TODO: attachments */}
+              <Grid item xs={12}>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Grid container direction={'column'} spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography component="span" variant="h6">
+                          Documents
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <ContextualUploader
+                          attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
+                          maxFiles={updateCaseAttachmentsMax}
+                          onCommittedFilesChanged={async (attachments: UiAttachmentSchemaType[]) => {
+                            // setValue(
+                            //   'attachments',
+                            //   attachments.map((attachment) => attachment.id)
+                            // );
+                          }}
+                          // TODO: enable once https://github.com/transloadit/uppy/issues/4130#issuecomment-1437198535 is fixed
+                          // isUploadingChanged={setIsUploadingAttachments}
+                        />
+                        {attachments && attachments.length > 0 && (
+                          <>
+                            <FileList
+                              files={attachments}
+                              onRemove={async () => {
+                                // TODO
+                              }}
+                            />
+                          </>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
               <Grid item xs={12}>
                 <Divider variant="fullWidth" sx={{ p: 0 }} />
               </Grid>
