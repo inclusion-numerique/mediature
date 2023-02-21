@@ -40,7 +40,7 @@ const moduleExports = async () => {
     typescript: {
       ignoreBuildErrors: true, // Skip since already done in a specific step of our CI/CD
     },
-    transpilePackages: ['@mediature/ui'],
+    transpilePackages: ['@mediature/ui', 'pretty-bytes'],
     experimental: {
       appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
