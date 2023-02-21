@@ -1,10 +1,7 @@
 import List from '@mui/material/List';
 import { UppyFile } from '@uppy/core';
-import '@uppy/core/dist/style.min.css';
-import '@uppy/progress-bar/dist/style.min.css';
 
 import { UploaderFileListItem } from '@mediature/main/src/components/uploader/UploaderFileListItem';
-import '@mediature/main/src/components/uploader/drag-drop.scss';
 
 export interface UploaderFileListProps {
   files: UppyFile[];

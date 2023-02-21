@@ -9,12 +9,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { UppyFile } from '@uppy/core';
 import '@uppy/core/dist/style.min.css';
-import '@uppy/progress-bar/dist/style.min.css';
 import { useMemo, useRef } from 'react';
 import { DefaultExtensionType, FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 
-import '@mediature/main/src/components/uploader/drag-drop.scss';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface UploaderFileListItemProps {

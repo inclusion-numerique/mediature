@@ -75,7 +75,6 @@
     "@uppy/core": "^3.0.6",
     "@uppy/drag-drop": "^3.0.1",
     "@uppy/locales": "^3.0.6",
-    "@uppy/progress-bar": "^3.0.1",
     "@uppy/tus": "^3.0.5",
     "bcrypt": "^5.1.0",
     "blob-util": "^2.0.2",

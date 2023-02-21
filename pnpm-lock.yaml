@@ -362,9 +362,6 @@ importers:
       '@uppy/locales':
         specifier: ^3.0.6
         version: 3.0.6
-      '@uppy/progress-bar':
-        specifier: ^3.0.1
-        version: 3.0.1(@uppy/core@3.0.6)
       '@uppy/tus':
         specifier: ^3.0.5
         version: 3.0.5(@uppy/core@3.0.6)
@@ -10091,16 +10088,6 @@ packages:
 
   /@uppy/locales@3.0.6:
     resolution: {integrity: sha512-stAV3HEV+I8vXwOuzKH+qZnWnaklL9DKowNzIbnWDyjGbEI5lje8mg5g+3MVNnFctW2EEYhVULSmUCY4ptuiZg==}
-    dev: false
-
-  /@uppy/progress-bar@3.0.1(@uppy/core@3.0.6):
-    resolution: {integrity: sha512-cjBLOst0sPV1yF6YzkQIx/mHpytMXN7MRF7H/6Yc8ahDzm8XkbwMQCf2zksaanGfHUNCHlQFgCkfjfizK6VJIw==}
-    peerDependencies:
-      '@uppy/core': ^3.0.2
-    dependencies:
-      '@uppy/core': 3.0.6
-      '@uppy/utils': 5.1.2
-      preact: 10.11.3
     dev: false
 
   /@uppy/store-default@3.0.2:
