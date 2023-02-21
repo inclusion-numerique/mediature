@@ -62,7 +62,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   showConfirmationDialog({
                     description: (
                       <>
-                        Êtes-vous vous sûr de vouloir réouvrir le dossier ?
+                        Êtes-vous sûr de vouloir réouvrir le dossier ?
                         <br />
                         <br />
                         <Typography component="span" sx={{ fontStyle: 'italic' }}>
