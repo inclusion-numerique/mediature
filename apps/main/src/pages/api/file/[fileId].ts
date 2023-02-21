@@ -1,8 +1,8 @@
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Readable } from 'stream';
 
 import { prisma } from '@mediature/main/prisma/client';
-import { ReadableString } from '@mediature/main/src/pages/api/file/stream';
 import { fileAuthSecret, verifySignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 
@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // [IMPORTANT] Since we manage only tiny files we chose to use our database instead of S3 to keep complexity lite.
     // Postgres cannot manage `bytea` with streams, so it's a full fetch, but we keep using the logic of a stream below
     // in case we switch over Postgres Large Object or S3 in the future (the following helps not blocking other requests)
-    const fileContentBuffer = new ReadableString(attachment.contentType);
+    const fileContentBuffer = Readable.from(attachment.value);
 
     await new Promise<void>(async function (resolve) {
       res.setHeader('Content-Type', attachment.contentType);
