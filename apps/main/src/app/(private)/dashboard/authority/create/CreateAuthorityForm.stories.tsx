@@ -26,7 +26,7 @@ const defaultMswParameters = {
         path: ['createAuthority'],
         response: {
           ...generateMock(AuthoritySchema),
-          attachmentId: 'd58ac4a3-7672-403c-ad04-112f5927e2be',
+          logoAttachmentId: 'd58ac4a3-7672-403c-ad04-112f5927e2be',
         },
       }),
     ],

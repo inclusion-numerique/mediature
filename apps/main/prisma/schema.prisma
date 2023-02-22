@@ -239,7 +239,7 @@ model Note {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  case                   Case?                    @relation(fields: [caseId], references: [id])
+  case                   Case?                    @relation(fields: [caseId], references: [id], onDelete: Cascade)
   AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
 }
 
@@ -255,8 +255,8 @@ model Agent {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  user                    User        @relation(fields: [userId], references: [id])
-  authority               Authority   @relation(fields: [authorityId], references: [id])
+  user                    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authority               Authority   @relation(fields: [authorityId], references: [id], onDelete: Cascade)
   Case                    Case[]
   AuthorityWhereMainAgent Authority[] @relation("AuthorityWhereMainAgent")
 }
@@ -308,17 +308,17 @@ model Authority {
   slug        String        @unique
   mainAgentId String?       @db.Uuid
   type        AuthorityType @default(CITY)
-  logo        Attachment?   @relation(fields: [attachmentId], references: [id])
+  logo        Attachment?   @relation(fields: [logoAttachmentId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  mainAgent       Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
-  attachmentId    String?           @db.Uuid
-  AgentInvitation AgentInvitation[]
-  Case            Case[]
-  Agent           Agent[]
+  mainAgent        Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
+  logoAttachmentId String?           @db.Uuid
+  AgentInvitation  AgentInvitation[]
+  Case             Case[]
+  Agent            Agent[]
 }
 
 enum CaseAttachmentType {
@@ -333,8 +333,8 @@ model AttachmentsOnCases {
   attachmentId String             @db.Uuid
   transmitter  CaseAttachmentType @default(CITIZEN)
 
-  case       Case       @relation(fields: [caseId], references: [id])
-  attachment Attachment @relation(fields: [attachmentId], references: [id])
+  case       Case       @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
 
   @@id([caseId, attachmentId])
 }
@@ -345,8 +345,8 @@ model AttachmentsOnCaseNotes {
   attachmentId String             @db.Uuid
   transmitter  CaseAttachmentType @default(CITIZEN)
 
-  note       Note       @relation(fields: [noteId], references: [id])
-  attachment Attachment @relation(fields: [attachmentId], references: [id])
+  note       Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
 
   @@id([noteId, attachmentId])
 }
@@ -361,7 +361,7 @@ model Admin {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum InvitationStatus {
@@ -384,7 +384,7 @@ model Invitation {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  issuer          User              @relation(fields: [issuerId], references: [id])
+  issuer          User              @relation(fields: [issuerId], references: [id], onDelete: Cascade)
   AgentInvitation AgentInvitation[]
   AdminInvitation AdminInvitation[]
 }
@@ -395,9 +395,9 @@ model AgentInvitation {
   invitationId String @unique @db.Uuid
   authorityId  String @db.Uuid
 
-  invitation Invitation @relation(fields: [invitationId], references: [id])
-  authority  Authority  @relation(fields: [authorityId], references: [id])
-  User       User?      @relation(fields: [userId], references: [id])
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  authority  Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  User       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String?    @db.Uuid
 }
 
@@ -407,5 +407,5 @@ model AdminInvitation {
   invitationId  String  @unique @db.Uuid
   canEverything Boolean @default(true)
 
-  invitation Invitation @relation(fields: [invitationId], references: [id])
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
 }
