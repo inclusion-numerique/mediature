@@ -25,7 +25,7 @@ export const visitorSessionContext: SessionContext = {
 export const userSessionContext: SessionContext = {
   status: 'authenticated',
   data: {
-    expires: new Date('December 17, 2304 03:24:00').toISOString(),
+    expires: new Date('December 17, 2304 03:24:00 UTC').toISOString(),
     user: {
       id: '00000000-0000-0000-0000-000000000000',
       email: 'jean@france.com',

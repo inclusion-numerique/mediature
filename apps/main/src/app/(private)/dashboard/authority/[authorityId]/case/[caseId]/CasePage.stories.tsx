@@ -29,7 +29,7 @@ const mswListCasesParameters = {
       ...casesWrappers[0],
       case: {
         ...casesWrappers[0].case,
-        termReminderAt: new Date('December 20, 2022 03:24:00'),
+        termReminderAt: new Date('December 20, 2022 03:24:00 UTC'),
       },
     },
   },

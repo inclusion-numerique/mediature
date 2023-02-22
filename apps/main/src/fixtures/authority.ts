@@ -15,8 +15,8 @@ export const authorities: AuthoritySchemaType[] = [
     mainAgentId: null,
     type: AuthorityTypeSchema.Values.REGION,
     logo: 'https://via.placeholder.com/300x150',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AuthoritySchema.parse({
@@ -26,8 +26,8 @@ export const authorities: AuthoritySchemaType[] = [
     mainAgentId: null,
     type: AuthorityTypeSchema.Values.CITY,
     logo: 'https://via.placeholder.com/300x400',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AuthoritySchema.parse({
@@ -37,8 +37,8 @@ export const authorities: AuthoritySchemaType[] = [
     mainAgentId: null,
     type: AuthorityTypeSchema.Values.FEDERATION_OF_CITIES,
     logo: null,
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
 ];

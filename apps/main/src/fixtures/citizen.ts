@@ -10,8 +10,8 @@ export const citizens: CitizenSchemaType[] = [
     lastname: 'Remy',
     address: addresses[0],
     phone: phones[0],
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   CitizenSchema.parse({
@@ -21,8 +21,8 @@ export const citizens: CitizenSchemaType[] = [
     lastname: 'Baron',
     address: addresses[1],
     phone: phones[1],
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   CitizenSchema.parse({
@@ -32,8 +32,8 @@ export const citizens: CitizenSchemaType[] = [
     lastname: 'Rolland',
     address: addresses[2],
     phone: phones[2],
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
 ];

@@ -70,7 +70,7 @@ const AlreadyClosedStory = Template.bind({});
 AlreadyClosedStory.args = {
   case: {
     ...cases[0],
-    closedAt: new Date('December 30, 2022 03:24:00'),
+    closedAt: new Date('December 30, 2022 03:24:00 UTC'),
     finalConclusion: `Minus soluta aut ad omnis nobis illo optio dicta. Sunt nisi cupiditate dolores. Exercitationem sit autem. Autem quaerat corrupti ullam corporis quod velit doloremque numquam.
 
 Consequatur consectetur beatae id. Quas optio facere. Et nisi non alias quibusdam cupiditate enim consequatur. Quo dolor inventore et veritatis quasi unde cumque quis.

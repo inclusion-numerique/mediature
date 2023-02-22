@@ -7,8 +7,8 @@ export const phones: PhoneSchemaType[] = [
     callingCode: '+33',
     countryCode: 'FR',
     number: '611223341',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   PhoneSchema.parse({
@@ -17,8 +17,8 @@ export const phones: PhoneSchemaType[] = [
     callingCode: '+33',
     countryCode: 'FR',
     number: '611223342',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   PhoneSchema.parse({
@@ -27,8 +27,8 @@ export const phones: PhoneSchemaType[] = [
     callingCode: '+33',
     countryCode: 'FR',
     number: '611223343',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
 ];

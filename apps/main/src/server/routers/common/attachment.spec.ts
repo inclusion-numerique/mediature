@@ -8,7 +8,7 @@ describe('signed file URL', () => {
 
   beforeAll(() => {
     jest.useFakeTimers();
-    jest.setSystemTime(new Date('December 15, 2022 03:24:00'));
+    jest.setSystemTime(new Date('December 15, 2022 03:24:00 UTC'));
   });
 
   afterAll(() => {
@@ -19,14 +19,14 @@ describe('signed file URL', () => {
     const signedUrl = await generateSignedAttachmentLink('00000000-0000-0000-0000-000000000000', secret);
 
     expect(signedUrl).toBe(
-      'http://localhost:3000/api/file/00000000-0000-0000-0000-000000000000?token=eyJhbGciOiJIUzI1NiJ9.eyJ1cm46Y2xhaW06ZmlsZV9pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImlhdCI6MTY3MTA3MDgwMCwiZXhwIjoxNjcxMDcxNzAwfQ.vXz58MqY90PYLyptsVpgyCrF9AsE41NbYrMAJScTY6I'
+      'http://localhost:3000/api/file/00000000-0000-0000-0000-000000000000?token=eyJhbGciOiJIUzI1NiJ9.eyJ1cm46Y2xhaW06ZmlsZV9pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImlhdCI6MTY3MTA3NDQwMCwiZXhwIjoxNjcxMDc1MzAwfQ.54onjTLOUBWHGw2sMLxCMU8K9o5g09-ZdjU_lrlWDys'
     );
   });
 
   it('should shift with the modulo interval', async () => {
     const lastModuloTime = getLastModuloTime();
 
-    expect(lastModuloTime).toStrictEqual(new Date('December 15, 2022 03:20:00'));
+    expect(lastModuloTime).toStrictEqual(new Date('December 15, 2022 03:20:00 UTC'));
   });
 
   it('should fail verifying the token expiration and validity', async () => {

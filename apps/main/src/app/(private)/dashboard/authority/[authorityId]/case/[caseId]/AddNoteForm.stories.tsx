@@ -54,7 +54,7 @@ const FilledStory = Template.bind({});
 FilledStory.args = {
   prefill: AddNoteToCasePrefillSchema.parse({
     caseId: '00000000-0000-0000-0000-000000000000',
-    date: new Date('December 15, 2022 03:24:00'),
+    date: new Date('December 15, 2022 03:24:00 UTC'),
     content: sampleHello,
   }),
 };

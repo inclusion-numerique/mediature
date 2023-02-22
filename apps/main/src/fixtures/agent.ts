@@ -9,8 +9,8 @@ export const agents: AgentSchemaType[] = [
     lastname: 'Garcia',
     email: 'germaine38@hotmail.fr',
     profilePicture: 'https://via.placeholder.com/300x150',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AgentSchema.parse({
@@ -21,8 +21,8 @@ export const agents: AgentSchemaType[] = [
     lastname: 'Bertrand',
     email: 'justine.blanchard@hotmail.fr',
     profilePicture: 'https://via.placeholder.com/300x250',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AgentSchema.parse({
@@ -33,8 +33,8 @@ export const agents: AgentSchemaType[] = [
     lastname: 'Louis',
     email: 'aure.benoit71@hotmail.fr',
     profilePicture: 'https://via.placeholder.com/150x150',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
 ];

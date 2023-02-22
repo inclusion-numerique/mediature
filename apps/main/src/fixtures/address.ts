@@ -8,8 +8,8 @@ export const addresses: AddressSchemaType[] = [
     postalCode: '35000',
     subdivision: '',
     countryCode: 'FR',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AddressSchema.parse({
@@ -19,8 +19,8 @@ export const addresses: AddressSchemaType[] = [
     postalCode: '35000',
     subdivision: '',
     countryCode: 'FR',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
   AddressSchema.parse({
@@ -30,8 +30,8 @@ export const addresses: AddressSchemaType[] = [
     postalCode: '35000',
     subdivision: '',
     countryCode: 'FR',
-    createdAt: new Date('December 17, 2022 03:24:00'),
-    updatedAt: new Date('December 19, 2022 04:33:00'),
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
   }),
 ];
