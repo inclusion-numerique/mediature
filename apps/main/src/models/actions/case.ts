@@ -44,7 +44,6 @@ export const UpdateCaseSchema = z
     close: z.boolean(),
     finalConclusion: incompleteCaseSchema.shape.finalConclusion,
     nextRequirements: incompleteCaseSchema.shape.nextRequirements,
-    attachments: z.array(AttachmentInputSchema).max(updateCaseAttachmentsMax),
   })
   .strict();
 export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
@@ -139,8 +138,8 @@ export type UpdateCaseNotePrefillSchemaType = z.infer<typeof UpdateCaseNotePrefi
 
 export const AddAttachmentToCaseSchema = z
   .object({
-    attachmentId: AttachmentInputSchema,
     caseId: incompleteCaseSchema.shape.id,
+    attachmentId: AttachmentInputSchema,
     transmitter: CaseAttachmentTypeSchema,
   })
   .strict();
@@ -151,6 +150,7 @@ export type AddAttachmentToCasePrefillSchemaType = z.infer<typeof AddAttachmentT
 
 export const RemoveAttachmentFromCaseSchema = z
   .object({
+    caseId: incompleteCaseSchema.shape.id,
     attachmentId: AttachmentInputSchema,
   })
   .strict();

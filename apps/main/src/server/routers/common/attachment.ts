@@ -87,6 +87,10 @@ export async function verifySignedAttachmentLink(
   }
 }
 
+export interface SafeAttachmentsToProcessOptions {
+  maxAttachmentsTotal?: number;
+}
+
 export interface SafeAttachmentsToProcess {
   markNewAttachmentsAsUsed: () => Promise<void>;
   attachmentsToAdd: string[];
@@ -96,11 +100,18 @@ export interface SafeAttachmentsToProcess {
 export async function formatSafeAttachmentsToProcess(
   attachmentKind: AttachmentKindSchemaType,
   inputAttachmentsIds: string[],
-  existingAttachmentsIds: string[]
+  existingAttachmentsIds: string[],
+  options?: SafeAttachmentsToProcessOptions
 ): Promise<SafeAttachmentsToProcess> {
   // Remove duplicates
   inputAttachmentsIds = [...new Set(inputAttachmentsIds)];
   existingAttachmentsIds = [...new Set(existingAttachmentsIds)];
+
+  if (options) {
+    if (options.maxAttachmentsTotal !== undefined && inputAttachmentsIds.length + existingAttachmentsIds.length > options.maxAttachmentsTotal) {
+      throw new Error(`vous ne pouvez pas transmettre plus de fichiers que le nombre autorisé`);
+    }
+  }
 
   const { removed, added } = diff(existingAttachmentsIds, inputAttachmentsIds);
 

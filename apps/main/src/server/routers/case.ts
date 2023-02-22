@@ -16,6 +16,8 @@ import {
   UpdateCaseAttachmentLabelSchema,
   UpdateCaseNoteSchema,
   UpdateCaseSchema,
+  requestCaseAttachmentsMax,
+  updateCaseAttachmentsMax,
 } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
@@ -85,7 +87,7 @@ export async function canUserManageThisCase(userId: string, caseId: string): Pro
   }
 
   if (!targetedCase.agentId || !(await isAgentThisUser(userId, targetedCase.agentId))) {
-    throw new Error(`vous pouvez ajouter une note seulement si vous êtes assigné au dossier`);
+    throw new Error(`vous devez être assigné au dossier pour effectuer cette opération`);
   }
 
   return true;
@@ -96,7 +98,10 @@ export const caseRouter = router({
     const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
       AttachmentKindSchema.Values.CASE_DOCUMENT,
       input.attachments,
-      []
+      [],
+      {
+        maxAttachmentsTotal: requestCaseAttachmentsMax,
+      }
     );
 
     const newCase = await prisma.case.create({
@@ -549,48 +554,63 @@ export const caseRouter = router({
   addAttachmentToCase: privateProcedure.input(AddAttachmentToCaseSchema).mutation(async ({ ctx, input }) => {
     await canUserManageThisCase(ctx.user.id, input.caseId);
 
+    const attachmentsOnCase = await prisma.attachmentsOnCases.findMany({
+      where: {
+        caseId: input.caseId,
+      },
+    });
+
+    const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
+      AttachmentKindSchema.Values.CASE_DOCUMENT,
+      [input.attachmentId],
+      attachmentsOnCase.map((attachmentOnCase) => attachmentOnCase.attachmentId),
+      {
+        maxAttachmentsTotal: updateCaseAttachmentsMax,
+      }
+    );
+
     const targetedCase = await prisma.case.update({
       where: {
         id: input.caseId,
       },
       data: {
         AttachmentsOnCases: {
-          create: {
-            transmitter: input.transmitter,
-            attachment: {
-              connect: {
-                // TODO: for all uploads, pass aId or the unique fileUrl?
-                id: input.attachmentId,
-              },
-            },
+          createMany: {
+            skipDuplicates: true,
+            data: attachmentsToAdd.map((attachmentId) => {
+              return {
+                attachmentId: attachmentId,
+                transmitter: CaseAttachmentType.AGENT,
+              };
+            }),
           },
         },
       },
     });
+
+    await markNewAttachmentsAsUsed();
 
     return;
   }),
   removeAttachmentFromCase: privateProcedure.input(RemoveAttachmentFromCaseSchema).mutation(async ({ ctx, input }) => {
-    const targetedCase = await prisma.case.findFirst({
+    await canUserManageThisCase(ctx.user.id, input.caseId);
+
+    const attachmentOnCase = await prisma.attachmentsOnCases.findUnique({
       where: {
-        AttachmentsOnCases: {
-          every: {
-            attachmentId: {
-              equals: input.attachmentId,
-            },
-          },
+        caseId_attachmentId: {
+          caseId: input.caseId,
+          attachmentId: input.attachmentId,
         },
       },
     });
-    if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+    if (!attachmentOnCase) {
+      throw new Error(`le document pour ce dossier n'existe pas`);
     }
 
-    await canUserManageThisCase(ctx.user.id, targetedCase.id);
-
+    // Delete cascaded to `attachmentOnCase`
     const attachment = await prisma.attachment.delete({
       where: {
-        id: input.attachmentId,
+        id: attachmentOnCase.attachmentId,
       },
     });
 

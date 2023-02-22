@@ -27,12 +27,20 @@ export interface UploaderProps {
   attachmentKindRequirements: AttachmentKindRequirementsSchemaType;
   minFiles?: number;
   maxFiles: number;
-  onCommittedFilesChanged: (attachments: UiAttachmentSchemaType[]) => Promise<void>;
+  onCommittedFilesChanged?: (attachments: UiAttachmentSchemaType[]) => Promise<void>;
+  postUploadHook?: (internalId: string) => Promise<void>;
   // TODO: onError (useful if the list is not displayed... the parent can use a custom error) ... throw error if one of the two not enabled
   isUploadingChanged?: (value: boolean) => void;
 }
 
-export function Uploader({ attachmentKindRequirements, minFiles, maxFiles, onCommittedFilesChanged, isUploadingChanged }: UploaderProps) {
+export function Uploader({
+  attachmentKindRequirements,
+  minFiles,
+  maxFiles,
+  onCommittedFilesChanged,
+  postUploadHook,
+  isUploadingChanged,
+}: UploaderProps) {
   const { t } = useTranslation('common');
   const { ContextualUploaderFileList } = useContext(UploaderContext);
 
@@ -60,36 +68,18 @@ export function Uploader({ attachmentKindRequirements, minFiles, maxFiles, onCom
       updateFiles();
     };
 
-    const handleUploadSuccess = (file: UppyFile | undefined, response: SuccessResponse) => {
-      updateFiles();
-
-      if (file && response.uploadURL) {
-        // Get the internal ID since we have no other way to retrieve it from here
-        const urlParts = new URL(response.uploadURL).pathname.split('/');
-
-        uppy.setFileState(file.id, {
-          meta: {
-            internalMeta: {
-              uploadSuccess: true,
-              id: urlParts[urlParts.length - 1],
-            },
-          },
-        });
+    const handleUploadSuccess = async (file: UppyFile | undefined, response: SuccessResponse) => {
+      if (!file || !response.uploadURL) {
+        return;
       }
 
-      const attachments: UiAttachmentSchemaType[] = uppy
-        .getFiles()
-        .filter((f) => {
-          return (f.meta as any).internalMeta?.uploadSuccess === true;
-        })
-        .map((f) => {
-          return {
-            id: (f.meta as any).internalMeta?.id,
-            url: `NOT_AVAILABLE_DUE_TO_UPPY_RESTRICTION_ON_RESPONSE_HEADERS`,
-          } as UiAttachmentSchemaType;
-        });
+      // Get the internal ID since we have no other way to retrieve it from here
+      const urlParts = new URL(response.uploadURL).pathname.split('/');
+      const internalId = urlParts[urlParts.length - 1];
 
-      onCommittedFilesChanged(attachments);
+      await reusableUploadSuccessCallback(uppy, file, response, internalId, onCommittedFilesChanged, postUploadHook);
+
+      updateFiles();
     };
 
     const handleUploadError = (file: UppyFile | undefined, error: Error, response: ErrorResponse | undefined) => {
@@ -159,7 +149,7 @@ export function Uploader({ attachmentKindRequirements, minFiles, maxFiles, onCom
       unregisterListeners();
       uppy.close({ reason: 'unmount' });
     };
-  }, [uppy, onCommittedFilesChanged]);
+  }, [uppy, onCommittedFilesChanged, postUploadHook]);
 
   useEffect(() => {
     if (isUploadingChanged) {
@@ -182,10 +172,26 @@ export function Uploader({ attachmentKindRequirements, minFiles, maxFiles, onCom
   );
 
   const retryUpload = useCallback(
-    (file: UppyFile) => {
-      uppy.retryUpload(file.id);
+    async (file: UppyFile) => {
+      if ((file as any).response.postUploadHookFailure === true) {
+        // Reuse the logic after the Uppy logic succeeds
+        const internalId = (file as any).meta.internalMeta.id as string;
+        await reusableUploadSuccessCallback(
+          uppy,
+          file,
+          file.response as unknown as SuccessResponse,
+          internalId,
+          onCommittedFilesChanged,
+          postUploadHook
+        );
+
+        setFiles(uppy.getFiles());
+      } else {
+        // It was a standard file upload, retry with the Uppy logic
+        await uppy.retryUpload(file.id);
+      }
     },
-    [uppy]
+    [uppy, onCommittedFilesChanged, postUploadHook]
   );
 
   const allowedExtensions = getExtensionsFromFileKinds(attachmentKindRequirements.allowedFileTypes);
@@ -280,4 +286,64 @@ function setupDragDrop(uppy: UppyEntity, dragAndDropRef: MutableRefObject<HTMLEl
 function getLocale(): any {
   // TODO: if multiple locales allowed, manage switching to another like en_FB...
   return fr_FR;
+}
+
+async function reusableUploadSuccessCallback(
+  uppy: Uppy,
+  file: UppyFile,
+  response: SuccessResponse,
+  internalId: string,
+  onCommittedFilesChanged: UploaderProps['onCommittedFilesChanged'],
+  postUploadHook: UploaderProps['postUploadHook']
+) {
+  if (postUploadHook) {
+    try {
+      await postUploadHook(internalId);
+    } catch (err) {
+      // Force an error as if it was part of content upload to reuse the display
+      uppy.setFileState(file.id, {
+        meta: {
+          ...file.meta,
+          internalMeta: {
+            id: internalId,
+          },
+        },
+        response: {
+          status: 500,
+          postUploadHookFailure: true,
+        },
+      });
+      return;
+    }
+  }
+
+  // If everything is good, mark keep the information for later process
+  uppy.setFileState(file.id, {
+    meta: {
+      ...file.meta,
+      internalMeta: {
+        uploadSuccess: true,
+        id: internalId,
+      },
+    },
+  });
+
+  const attachments: UiAttachmentSchemaType[] = uppy
+    .getFiles()
+    .filter((f) => {
+      return (f.meta as any).internalMeta?.uploadSuccess === true;
+    })
+    .map((f) => {
+      return {
+        id: (f.meta as any).internalMeta?.id,
+        url: `NOT_AVAILABLE_DUE_TO_UPPY_RESTRICTION_ON_RESPONSE_HEADERS`,
+      } as UiAttachmentSchemaType;
+    });
+
+  onCommittedFilesChanged && onCommittedFilesChanged(attachments);
+
+  if (postUploadHook) {
+    // If we succeed the hook, we can safely remove the file since the parent is supposed to manage the UI
+    uppy.removeFile(file.id);
+  }
 }

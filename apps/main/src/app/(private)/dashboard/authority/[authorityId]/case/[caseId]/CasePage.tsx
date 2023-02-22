@@ -39,7 +39,7 @@ import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
-import { CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import { CaseAttachmentTypeSchema, CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
@@ -73,6 +73,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const caseWrapper = data?.caseWrapper;
 
   const updateCase = trpc.updateCase.useMutation();
+  const addAttachmentToCase = trpc.addAttachmentToCase.useMutation();
+  const removeAttachmentFromCase = trpc.removeAttachmentFromCase.useMutation();
 
   const form = useForm<UpdateCaseSchemaType>({
     resolver: zodResolver(UpdateCaseSchema),
@@ -115,7 +117,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       termReminderAt: caseWrapper?.case.termReminderAt,
       finalConclusion: caseWrapper?.case.finalConclusion,
       nextRequirements: caseWrapper?.case.nextRequirements,
-      attachments: [], // TODO
     });
   }, [caseWrapper, isDirty, reset]);
 
@@ -237,7 +238,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   close: control._defaultValues.close || !!targetedCase.closedAt,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                   nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
-                  attachments: [], // TODO
                 });
               } catch (err) {
                 setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
@@ -272,6 +272,45 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               );
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Card variant="outlined">
+            <CardContent>
+              <Grid container direction={'column'} spacing={2}>
+                <Grid item xs={12}>
+                  <Typography component="span" variant="h6">
+                    Documents
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <ContextualUploader
+                    attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
+                    maxFiles={updateCaseAttachmentsMax}
+                    postUploadHook={async (internalId: string) => {
+                      await addAttachmentToCase.mutateAsync({
+                        caseId: targetedCase.id,
+                        attachmentId: internalId,
+                        transmitter: CaseAttachmentTypeSchema.Values.AGENT,
+                      });
+                    }}
+                  />
+                  {attachments && attachments.length > 0 && (
+                    <>
+                      <FileList
+                        files={attachments}
+                        onRemove={async (file) => {
+                          await removeAttachmentFromCase.mutateAsync({
+                            caseId: targetedCase.id,
+                            attachmentId: file.id,
+                          });
+                        }}
+                      />
+                    </>
+                  )}
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         </Grid>
         <Grid
           item
@@ -322,7 +361,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     close: control._defaultValues.close || !!targetedCase.closedAt,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                     nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
-                    attachments: [], // TODO
                   });
                 } catch (err) {
                   setValue('status', control._defaultValues.status || targetedCase.status);
@@ -634,43 +672,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                 <Divider variant="fullWidth" sx={{ p: 0 }} />
               </Grid>
               <Grid item xs={12}>
-                <Card variant="outlined">
-                  <CardContent>
-                    <Grid container direction={'column'} spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography component="span" variant="h6">
-                          Documents
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <ContextualUploader
-                          attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
-                          maxFiles={updateCaseAttachmentsMax}
-                          onCommittedFilesChanged={async (attachments: UiAttachmentSchemaType[]) => {
-                            // setValue(
-                            //   'attachments',
-                            //   attachments.map((attachment) => attachment.id)
-                            // );
-                          }}
-                          // TODO: enable once https://github.com/transloadit/uppy/issues/4130#issuecomment-1437198535 is fixed
-                          // isUploadingChanged={setIsUploadingAttachments}
-                        />
-                        {attachments && attachments.length > 0 && (
-                          <>
-                            <FileList
-                              files={attachments}
-                              onRemove={async () => {
-                                // TODO
-                              }}
-                            />
-                          </>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12}>
                 <Divider variant="fullWidth" sx={{ p: 0 }} />
               </Grid>
               <Grid item xs={12}>
@@ -703,7 +704,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       close: control._formValues.close,
                       finalConclusion: control._formValues.finalConclusion,
                       nextRequirements: control._formValues.nextRequirements,
-                      attachments: [], // TODO
                     });
                   }}
                 />
