@@ -143,7 +143,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     );
   } else if (isInitialLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
-  } else if (!caseWrapper) {
+  } else if (!caseWrapper || caseWrapper.case.authorityId !== authorityId) {
     return notFound();
   }
 
