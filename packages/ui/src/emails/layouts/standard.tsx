@@ -71,11 +71,12 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
         <MjmlWrapper cssClass="light-body">
           <MjmlSection>
             <MjmlGroup>
-              <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="120px">
+              <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="24%">
+                {/* `MjmlColumn` width must be a percentage (ref: https://github.com/mjmlio/mjml/issues/2489) */}
                 {/* TODO: upload images on our own CDN, or use public folder of the app... */}
                 <MjmlImage src="https://upload.wikimedia.org/wikipedia/commons/4/44/Logo_republique_francaise.png" alt="Logo" paddingRight={0} />
               </MjmlColumn>
-              <MjmlColumn verticalAlign="middle" width="380px">
+              <MjmlColumn verticalAlign="middle" width="76%">
                 <MjmlText fontSize={20} fontWeight={700} paddingBottom={2}>
                   Médiature
                 </MjmlText>
