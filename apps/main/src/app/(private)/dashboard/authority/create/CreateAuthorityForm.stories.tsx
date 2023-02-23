@@ -3,7 +3,8 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm } from '@mediature/docs/.storybook/testing';
-import { CreateAuthorityForm } from '@mediature/main/src/app/(private)/dashboard/authority/create/CreateAuthorityForm';
+import { CreateAuthorityForm, CreateAuthorityFormContext } from '@mediature/main/src/app/(private)/dashboard/authority/create/CreateAuthorityForm';
+import { Normal as UploaderNormalStory } from '@mediature/main/src/components/uploader/Uploader.stories';
 import { CreateAuthorityPrefillSchema } from '@mediature/main/src/models/actions/authority';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
@@ -44,7 +45,14 @@ EmptyStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
 
-export const Empty = prepareStory(EmptyStory);
+export const Empty = prepareStory(EmptyStory, {
+  childrenContext: {
+    context: CreateAuthorityFormContext,
+    value: {
+      ContextualUploader: UploaderNormalStory,
+    },
+  },
+});
 
 const FilledStory = Template.bind({});
 FilledStory.args = {
@@ -60,4 +68,11 @@ FilledStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
 
-export const Filled = prepareStory(FilledStory);
+export const Filled = prepareStory(FilledStory, {
+  childrenContext: {
+    context: CreateAuthorityFormContext,
+    value: {
+      ContextualUploader: UploaderNormalStory,
+    },
+  },
+});

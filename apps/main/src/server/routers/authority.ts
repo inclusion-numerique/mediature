@@ -8,7 +8,9 @@ import {
   UpdateAuthoritySchema,
 } from '@mediature/main/src/models/actions/authority';
 import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
+import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import { agentPrismaToModel, authorityPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
@@ -49,25 +51,30 @@ export const authorityRouter = router({
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
-    // TODO:
-    input.logoAttachmentId = null;
-
     await requiresThereIsNoSimilarAuthority(input.name, input.slug);
+
+    const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
+      AttachmentKindSchema.Values.AUTHORITY_LOGO,
+      input.logoAttachmentId ? [input.logoAttachmentId] : [],
+      []
+    );
 
     const newAuthority = await prisma.authority.create({
       data: {
         name: input.name,
         slug: input.slug,
         type: input.type,
-        logo: input.logoAttachmentId
+        logo: attachmentsToAdd.length
           ? {
               connect: {
-                id: input.logoAttachmentId,
+                id: attachmentsToAdd[0],
               },
             }
           : undefined,
       },
     });
+
+    await markNewAttachmentsAsUsed();
 
     return newAuthority;
   }),

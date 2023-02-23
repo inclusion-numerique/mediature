@@ -17,6 +17,7 @@ export interface RootLayoutProps {
 function MainStructure(props: PropsWithChildren) {
   return (
     <>
+      {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <StartDsfr />
         <DsfrHead defaultColorScheme={defaultColorScheme} />

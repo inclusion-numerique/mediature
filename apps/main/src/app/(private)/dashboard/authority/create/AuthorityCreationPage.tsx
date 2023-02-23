@@ -15,7 +15,7 @@ export const AuthorityCreationPageContext = createContext({
 export function AuthorityCreationPage() {
   const { ContextualCreateAuthorityForm } = useContext(AuthorityCreationPageContext);
 
-  // Check the user is an admin
+  // TODO: Check the user is an admin
 
   return (
     <Grid container {...centeredFormContainerGridProps}>

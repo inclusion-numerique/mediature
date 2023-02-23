@@ -6,7 +6,7 @@ import DragDrop from '@uppy/drag-drop';
 import en_US from '@uppy/locales/lib/en_US';
 import fr_FR from '@uppy/locales/lib/fr_FR';
 import Tus from '@uppy/tus';
-import { mimeData } from 'human-filetypes';
+import { FileKind, mimeData } from 'human-filetypes';
 import { MutableRefObject, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ import { UploaderFileList } from '@mediature/main/src/components/uploader/Upload
 import '@mediature/main/src/components/uploader/drag-drop.scss';
 import { AttachmentKindRequirementsSchemaType, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { mockBaseUrl, shouldTargetMock } from '@mediature/main/src/server/mock/environment';
-import { getExtensionsFromFileKinds, getMimesFromFileKinds } from '@mediature/main/src/utils/attachment';
+import { getExtensionsFromFileKinds, getFileKindFromMime, getMimesFromFileKinds } from '@mediature/main/src/utils/attachment';
 import { bitsFor } from '@mediature/main/src/utils/bits';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
@@ -328,17 +328,26 @@ async function reusableUploadSuccessCallback(
     },
   });
 
-  const attachments: UiAttachmentSchemaType[] = uppy
-    .getFiles()
-    .filter((f) => {
-      return (f.meta as any).internalMeta?.uploadSuccess === true;
-    })
-    .map((f) => {
-      return {
-        id: (f.meta as any).internalMeta?.id,
-        url: `NOT_AVAILABLE_DUE_TO_UPPY_RESTRICTION_ON_RESPONSE_HEADERS`,
-      } as UiAttachmentSchemaType;
-    });
+  const attachments: UiAttachmentSchemaType[] = await Promise.all(
+    uppy
+      .getFiles()
+      .filter((f) => {
+        return (f.meta as any).internalMeta?.uploadSuccess === true;
+      })
+      .map(async (f) => {
+        let localUrl: string | null = null;
+
+        if (file.meta.type && getFileKindFromMime(file.meta.type) === FileKind.Image) {
+          const base64 = await convertBlobToBase64(file.data);
+          localUrl = base64 as string;
+        }
+
+        return {
+          id: (f.meta as any).internalMeta?.id,
+          url: localUrl || `NOT_AVAILABLE_DUE_TO_UPPY_RESTRICTION_ON_RESPONSE_HEADERS`,
+        } as UiAttachmentSchemaType;
+      })
+  );
 
   onCommittedFilesChanged && onCommittedFilesChanged(attachments);
 
@@ -346,4 +355,14 @@ async function reusableUploadSuccessCallback(
     // If we succeed the hook, we can safely remove the file since the parent is supposed to manage the UI
     uppy.removeFile(file.id);
   }
+}
+
+async function convertBlobToBase64(blob: Blob): Promise<string | ArrayBuffer | null> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      resolve(reader.result);
+    };
+  });
 }

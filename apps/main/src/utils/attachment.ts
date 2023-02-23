@@ -56,3 +56,7 @@ export function getExtensionsFromFileKinds(fileKinds: FileKind[]) {
 export function getExtensionsFromMime(contentType: string): string[] {
   return mimeData[contentType]?.extensions || [];
 }
+
+export function getFileKindFromMime(contentType: string): FileKind | null {
+  return mimeData[contentType].kind;
+}
