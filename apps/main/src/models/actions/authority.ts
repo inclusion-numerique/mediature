@@ -1,14 +1,14 @@
 import z from 'zod';
 
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
-import { AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
+import { AttachmentInputSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 
 export const CreateAuthoritySchema = z.object({
   name: AuthoritySchema.shape.name,
   slug: AuthoritySchema.shape.slug,
   type: AuthoritySchema.shape.type,
-  logoAttachmentId: AttachmentSchema.shape.id.nullish(), // TODO: use a specific attachment object? Or same if "url", and "new" if "uuid"?
+  logoAttachmentId: AttachmentInputSchema.nullable(),
 });
 export type CreateAuthoritySchemaType = z.infer<typeof CreateAuthoritySchema>;
 
@@ -22,7 +22,7 @@ export const UpdateAuthoritySchema = z
     slug: AuthoritySchema.shape.slug,
     mainAgentId: AuthoritySchema.shape.mainAgentId,
     type: AuthoritySchema.shape.type,
-    logoAttachmentId: AuthoritySchema.shape.logo,
+    logoAttachmentId: AttachmentInputSchema.nullable(),
   })
   .strict();
 export type UpdateAuthoritySchemaType = z.infer<typeof UpdateAuthoritySchema>;

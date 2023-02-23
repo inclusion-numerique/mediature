@@ -27,10 +27,13 @@ const defaultMswParameters = {
         path: ['getPublicFacingAuthority'],
         response: {
           authority: PublicFacingAuthoritySchema.parse({
-            id: '00000000-0000-0000-0000-000000000000',
+            id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
             name: 'Bretagne',
             slug: 'my-bzh',
-            logo: null,
+            logo: {
+              id: 'e79cb3ba-745e-5d9a-8903-4a02327a7e01',
+              url: 'https://via.placeholder.com/300x250',
+            },
           }),
         },
       }),

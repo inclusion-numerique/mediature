@@ -30,7 +30,7 @@ const defaultMswParameters = {
             'Authorization, Content-Type, Location, Tus-Extension, Tus-Max-Size, Tus-Resumable, Tus-Version, Upload-Concat, Upload-Defer-Length, Upload-Length, Upload-Metadata, Upload-Offset, X-HTTP-Method-Override, X-Requested-With, X-Forwarded-Host, X-Forwarded-Proto, Forwarded'
           ),
           ctx.set('Content-Length', '0'),
-          ctx.set('Location', `${mockBaseUrl}/api/upload/00000000-0000-0000-0000-000000000001`),
+          ctx.set('Location', `${mockBaseUrl}/api/upload/00000000-0000-0000-0000-000000000000`),
           ctx.set('Tus-Resumable', '1.0.0')
         );
       }),

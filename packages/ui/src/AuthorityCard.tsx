@@ -28,7 +28,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
             <Grid container alignItems="center" spacing={2}>
               {!!props.authority.logo && (
                 <Grid item>
-                  <Image src={props.authority.logo} alt="" width={50} height={30} style={{ objectFit: 'contain' }} />
+                  <Image src={props.authority.logo.url} alt="" width={50} height={30} style={{ objectFit: 'contain' }} />
                 </Grid>
               )}
               <Grid item>

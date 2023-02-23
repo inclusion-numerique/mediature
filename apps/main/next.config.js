@@ -1,15 +1,18 @@
 const path = require('path');
 const tsImport = require('ts-import');
 
-const { generateRewrites, localizedRoutes } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/routes/list.ts`), {
+const tsImportLoadOptions = {
   mode: tsImport.LoadMode.Compile,
   compilerOptions: {
     paths: {
-      // Paths are not working, we modified inside files to use relative ones where needed
+      // [IMPORTANT] Paths are not working, we modified inside files to use relative ones where needed
       '@mediature/main/*': ['../../apps/main/*'],
     },
   },
-});
+};
+
+const { generateRewrites, localizedRoutes } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/routes/list.ts`), tsImportLoadOptions);
+const { getBaseUrl } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/url.ts`), tsImportLoadOptions);
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const gitRevision = require('git-rev-sync');
@@ -20,6 +23,7 @@ const { i18n } = require('./next-i18next.config');
 const mode = process.env.APP_MODE || 'test';
 
 const nextjsSecurityHeaders = convertHeadersForNextjs(securityHeaders);
+const baseUrl = new URL(getBaseUrl());
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
@@ -69,6 +73,10 @@ const moduleExports = async () => {
     },
     images: {
       remotePatterns: [
+        {
+          protocol: baseUrl.protocol.slice(0, -1),
+          hostname: baseUrl.hostname,
+        },
         {
           protocol: 'https',
           hostname: 'via.placeholder.com',

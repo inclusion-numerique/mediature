@@ -50,8 +50,8 @@ const defaultMswParameters = {
 
 const commonComponentProps: ComponentProps<ComponentType> = {
   params: {
-    authorityId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
-    caseId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e05',
+    authorityId: casesWrappers[0].case.authorityId,
+    caseId: casesWrappers[0].case.id,
   },
 };
 

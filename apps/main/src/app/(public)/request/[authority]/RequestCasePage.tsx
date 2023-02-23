@@ -3,6 +3,7 @@
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
 import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
@@ -53,9 +54,22 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
         </>
       ) : (
         <>
-          <Typography component="h2" variant="h6" align="center">
-            {authority.name}
-          </Typography>
+          {!!authority.logo ? (
+            <Image
+              src={authority.logo.url}
+              width={300}
+              height={100}
+              alt="logo de la collectivité"
+              style={{
+                objectFit: 'contain',
+                margin: '0 auto 20px',
+              }}
+            />
+          ) : (
+            <Typography component="h2" variant="h6" align="center">
+              {authority.name}
+            </Typography>
+          )}
           <Typography component="h1" variant="h5" align="center" gutterBottom sx={{ mb: 5 }}>
             Lancer ma démarche de médiation
           </Typography>

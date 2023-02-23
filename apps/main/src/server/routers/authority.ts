@@ -11,7 +11,12 @@ import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agen
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
-import { agentPrismaToModel, authorityPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import {
+  agentPrismaToModel,
+  attachmentIdPrismaToModel,
+  attachmentPrismaToModel,
+  authorityPrismaToModel,
+} from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export async function isUserAnAdmin(userId: string): Promise<boolean> {
@@ -149,15 +154,14 @@ export const authorityRouter = router({
       throw new Error(`aucune collectivité trouvée`);
     }
 
-    return { authority: authorityPrismaToModel(authority) };
+    return {
+      authority: await authorityPrismaToModel(authority),
+    };
   }),
   getPublicFacingAuthority: publicProcedure.input(GetPublicFacingAuthoritySchema).query(async ({ ctx, input }) => {
     const authority = await prisma.authority.findUnique({
       where: {
         slug: input.slug,
-      },
-      include: {
-        logo: true,
       },
     });
 
@@ -165,7 +169,12 @@ export const authorityRouter = router({
       throw new Error(`aucune collectivité trouvée`);
     }
 
-    return { authority: PublicFacingAuthoritySchema.parse({ ...authority, logo: authority.logo ? `https://TODO.com/${authority.logo.id}` : null }) };
+    return {
+      authority: PublicFacingAuthoritySchema.parse({
+        ...authority,
+        logo: await attachmentIdPrismaToModel(authority.logoAttachmentId),
+      }),
+    };
   }),
   listAuthorities: privateProcedure.input(ListAuthoritiesSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
@@ -208,27 +217,29 @@ export const authorityRouter = router({
     });
 
     return {
-      authoritiesWrappers: authorities.map((authority): AuthorityWrapperSchemaType => {
-        let openCases: number = 0;
-        let closeCases: number = 0;
-        for (const authorityCase of authority.Case) {
-          if (authorityCase.closedAt) {
-            closeCases++;
-          } else {
-            openCases++;
+      authoritiesWrappers: await Promise.all(
+        authorities.map(async (authority): Promise<AuthorityWrapperSchemaType> => {
+          let openCases: number = 0;
+          let closeCases: number = 0;
+          for (const authorityCase of authority.Case) {
+            if (authorityCase.closedAt) {
+              closeCases++;
+            } else {
+              openCases++;
+            }
           }
-        }
 
-        return {
-          authority: authorityPrismaToModel(authority),
-          mainAgent: authority.mainAgent ? agentPrismaToModel(authority.mainAgent) : null,
-          agents: authority.Agent.map((agent) => {
-            return agentPrismaToModel(agent);
-          }),
-          openCases: openCases,
-          closeCases: closeCases,
-        };
-      }),
+          return {
+            authority: await authorityPrismaToModel(authority),
+            mainAgent: authority.mainAgent ? agentPrismaToModel(authority.mainAgent) : null,
+            agents: authority.Agent.map((agent) => {
+              return agentPrismaToModel(agent);
+            }),
+            openCases: openCases,
+            closeCases: closeCases,
+          };
+        })
+      ),
     };
   }),
 });

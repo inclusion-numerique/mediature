@@ -25,14 +25,14 @@ export function agentPrismaToModel(
   };
 }
 
-export function authorityPrismaToModel(authority: Authority): AuthoritySchemaType {
+export async function authorityPrismaToModel(authority: Authority): Promise<AuthoritySchemaType> {
   return {
     id: authority.id,
     name: authority.name,
     slug: authority.slug,
     mainAgentId: authority.mainAgentId,
     type: authority.type,
-    logo: null as string | null, // TODO
+    logo: await attachmentIdPrismaToModel(authority.logoAttachmentId),
     createdAt: authority.createdAt,
     updatedAt: authority.updatedAt,
     deletedAt: authority.deletedAt,
@@ -104,4 +104,14 @@ export async function attachmentPrismaToModel(attachment: AttachmentPrismaInput)
     size: attachment.size,
     name: attachment.name,
   };
+}
+
+export async function attachmentIdPrismaToModel(attachmentId: string | null): Promise<UiAttachmentSchemaType | null> {
+  if (!attachmentId) {
+    return null;
+  }
+
+  return await attachmentPrismaToModel({
+    id: attachmentId,
+  });
 }

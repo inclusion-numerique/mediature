@@ -1,4 +1,4 @@
-import { isBrowser } from '@mediature/main/src/utils/platform';
+import { isBrowser } from './platform';
 
 export function getBaseUrl() {
   if (process.env.APP_BASE_URL) {

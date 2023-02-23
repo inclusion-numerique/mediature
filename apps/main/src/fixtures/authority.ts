@@ -14,7 +14,10 @@ export const authorities: AuthoritySchemaType[] = [
     slug: 'bzh',
     mainAgentId: null,
     type: AuthorityTypeSchema.Values.REGION,
-    logo: 'https://via.placeholder.com/300x150',
+    logo: {
+      id: 'e79cb3ba-745e-5d9a-8903-4a02327a7e01',
+      url: 'https://via.placeholder.com/300x150',
+    },
     createdAt: new Date('December 17, 2022 03:24:00 UTC'),
     updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
@@ -25,7 +28,10 @@ export const authorities: AuthoritySchemaType[] = [
     slug: 'mairie-de-paris',
     mainAgentId: null,
     type: AuthorityTypeSchema.Values.CITY,
-    logo: 'https://via.placeholder.com/300x400',
+    logo: {
+      id: 'e79cb3ba-745e-5d9a-8903-4a02327a7e02',
+      url: 'https://via.placeholder.com/300x400',
+    },
     createdAt: new Date('December 17, 2022 03:24:00 UTC'),
     updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
     deletedAt: null,
