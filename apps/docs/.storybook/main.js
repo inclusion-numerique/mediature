@@ -77,8 +77,8 @@ module.exports = {
           oneOf: [
             {
               resourceQuery: /raw/, // foo.scss?raw
+              type: 'asset/source',
               use: [
-                'raw-loader',
                 {
                   loader: 'postcss-loader',
                   options: {
