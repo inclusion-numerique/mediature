@@ -1,3 +1,4 @@
+const cssnano = require('cssnano');
 const path = require('path');
 const tsImport = require('ts-import');
 
@@ -84,6 +85,42 @@ const moduleExports = async () => {
       ],
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+      // Inject a style loader when we want to use `foo.scss?raw` for backend processing (like emails)
+      // It was not easy because adding this rule was making Next.js removing all default style loaders saying we use a custom style so it left us with nothing...
+      // It's due to this check https://github.com/vercel/next.js/blob/d3e3f28b418a408d865cd7cde255af888739da45/packages/next/build/webpack-config.ts#L1468-L1474
+      // The trick below is to parse their rules tree and when they use Sass loaders we add our own rule at the beginning of the chain (they do not check that)
+      // We could have tried the first attempt while trying to re-add all their loaders by ourselves... but there is a high chance it breaks soon since that's their internal stuff (https://github.com/vercel/next.js/blob/d3e3f28b418a408d865cd7cde255af888739da45/packages/next/build/webpack/config/blocks/css/index.ts used at https://github.com/vercel/next.js/blob/d3e3f28b418a408d865cd7cde255af888739da45/packages/next/build/webpack/config/index.ts#L49)
+      const originalRules = config.module.rules;
+      const styleRegex = new RegExp('(scss|sass)', 'i');
+      for (const originalRule of originalRules) {
+        if (originalRule.oneOf) {
+          for (const ruleItem of originalRule.oneOf) {
+            if (ruleItem.test && styleRegex.test(ruleItem.test.toString())) {
+              originalRule.oneOf.splice(0, 0, {
+                test: /\.(scss|sass)$/,
+                resourceQuery: /raw/, // foo.scss?raw
+                type: 'asset/source',
+                use: [
+                  {
+                    loader: 'postcss-loader',
+                    options: {
+                      postcssOptions: {
+                        // In our case getting raw style in to inject it in emails, we want to make sure it's minified to avoid comments and so on
+                        plugins: [cssnano({ preset: 'default' })],
+                      },
+                    },
+                  },
+                  'resolve-url-loader',
+                  'sass-loader',
+                ],
+              });
+
+              break;
+            }
+          }
+        }
+      }
+
       config.module.rules.push({
         test: /\.woff2$/,
         type: 'asset/resource',
