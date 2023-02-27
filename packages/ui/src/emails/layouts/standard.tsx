@@ -21,11 +21,14 @@ import {
 } from '@luma-team/mjml-react';
 import { PropsWithChildren } from 'react';
 
+import { getBaseUrl } from '@mediature/main/src/utils/url';
 import emailCss from '@mediature/ui/src/emails/layouts/standard.email.scss?raw';
 import storybookCss from '@mediature/ui/src/emails/layouts/standard.storybook.scss?raw';
 
 // We avoided using React context hook here for simplicity
 const isStorybookEnvironment: boolean = process.env.STORYBOOK_ENVIRONMENT === 'true';
+
+const emailCssWithAdjustedUrls = isStorybookEnvironment ? emailCss : emailCss.replace(/\/assets\//g, `${getBaseUrl()}/assets/`);
 
 export interface StandardLayoutProps {
   title: string;
@@ -52,12 +55,12 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
             cssClass="light-button"
             color="#f5f5fe"
             fontSize={16}
-            fontWeight={500}
+            fontWeight={400}
             lineHeight="24px"
             padding="8px 16px"
           ></MjmlButton>
         </MjmlAttributes>
-        <MjmlStyle>{isStorybookEnvironment ? storybookCss : emailCss}</MjmlStyle>
+        <MjmlStyle>{isStorybookEnvironment ? storybookCss : emailCssWithAdjustedUrls}</MjmlStyle>
         <MjmlRaw>
           {!isStorybookEnvironment && (
             <>
@@ -74,7 +77,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
               <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="24%">
                 {/* `MjmlColumn` width must be a percentage (ref: https://github.com/mjmlio/mjml/issues/2489) */}
                 {/* TODO: upload images on our own CDN, or use public folder of the app... */}
-                <MjmlImage src="https://upload.wikimedia.org/wikipedia/commons/4/44/Logo_republique_francaise.png" alt="Logo" paddingRight={0} />
+                <MjmlImage src={`${getBaseUrl()}/assets/images/logo.png`} alt="logo" paddingRight={0} />
               </MjmlColumn>
               <MjmlColumn verticalAlign="middle" width="76%">
                 <MjmlText fontSize={20} fontWeight={700} paddingBottom={2}>

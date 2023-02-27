@@ -21,6 +21,7 @@ import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import { Providers } from '@mediature/main/src/app/providers';
 import { i18n } from '@mediature/main/src/i18n';
 import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storybook-renderer';
+import '@mediature/ui/src/fonts/index.css';
 
 // const channel = addons.getChannel();
 

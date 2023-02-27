@@ -47,7 +47,9 @@ h2 {
     color: #cecece !important;
   }
 
-  .light-button p {
+  .light-button a,
+  .light-button p // `p` is needed because on Storybook when we replace with no link it's a paragraph instead of a `a`
+  {
     background: #8585f6 !important;
     color: #000091 !important;
   }

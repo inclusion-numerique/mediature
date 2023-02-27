@@ -1,4 +1,5 @@
 /.files/
+/public/assets/fonts/
 # Sentry
 /.sentryclirc
 /sentry.properties

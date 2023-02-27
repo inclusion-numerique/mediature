@@ -16,14 +16,16 @@ const { generateRewrites, localizedRoutes } = tsImport.loadSync(path.resolve(__d
 const { getBaseUrl } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/url.ts`), tsImportLoadOptions);
 
 const { withSentryConfig } = require('@sentry/nextjs');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const gitRevision = require('git-rev-sync');
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
-const { convertHeadersForNextjs, securityHeaders } = require('./src/utils/http.js');
+const { convertHeadersForNextjs, securityHeaders, assetsSecurityHeaders } = require('./src/utils/http.js');
 const { i18n } = require('./next-i18next.config');
 
 const mode = process.env.APP_MODE || 'test';
 
 const nextjsSecurityHeaders = convertHeadersForNextjs(securityHeaders);
+const nextjsAssetsSecurityHeaders = convertHeadersForNextjs(assetsSecurityHeaders);
 const baseUrl = new URL(getBaseUrl());
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
@@ -65,10 +67,15 @@ const moduleExports = async () => {
       ];
     },
     async headers() {
+      // Order matters, less precise to more precise (it's weird since the opposite of others... but fine)
       return [
         {
           source: '/:path*', // All routes
           headers: nextjsSecurityHeaders,
+        },
+        {
+          source: '/assets/:path*', // Assets routes
+          headers: nextjsAssetsSecurityHeaders,
         },
       ];
     },
@@ -85,6 +92,22 @@ const moduleExports = async () => {
       ],
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+      // Expose all DSFR fonts as static at the root so emails and PDFs can download them when needed
+      config.plugins.push(
+        new CopyWebpackPlugin({
+          patterns: [
+            {
+              from: path.dirname(require.resolve('@gouvfr/dsfr/dist/fonts/Marianne-Bold.woff2')),
+              to: path.resolve(__dirname, './public/assets/fonts/'),
+            },
+            {
+              from: require.resolve('@mediature/ui/src/fonts/index.css'),
+              to: path.resolve(__dirname, './public/assets/fonts/'),
+            },
+          ],
+        })
+      );
+
       // Inject a style loader when we want to use `foo.scss?raw` for backend processing (like emails)
       // It was not easy because adding this rule was making Next.js removing all default style loaders saying we use a custom style so it left us with nothing...
       // It's due to this check https://github.com/vercel/next.js/blob/d3e3f28b418a408d865cd7cde255af888739da45/packages/next/build/webpack-config.ts#L1468-L1474

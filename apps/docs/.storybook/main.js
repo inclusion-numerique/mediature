@@ -1,3 +1,4 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const cssnano = require('cssnano');
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -53,6 +54,27 @@ module.exports = {
     TRPC_SERVER_MOCK: 'true',
   }),
   async webpackFinal(config, { configType }) {
+    // Expose all DSFR fonts as static at the root so emails and PDFs can download them when needed
+    // And also static files embedded in the application
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.dirname(require.resolve('@gouvfr/dsfr/dist/fonts/Marianne-Bold.woff2')),
+            to: path.resolve(__dirname, '../public/assets/fonts/'),
+          },
+          {
+            from: require.resolve('@mediature/ui/src/fonts/index.css'),
+            to: path.resolve(__dirname, '../public/assets/fonts/'),
+          },
+          {
+            from: path.dirname(require.resolve('@mediature/main/public/assets/images/logo.png')),
+            to: path.resolve(__dirname, '../public/assets/images/'),
+          },
+        ],
+      })
+    );
+
     // TODO: move the following to a `utils` to be reused elsewhere than in Storybook
     const originalRules = config.module.rules;
     config.module.rules = [
