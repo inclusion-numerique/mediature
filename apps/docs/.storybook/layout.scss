@@ -1,5 +1,10 @@
 @import '@mediature/main/src/app/workarounds.scss';
 
+.protectedFromStyleSwitchWorkaround {
+  /* This file will not see its style definition received a `media="not all"` (that was needed due to DSFR style leakage in Storybook) */
+  display: none;
+}
+
 html,
 body,
 #storybook-root {

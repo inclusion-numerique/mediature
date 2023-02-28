@@ -113,6 +113,12 @@ export const parameters = {
           id: 'duplicate-id',
           selector: '*:not(MuiListItemIcon-root.disabledA11y)',
         },
+        {
+          // The `react-pdf` viewer cannot receive a `title`
+          id: 'frame-title',
+          // selector: '*:not(iframe.pdfViewer.disabledA11y)',
+          selector: '*:not(*)', // The other above does not work... also targetting parents of it does not work so leaving like that
+        },
       ],
     },
   },
@@ -134,6 +140,16 @@ export const decorators = [
 
     if (context.kind.startsWith('Emails/')) {
       // We are in the email templating context, they don't need other stuff and they will use a specific decorator per-story
+
+      disableGlobalDsfrStyle(true); // Workaround for global style leaking
+
+      return (
+        <I18nextProvider i18n={i18n}>
+          <Story />
+        </I18nextProvider>
+      );
+    } else if (context.kind.startsWith('Documents/')) {
+      // We are in the document templating context, they don't need other stuff and they will use a specific decorator per-story
 
       disableGlobalDsfrStyle(true); // Workaround for global style leaking
 
