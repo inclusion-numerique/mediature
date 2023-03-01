@@ -44,6 +44,16 @@ const defaultMswParameters = {
         path: ['updateCase'],
         response: { case: cases[0] },
       }),
+      getTRPCMock({
+        type: 'mutation',
+        path: ['generatePdfFromCase'],
+        response: {
+          attachment: {
+            id: '13422339-278f-400d-9b25-5399e9fe6232',
+            url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          },
+        },
+      }),
     ],
   },
 };

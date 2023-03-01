@@ -75,6 +75,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const updateCase = trpc.updateCase.useMutation();
   const addAttachmentToCase = trpc.addAttachmentToCase.useMutation();
   const removeAttachmentFromCase = trpc.removeAttachmentFromCase.useMutation();
+  const generatePdfFromCase = trpc.generatePdfFromCase.useMutation();
 
   const form = useForm<UpdateCaseSchemaType>({
     resolver: zodResolver(UpdateCaseSchema),
@@ -126,6 +127,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
   const mainContainerRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
   const [manualSubmitError, setManualSubmitError] = useState<Error | null>(null);
+  const [pdfGenerationError, setPdfGenerationError] = useState<Error | null>(null);
 
   const [addNoteModalOpen, setAddNoteModalOpen] = useState<boolean>(false);
   const handeOpenAddNoteModal = () => {
@@ -173,6 +175,27 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     }
   };
 
+  const downloadPdf = async () => {
+    try {
+      const result = await generatePdfFromCase.mutateAsync({
+        caseId: targetedCase.id,
+      });
+
+      // Open a new tab we the PDF, from there the user will be able to save it
+      if (window) {
+        const newTab = window.open(result.attachment.url, '_blank');
+        newTab && newTab.focus();
+      }
+
+      setPdfGenerationError(null);
+    } catch (err) {
+      setPdfGenerationError(err as unknown as Error);
+      mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+      throw err;
+    }
+  };
+
   const onClick = () => {};
 
   return (
@@ -181,6 +204,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         {!!manualSubmitError && (
           <Grid item xs={12} sx={{ py: 2 }}>
             <ErrorAlert errors={[manualSubmitError]} />
+          </Grid>
+        )}
+        {!!pdfGenerationError && (
+          <Grid item xs={12} sx={{ py: 2 }}>
+            <ErrorAlert errors={[pdfGenerationError]} />
           </Grid>
         )}
         <Grid
@@ -419,7 +447,14 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   ) : (
                     <>
                       <Grid item xs>
-                        <Button onClick={onClick} size="large" variant="contained" fullWidth startIcon={<DownloadIcon />}>
+                        <Button
+                          onClick={downloadPdf}
+                          loading={generatePdfFromCase.isLoading}
+                          size="large"
+                          variant="contained"
+                          fullWidth
+                          startIcon={<DownloadIcon />}
+                        >
                           Télécharger le dossier
                         </Button>
                       </Grid>

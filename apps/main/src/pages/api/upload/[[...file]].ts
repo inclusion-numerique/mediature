@@ -45,6 +45,8 @@ const tusServer = new Server({
     return uuidv4();
   },
   async onUploadCreate(req, res, upload) {
+    // TODO: in case the upload comes from the backend, we should add an authentication check with a custom JWT...
+
     console.debug('checking pre-create authorization to upload');
 
     // This function must only be called for "pre-create" hook

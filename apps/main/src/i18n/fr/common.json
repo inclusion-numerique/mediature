@@ -67,7 +67,8 @@
           "SYNC_WITH_CITIZEN": "Se synchroniser avec le requérant",
           "TO_PROCESS": "À traiter"
         }
-      }
+      },
+      "technicalName": "dossier-{{humanId}}"
     }
   }
 }

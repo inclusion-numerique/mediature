@@ -1,7 +1,9 @@
 import { AttachmentKind, AttachmentStatus, CaseAttachmentType, Note } from '@prisma/client';
+import { renderToStream } from '@react-pdf/renderer';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import { useServerTranslation } from '@mediature/main/src/i18n';
 import {
   AddAttachmentToCaseSchema,
   AddNoteToCaseSchema,
@@ -23,10 +25,18 @@ import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attach
 import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
-import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
-import { attachmentPrismaToModel, caseNotePrismaToModel, casePrismaToModel, citizenPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import { formatSafeAttachmentsToProcess, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
+import {
+  attachmentIdPrismaToModel,
+  attachmentPrismaToModel,
+  caseNotePrismaToModel,
+  casePrismaToModel,
+  citizenPrismaToModel,
+} from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
 export async function isAgentPartOfAuthority(authorityId: string, agentId: string): Promise<boolean> {
   const agent = await prisma.agent.findFirst({
@@ -473,10 +483,46 @@ export const caseRouter = router({
     };
   }),
   generatePdfFromCase: privateProcedure.input(GeneratePdfFromCaseSchema).mutation(async ({ ctx, input }) => {
-    // TODO
-    input.caseId;
+    const targetedCase = await prisma.case.findUnique({
+      where: {
+        id: input.caseId,
+      },
+      include: {
+        citizen: {
+          include: {
+            address: true,
+            phone: true,
+          },
+        },
+      },
+    });
 
-    return true;
+    if (!targetedCase) {
+      throw new Error(`ce dossier n'existe pas`);
+    } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
+      throw new Error(`en tant qu'agent vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+    }
+
+    const fileStream = await renderToStream(
+      CaseSynthesisDocument({
+        case: casePrismaToModel(targetedCase),
+        citizen: citizenPrismaToModel(targetedCase.citizen),
+      })
+    );
+
+    const { t } = useServerTranslation('common');
+
+    const fileId = await uploadPdfFile({
+      filename: `${t('model.case.technicalName', { humanId: targetedCase.humanId.toString() })}.pdf`,
+      kind: attachmentKindList[AttachmentKindSchema.Values.CASE_SYNTHESIS],
+      file: fileStream,
+    });
+
+    const attachmentUi = await attachmentIdPrismaToModel(fileId);
+
+    return {
+      attachment: attachmentUi,
+    };
   }),
   addNoteToCase: privateProcedure.input(AddNoteToCaseSchema).mutation(async ({ ctx, input }) => {
     await canUserManageThisCase(ctx.user.id, input.caseId);

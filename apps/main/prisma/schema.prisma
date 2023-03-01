@@ -271,6 +271,7 @@ enum AttachmentStatus {
 
 enum AttachmentKind {
   CASE_DOCUMENT
+  CASE_SYNTHESIS
   AUTHORITY_LOGO
   MESSAGE_DOCUMENT
 }

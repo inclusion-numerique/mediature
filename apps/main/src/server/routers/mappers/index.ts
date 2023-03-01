@@ -106,6 +106,9 @@ export async function attachmentPrismaToModel(attachment: AttachmentPrismaInput)
   };
 }
 
+export async function attachmentIdPrismaToModel(attachmentId: null): Promise<null>;
+export async function attachmentIdPrismaToModel(attachmentId: string): Promise<UiAttachmentSchemaType>;
+export async function attachmentIdPrismaToModel(attachmentId: string | null): Promise<UiAttachmentSchemaType | null>;
 export async function attachmentIdPrismaToModel(attachmentId: string | null): Promise<UiAttachmentSchemaType | null> {
   if (!attachmentId) {
     return null;

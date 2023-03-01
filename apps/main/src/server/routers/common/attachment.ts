@@ -1,12 +1,17 @@
+import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
 import { AttachmentStatus } from '@prisma/client';
 import getUnixTime from 'date-fns/getUnixTime';
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { diff } from 'fast-array-diff';
 import { SignJWT, jwtVerify } from 'jose';
 import isJwtTokenExpired from 'jwt-check-expiry';
+import * as tus from 'tus-js-client';
 
 import { prisma } from '@mediature/main/prisma/client';
-import { AttachmentKindSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { AttachmentKindRequirementsSchemaType, AttachmentKindSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { getFileIdFromUrl } from '@mediature/main/src/utils/attachment';
+import { bitsFor } from '@mediature/main/src/utils/bits';
+import { getListeningPort } from '@mediature/main/src/utils/url';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 
 export const fileAuthSecret = new TextEncoder().encode(process.env.FILE_AUTH_SECRET);
@@ -152,4 +157,77 @@ export async function formatSafeAttachmentsToProcess(
         }
       : async () => {},
   };
+}
+
+export interface UploadFileOptions {
+  filename: string;
+  contentType: string;
+  kind: AttachmentKindRequirementsSchemaType;
+  file: Buffer | NodeJS.ReadableStream;
+  fileSize?: number; // In case you pass a stream you must specify the total length of it... but it's hard when generating on the backend without reading the stream for no other reason. So we decided to use `Buffer` in most cases
+}
+
+export async function uploadFile(options: UploadFileOptions): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // Since this function is for the server usage librairies will often generate a the Node.js `ReadableStream` or `Buffer`
+    // whereas Tus only accepts the browser `ReadableStream` and `Blob`. Casting should be enough in all cases
+    const file = options.file as unknown as Blob | ReadableStreamDefaultReader;
+
+    // Reuse the same as for the frontend, it's to limit memory usage in our case
+    const chunkSize = 5 * bitsFor.MiB;
+
+    const upload = new tus.Upload(file, {
+      endpoint: `http://localhost:${getListeningPort()}/api/upload`, // Use the local address to prevent sending the file over the external network
+      chunkSize: chunkSize,
+      uploadSize: options.fileSize,
+      metadata: {
+        name: options.filename,
+        type: options.contentType,
+        kind: options.kind.id,
+      },
+      headers: {},
+      retryDelays: [1000],
+      onError(error) {
+        reject(error);
+
+        // Cancel the stream manually (it's done automatically in the `onSuccess`)
+        // TODO: but I didn't find for example `pdfStream.destroy()` or `pdfStream.cancel()`...
+      },
+      onShouldRetry(err, retryAttempt, options) {
+        // Prevent retrying
+        return false;
+      },
+      async onSuccess() {
+        if (upload.url) {
+          const fileId = await getFileIdFromUrl(upload.url);
+
+          resolve(fileId);
+        } else {
+          reject(new Error('the upload has been a success but no URL was provided'));
+        }
+      },
+    });
+    upload.start();
+  });
+}
+
+export interface UploadPdfFileOptions {
+  filename: string;
+  kind: AttachmentKindRequirementsSchemaType;
+  file: NodeJS.ReadableStream;
+}
+
+export async function uploadPdfFile(options: UploadPdfFileOptions): Promise<string> {
+  // To upload the PDF we should be aware of its size... which is not possible while having a stream
+  // except if we read it once entirely (which looses the sense of a stream).
+  // Since they are intended to be tiny, we convert the whole stream into a buffer (the size will be implicit)
+  // Note: we didn't used a `string` instead of a stream due to encoding issue (ref: https://github.com/diegomura/react-pdf/issues/1067#issuecomment-1450194954)
+  const fileBuffer = await streamToBuffer(options.file);
+
+  return await uploadFile({
+    filename: options.filename,
+    contentType: 'application/pdf',
+    kind: options.kind,
+    file: fileBuffer,
+  });
 }

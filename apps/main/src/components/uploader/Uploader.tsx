@@ -14,7 +14,7 @@ import { UploaderFileList } from '@mediature/main/src/components/uploader/Upload
 import '@mediature/main/src/components/uploader/drag-drop.scss';
 import { AttachmentKindRequirementsSchemaType, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { mockBaseUrl, shouldTargetMock } from '@mediature/main/src/server/mock/environment';
-import { getExtensionsFromFileKinds, getFileKindFromMime, getMimesFromFileKinds } from '@mediature/main/src/utils/attachment';
+import { getExtensionsFromFileKinds, getFileIdFromUrl, getFileKindFromMime, getMimesFromFileKinds } from '@mediature/main/src/utils/attachment';
 import { bitsFor } from '@mediature/main/src/utils/bits';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
@@ -73,9 +73,7 @@ export function Uploader({
         return;
       }
 
-      // Get the internal ID since we have no other way to retrieve it from here
-      const urlParts = new URL(response.uploadURL).pathname.split('/');
-      const internalId = urlParts[urlParts.length - 1];
+      const internalId = getFileIdFromUrl(response.uploadURL);
 
       await reusableUploadSuccessCallback(uppy, file, response, internalId, onCommittedFilesChanged, postUploadHook);
 

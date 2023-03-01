@@ -35,7 +35,7 @@ export type UiAttachmentSchemaType = z.infer<typeof UiAttachmentSchema>;
 export const AttachmentInputSchema = AttachmentSchema.shape.id;
 export type AttachmentInputSchemaType = z.infer<typeof AttachmentInputSchema>;
 
-export const AttachmentKindSchema = z.enum(['CASE_DOCUMENT', 'AUTHORITY_LOGO', 'MESSAGE_DOCUMENT']);
+export const AttachmentKindSchema = z.enum(['CASE_DOCUMENT', 'CASE_SYNTHESIS', 'AUTHORITY_LOGO', 'MESSAGE_DOCUMENT']);
 export type AttachmentKindSchemaType = z.infer<typeof AttachmentKindSchema>;
 
 export const AttachmentPostUploadOperationSchema = z.enum(['RESIZE', 'COMPRESS']);

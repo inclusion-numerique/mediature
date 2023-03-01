@@ -16,6 +16,14 @@ export const attachmentKindList: AttachmentKindList = {
     requiresAuthToUpload: false,
     isAttachmentPublic: false,
   },
+  [AttachmentKindSchema.Values.CASE_SYNTHESIS]: {
+    id: AttachmentKindSchema.Values.CASE_SYNTHESIS,
+    maxSize: 5 * bitsFor.MiB,
+    allowedFileTypes: [FileKind.Document],
+    postUploadOperations: null,
+    requiresAuthToUpload: false,
+    isAttachmentPublic: false,
+  },
   [AttachmentKindSchema.Values.AUTHORITY_LOGO]: {
     id: AttachmentKindSchema.Values.AUTHORITY_LOGO,
     maxSize: 750 * bitsFor.KiB,
@@ -59,4 +67,11 @@ export function getExtensionsFromMime(contentType: string): string[] {
 
 export function getFileKindFromMime(contentType: string): FileKind | null {
   return mimeData[contentType].kind;
+}
+
+// Getter for the internal file ID since we have no other way to retrieve it from here (it's behind the Tus server)
+export function getFileIdFromUrl(url: string): string {
+  const urlParts = new URL(url).pathname.split('/');
+
+  return urlParts[urlParts.length - 1];
 }

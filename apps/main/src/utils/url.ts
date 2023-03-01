@@ -9,5 +9,9 @@ export function getBaseUrl() {
     return '';
   }
 
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://localhost:${process.env.PORT ?? getListeningPort()}`;
+}
+
+export function getListeningPort() {
+  return process.env.PORT ?? 3000;
 }
