@@ -1,7 +1,7 @@
 import { Text } from '@react-pdf/renderer';
 import { Meta, StoryFn } from '@storybook/react';
 
-import { withDocumentRenderer } from '@mediature/docs/.storybook/document';
+import { WithDocumentRenderer } from '@mediature/docs/.storybook/document';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindDocumentStructure } from '@mediature/docs/.storybook/testing';
 import { StandardLayout, styles } from '@mediature/ui/src/documents/layouts/StandardLayout';
@@ -33,7 +33,7 @@ const EmptyStory = Template.bind({});
 EmptyStory.args = {
   title: '',
 };
-EmptyStory.decorators = [withDocumentRenderer];
+EmptyStory.decorators = [WithDocumentRenderer];
 EmptyStory.play = async ({ canvasElement }) => {
   await playFindDocumentStructure(canvasElement);
 };
@@ -84,7 +84,7 @@ LoremStory.args = {
     </>
   ),
 };
-LoremStory.decorators = [withDocumentRenderer];
+LoremStory.decorators = [WithDocumentRenderer];
 LoremStory.play = async ({ canvasElement }) => {
   await playFindDocumentStructure(canvasElement);
 };

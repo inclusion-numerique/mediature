@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { withDocumentRenderer } from '@mediature/docs/.storybook/document';
+import { WithDocumentRenderer } from '@mediature/docs/.storybook/document';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindDocumentStructure } from '@mediature/docs/.storybook/testing';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
@@ -34,7 +34,7 @@ NormalStory.args = {
   case: casesWrappers[0].case,
   citizen: casesWrappers[0].citizen,
 };
-NormalStory.decorators = [withDocumentRenderer];
+NormalStory.decorators = [WithDocumentRenderer];
 NormalStory.play = async ({ canvasElement }) => {
   await playFindDocumentStructure(canvasElement);
 };

@@ -64,7 +64,6 @@ export async function playFindEmailStructure(parentElement: HTMLElement): Promis
   return await within(parentElement).findAllByText(/©/i);
 }
 
-export async function playFindDocumentStructure(parentElement: HTMLElement): Promise<HTMLElement[]> {
-  // TODO: if we were able to set the title on the iframe we could use it... but for now just returning a mock success
-  return Promise.resolve([]);
+export async function playFindDocumentStructure(parentElement: HTMLElement): Promise<HTMLElement> {
+  return await within(parentElement).findByTitle(/PDF preview/i);
 }

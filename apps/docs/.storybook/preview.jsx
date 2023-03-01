@@ -113,12 +113,6 @@ export const parameters = {
           id: 'duplicate-id',
           selector: '*:not(MuiListItemIcon-root.disabledA11y)',
         },
-        {
-          // The `react-pdf` viewer cannot receive a `title`
-          id: 'frame-title',
-          // selector: '*:not(iframe.pdfViewer.disabledA11y)',
-          selector: '*:not(*)', // The other above does not work... also targetting parents of it does not work so leaving like that
-        },
       ],
     },
   },
