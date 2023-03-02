@@ -107,6 +107,10 @@ module.exports = {
             from: path.dirname(require.resolve('@mediature/main/public/assets/images/logo.png')),
             to: path.resolve(__dirname, '../public/assets/images/'),
           },
+          {
+            from: path.dirname(require.resolve('@mediature/ui/src/emails/images/twitter.png')),
+            to: path.resolve(__dirname, '../public/assets/images/email/social/'),
+          },
         ],
       })
     );

@@ -104,6 +104,10 @@ const moduleExports = async () => {
               from: require.resolve('@mediature/ui/src/fonts/index.css'),
               to: path.resolve(__dirname, './public/assets/fonts/'),
             },
+            {
+              from: path.dirname(require.resolve('@mediature/ui/src/emails/images/twitter.png')),
+              to: path.resolve(__dirname, './public/assets/images/email/social/'),
+            },
           ],
         })
       );

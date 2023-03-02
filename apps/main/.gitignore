@@ -1,5 +1,6 @@
 /.files/
 /public/assets/fonts/
+/public/assets/images/email/social/
 # Sentry
 /.sentryclirc
 /sentry.properties

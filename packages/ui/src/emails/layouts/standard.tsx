@@ -101,9 +101,11 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
                   {currentYear} © Médiature
                 </MjmlText>
                 <MjmlSocial cssClass="social-network-section" fontSize="15px" iconSize="30px" mode="horizontal" borderRadius={20} paddingTop={2}>
+                  {/* We took images from https://www.mailjet.com/images/theme/v1/icons/ico-social/twitter.png (change `twitter` for others) to host them ourselves since adblockers may block images otherwise */}
                   <MjmlSocialElement
                     name="twitter"
                     href="https://twitter.com/AmctMediation"
+                    src={`${getBaseUrl()}/assets/images/email/social/twitter.png`}
                     alt="Lien vers Twitter"
                     iconPadding="5px"
                     padding="6px 6px"
@@ -111,6 +113,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
                   <MjmlSocialElement
                     name="linkedin"
                     href="https://www.linkedin.com/company/association-des-m%C3%A9diateurs-des-collectivit%C3%A9s-territoriales"
+                    src={`${getBaseUrl()}/assets/images/email/social/linkedin.png`}
                     alt="Lien vers LinkedIn"
                     iconPadding="5px"
                     padding="0px 10px"
