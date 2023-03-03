@@ -54,7 +54,8 @@ export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema
 export const AssignCaseSchema = z
   .object({
     caseId: incompleteCaseSchema.shape.id,
-    agentIds: z.array(AgentSchema.shape.id).min(1),
+    agentId: AgentSchema.shape.id.nullish(),
+    myself: z.boolean().nullish(),
   })
   .strict();
 export type AssignCaseSchemaType = z.infer<typeof AssignCaseSchema>;
@@ -65,7 +66,7 @@ export type AssignCasePrefillSchemaType = z.infer<typeof AssignCasePrefillSchema
 export const UnassignCaseSchema = z
   .object({
     caseId: incompleteCaseSchema.shape.id,
-    agentIds: z.array(AgentSchema.shape.id).min(1),
+    agentId: AgentSchema.shape.id,
   })
   .strict();
 export type UnassignCaseSchemaType = z.infer<typeof UnassignCaseSchema>;
@@ -84,7 +85,9 @@ export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({
     query: z.string().nullish(),
     authorityIds: z.array(AuthoritySchema.shape.id).nullish(),
+    agentIds: z.array(AgentSchema.shape.id).nullish(),
     assigned: z.boolean().nullish(),
+    mine: z.boolean().nullish(),
   }),
 }).strict();
 export type ListCasesSchemaType = z.infer<typeof ListCasesSchema>;

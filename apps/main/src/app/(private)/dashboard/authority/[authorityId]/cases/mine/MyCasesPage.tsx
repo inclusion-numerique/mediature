@@ -16,12 +16,13 @@ import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
+import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
-export interface CaseListPageProps {
+export interface MyCasesPageProps {
   params: { authorityId: string };
 }
 
-export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
+export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
@@ -30,7 +31,9 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
+      agentIds: null,
       query: searchQuery,
+      mine: true,
     },
   });
 
@@ -54,6 +57,9 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
     return !!caseWrapper.case.closedAt;
   });
 
+  const unassignCase = trpc.unassignCase.useMutation();
+  const { showConfirmationDialog } = useSingletonConfirmationDialog();
+
   if (error) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
@@ -63,6 +69,18 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   } else if (isInitialLoading && !searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
+
+  const unassignCaseAction = async (caseId: string, agentId: string) => {
+    showConfirmationDialog({
+      description: <>Êtes-vous sûr de vouloir vous désassigner de ce dossier ?</>,
+      onConfirm: async () => {
+        await unassignCase.mutateAsync({
+          caseId: caseId,
+          agentId: agentId,
+        });
+      },
+    });
+  };
 
   const handleClearQuery = () => {
     setSearchQuery(null);
@@ -78,7 +96,8 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
       <Grid container {...centeredContainerGridProps} alignContent="flex-start">
         <Grid item xs={12} sx={{ pb: 3 }}>
           <Typography component="h1" variant="h5">
-            Tous les dossiers de la collectivité
+            {/* TODO: manage multiple ones when main agent */}
+            Mes dossiers
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ mb: 3 }}>
@@ -125,14 +144,19 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                       })}
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
-                      agent={caseWrapper.agent || undefined}
+                      assignAction={async () => {
+                        // TODO: bind to API
+                      }}
+                      unassignAction={async () => {
+                        await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
+                      }}
                     />
                   </Grid>
                 ))}
               </Grid>
             ) : (
               <Grid item xs={12}>
-                <Typography variant="body2">Aucun dossier est en cours de traitement</Typography>
+                <Typography variant="body2">Vous ne traitez actuellement aucun dossier</Typography>
               </Grid>
             )}
             <Grid item xs={12} sx={{ py: 3 }}>
@@ -151,14 +175,19 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                       })}
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
-                      agent={caseWrapper.agent || undefined}
+                      assignAction={async () => {
+                        // TODO: bind to API
+                      }}
+                      unassignAction={async () => {
+                        await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
+                      }}
                     />
                   </Grid>
                 ))}
               </Grid>
             ) : (
               <Grid item xs={12}>
-                <Typography variant="body2">Il n&apos;y a pour l&apos;instant aucun dossier clôturé</Typography>
+                <Typography variant="body2">Vous n&apos;avez aucun dossier assigné ayant été fermé</Typography>
               </Grid>
             )}
           </>

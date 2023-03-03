@@ -1,3 +1,4 @@
+import { agents } from '@mediature/main/src/fixtures/agent';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import {
   CaseNoteSchema,
@@ -115,18 +116,21 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
   CaseWrapperSchema.parse({
     case: cases[0],
     citizen: citizens[0],
+    agent: agents[0],
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[1],
     citizen: citizens[1],
+    agent: agents[1],
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[2],
     citizen: citizens[2],
+    agent: agents[2],
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
   }),

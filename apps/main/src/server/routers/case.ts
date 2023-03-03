@@ -27,6 +27,7 @@ import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { formatSafeAttachmentsToProcess, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
 import {
+  agentPrismaToModel,
   attachmentIdPrismaToModel,
   attachmentPrismaToModel,
   caseNotePrismaToModel,
@@ -270,9 +271,6 @@ export const caseRouter = router({
     return { case: updatedCase };
   }),
   assignCase: privateProcedure.input(AssignCaseSchema).mutation(async ({ ctx, input }) => {
-    // TODO: maybe better to use userId instead of agentId?
-    const agentIdToAssign = input.agentIds[0];
-
     const targetedCase = await prisma.case.findFirst({
       where: {
         id: input.caseId,
@@ -284,6 +282,19 @@ export const caseRouter = router({
 
     if (targetedCase.agentId) {
       throw new Error(`un agent est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que assigner une autre personne`);
+    }
+
+    let agentIdToAssign: string;
+    if (input.myself) {
+      const userAgent = await prisma.agent.findFirstOrThrow({
+        where: {
+          userId: ctx.user.id,
+        },
+      });
+
+      agentIdToAssign = userAgent.id;
+    } else {
+      agentIdToAssign = input.agentId || '';
     }
 
     if (!(await isAgentPartOfAuthority(targetedCase.authorityId, agentIdToAssign))) {
@@ -319,8 +330,7 @@ export const caseRouter = router({
     return { case: assignedCase };
   }),
   unassignCase: privateProcedure.input(UnassignCaseSchema).mutation(async ({ ctx, input }) => {
-    // TODO: maybe better to use userId instead of agentId?
-    const agentIdToUnassign = input.agentIds[0];
+    const agentIdToUnassign = input.agentId;
 
     const targetedCase = await prisma.case.findFirst({
       where: {
@@ -364,6 +374,11 @@ export const caseRouter = router({
             phone: true,
           },
         },
+        agent: {
+          include: {
+            user: true,
+          },
+        },
         Note: true,
         AttachmentsOnCases: {
           include: {
@@ -396,6 +411,7 @@ export const caseRouter = router({
       caseWrapper: CaseWrapperSchema.parse({
         case: casePrismaToModel(targetedCase),
         citizen: citizenPrismaToModel(targetedCase.citizen),
+        agent: targetedCase.agent ? agentPrismaToModel(targetedCase.agent) : null,
         notes: targetedCase.Note.map((note: Note) => caseNotePrismaToModel(note)),
         attachments: attachments,
       }),
@@ -430,36 +446,52 @@ export const caseRouter = router({
               in: input.filterBy.authorityIds,
             }
           : undefined,
-        humanId: input.filterBy.query
-          ? {
-              equals: humandIdSearch,
-            }
-          : undefined,
-        description: input.filterBy.query
-          ? {
-              search: input.filterBy.query,
-              mode: 'insensitive',
-            }
-          : undefined,
-        citizen: {
-          // TODO: concatenate the 2 columns in the DB and search on it
-          firstname: input.filterBy.query
+        agentId: {
+          in: input.filterBy.agentIds || undefined,
+          equals: input.filterBy.assigned === false ? null : undefined,
+          not: input.filterBy.assigned === true ? null : undefined,
+        },
+        agent:
+          input.filterBy.mine === true
             ? {
-                search: input.filterBy.query,
-                mode: 'insensitive',
+                userId: ctx.user.id,
               }
             : undefined,
-          lastname: input.filterBy.query
-            ? {
-                search: input.filterBy.query,
-                mode: 'insensitive',
-              }
-            : undefined,
-        },
-        agent: {
-          is: input.filterBy.assigned === false ? null : undefined,
-          isNot: input.filterBy.assigned === false ? null : undefined,
-        },
+        AND: input.filterBy.query
+          ? [
+              {
+                OR: [
+                  {
+                    humanId: {
+                      equals: humandIdSearch,
+                    },
+                  },
+                  {
+                    description: {
+                      search: input.filterBy.query,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    citizen: {
+                      firstname: {
+                        search: input.filterBy.query,
+                        mode: 'insensitive',
+                      },
+                    },
+                  },
+                  {
+                    citizen: {
+                      lastname: {
+                        search: input.filterBy.query,
+                        mode: 'insensitive',
+                      },
+                    },
+                  },
+                ],
+              },
+            ]
+          : undefined,
       },
       include: {
         citizen: {
@@ -468,18 +500,44 @@ export const caseRouter = router({
             phone: true,
           },
         },
+        agent: {
+          include: {
+            user: true,
+          },
+        },
+        AttachmentsOnCases: {
+          include: {
+            attachment: {
+              select: {
+                id: true,
+                contentType: false,
+                name: true,
+                size: false,
+              },
+            },
+          },
+        },
       },
     });
 
     return {
-      casesWrappers: cases.map((iterationCase): CaseWrapperSchemaType => {
-        return {
-          case: casePrismaToModel(iterationCase),
-          citizen: citizenPrismaToModel(iterationCase.citizen),
-          notes: null,
-          attachments: null,
-        };
-      }),
+      casesWrappers: await Promise.all(
+        cases.map(async (iterationCase): Promise<CaseWrapperSchemaType> => {
+          const attachments = await Promise.all(
+            iterationCase.AttachmentsOnCases.map(async (attachmentOnCase) => {
+              return await attachmentPrismaToModel(attachmentOnCase.attachment);
+            })
+          );
+
+          return {
+            case: casePrismaToModel(iterationCase),
+            citizen: citizenPrismaToModel(iterationCase.citizen),
+            agent: iterationCase.agent ? agentPrismaToModel(iterationCase.agent) : null,
+            notes: null,
+            attachments: attachments,
+          };
+        })
+      ),
     };
   }),
   generatePdfFromCase: privateProcedure.input(GeneratePdfFromCaseSchema).mutation(async ({ ctx, input }) => {

@@ -1,9 +1,14 @@
+import addressFormatter from '@fragaria/address-formatter';
 import { Link, Text, View } from '@react-pdf/renderer';
+import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 
 import { useServerTranslation } from '@mediature/main/src/i18n/index';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { StandardLayout, styles } from '@mediature/ui/src/documents/layouts/StandardLayout';
+import { convertInputModelToGooglePhoneNumber } from '@mediature/ui/src/utils/phone';
+
+const phoneNumberUtil = PhoneNumberUtil.getInstance();
 
 export interface CaseSynthesisDocumentProps {
   case: CaseSchemaType;
@@ -60,20 +65,24 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
         {/* <View style={styles.gridBreak}></View> */}
         <View style={styles.gridItem}>
           <Text style={styles.label}>Adresse</Text>
-          <Text>{props.citizen.address.street}</Text>
+          <Text>
+            {addressFormatter.format({
+              street: props.citizen.address.street,
+              city: props.citizen.address.city,
+              postcode: props.citizen.address.postalCode,
+              state: props.citizen.address.subdivision,
+              countryCode: props.citizen.address.countryCode,
+            })}
+          </Text>
         </View>
-        <View style={styles.gridItem}>
-          <Text style={styles.label}>Code postal</Text>
-          <Text>{props.citizen.address.postalCode}</Text>
-        </View>
-        <View style={styles.gridItem}>
-          <Text style={styles.label}>Ville</Text>
-          <Text>{props.citizen.address.city}</Text>
-        </View>
-        {/* break */}
         <View style={styles.gridItem}>
           <Text style={styles.label}>Téléphone</Text>
-          <Text>TODO: set + link to phone?</Text>
+          <Link
+            src={phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.RFC3966)}
+            style={styles.link}
+          >
+            {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL)}
+          </Link>
         </View>
       </View>
       <Text style={styles.h2}>Demande</Text>

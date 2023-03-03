@@ -755,6 +755,9 @@ importers:
       '@codegouvfr/react-dsfr':
         specifier: 0.31.1
         version: 0.31.1(react@18.2.0)
+      '@fragaria/address-formatter':
+        specifier: ^5.0.1
+        version: 5.0.1
       '@gouvfr/dsfr':
         specifier: ^1.8.5
         version: 1.8.5
@@ -5292,6 +5295,13 @@ packages:
       react: 18.2.0
     dev: true
 
+  /@fragaria/address-formatter@5.0.1:
+    resolution: {integrity: sha512-3ns+tNssYoCiF15m2+1CBdgp8+C/6F4203iMC7a3sHM4mF4MRG18/ZabLWdsOhe8a120S5ZUyDMiIilto0VEbA==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      mustache: 4.2.0
+    dev: false
+
   /@glen/jest-raw-loader@2.0.0(jest@29.3.1):
     resolution: {integrity: sha512-758pv2NtgFOJvVIdh6JRy4LoxLsAz8qtXwxLp/u/GHXz6wCWrbw581QF0ORJ2E8zEdhM4xjDLlsFSjeISmX0KQ==}
     peerDependencies:
@@ -8290,8 +8300,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.0.0-beta.59:
-    resolution: {integrity: sha512-xEl+RNAsMZ+AvdatVd8GVzIvH6Dm4kaIXs3iyCRr4HXIdAxNB53tReqDDdzsK4LamMf5003Mlo4Szcb4QTkskQ==}
+  /@storybook/client-logger@7.0.0-beta.60:
+    resolution: {integrity: sha512-L9aT6KnbIwZ9MuH77YpkIOtf2vTDeDvVe+8jUm59ov5L0XKZ6RTKdyKonAvp+CBuyp2XQS8+E3A/lnezACIzLQ==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -9290,7 +9300,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.59
+      '@storybook/client-logger': 7.0.0-beta.60
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
@@ -19805,6 +19815,11 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
+    dev: false
 
   /mute-stream@0.0.7:
     resolution: {integrity: sha512-r65nCZhrbXXb6dXOACihYApHw2Q6pV0M3V0PSxd74N0+D8nzAdEAITq2oAjA1jVnKI+tGvEBUpqiMh0+rW6zDQ==}

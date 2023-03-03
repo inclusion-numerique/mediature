@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import styles from '@mediature/main/src/components/UnassignedCaseSlider.module.scss';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
@@ -73,7 +74,16 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
       >
         {casesWrappers.map((caseWrapper) => (
           <SwiperSlide key={caseWrapper.case.id} role="group" aria-roledescription="élément du carrousel" className={styles.swiperSlide}>
-            <UnassignedCaseSliderCard case={caseWrapper.case} citizen={caseWrapper.citizen} assignAction={assignAction} />
+            <UnassignedCaseSliderCard
+              caseLink={linkRegistry.get('case', {
+                authorityId: caseWrapper.case.authorityId,
+                caseId: caseWrapper.case.id,
+              })}
+              case={caseWrapper.case}
+              citizen={caseWrapper.citizen}
+              attachments={caseWrapper.attachments || []}
+              assignAction={assignAction}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

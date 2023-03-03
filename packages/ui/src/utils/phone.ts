@@ -1,6 +1,6 @@
 import { PhoneNumber, PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 
-import { PhoneInputSchemaType } from '@mediature/main/src/models/entities/phone';
+import { PhoneInputSchemaType, PhoneSchemaType } from '@mediature/main/src/models/entities/phone';
 import { mostUsedSortedCountries } from '@mediature/ui/src/utils/country';
 
 export interface CountryCallingCode {
@@ -53,8 +53,17 @@ export function transformPhoneNumberPlaceholderToMask(phoneNumberPlaceholder: st
   return mask;
 }
 
+// Helper to retrieve Google object from our own input model
+export function convertInputModelToGooglePhoneNumber(phoneNumber: PhoneInputSchemaType): PhoneNumber {
+  const phoneNumberUtil = PhoneNumberUtil.getInstance();
+  const potentialE164Number: string = `${phoneNumber.callingCode}${phoneNumber.number}`;
+  const fullPhoneNumber = phoneNumberUtil.parse(potentialE164Number, phoneNumber.countryCode);
+
+  return fullPhoneNumber;
+}
+
 // Helper to retrieve Google object from our own model
-export function convertModelToGooglePhoneNumber(phoneNumber: PhoneInputSchemaType): PhoneNumber {
+export function convertModelToGooglePhoneNumber(phoneNumber: PhoneSchemaType): PhoneNumber {
   const phoneNumberUtil = PhoneNumberUtil.getInstance();
   const potentialE164Number: string = `${phoneNumber.callingCode}${phoneNumber.number}`;
   const fullPhoneNumber = phoneNumberUtil.parse(potentialE164Number, phoneNumber.countryCode);

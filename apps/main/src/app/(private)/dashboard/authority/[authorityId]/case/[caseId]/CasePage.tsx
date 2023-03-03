@@ -6,6 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
@@ -136,6 +137,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const handleCloseAddNoteModal = () => {
     setAddNoteModalOpen(false);
   };
+
+  const assignCase = trpc.assignCase.useMutation();
 
   if (error) {
     return (
@@ -301,45 +304,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             }}
           />
         </Grid>
-        <Grid item xs={12}>
-          <Card variant="outlined">
-            <CardContent>
-              <Grid container direction={'column'} spacing={2}>
-                <Grid item xs={12}>
-                  <Typography component="span" variant="h6">
-                    Documents
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <ContextualUploader
-                    attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
-                    maxFiles={updateCaseAttachmentsMax}
-                    postUploadHook={async (internalId: string) => {
-                      await addAttachmentToCase.mutateAsync({
-                        caseId: targetedCase.id,
-                        attachmentId: internalId,
-                        transmitter: CaseAttachmentTypeSchema.Values.AGENT,
-                      });
-                    }}
-                  />
-                  {attachments && attachments.length > 0 && (
-                    <>
-                      <FileList
-                        files={attachments}
-                        onRemove={async (file) => {
-                          await removeAttachmentFromCase.mutateAsync({
-                            caseId: targetedCase.id,
-                            attachmentId: file.id,
-                          });
-                        }}
-                      />
-                    </>
-                  )}
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
         <Grid
           item
           xs={12}
@@ -459,9 +423,37 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         </Button>
                       </Grid>
                       <Grid item xs>
-                        <Button onClick={onClick} size="large" variant="contained" fullWidth startIcon={<TransferWithinAStationIcon />}>
-                          Transférer le dossier
-                        </Button>
+                        {targetedCase.agentId ? (
+                          <Button onClick={onClick} size="large" variant="contained" fullWidth startIcon={<TransferWithinAStationIcon />}>
+                            {/* TODO: bind to API */}
+                            Transférer le dossier
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={async () => {
+                              try {
+                                await assignCase.mutateAsync({
+                                  caseId: caseId,
+                                  myself: true,
+                                });
+
+                                setManualSubmitError(null);
+                              } catch (err) {
+                                setManualSubmitError(err as unknown as Error);
+                                mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+                                throw err;
+                              }
+                            }}
+                            loading={assignCase.isLoading}
+                            size="large"
+                            variant="contained"
+                            fullWidth
+                            startIcon={<EmojiPeopleIcon />}
+                          >
+                            S&apos;attribuer le dossier
+                          </Button>
+                        )}
                       </Grid>
                     </>
                   )}
@@ -606,8 +598,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Premier recours à l&apos;amiable effectué ?
                         </Typography>
                         <br />
-                        {/* TODO: bool */}
-                        <Chip label={targetedCase.alreadyRequestedInThePast.toString()} />
+                        <Chip label={targetedCase.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
                       </Grid>
                       {targetedCase.alreadyRequestedInThePast && (
                         <Grid item xs={12}>
@@ -615,8 +606,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                             Suite au premier recours, réponse de l&apos;administration reçue ?
                           </Typography>
                           <br />
-                          {/* TODO: bool */}
-                          <Chip label={targetedCase.gotAnswerFromPreviousRequest?.toString()} />
+                          <Chip label={targetedCase.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')} />
                         </Grid>
                       )}
                     </Grid>
@@ -705,6 +695,45 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               </Grid>
               <Grid item xs={12}>
                 <Divider variant="fullWidth" sx={{ p: 0 }} />
+              </Grid>
+              <Grid item xs={12}>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Grid container direction={'column'} spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography component="span" variant="h6">
+                          Documents
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <ContextualUploader
+                          attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.CASE_DOCUMENT]}
+                          maxFiles={updateCaseAttachmentsMax}
+                          postUploadHook={async (internalId: string) => {
+                            await addAttachmentToCase.mutateAsync({
+                              caseId: targetedCase.id,
+                              attachmentId: internalId,
+                              transmitter: CaseAttachmentTypeSchema.Values.AGENT,
+                            });
+                          }}
+                        />
+                        {attachments && attachments.length > 0 && (
+                          <>
+                            <FileList
+                              files={attachments}
+                              onRemove={async (file) => {
+                                await removeAttachmentFromCase.mutateAsync({
+                                  caseId: targetedCase.id,
+                                  attachmentId: file.id,
+                                });
+                              }}
+                            />
+                          </>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
               </Grid>
               <Grid item xs={12}>
                 <Divider variant="fullWidth" sx={{ p: 0 }} />

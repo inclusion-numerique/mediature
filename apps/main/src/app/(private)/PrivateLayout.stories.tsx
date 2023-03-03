@@ -78,7 +78,7 @@ AsNewUserStory.parameters = {
   },
   nextjs: {
     navigation: {
-      pathname: linkRegistry.get('caseList', {
+      pathname: linkRegistry.get('myCases', {
         authorityId: agentOfSample[0].id,
       }),
     },

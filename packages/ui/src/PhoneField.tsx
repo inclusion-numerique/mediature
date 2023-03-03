@@ -16,7 +16,7 @@ import { PhoneInputSchemaType, PhoneTypeSchema } from '@mediature/main/src/model
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 import {
   CountryCallingCode,
-  convertModelToGooglePhoneNumber,
+  convertInputModelToGooglePhoneNumber,
   countryCallingCodes,
   getCountryCallingCode,
   getE164Number,
@@ -60,7 +60,7 @@ export function PhoneField({ onGlobalChange, initialPhoneNumber, ...props }: Pho
       const countryCallingCode = getCountryCallingCode(initialPhoneNumber.callingCode, initialPhoneNumber.countryCode);
       if (countryCallingCode) {
         // Format the phone as the national number into the form value "number" (to respect the mask to fill)
-        const fullPhoneNumber = convertModelToGooglePhoneNumber(initialPhoneNumber);
+        const fullPhoneNumber = convertInputModelToGooglePhoneNumber(initialPhoneNumber);
         const initialFormattedNumber = phoneNumberUtil.formatInOriginalFormat(fullPhoneNumber);
 
         return {

@@ -72,7 +72,7 @@ export function PrivateLayout(props: PropsWithChildren) {
         {
           text: 'Mes dossiers',
           linkProps: {
-            href: linkRegistry.get('caseList', {
+            href: linkRegistry.get('myCases', {
               authorityId: currentAuthority.id,
             }),
             target: '_self',

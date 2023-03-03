@@ -33,6 +33,13 @@ export const localizedRoutes = {
       fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers`,
     }
   ),
+  myCases: defineLocalizedRoute(
+    { authorityId: param.path.string },
+    {
+      en: (p) => `/dashboard/authority/${p.authorityId}/cases/mine`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers/les-miens`,
+    }
+  ),
   unassignedCaseList: defineLocalizedRoute(
     { authorityId: param.path.string },
     {
@@ -170,6 +177,7 @@ export const routes = {
     authorityAgentList: defineRoute(localizedRoutes.authorityAgentList.params, localizedRoutes.authorityAgentList.paths.en),
     case: defineRoute(localizedRoutes.case.params, localizedRoutes.case.paths.en),
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.en),
+    myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.en),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.en),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.en),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.en),
@@ -189,6 +197,7 @@ export const routes = {
     authorityAgentList: defineRoute(localizedRoutes.authorityAgentList.params, localizedRoutes.authorityAgentList.paths.fr),
     case: defineRoute(localizedRoutes.case.params, localizedRoutes.case.paths.fr),
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.fr),
+    myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.fr),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.fr),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.fr),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.fr),

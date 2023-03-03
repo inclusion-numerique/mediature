@@ -1,5 +1,6 @@
 import z from 'zod';
 
+import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentSchema, UiAttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
@@ -76,6 +77,7 @@ export const CaseWrapperSchema = z
   .object({
     case: CaseSchema,
     citizen: CitizenSchema,
+    agent: AgentSchema.nullable(),
     notes: z.array(CaseNoteSchema).nullable(),
     attachments: z.array(UiAttachmentSchema).nullable(),
   })
