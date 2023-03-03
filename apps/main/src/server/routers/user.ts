@@ -1,9 +1,46 @@
 import { prisma } from '@mediature/main/prisma/client';
-import { GetInterfaceSessionSchema, GetProfileSchema, UpdateProfileSchema } from '@mediature/main/src/models/actions/user';
+import {
+  GetInterfaceSessionSchema,
+  GetProfileSchema,
+  GetPublicFacingInvitationSchema,
+  UpdateProfileSchema,
+} from '@mediature/main/src/models/actions/user';
+import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
-import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 
 export const userRouter = router({
+  getPublicFacingInvitation: publicProcedure.input(GetPublicFacingInvitationSchema).query(async ({ ctx, input }) => {
+    const invitation = await prisma.invitation.findFirst({
+      where: {
+        token: input.token,
+      },
+      include: {
+        issuer: true,
+      },
+    });
+
+    if (!invitation) {
+      throw new Error(`le jeton d'invitation fournit n'est pas valide`);
+    } else if (invitation.status !== InvitationStatusSchema.Values.PENDING) {
+      throw new Error(`le jeton d'invitation n'est plus utilisable`);
+    }
+
+    return {
+      invitation: PublicFacingInvitationSchema.parse({
+        inviteeEmail: invitation.inviteeEmail,
+        inviteeFirstname: invitation.inviteeFirstname,
+        inviteeLastname: invitation.inviteeLastname,
+        issuer: {
+          id: invitation.issuer.id,
+          email: invitation.issuer.email,
+          firstname: invitation.issuer.firstname,
+          lastname: invitation.issuer.lastname,
+        },
+        status: invitation.status,
+      }),
+    };
+  }),
   updateProfile: privateProcedure.input(UpdateProfileSchema).mutation(async ({ ctx, input }) => {
     const user = await prisma.user.update({
       where: {

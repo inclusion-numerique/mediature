@@ -1,5 +1,6 @@
 import z from 'zod';
 
+import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 
 export const UpdateProfileSchema = z
@@ -13,6 +14,16 @@ export type UpdateProfileType = z.infer<typeof UpdateProfileSchema>;
 
 export const UpdateProfilePrefillSchema = UpdateProfileSchema.deepPartial();
 export type UpdateProfilePrefillSchemaType = z.infer<typeof UpdateProfilePrefillSchema>;
+
+export const GetPublicFacingInvitationSchema = z
+  .object({
+    token: InvitationSchema.shape.token,
+  })
+  .strict();
+export type GetPublicFacingInvitationSchemaType = z.infer<typeof GetPublicFacingInvitationSchema>;
+
+export const GetPublicFacingInvitationPrefillSchema = GetPublicFacingInvitationSchema.deepPartial();
+export type GetPublicFacingInvitationPrefillSchemaType = z.infer<typeof GetPublicFacingInvitationPrefillSchema>;
 
 export const GetProfileSchema = z.object({}).strict();
 export type GetProfileSchemaType = z.infer<typeof GetProfileSchema>;

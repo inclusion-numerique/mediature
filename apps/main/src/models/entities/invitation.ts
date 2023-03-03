@@ -28,3 +28,12 @@ export const InvitationSchema = z
   })
   .strict();
 export type InvitationSchemaType = z.infer<typeof InvitationSchema>;
+
+export const PublicFacingInvitationSchema = z.object({
+  inviteeEmail: InvitationSchema.shape.inviteeEmail,
+  inviteeFirstname: InvitationSchema.shape.inviteeFirstname,
+  inviteeLastname: InvitationSchema.shape.inviteeLastname,
+  issuer: InvitationSchema.shape.issuer,
+  status: InvitationSchema.shape.status,
+});
+export type PublicFacingInvitationSchemaType = z.infer<typeof PublicFacingInvitationSchema>;

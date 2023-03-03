@@ -8,7 +8,8 @@ import { createContext, useContext } from 'react';
 import { ResetPasswordForm } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordForm';
 import { ResetPasswordPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { formTitleProps } from '@mediature/main/src/utils/form';
-import { centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { centeredAlertContainerGridProps, centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export const ResetPasswordPageContext = createContext({
   ContextualResetPasswordForm: ResetPasswordForm,
@@ -21,8 +22,12 @@ export function ResetPasswordPage() {
   const resetToken = searchParams.get('token');
 
   if (!resetToken) {
+    const error = new Error(`Le jeton de réinitialisation de mot de passe n'est pas détecté, merci de bien copier le lien depuis l'email.`);
+
     return (
-      <span role="alert">Le jeton de réinitialisation de mot de passe n&apos;est pas détecté, merci de bien copier le lien depuis l&apos;email.</span>
+      <Grid container {...centeredAlertContainerGridProps}>
+        <ErrorAlert errors={[error]} />
+      </Grid>
     );
   }
 

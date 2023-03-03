@@ -5,6 +5,8 @@ import { playFindAlert, playFindForm, playFindFormInMain } from '@mediature/docs
 import { Normal as VisitorOnlyLayoutNormalStory } from '@mediature/main/src/app/(visitor-only)/VisitorOnlyLayout.stories';
 import { Empty as SignUpFormEmptyStory } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm.stories';
 import { SignUpPage, SignUpPageContext } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpPage';
+import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
+import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 type ComponentType = typeof SignUpPage;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
@@ -16,6 +18,31 @@ export default {
     parameters: {},
   }),
 } as Meta<ComponentType>;
+
+const defaultMswParameters = {
+  msw: {
+    handlers: [
+      getTRPCMock({
+        type: 'query',
+        path: ['getPublicFacingInvitation'],
+        response: {
+          invitation: PublicFacingInvitationSchema.parse({
+            inviteeEmail: 'jean@france.fr',
+            inviteeFirstname: 'Jean',
+            inviteeLastname: 'Derrien',
+            issuer: {
+              id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+              email: 'pascale.leclerc@yahoo.fr',
+              firstname: 'Pascale',
+              lastname: 'Leclerc',
+            },
+            status: InvitationStatusSchema.Values.PENDING,
+          }),
+        },
+      }),
+    ],
+  },
+};
 
 const tokenProvidedParameters = {
   nextjs: {
@@ -33,7 +60,7 @@ const Template: StoryFn<ComponentType> = (args) => {
 
 const NormalStory = Template.bind({});
 NormalStory.args = {};
-NormalStory.parameters = { ...tokenProvidedParameters };
+NormalStory.parameters = { ...defaultMswParameters, ...tokenProvidedParameters };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindForm(canvasElement);
 };
@@ -49,7 +76,7 @@ export const Normal = prepareStory(NormalStory, {
 
 const MissingInvitationTokenStory = Template.bind({});
 MissingInvitationTokenStory.args = {};
-MissingInvitationTokenStory.parameters = {};
+MissingInvitationTokenStory.parameters = { ...defaultMswParameters };
 MissingInvitationTokenStory.play = async ({ canvasElement }) => {
   await playFindAlert(canvasElement);
 };
@@ -67,6 +94,7 @@ const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {};
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
+  ...defaultMswParameters,
   ...tokenProvidedParameters,
 };
 WithLayoutStory.play = async ({ canvasElement }) => {

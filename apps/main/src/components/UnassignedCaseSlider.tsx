@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import styles from '@mediature/main/src/components/UnassignedCaseSlider.module.scss';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
+import { wideContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
@@ -39,7 +40,19 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
   }
 
   if (!casesWrappers.length) {
-    return <span role="alert">TODO: pas de nouveau dossier trouvé</span>;
+    return (
+      <Grid
+        container
+        sx={{
+          ...wideContainerGridProps.sx,
+          py: 0,
+          maxWidth: 'lg',
+          mx: 'auto',
+        }}
+      >
+        <span role="alert">Il n&apos;y a aucun nouveau dossier à traiter</span>
+      </Grid>
+    );
   }
 
   return (
