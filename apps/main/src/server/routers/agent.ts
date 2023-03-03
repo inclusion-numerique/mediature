@@ -100,7 +100,7 @@ export const agentRouter = router({
         id: input.agentId,
       },
       data: {
-        Case: {
+        CaseAssigned: {
           set: [],
         },
       },
@@ -160,7 +160,7 @@ export const agentRouter = router({
         },
       },
       include: {
-        Case: true,
+        CaseAssigned: true,
         user: true,
       },
     });
@@ -169,7 +169,7 @@ export const agentRouter = router({
       agentsWrappers: agents.map((agent): AgentWrapperSchemaType => {
         let openCases: number = 0;
         let closeCases: number = 0;
-        for (const agentCase of agent.Case) {
+        for (const agentCase of agent.CaseAssigned) {
           if (agentCase.closedAt) {
             closeCases++;
           } else {

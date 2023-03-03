@@ -232,11 +232,13 @@ export const adminRouter = router({
                 },
               }
             : undefined,
-        Admin: input.filterBy.isAdmin
-          ? {
-              some: {},
-            }
-          : undefined,
+        Admin:
+          input.filterBy.isAdmin !== null
+            ? {
+                is: input.filterBy.isAdmin === false ? null : undefined,
+                isNot: input.filterBy.isAdmin === true ? null : undefined,
+              }
+            : undefined,
       },
       include: {
         Admin: true,

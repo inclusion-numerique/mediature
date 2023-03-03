@@ -37,7 +37,7 @@ datasource db {
 /// @@Gen.model(hide: true)
 model Account {
   id                String  @id @default(cuid())
-  userId            String  @db.Uuid
+  userId            String  @unique @db.Uuid
   type              String
   provider          String
   providerAccountId String
@@ -100,12 +100,11 @@ model User {
   deletedAt DateTime?
   // TODO: https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
 
-  Account         Account[]
-  Session         Session[]
-  Agent           Agent[]
-  Admin           Admin[]
-  AgentInvitation AgentInvitation[]
-  Invitation      Invitation[]
+  Account        Account?
+  Session        Session[]
+  Agent          Agent[]
+  Admin          Admin?
+  InvitationSent Invitation[]
 }
 
 /// @@Gen.model(hide: true)
@@ -121,7 +120,7 @@ model Address {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  Citizen Citizen[]
+  Citizen Citizen?
 }
 
 enum PhoneType {
@@ -144,7 +143,7 @@ model Phone {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  Citizen Citizen[]
+  Citizen Citizen?
 }
 
 /// @@Gen.model(hide: true)
@@ -163,7 +162,7 @@ model Citizen {
   address       Address         @relation(fields: [addressId], references: [id], onDelete: Cascade)
   phone         Phone           @relation(fields: [phoneId], references: [id], onDelete: Cascade)
   IdentityStamp IdentityStamp[]
-  Case          Case[]
+  Case          Case?
 }
 
 /// @@Gen.model(hide: true)
@@ -255,10 +254,10 @@ model Agent {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  user                    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  authority               Authority   @relation(fields: [authorityId], references: [id], onDelete: Cascade)
-  Case                    Case[]
-  AuthorityWhereMainAgent Authority[] @relation("AuthorityWhereMainAgent")
+  user                    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authority               Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  CaseAssigned            Case[]
+  AuthorityWhereMainAgent Authority? @relation("AuthorityWhereMainAgent")
 }
 
 // TODO: Admin model?
@@ -290,9 +289,9 @@ model Attachment {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  Authority              Authority[] // TODO: Prevent this because there is no sens retrieving authority from attachment?
-  AttachmentsOnCases     AttachmentsOnCases[]
-  AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
+  Authority              Authority?
+  AttachmentsOnCases     AttachmentsOnCases?
+  AttachmentsOnCaseNotes AttachmentsOnCaseNotes?
 }
 
 enum AuthorityType {
@@ -304,22 +303,22 @@ enum AuthorityType {
 
 /// @@Gen.model(hide: true)
 model Authority {
-  id          String        @id @default(uuid()) @db.Uuid
-  name        String        @unique
-  slug        String        @unique
-  mainAgentId String?       @db.Uuid
-  type        AuthorityType @default(CITY)
-  logo        Attachment?   @relation(fields: [logoAttachmentId], references: [id])
+  id               String        @id @default(uuid()) @db.Uuid
+  name             String        @unique
+  slug             String        @unique
+  mainAgentId      String?       @unique @db.Uuid
+  type             AuthorityType @default(CITY)
+  logoAttachmentId String?       @unique @db.Uuid
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  mainAgent        Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
-  logoAttachmentId String?           @db.Uuid
-  AgentInvitation  AgentInvitation[]
-  Case             Case[]
-  Agent            Agent[]
+  mainAgent       Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
+  logo            Attachment?       @relation(fields: [logoAttachmentId], references: [id])
+  AgentInvitation AgentInvitation[]
+  Case            Case[]
+  Agent           Agent[]
 }
 
 enum CaseAttachmentType {
@@ -331,7 +330,7 @@ enum CaseAttachmentType {
 /// @@Gen.model(hide: true)
 model AttachmentsOnCases {
   caseId       String             @db.Uuid
-  attachmentId String             @db.Uuid
+  attachmentId String             @unique @db.Uuid
   transmitter  CaseAttachmentType @default(CITIZEN)
 
   case       Case       @relation(fields: [caseId], references: [id], onDelete: Cascade)
@@ -343,7 +342,7 @@ model AttachmentsOnCases {
 /// @@Gen.model(hide: true)
 model AttachmentsOnCaseNotes {
   noteId       String             @db.Uuid
-  attachmentId String             @db.Uuid
+  attachmentId String             @unique @db.Uuid
   transmitter  CaseAttachmentType @default(CITIZEN)
 
   note       Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
@@ -385,9 +384,9 @@ model Invitation {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  issuer          User              @relation(fields: [issuerId], references: [id], onDelete: Cascade)
-  AgentInvitation AgentInvitation[]
-  AdminInvitation AdminInvitation[]
+  issuer          User             @relation(fields: [issuerId], references: [id], onDelete: Cascade)
+  AgentInvitation AgentInvitation?
+  AdminInvitation AdminInvitation?
 }
 
 /// @@Gen.model(hide: true)
@@ -398,8 +397,6 @@ model AgentInvitation {
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   authority  Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)
-  User       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String?    @db.Uuid
 }
 
 /// @@Gen.model(hide: true)

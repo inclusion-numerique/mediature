@@ -78,13 +78,11 @@ export const authRouter = router({
     for (const pendingInvitation of pendingInvitations) {
       invitationIds.push(pendingInvitation.id);
 
-      authorityIdsToJoin.push(
-        ...pendingInvitation.AgentInvitation.map((agentInvitation) => {
-          return agentInvitation.authorityId;
-        })
-      );
+      if (pendingInvitation.AgentInvitation) {
+        authorityIdsToJoin.push(pendingInvitation.AgentInvitation.authorityId);
+      }
 
-      if (pendingInvitation.AdminInvitation.length > 0) {
+      if (pendingInvitation.AdminInvitation) {
         setAsAdmin = true;
       }
     }
