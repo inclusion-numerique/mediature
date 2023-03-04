@@ -686,8 +686,8 @@ importers:
         specifier: ^8.3.0
         version: 8.5.0(eslint@7.32.0)
       eslint-config-turbo:
-        specifier: latest
-        version: 0.0.9(eslint@7.32.0)
+        specifier: 0.0.8
+        version: 0.0.8(eslint@7.32.0)
       eslint-plugin-jsx-a11y:
         specifier: ^6.6.1
         version: 6.6.1(eslint@7.32.0)
@@ -8300,8 +8300,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.0.0-beta.60:
-    resolution: {integrity: sha512-L9aT6KnbIwZ9MuH77YpkIOtf2vTDeDvVe+8jUm59ov5L0XKZ6RTKdyKonAvp+CBuyp2XQS8+E3A/lnezACIzLQ==}
+  /@storybook/client-logger@7.0.0-beta.61:
+    resolution: {integrity: sha512-uvH7oPEeQXFV3IThHkV3UbkPXnCUKE+Kk0SV9zMJe2DK3eC/K/8g3TqafOXOSS6LOWuZojm6Bk/Kmpn7ZpxcSw==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -9300,7 +9300,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-beta.60
+      '@storybook/client-logger': 7.0.0-beta.61
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
@@ -14203,13 +14203,13 @@ packages:
       eslint: 7.32.0
     dev: false
 
-  /eslint-config-turbo@0.0.9(eslint@7.32.0):
-    resolution: {integrity: sha512-j1cTdx3tRmKo0csyfQKhpuT8dynK9oddbK5nmrShoMpXI2qMbxHLYH7MWAid4FmJN8rYympy3VKw5U63Yazycg==}
+  /eslint-config-turbo@0.0.8(eslint@7.32.0):
+    resolution: {integrity: sha512-ijj6uv0QX2kWahg3OYnTK1/q4MueXsqY2uE4MP9yeUA5CzVhL7GU+biKlv1BfMMqPltixHUcpZoW4yyNLCnMiw==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
       eslint: 7.32.0
-      eslint-plugin-turbo: 0.0.9(eslint@7.32.0)
+      eslint-plugin-turbo: 0.0.8(eslint@7.32.0)
     dev: false
 
   /eslint-import-resolver-node@0.3.6:
@@ -14532,8 +14532,8 @@ packages:
       - typescript
     dev: true
 
-  /eslint-plugin-turbo@0.0.9(eslint@7.32.0):
-    resolution: {integrity: sha512-fEsuSnYU3GLtT+s66mUuzDL1LaSieIx5uk3tPO0ToGv7hI2XzOfP24aPkQItTBGl7kq2JaVkRzPwcnfz8hkp0w==}
+  /eslint-plugin-turbo@0.0.8(eslint@7.32.0):
+    resolution: {integrity: sha512-pExSCmjWw/KFKb3/0PVqxiWb30FbcwDEf6kKv3alvNBSVEzDHalyAGHc9klbLSG+nFmbkfNE3Ky/UHDryCqt8g==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
