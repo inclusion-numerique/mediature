@@ -2,7 +2,7 @@ import z from 'zod';
 
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
+import { InvitationSchema, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 
 export const GrantAdminSchema = z
@@ -25,6 +25,14 @@ export type RevokeAdminSchemaType = z.infer<typeof RevokeAdminSchema>;
 export const RevokeAdminPrefillSchema = RevokeAdminSchema.deepPartial();
 export type RevokeAdminPrefillSchemaType = z.infer<typeof RevokeAdminPrefillSchema>;
 
+export const ListAdminsSchema = GetterInputSchema.extend({
+  filterBy: z.object({}),
+}).strict();
+export type ListAdminsSchemaType = z.infer<typeof ListAdminsSchema>;
+
+export const ListAdminsPrefillSchema = ListAdminsSchema.deepPartial();
+export type ListAdminsPrefillSchemaType = z.infer<typeof ListAdminsPrefillSchema>;
+
 export const InviteAdminSchema = z
   .object({
     inviteeEmail: InvitationSchema.shape.inviteeEmail,
@@ -38,7 +46,9 @@ export const InviteAdminPrefillSchema = InviteAdminSchema.deepPartial();
 export type InviteAdminPrefillSchemaType = z.infer<typeof InviteAdminPrefillSchema>;
 
 export const ListAdminInvitationsSchema = GetterInputSchema.extend({
-  filterBy: z.object({}),
+  filterBy: z.object({
+    status: InvitationStatusSchema.nullish(),
+  }),
 }).strict();
 export type ListAdminInvitationsSchemaType = z.infer<typeof ListAdminInvitationsSchema>;
 

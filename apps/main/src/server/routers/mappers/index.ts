@@ -1,10 +1,29 @@
-import { Address, Agent, Attachment, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
+import { Address, Admin, Agent, Attachment, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
 
 import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { fileAuthSecret, generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+
+export function adminPrismaToModel(
+  admin: Admin & {
+    user: User;
+  }
+) {
+  return {
+    id: admin.id,
+    userId: admin.userId,
+    firstname: admin.user.firstname,
+    lastname: admin.user.lastname,
+    email: admin.user.email,
+    profilePicture: admin.user.profilePicture,
+    canEverything: admin.canEverything,
+    createdAt: admin.createdAt,
+    updatedAt: admin.updatedAt,
+    deletedAt: admin.deletedAt,
+  };
+}
 
 export function agentPrismaToModel(
   agent: Agent & {

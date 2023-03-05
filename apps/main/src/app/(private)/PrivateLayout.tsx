@@ -136,9 +136,9 @@ export function PrivateLayout(props: PropsWithChildren) {
             },
           },
           {
-            text: 'Gérer les utilisateurs de la plateforme',
+            text: 'Gérer les administrateurs de la plateforme',
             linkProps: {
-              href: '#',
+              href: linkRegistry.get('adminList', undefined),
             },
           },
         ]

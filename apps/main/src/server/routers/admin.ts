@@ -7,11 +7,14 @@ import {
   GrantAdminSchema,
   InviteAdminSchema,
   ListAdminInvitationsSchema,
+  ListAdminsSchema,
   ListUsersAndRolesSchema,
   RevokeAdminSchema,
 } from '@mediature/main/src/models/actions/admin';
+import { AdminSchemaType } from '@mediature/main/src/models/entities/admin';
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { adminPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -79,6 +82,8 @@ export const adminRouter = router({
 
     if (!revokedUser) {
       throw new Error(`l'utilisateur que vous avez renseigné n'existe pas`);
+    } else if (revokedUser.id === originatorUser.id) {
+      throw new Error(`vous ne pouvez pas vous enlever vous-même vos droits d'administrateur`);
     }
 
     await prisma.admin.deleteMany({
@@ -95,6 +100,23 @@ export const adminRouter = router({
       originatorFirstname: originatorUser.firstname,
       originatorLastname: originatorUser.lastname,
     });
+  }),
+  listAdmins: privateProcedure.input(ListAdminsSchema).query(async ({ ctx, input }) => {
+    if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const admins = await prisma.admin.findMany({
+      include: {
+        user: true,
+      },
+    });
+
+    return {
+      admins: admins.map((admin): AdminSchemaType => {
+        return adminPrismaToModel(admin);
+      }),
+    };
   }),
   inviteAdmin: privateProcedure.input(InviteAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
@@ -165,6 +187,11 @@ export const adminRouter = router({
     }
 
     const adminInvitations = await prisma.adminInvitation.findMany({
+      where: {
+        invitation: {
+          status: input.filterBy.status || undefined,
+        },
+      },
       include: {
         invitation: {
           include: {
@@ -177,7 +204,7 @@ export const adminRouter = router({
     return {
       invitations: adminInvitations.map((adminInvitation): InvitationSchemaType => {
         return {
-          id: adminInvitation.id,
+          id: adminInvitation.invitation.id,
           inviteeEmail: adminInvitation.invitation.inviteeEmail,
           inviteeFirstname: adminInvitation.invitation.inviteeFirstname,
           inviteeLastname: adminInvitation.invitation.inviteeLastname,
