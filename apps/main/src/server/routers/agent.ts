@@ -14,6 +14,7 @@ import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agen
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
+import { addAgent } from '@mediature/main/src/server/routers/common/agent';
 import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -48,53 +49,7 @@ export const agentRouter = router({
       throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
-    const existingAgent = await prisma.agent.findFirst({
-      where: {
-        userId: input.userId,
-        authorityId: input.authorityId,
-      },
-    });
-
-    if (existingAgent) {
-      throw new Error(`cet agent fait déjà partie de la collectivité`);
-    }
-
-    const originatorUser = await prisma.user.findUniqueOrThrow({
-      where: {
-        id: ctx.user.id,
-      },
-    });
-
-    const agent = await prisma.agent.create({
-      data: {
-        user: {
-          connect: {
-            id: input.userId,
-          },
-        },
-        authority: {
-          connect: {
-            id: input.authorityId,
-          },
-        },
-      },
-      include: {
-        user: true,
-        authority: true,
-      },
-    });
-
-    await mailer.sendWelcomeAuthorityAgent({
-      recipient: agent.user.email,
-      firstname: agent.user.firstname,
-      originatorFirstname: originatorUser.firstname,
-      originatorLastname: originatorUser.lastname,
-      authorityName: agent.authority.name,
-      authorityDashboardUrl: linkRegistry.get('dashboard', undefined, { absolute: true }), // TODO: use below when the page exists
-      // authorityDashboardUrl: linkRegistry.get('authority', { authorityId: agent.authorityId }, { absolute: true }),
-    });
-
-    return { agent };
+    return await addAgent(input.userId, input.authorityId, ctx.user.id);
   }),
   removeAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
@@ -204,9 +159,8 @@ export const agentRouter = router({
     });
 
     if (existingUser) {
-      throw new Error(
-        `cet utilisateur existe déjà, vous pouvez le nommer agent de cette collectivité directement depuis la section d'ajout d'un agent`
-      );
+      // Try to add the user directly
+      return await addAgent(existingUser.id, input.authorityId, ctx.user.id);
     }
 
     const existingAgentInvitation = await prisma.agentInvitation.findFirst({

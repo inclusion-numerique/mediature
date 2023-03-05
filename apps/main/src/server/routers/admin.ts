@@ -14,6 +14,7 @@ import {
 import { AdminSchemaType } from '@mediature/main/src/models/entities/admin';
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { grantAdmin } from '@mediature/main/src/server/routers/common/admin';
 import { adminPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -24,44 +25,7 @@ export const adminRouter = router({
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
-    const existingAdmin = await prisma.admin.findFirst({
-      where: {
-        user: {
-          id: input.userId,
-        },
-      },
-    });
-
-    if (existingAdmin) {
-      return;
-    }
-
-    const originatorUser = await prisma.user.findUniqueOrThrow({
-      where: {
-        id: ctx.user.id,
-      },
-    });
-
-    const grantedUser = await prisma.user.update({
-      where: {
-        id: input.userId,
-      },
-      data: {
-        Admin: {
-          create: {
-            canEverything: true,
-          },
-        },
-      },
-    });
-
-    await mailer.sendAdminRoleGranted({
-      recipient: grantedUser.email,
-      firstname: grantedUser.firstname,
-      originatorFirstname: originatorUser.firstname,
-      originatorLastname: originatorUser.lastname,
-      adminDashboardUrl: linkRegistry.get('dashboard', undefined, { absolute: true }),
-    });
+    return await grantAdmin(input.userId, ctx.user.id);
   }),
   revokeAdmin: privateProcedure.input(RevokeAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
@@ -130,7 +94,8 @@ export const adminRouter = router({
     });
 
     if (existingUser) {
-      throw new Error(`cet utilisateur existe déjà, vous pouvez le nommer administrateur directement depuis la liste des utilisateurs`);
+      // Try to grant the user directly
+      return await grantAdmin(existingUser.id, ctx.user.id);
     }
 
     const existingAdminInvitation = await prisma.adminInvitation.findFirst({
