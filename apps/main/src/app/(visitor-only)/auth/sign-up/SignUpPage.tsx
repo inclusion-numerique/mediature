@@ -25,7 +25,7 @@ export function SignUpPage() {
 
   if (!invitationToken) {
     const error = new Error(
-      `Vous ne pouvez vous inscrire sans avoir être invité par un agent d'une collectivité déjà sur la plateforme. Merci de vous rapprocher de votre collectivité pour en savoir plus.`
+      `Vous ne pouvez vous inscrire sans avoir être invité par un médiateur d'une collectivité déjà sur la plateforme. Merci de vous rapprocher de votre collectivité pour en savoir plus.`
     );
 
     return (
@@ -88,7 +88,7 @@ export function SignUpPage() {
         }}
       >
         <Typography variant="body1" align="center">
-          Cet espace est réservé aux agents des collectivités ... TODO
+          Cet espace est réservé aux médiateurs des collectivités ... TODO
         </Typography>
       </Grid>
     </Grid>

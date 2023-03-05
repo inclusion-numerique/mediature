@@ -41,7 +41,7 @@ export function SignInPage() {
         }}
       >
         <Typography variant="body1" align="center">
-          Cet espace est réservé aux agents des collectivités ... TODO
+          Cet espace est réservé aux médiateurs des collectivités ... TODO
         </Typography>
       </Grid>
     </Grid>

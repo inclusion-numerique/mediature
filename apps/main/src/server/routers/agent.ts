@@ -46,14 +46,14 @@ export async function isUserMainAgentOfAuthority(authorityId: string, userId: st
 export const agentRouter = router({
   addAgent: privateProcedure.input(AddAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     return await addAgent(input.userId, input.authorityId, ctx.user.id);
   }),
   removeAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     // We unassign the agent from all cases where he was
@@ -98,7 +98,7 @@ export const agentRouter = router({
     });
 
     if (!agent) {
-      throw new Error(`cet agent n'existe pas`);
+      throw new Error(`ce médiateur n'existe pas`);
     }
 
     // Before returning, make sure the caller has rights on this authority ;)
@@ -149,7 +149,7 @@ export const agentRouter = router({
   }),
   inviteAgent: privateProcedure.input(InviteAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -173,7 +173,7 @@ export const agentRouter = router({
     });
 
     if (existingAgentInvitation) {
-      throw new Error(`une invitation pour devenir agent de cette collectivité a déjà été envoyée à cette personne`);
+      throw new Error(`une invitation pour devenir médiateur de cette collectivité a déjà été envoyée à cette personne`);
     }
 
     const originatorUser = await prisma.user.findUniqueOrThrow({

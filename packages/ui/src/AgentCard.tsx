@@ -60,7 +60,7 @@ export function AgentCard(props: AgentCardProps) {
     <Card variant="outlined" sx={{ position: 'relative' }}>
       <CardHeader
         action={
-          <Tooltip title="Options de l'agent">
+          <Tooltip title="Options du médiateur">
             <IconButton
               onClick={handleClick}
               size="small"

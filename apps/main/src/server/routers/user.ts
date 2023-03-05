@@ -131,7 +131,7 @@ export const userRouter = router({
 
     if (invitation.AgentInvitation) {
       if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(invitation.AgentInvitation.authorityId, ctx.user.id))) {
-        throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
+        throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
       }
     } else {
       if (!(await isUserAnAdmin(ctx.user.id))) {

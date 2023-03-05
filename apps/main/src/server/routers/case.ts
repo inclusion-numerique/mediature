@@ -281,7 +281,7 @@ export const caseRouter = router({
     }
 
     if (targetedCase.agentId) {
-      throw new Error(`un agent est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que assigner une autre personne`);
+      throw new Error(`un médiateur est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que assigner une autre personne`);
     }
 
     let agentIdToAssign: string;
@@ -298,7 +298,7 @@ export const caseRouter = router({
     }
 
     if (!(await isAgentPartOfAuthority(targetedCase.authorityId, agentIdToAssign))) {
-      throw new Error(`impossible d'assigner un agent qui ne fait pas partie de la collectivité du dossier`);
+      throw new Error(`impossible d'assigner un médiateur qui ne fait pas partie de la collectivité du dossier`);
     }
 
     if (!(await isAgentThisUser(ctx.user.id, agentIdToAssign))) {
@@ -342,7 +342,7 @@ export const caseRouter = router({
     }
 
     if (!targetedCase.agentId) {
-      throw new Error(`aucun agent n'est assigné sur ce dossier`);
+      throw new Error(`aucun médiateur n'est assigné sur ce dossier`);
     }
 
     if (!(await isAgentThisUser(ctx.user.id, agentIdToUnassign))) {
@@ -398,7 +398,7 @@ export const caseRouter = router({
     if (!targetedCase) {
       throw new Error(`ce dossier n'existe pas`);
     } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`en tant qu'agent vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+      throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
     }
 
     const attachments = await Promise.all(
@@ -426,7 +426,7 @@ export const caseRouter = router({
         input.filterBy.authorityIds.length !== 1 ||
         !(await isUserAnAgentPartOfAuthorities(input.filterBy.authorityIds, ctx.user.id))
       ) {
-        throw new Error(`en tant qu'agent vous ne pouvez que rechercher les dossiers concernant votre collectivité`);
+        throw new Error(`en tant que médiateur vous ne pouvez que rechercher les dossiers concernant votre collectivité`);
       }
     }
 
@@ -558,7 +558,7 @@ export const caseRouter = router({
     if (!targetedCase) {
       throw new Error(`ce dossier n'existe pas`);
     } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`en tant qu'agent vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+      throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
     }
 
     const fileStream = await renderToStream(

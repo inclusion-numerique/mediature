@@ -11,7 +11,7 @@ export async function addAgent(userId: string, authorityId: string, originatorUs
   });
 
   if (existingAgent) {
-    throw new Error(`cet agent fait déjà partie de la collectivité`);
+    throw new Error(`ce médiateur fait déjà partie de la collectivité`);
   }
 
   const originatorUser = await prisma.user.findUniqueOrThrow({
