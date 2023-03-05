@@ -67,7 +67,7 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" loading={inviteAgent.isLoading} size="large" variant="contained" fullWidth>
-          Envoyer
+          Ajouter / Inviter
         </Button>
       </Grid>
     </BaseForm>

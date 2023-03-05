@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
+import { InvitationSchema, InvitationTokenSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 
 export const UpdateProfileSchema = z
@@ -10,20 +10,30 @@ export const UpdateProfileSchema = z
     profilePicture: UserSchema.shape.profilePicture,
   })
   .strict();
-export type UpdateProfileType = z.infer<typeof UpdateProfileSchema>;
+export type UpdateProfileSchemaType = z.infer<typeof UpdateProfileSchema>;
 
 export const UpdateProfilePrefillSchema = UpdateProfileSchema.deepPartial();
 export type UpdateProfilePrefillSchemaType = z.infer<typeof UpdateProfilePrefillSchema>;
 
 export const GetPublicFacingInvitationSchema = z
   .object({
-    token: InvitationSchema.shape.token,
+    token: InvitationTokenSchema,
   })
   .strict();
 export type GetPublicFacingInvitationSchemaType = z.infer<typeof GetPublicFacingInvitationSchema>;
 
 export const GetPublicFacingInvitationPrefillSchema = GetPublicFacingInvitationSchema.deepPartial();
 export type GetPublicFacingInvitationPrefillSchemaType = z.infer<typeof GetPublicFacingInvitationPrefillSchema>;
+
+export const CancelInvitationSchema = z
+  .object({
+    invitationId: InvitationSchema.shape.id,
+  })
+  .strict();
+export type CancelInvitationSchemaType = z.infer<typeof CancelInvitationSchema>;
+
+export const CancelInvitationPrefillSchema = CancelInvitationSchema.deepPartial();
+export type CancelInvitationPrefillSchemaType = z.infer<typeof CancelInvitationPrefillSchema>;
 
 export const GetProfileSchema = z.object({}).strict();
 export type GetProfileSchemaType = z.infer<typeof GetProfileSchema>;

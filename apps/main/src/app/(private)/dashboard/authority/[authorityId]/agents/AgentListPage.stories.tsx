@@ -1,11 +1,11 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMainTitle } from '@mediature/docs/.storybook/testing';
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { AgentListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agents/AgentListPage';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
+import { invitations } from '@mediature/main/src/fixtures/invitation';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 type ComponentType = typeof AgentListPage;
@@ -27,6 +27,13 @@ const defaultMswParameters = {
         path: ['listAgents'],
         response: {
           agentsWrappers: [agentsWrappers[0], agentsWrappers[1], agentsWrappers[2]],
+        },
+      }),
+      getTRPCMock({
+        type: 'query',
+        path: ['listAgentInvitations'],
+        response: {
+          invitations: [invitations[0], invitations[1], invitations[2]],
         },
       }),
       getTRPCMock({

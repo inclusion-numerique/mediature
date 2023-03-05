@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
+import { InvitationSchema, InvitationTokenSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserPasswordSchema, UserSchema, VerificationTokenSchema } from '@mediature/main/src/models/entities/user';
 
 export const SignInSchema = z
@@ -16,7 +16,7 @@ export const SignInPrefillSchema = SignInSchema.deepPartial();
 export type SignInPrefillSchemaType = z.infer<typeof SignInPrefillSchema>;
 
 export const SignUpSchema = z.object({
-  invitationToken: InvitationSchema.shape.token,
+  invitationToken: InvitationTokenSchema,
   email: UserSchema.shape.email,
   password: UserPasswordSchema,
   firstname: UserSchema.shape.firstname,

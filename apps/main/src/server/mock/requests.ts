@@ -21,14 +21,14 @@ export type RpcErrorResponse = {
 
 // According to JSON-RPC 2.0 and tRPC documentation.
 // https://trpc.io/docs/rpc
-export const jsonRpcSuccessResponse = (data: unknown) => [
-  {
+export const jsonRpcSuccessResponse = (data: unknown) => {
+  return {
     result: { data },
-  },
-];
+  };
+};
 
-export const jsonRpcErrorResponse = (err: Error) => [
-  {
+export const jsonRpcErrorResponse = (err: Error) => {
+  return {
     error: {
       json: {
         message: err.message,
@@ -39,5 +39,5 @@ export const jsonRpcErrorResponse = (err: Error) => [
         },
       },
     },
-  },
-];
+  };
+};

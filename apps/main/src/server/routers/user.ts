@@ -1,5 +1,6 @@
 import { prisma } from '@mediature/main/prisma/client';
 import {
+  CancelInvitationSchema,
   GetInterfaceSessionSchema,
   GetProfileSchema,
   GetPublicFacingInvitationSchema,
@@ -8,6 +9,9 @@ import {
 import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+
+import { isUserMainAgentOfAuthority } from './agent';
+import { isUserAnAdmin } from './authority';
 
 export const userRouter = router({
   getPublicFacingInvitation: publicProcedure.input(GetPublicFacingInvitationSchema).query(async ({ ctx, input }) => {
@@ -105,5 +109,43 @@ export const userRouter = router({
         isAdmin: !!user.Admin,
       }),
     };
+  }),
+  cancelInvitation: privateProcedure.input(CancelInvitationSchema).mutation(async ({ ctx, input }) => {
+    const invitation = await prisma.invitation.findUnique({
+      where: {
+        id: input.invitationId,
+      },
+      include: {
+        AgentInvitation: true,
+        AdminInvitation: true,
+      },
+    });
+
+    if (!invitation) {
+      throw new Error(`l'invitation spécifiée n'existe pas`);
+    }
+
+    if (invitation.status !== InvitationStatusSchema.Values.PENDING) {
+      throw new Error(`l'invitation spécifiée ne peut pas être annulée`);
+    }
+
+    if (invitation.AgentInvitation) {
+      if (!(await isUserMainAgentOfAuthority(invitation.AgentInvitation.authorityId, ctx.user.id))) {
+        throw new Error(`vous devez être agent principal de la collectivité pour effectuer cette action`);
+      }
+    } else {
+      if (!(await isUserAnAdmin(ctx.user.id))) {
+        throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      }
+    }
+
+    const canceledInvitation = await prisma.invitation.update({
+      where: {
+        id: invitation.id,
+      },
+      data: {
+        status: InvitationStatusSchema.Values.CANCELED,
+      },
+    });
   }),
 });

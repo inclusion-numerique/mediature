@@ -327,6 +327,9 @@ importers:
       '@mui/material':
         specifier: ^5.10.16
         version: 5.10.16(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/x-data-grid':
+        specifier: ^5.17.26
+        version: 5.17.26(@mui/material@5.10.16)(react-dom@18.2.0)(react@18.2.0)
       '@mui/x-date-pickers':
         specifier: ^5.0.15
         version: 5.0.15(@mui/material@5.10.16)(date-fns@2.29.3)(react-dom@18.2.0)(react@18.2.0)
@@ -6489,6 +6492,25 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.2.0
+
+  /@mui/x-data-grid@5.17.26(@mui/material@5.10.16)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-eGJq9J0g9cDGLFfMmugOadZx0mJeOd/yQpHwEa5gUXyONS6qF0OhXSWyDOhDdA3l2TOoQzotMN5dY/T4Wl1KYA==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.4.1
+      '@mui/system': ^5.4.1
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@mui/material': 5.10.16(@types/react@18.0.26)(react-dom@18.2.0)(react@18.2.0)
+      '@mui/utils': 5.11.7(react@18.2.0)
+      clsx: 1.2.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      reselect: 4.1.7
+    dev: false
 
   /@mui/x-date-pickers@5.0.15(@mui/material@5.10.16)(date-fns@2.29.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-jQPwiB961fYT79H419/sfSqWRefo9aCx5MEDGZOifMuRv6k5gcZCrSFjmLC5Lt4PZ20BsitJYvSKpmvYZYh+mg==}
@@ -22396,6 +22418,10 @@ packages:
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
+
+  /reselect@4.1.7:
+    resolution: {integrity: sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==}
+    dev: false
 
   /reserved-words@0.1.2:
     resolution: {integrity: sha512-0S5SrIUJ9LfpbVl4Yzij6VipUdafHrOTzvmfazSw/jeZrZtQK303OPZW+obtkaw7jQlTQppy0UvZWm9872PbRw==}

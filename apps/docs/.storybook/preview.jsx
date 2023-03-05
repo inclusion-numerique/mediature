@@ -113,6 +113,13 @@ export const parameters = {
           id: 'duplicate-id',
           selector: '*:not(MuiListItemIcon-root.disabledA11y)',
         },
+        {
+          // When using the `DataGrid` it says: "Element has children which are not allowed"
+          // whereas it has `role="rowgroup"` as direct nested elements... it seems a false-positive so ignoring it
+          // (multiple posts on internet mentions this wrong trigger)
+          id: 'aria-required-children',
+          selector: '*:not(.MuiDataGrid-root)',
+        },
       ],
     },
   },

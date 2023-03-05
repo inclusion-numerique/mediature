@@ -28,3 +28,8 @@ a.MuiMenuItem-root {
     background-color: var(--background-default-grey-active) !important;
   }
 }
+
+// The page numbers indicator sticks to the top whereas it should be vertically centered, probably due to leaking DSFR style
+.MuiDataGrid-footerContainer .MuiTablePagination-displayedRows {
+  margin: 0 !important;
+}

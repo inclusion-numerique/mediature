@@ -7,8 +7,11 @@ import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { InvitationList } from '@mediature/main/src/components/InvitationList';
+import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
@@ -27,22 +30,33 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
     });
   };
 
-  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listAgents.useQuery({
+  const listAgents = trpc.listAgents.useQuery({
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
     },
   });
 
-  const agentsWrappers = data?.agentsWrappers || [];
+  const listAgentInvitations = trpc.listAgentInvitations.useQuery({
+    orderBy: {},
+    filterBy: {
+      authorityIds: [authorityId],
+      status: InvitationStatusSchema.Values.PENDING,
+    },
+  });
 
-  if (error) {
+  const aggregatedQueries = new AggregatedQueries(listAgents, listAgentInvitations);
+
+  const agentsWrappers = listAgents.data?.agentsWrappers || [];
+  const invitations = listAgentInvitations.data?.invitations || [];
+
+  if (aggregatedQueries.hasError) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
-        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+        <ErrorAlert errors={aggregatedQueries.errors} refetchs={aggregatedQueries.refetchs} />
       </Grid>
     );
-  } else if (isLoading) {
+  } else if (aggregatedQueries.isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
 
@@ -79,6 +93,18 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
             </Grid>
           ))}
         </Grid>
+        {!!invitations.length && (
+          <>
+            <Grid item xs={12} sx={{ py: 3 }}>
+              <Typography component="h2" variant="h6">
+                Invitations en cours
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <InvitationList invitations={invitations} />
+            </Grid>
+          </>
+        )}
       </Grid>
     </>
   );

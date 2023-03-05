@@ -2,8 +2,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
-import { AddAgentSchema, GetAgentSchema, InviteAgentSchema, ListAgentsSchema, RemoveAgentSchema } from '@mediature/main/src/models/actions/agent';
-import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
+import {
+  AddAgentSchema,
+  GetAgentSchema,
+  InviteAgentSchema,
+  ListAgentInvitationsSchema,
+  ListAgentsSchema,
+  RemoveAgentSchema,
+} from '@mediature/main/src/models/actions/agent';
+import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
@@ -256,5 +263,51 @@ export const agentRouter = router({
       authorityName: authority.name,
       signUpUrlWithToken: linkRegistry.get('signUp', { token: invitation.token }, { absolute: true }),
     });
+  }),
+  listAgentInvitations: privateProcedure.input(ListAgentInvitationsSchema).query(async ({ ctx, input }) => {
+    const authorityIds = input.filterBy.authorityIds;
+
+    if (!(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
+      throw new Error(`vous n'avez pas les droits pour effectuer une recherche sur toutes les collectivités précisées`);
+    }
+
+    const agentInvitations = await prisma.agentInvitation.findMany({
+      where: {
+        authorityId: {
+          in: authorityIds,
+        },
+        invitation: {
+          status: input.filterBy.status || undefined,
+        },
+      },
+      include: {
+        invitation: {
+          include: {
+            issuer: true,
+          },
+        },
+      },
+    });
+
+    return {
+      invitations: agentInvitations.map((agentInvitation): InvitationSchemaType => {
+        return {
+          id: agentInvitation.invitation.id,
+          inviteeEmail: agentInvitation.invitation.inviteeEmail,
+          inviteeFirstname: agentInvitation.invitation.inviteeFirstname,
+          inviteeLastname: agentInvitation.invitation.inviteeLastname,
+          issuer: {
+            id: agentInvitation.invitation.issuer.id,
+            email: agentInvitation.invitation.issuer.email,
+            firstname: agentInvitation.invitation.issuer.firstname,
+            lastname: agentInvitation.invitation.issuer.lastname,
+          },
+          status: agentInvitation.invitation.status,
+          createdAt: agentInvitation.invitation.createdAt,
+          updatedAt: agentInvitation.invitation.updatedAt,
+          deletedAt: agentInvitation.invitation.deletedAt,
+        };
+      }),
+    };
   }),
 });

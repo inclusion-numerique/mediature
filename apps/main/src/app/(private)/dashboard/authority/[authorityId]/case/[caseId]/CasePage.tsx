@@ -666,7 +666,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                                     Édition de note
                                   </Grid>
                                   <Grid item xs="auto">
-                                    <IconButton onClick={handleCloseAddNoteModal} size="small">
+                                    <IconButton aria-label="fermer" onClick={handleCloseAddNoteModal} size="small">
                                       <CloseIcon />
                                     </IconButton>
                                   </Grid>

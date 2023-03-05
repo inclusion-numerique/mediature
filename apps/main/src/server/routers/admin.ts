@@ -6,10 +6,11 @@ import {
   DeleteUserSchema,
   GrantAdminSchema,
   InviteAdminSchema,
+  ListAdminInvitationsSchema,
   ListUsersAndRolesSchema,
   RevokeAdminSchema,
 } from '@mediature/main/src/models/actions/admin';
-import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
+import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -157,6 +158,42 @@ export const adminRouter = router({
       originatorLastname: originatorUser.lastname,
       signUpUrlWithToken: linkRegistry.get('signUp', { token: invitation.token }, { absolute: true }),
     });
+  }),
+  listAdminInvitations: privateProcedure.input(ListAdminInvitationsSchema).query(async ({ ctx, input }) => {
+    if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const adminInvitations = await prisma.adminInvitation.findMany({
+      include: {
+        invitation: {
+          include: {
+            issuer: true,
+          },
+        },
+      },
+    });
+
+    return {
+      invitations: adminInvitations.map((adminInvitation): InvitationSchemaType => {
+        return {
+          id: adminInvitation.id,
+          inviteeEmail: adminInvitation.invitation.inviteeEmail,
+          inviteeFirstname: adminInvitation.invitation.inviteeFirstname,
+          inviteeLastname: adminInvitation.invitation.inviteeLastname,
+          issuer: {
+            id: adminInvitation.invitation.issuer.id,
+            email: adminInvitation.invitation.issuer.email,
+            firstname: adminInvitation.invitation.issuer.firstname,
+            lastname: adminInvitation.invitation.issuer.lastname,
+          },
+          status: adminInvitation.invitation.status,
+          createdAt: adminInvitation.invitation.createdAt,
+          updatedAt: adminInvitation.invitation.updatedAt,
+          deletedAt: adminInvitation.invitation.deletedAt,
+        };
+      }),
+    };
   }),
   deleteUser: privateProcedure.input(DeleteUserSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {

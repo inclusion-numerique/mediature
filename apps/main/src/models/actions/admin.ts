@@ -37,6 +37,14 @@ export type InviteAdminSchemaType = z.infer<typeof InviteAdminSchema>;
 export const InviteAdminPrefillSchema = InviteAdminSchema.deepPartial();
 export type InviteAdminPrefillSchemaType = z.infer<typeof InviteAdminPrefillSchema>;
 
+export const ListAdminInvitationsSchema = GetterInputSchema.extend({
+  filterBy: z.object({}),
+}).strict();
+export type ListAdminInvitationsSchemaType = z.infer<typeof ListAdminInvitationsSchema>;
+
+export const ListAdminInvitationsPrefillSchema = ListAdminInvitationsSchema.deepPartial();
+export type ListAdminInvitationsPrefillSchemaType = z.infer<typeof ListAdminInvitationsPrefillSchema>;
+
 export const DeleteUserSchema = z
   .object({
     userId: UserSchema.shape.id,

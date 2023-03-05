@@ -4,7 +4,7 @@ import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AgentInvitationSchema } from '@mediature/main/src/models/entities/agent-invitation';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { InvitationSchema } from '@mediature/main/src/models/entities/invitation';
+import { InvitationSchema, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 
 export const AddAgentSchema = z
@@ -61,3 +61,14 @@ export type InviteAgentSchemaType = z.infer<typeof InviteAgentSchema>;
 
 export const InviteAgentPrefillSchema = InviteAgentSchema.deepPartial().strict();
 export type InviteAgentPrefillSchemaType = z.infer<typeof InviteAgentPrefillSchema>;
+
+export const ListAgentInvitationsSchema = GetterInputSchema.extend({
+  filterBy: z.object({
+    authorityIds: z.array(AuthoritySchema.shape.id),
+    status: InvitationStatusSchema.nullish(),
+  }),
+}).strict();
+export type ListAgentInvitationsSchemaType = z.infer<typeof ListAgentInvitationsSchema>;
+
+export const ListAgentInvitationsPrefillSchema = ListAgentInvitationsSchema.deepPartial();
+export type ListAgentInvitationsPrefillSchemaType = z.infer<typeof ListAgentInvitationsPrefillSchema>;

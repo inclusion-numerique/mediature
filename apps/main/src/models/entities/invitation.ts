@@ -13,6 +13,9 @@ export const InvitationIssuerSchema = z
   .strict();
 export type InvitationIssuerSchemaType = z.infer<typeof InvitationIssuerSchema>;
 
+export const InvitationTokenSchema = z.string().min(1);
+export type InvitationTokenSchemaType = z.infer<typeof InvitationTokenSchema>;
+
 export const InvitationSchema = z
   .object({
     id: z.string().uuid(),
@@ -20,7 +23,6 @@ export const InvitationSchema = z
     inviteeFirstname: z.string().nullable(),
     inviteeLastname: z.string().nullable(),
     issuer: InvitationIssuerSchema,
-    token: z.string().min(1),
     status: InvitationStatusSchema,
     createdAt: z.date(),
     updatedAt: z.date(),

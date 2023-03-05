@@ -74,6 +74,7 @@ export const getTRPCMock = <
       }
     }
 
+    // Note we use `httpLink` and not `httpBatchLink` when mocking, so no need to wrap the response into an array
     transformers.push(ctx.json(rpcResponse));
 
     return res(...transformers);
