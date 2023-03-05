@@ -10,13 +10,13 @@ import {
   ListAgentsSchema,
   RemoveAgentSchema,
 } from '@mediature/main/src/models/actions/agent';
+import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
+import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { agentPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-
-import { AgentWrapperSchemaType } from '../../models/entities/agent';
 
 export async function isUserMainAgentOfAuthorities(authorityIds: string[], userId: string): Promise<boolean> {
   // Remove duplicates
@@ -44,8 +44,8 @@ export async function isUserMainAgentOfAuthority(authorityId: string, userId: st
 
 export const agentRouter = router({
   addAgent: privateProcedure.input(AddAgentSchema).mutation(async ({ ctx, input }) => {
-    if (!(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité pour effectuer cette action`);
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     const existingAgent = await prisma.agent.findFirst({
@@ -97,8 +97,8 @@ export const agentRouter = router({
     return { agent };
   }),
   removeAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
-    if (!(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité pour effectuer cette action`);
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     // We unassign the agent from all cases where he was
@@ -156,7 +156,7 @@ export const agentRouter = router({
   listAgents: privateProcedure.input(ListAgentsSchema).query(async ({ ctx, input }) => {
     const authorityIds = input.filterBy.authorityIds;
 
-    if (!(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
       throw new Error(`vous n'avez pas les droits pour effectuer une recherche sur toutes les collectivités précisées`);
     }
 
@@ -193,8 +193,8 @@ export const agentRouter = router({
     };
   }),
   inviteAgent: privateProcedure.input(InviteAgentSchema).mutation(async ({ ctx, input }) => {
-    if (!(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être agent principal de la collectivité pour effectuer cette action`);
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être agent principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -267,7 +267,7 @@ export const agentRouter = router({
   listAgentInvitations: privateProcedure.input(ListAgentInvitationsSchema).query(async ({ ctx, input }) => {
     const authorityIds = input.filterBy.authorityIds;
 
-    if (!(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
       throw new Error(`vous n'avez pas les droits pour effectuer une recherche sur toutes les collectivités précisées`);
     }
 

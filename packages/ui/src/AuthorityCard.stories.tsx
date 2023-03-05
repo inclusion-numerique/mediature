@@ -27,6 +27,7 @@ const Template: StoryFn<ComponentType> = (args) => {
 const NormalStory = Template.bind({});
 NormalStory.args = {
   ...authoritiesWrappers[0],
+  authorityAgentsManagementLink: '',
 };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);

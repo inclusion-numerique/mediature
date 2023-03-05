@@ -4,8 +4,10 @@ import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import NextLink from 'next/link';
 
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
@@ -17,6 +19,7 @@ export interface AuthorityCardProps {
   agents: AgentSchemaType[] | null;
   openCases: number;
   closeCases: number;
+  authorityAgentsManagementLink: string;
 }
 
 export function AuthorityCard(props: AuthorityCardProps) {
@@ -32,9 +35,16 @@ export function AuthorityCard(props: AuthorityCardProps) {
                 </Grid>
               )}
               <Grid item>
-                <Typography component="b" variant="h4">
+                <Link
+                  component={NextLink}
+                  href={props.authorityAgentsManagementLink}
+                  variant="h5"
+                  color="inherit"
+                  underline="none"
+                  style={{ fontWeight: 600 }}
+                >
                   {props.authority.name}
-                </Typography>
+                </Link>
               </Grid>
             </Grid>
           </Grid>

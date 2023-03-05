@@ -62,7 +62,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
 
   return (
     <>
-      <Grid container {...centeredContainerGridProps}>
+      <Grid container {...centeredContainerGridProps} alignContent="flex-start">
         <Grid container spacing={1} sx={{ pb: 3 }}>
           <Grid item xs={12} md={7} sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography component="h1" variant="h5">
@@ -81,18 +81,24 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
             </Button>
           </Grid>
         </Grid>
-        <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
-          {agentsWrappers.map((agentWrapper) => (
-            <Grid key={agentWrapper.agent.id} item component="li" xs={12} sm={6}>
-              <AgentCard
-                agent={agentWrapper.agent}
-                openCases={agentWrapper.openCases}
-                closeCases={agentWrapper.closeCases}
-                removeAction={() => removeAgentAction(agentWrapper.agent.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {agentsWrappers.length ? (
+          <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
+            {agentsWrappers.map((agentWrapper) => (
+              <Grid key={agentWrapper.agent.id} item component="li" xs={12} sm={6}>
+                <AgentCard
+                  agent={agentWrapper.agent}
+                  openCases={agentWrapper.openCases}
+                  closeCases={agentWrapper.closeCases}
+                  removeAction={() => removeAgentAction(agentWrapper.agent.id)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+            <Typography variant="body2">Aucun médiateur n&apos;est pour l&apos;instant dans cette collectivité</Typography>
+          </Grid>
+        )}
         {!!invitations.length && (
           <>
             <Grid item xs={12} sx={{ py: 3 }}>

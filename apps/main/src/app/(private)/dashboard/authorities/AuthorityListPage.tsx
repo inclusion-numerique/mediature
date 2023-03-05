@@ -122,6 +122,9 @@ export function AuthorityListPage() {
                   agents={authorityWrapper.agents}
                   openCases={authorityWrapper.openCases}
                   closeCases={authorityWrapper.closeCases}
+                  authorityAgentsManagementLink={linkRegistry.get('authorityAgentList', {
+                    authorityId: authorityWrapper.authority.id,
+                  })}
                 />
               </Grid>
             ))}
