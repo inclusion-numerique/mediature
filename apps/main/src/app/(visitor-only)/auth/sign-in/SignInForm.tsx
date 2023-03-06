@@ -26,8 +26,8 @@ import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediat
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-function errorCodeToError(errorCode: string): string {
-  let error: string;
+function errorCodeToError(errorCode: string): string | null {
+  let error: string | null;
 
   switch (errorCode) {
     case 'credentials_required':
@@ -35,6 +35,9 @@ function errorCodeToError(errorCode: string): string {
       break;
     case 'no_credentials_match':
       error = 'Les informations de connexion fournies sont incorrectes';
+      break;
+    case 'undefined':
+      error = null;
       break;
     default:
       error = 'Une erreur est survenue, veuillez retenter';
@@ -109,8 +112,12 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
         setError(null);
 
         router.push(result.url);
+      } else if (result && result.ok) {
+        setError(null);
+
+        router.push(linkRegistry.get('dashboard', undefined));
       } else {
-        setError('default');
+        setError('une erreur inattendue est survenue, merci de contacter le support');
       }
     } finally {
       // Unlock to allow a new submit
