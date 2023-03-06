@@ -289,6 +289,7 @@ export const caseRouter = router({
       const userAgent = await prisma.agent.findFirstOrThrow({
         where: {
           userId: ctx.user.id,
+          authorityId: targetedCase.authorityId,
         },
       });
 
