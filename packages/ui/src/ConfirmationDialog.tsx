@@ -23,6 +23,11 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   const [actionError, setActionError] = useState<Error | null>(null);
   const dialogContentRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
 
+  const closeCallback = () => {
+    props.onClose();
+    setActionError(null);
+  };
+
   return (
     <Dialog
       fullWidth
@@ -33,7 +38,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           return;
         }
 
-        props.onClose();
+        closeCallback();
       }}
     >
       <DialogTitle>{props.title || 'Confirmation'}</DialogTitle>
@@ -58,7 +63,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
               await props.onCancel();
             }
 
-            props.onClose();
+            closeCallback();
           }}
           disabled={isLoading}
         >
@@ -72,7 +77,7 @@ export const ConfirmationDialog = (props: ConfirmationDialogProps) => {
             try {
               await props.onConfirm();
 
-              props.onClose();
+              closeCallback();
             } catch (err) {
               if (err instanceof Error) {
                 setActionError(err);
