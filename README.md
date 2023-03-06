@@ -133,6 +133,91 @@ Those are temporary environments, different than `dev` and `prod`. Since they ha
 - adjust environment variables
 - seed the database to have some data to test on
 
+#### Monitoring
+
+It's important to be aware of some events, for this we decided to monitor:
+
+- Scalingo (responsible for the application and database)
+- Sentry (responsible for gathering runtime issues)
+
+_Note that doing it after the full setup will avoid flooding your inbox :)_
+
+**IMPORTANT: keep in mind webhook URL tokens can be invalidated if someone leaves the project while he created them.**
+
+##### Scalingo
+
+For both the development and production environments you need to create notifiers by following the following steps.
+
+First, create a Slack notifier named `tech` to keep an eye on the global activity, specify the webhook URL to use and enable those events:
+
+- `addon_db_upgraded`
+- `addon_deleted`
+- `addon_plan_changed`
+- `addon_provisioned`
+- `addon_resumed`
+- `addon_suspended`
+- `alert_added`
+- `alert_deleted`
+- `app_alert_triggered`
+- `app_command_ran`
+- `app_crashed`
+- `app_crashed_repeated`
+- `app_deleted`
+- `app_deployed` _(only in `production`)_
+- `app_edited`
+- `app_region_migration_started`
+- `app_renamed`
+- `app_restarted`
+- `app_scaled`
+- `app_stopped`
+- `app_transferred`
+- `collaborator_accepted`
+- `collaborator_invited`
+- `collaborator_removed`
+- `domain_added`
+- `domain_edited`
+- `domain_removed`
+- `github_link`
+- `github_unlink`
+- `notifier_added`
+- `notifier_edited`
+- `notifier_removed`
+- `variable_added`
+- `variable_bulk_edited`
+- `variable_edited`
+- `variable_removed`
+
+And in some cases you don't want to miss the notification, because it's a runtime failure, a sensitive setting that changed... For this create an email notifier named `tech-important` and add appropriate people to be notified. Enable those events:
+
+- `addon_deleted`
+- `addon_suspended`
+- `app_alert_triggered`
+- `app_crashed`
+- `app_crashed_repeated`
+- `app_deleted`
+- `app_region_migration_started`
+- `app_renamed`
+- `app_transferred`
+- `collaborator_accepted`
+- `collaborator_invited`
+- `collaborator_removed`
+- `domain_added`
+- `domain_edited`
+- `domain_removed`
+- `github_link`
+- `github_unlink`
+- `notifier_edited` _(only in `production`)_
+- `notifier_removed` _(only in `production`)_
+- `variable_bulk_edited` _(only in `production`)_
+- `variable_edited` _(only in `production`)_
+- `variable_removed` _(only in `production`)_
+
+_Find more context on those events on https://doc.scalingo.com/platform/app/notification_
+
+##### Sentry
+
+TODO: to write once it's compatible with Next.js 13 a new time
+
 #### Debug
 
 To debug scalingo apps you may prefer using their CLI with some commands like:
