@@ -23,6 +23,8 @@ export interface AuthorityCardProps {
 }
 
 export function AuthorityCard(props: AuthorityCardProps) {
+  const agentsExceptMainOne = props.agents ? props.agents.filter((agent) => agent.id !== props.mainAgent?.id) : null;
+
   return (
     <Card variant="outlined">
       <CardContent>
@@ -73,18 +75,18 @@ export function AuthorityCard(props: AuthorityCardProps) {
           <Grid item xs={12}>
             {!!props.mainAgent ? (
               <>
-                <Typography sx={{ fontWeight: 'bold' }}>Responsable médiateur :</Typography> {props.mainAgent.firstname} {props.mainAgent.lastname}
+                <Typography sx={{ fontWeight: 'bold' }}>Médiateur principal :</Typography> {props.mainAgent.firstname} {props.mainAgent.lastname}
               </>
             ) : (
-              <>Aucun responsable médiateur</>
+              <>Aucun médiateur principal</>
             )}
           </Grid>
           <Grid item xs={12}>
-            {!!props.agents && props.agents.length ? (
+            {!!agentsExceptMainOne && agentsExceptMainOne.length ? (
               <>
                 <Typography sx={{ fontWeight: 'bold' }}>Liste des médiateurs :</Typography>
                 <Grid container component="ul" spacing={1} sx={ulComponentResetStyles}>
-                  {props.agents.map((agent) => (
+                  {agentsExceptMainOne.map((agent) => (
                     <Grid key={agent.id} item component="li" xs={12} sm={6}>
                       {agent.firstname} {agent.lastname}
                     </Grid>

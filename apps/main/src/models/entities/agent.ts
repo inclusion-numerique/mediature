@@ -11,6 +11,7 @@ export const AgentSchema = z
     lastname: UserSchema.shape.lastname,
     email: UserSchema.shape.email,
     profilePicture: UserSchema.shape.profilePicture,
+    isMainAgent: z.boolean(),
     createdAt: z.date(),
     updatedAt: z.date(),
     deletedAt: z.date().nullable(),

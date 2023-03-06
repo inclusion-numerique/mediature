@@ -7,5 +7,6 @@ export const AgentInvitationSchema = InvitationSchema.extend({
   id: z.string().uuid(),
   invitationId: InvitationSchema.shape.id,
   authorityId: AuthoritySchema.shape.id,
+  grantMainAgent: z.boolean(),
 }).strict();
 export type AgentInvitationSchemaType = z.infer<typeof AgentInvitationSchema>;

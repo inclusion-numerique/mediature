@@ -377,6 +377,9 @@ export const caseRouter = router({
         agent: {
           include: {
             user: true,
+            AuthorityWhereMainAgent: {
+              select: { id: true },
+            },
           },
         },
         Note: true,
@@ -503,6 +506,9 @@ export const caseRouter = router({
         agent: {
           include: {
             user: true,
+            AuthorityWhereMainAgent: {
+              select: { id: true },
+            },
           },
         },
         AttachmentsOnCases: {

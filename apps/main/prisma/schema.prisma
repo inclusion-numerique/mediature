@@ -391,9 +391,10 @@ model Invitation {
 
 /// @@Gen.model(hide: true)
 model AgentInvitation {
-  id           String @id @default(uuid()) @db.Uuid
-  invitationId String @unique @db.Uuid
-  authorityId  String @db.Uuid
+  id             String  @id @default(uuid()) @db.Uuid
+  invitationId   String  @unique @db.Uuid
+  authorityId    String  @db.Uuid
+  grantMainAgent Boolean @default(false)
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   authority  Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)

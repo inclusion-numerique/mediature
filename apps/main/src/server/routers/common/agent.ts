@@ -2,11 +2,18 @@ import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-export async function addAgent(userId: string, authorityId: string, originatorUserId: string) {
+export interface AddAgentOptions {
+  userId: string;
+  authorityId: string;
+  originatorUserId: string;
+  grantMainAgent: boolean;
+}
+
+export async function addAgent(options: AddAgentOptions) {
   const existingAgent = await prisma.agent.findFirst({
     where: {
-      userId: userId,
-      authorityId: authorityId,
+      userId: options.userId,
+      authorityId: options.authorityId,
     },
   });
 
@@ -16,7 +23,7 @@ export async function addAgent(userId: string, authorityId: string, originatorUs
 
   const originatorUser = await prisma.user.findUniqueOrThrow({
     where: {
-      id: originatorUserId,
+      id: options.originatorUserId,
     },
   });
 
@@ -24,14 +31,21 @@ export async function addAgent(userId: string, authorityId: string, originatorUs
     data: {
       user: {
         connect: {
-          id: userId,
+          id: options.userId,
         },
       },
       authority: {
         connect: {
-          id: authorityId,
+          id: options.authorityId,
         },
       },
+      AuthorityWhereMainAgent: options.grantMainAgent
+        ? {
+            connect: {
+              id: options.authorityId,
+            },
+          }
+        : undefined,
     },
     include: {
       user: true,

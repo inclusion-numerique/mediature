@@ -22,9 +22,17 @@ export interface AgentListPageProps {
 
 export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
   const removeAgent = trpc.removeAgent.useMutation();
+  const grantMainAgent = trpc.grantMainAgent.useMutation();
 
   const removeAgentAction = async (agentId: string) => {
-    const result = await removeAgent.mutateAsync({
+    await removeAgent.mutateAsync({
+      authorityId: authorityId,
+      agentId: agentId,
+    });
+  };
+
+  const grantMainAgentAction = async (agentId: string) => {
+    await grantMainAgent.mutateAsync({
       authorityId: authorityId,
       agentId: agentId,
     });
@@ -90,6 +98,7 @@ export function AgentListPage({ params: { authorityId } }: AgentListPageProps) {
                   openCases={agentWrapper.openCases}
                   closeCases={agentWrapper.closeCases}
                   removeAction={() => removeAgentAction(agentWrapper.agent.id)}
+                  grantMainAgentAction={() => grantMainAgentAction(agentWrapper.agent.id)}
                 />
               </Grid>
             ))}

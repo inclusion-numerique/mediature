@@ -49,6 +49,7 @@ FilledStory.args = {
     inviteeEmail: 'jean@france.fr',
     inviteeFirstname: 'Jean',
     inviteeLastname: 'Derrien',
+    grantMainAgent: true,
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };

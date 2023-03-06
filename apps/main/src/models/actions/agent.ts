@@ -11,12 +11,24 @@ export const AddAgentSchema = z
   .object({
     userId: UserSchema.shape.id,
     authorityId: AgentSchema.shape.authorityId,
+    grantMainAgent: z.boolean(),
   })
   .strict();
 export type AddAgentSchemaType = z.infer<typeof AddAgentSchema>;
 
 export const AddAgentPrefillSchema = AddAgentSchema.deepPartial();
 export type AddAgentPrefillSchemaType = z.infer<typeof AddAgentPrefillSchema>;
+
+export const GrantMainAgentSchema = z
+  .object({
+    agentId: AgentSchema.shape.id,
+    authorityId: AgentSchema.shape.authorityId,
+  })
+  .strict();
+export type GrantMainAgentSchemaType = z.infer<typeof GrantMainAgentSchema>;
+
+export const GrantMainAgentPrefillSchema = GrantMainAgentSchema.deepPartial();
+export type GrantMainAgentPrefillSchemaType = z.infer<typeof GrantMainAgentPrefillSchema>;
 
 export const RemoveAgentSchema = z
   .object({
@@ -55,6 +67,7 @@ export const InviteAgentSchema = z
     inviteeFirstname: InvitationSchema.shape.inviteeFirstname,
     inviteeLastname: InvitationSchema.shape.inviteeLastname,
     authorityId: AgentInvitationSchema.shape.authorityId,
+    grantMainAgent: AgentInvitationSchema.shape.grantMainAgent,
   })
   .strict();
 export type InviteAgentSchemaType = z.infer<typeof InviteAgentSchema>;

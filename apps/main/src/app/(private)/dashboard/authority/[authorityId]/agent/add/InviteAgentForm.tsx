@@ -2,8 +2,13 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@mui/lab/LoadingButton';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
@@ -66,8 +71,24 @@ export function InviteAgentForm({ prefill }: { prefill?: InviteAgentPrefillSchem
         />
       </Grid>
       <Grid item xs={12}>
+        <FormControl error={!!errors.grantMainAgent}>
+          <FormControlLabel
+            label={
+              <>
+                Nommer comme médiateur principal de la collectivité{' '}
+                <Typography component="span" sx={{ fontStyle: 'italic' }}>
+                  (cela enlèvera les droits du médiateur principal actuel s&apos;il y en a un)
+                </Typography>
+              </>
+            }
+            control={<Checkbox {...register('grantMainAgent')} defaultChecked={!!control._defaultValues.grantMainAgent} />}
+          />
+          <FormHelperText>{errors?.grantMainAgent?.message}</FormHelperText>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12}>
         <Button type="submit" loading={inviteAgent.isLoading} size="large" variant="contained" fullWidth>
-          Ajouter / Inviter
+          Ajouter
         </Button>
       </Grid>
     </BaseForm>

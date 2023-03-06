@@ -49,7 +49,45 @@ export const agentRouter = router({
       throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
-    return await addAgent(input.userId, input.authorityId, ctx.user.id);
+    return await addAgent({
+      userId: input.userId,
+      authorityId: input.authorityId,
+      originatorUserId: ctx.user.id,
+      grantMainAgent: input.grantMainAgent,
+    });
+  }),
+  grantMainAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+    }
+
+    const agent = await prisma.agent.findUnique({
+      where: {
+        id: input.agentId,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!agent) {
+      throw new Error(`ce médiateur n'existe pas`);
+    } else if (agent.authorityId !== input.authorityId) {
+      throw new Error(`ce médiateur ne fait pas partie de la collectivité`);
+    }
+
+    await prisma.authority.update({
+      where: {
+        id: input.authorityId,
+      },
+      data: {
+        mainAgent: {
+          connect: {
+            id: input.agentId,
+          },
+        },
+      },
+    });
   }),
   removeAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
@@ -123,6 +161,9 @@ export const agentRouter = router({
       },
       include: {
         CaseAssigned: true,
+        AuthorityWhereMainAgent: {
+          select: { id: true },
+        },
         user: true,
       },
     });
@@ -160,7 +201,12 @@ export const agentRouter = router({
 
     if (existingUser) {
       // Try to add the user directly
-      return await addAgent(existingUser.id, input.authorityId, ctx.user.id);
+      return await addAgent({
+        userId: existingUser.id,
+        authorityId: input.authorityId,
+        originatorUserId: ctx.user.id,
+        grantMainAgent: input.grantMainAgent,
+      });
     }
 
     const existingAgentInvitation = await prisma.agentInvitation.findFirst({

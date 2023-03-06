@@ -28,6 +28,7 @@ export function adminPrismaToModel(
 export function agentPrismaToModel(
   agent: Agent & {
     user: User;
+    AuthorityWhereMainAgent: { id: string } | null;
   }
 ) {
   return {
@@ -38,6 +39,7 @@ export function agentPrismaToModel(
     lastname: agent.user.lastname,
     email: agent.user.email,
     profilePicture: agent.user.profilePicture,
+    isMainAgent: !!agent.AuthorityWhereMainAgent,
     createdAt: agent.createdAt,
     updatedAt: agent.updatedAt,
     deletedAt: agent.deletedAt,

@@ -1,3 +1,4 @@
+import { AgentInvitation } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import addMinutes from 'date-fns/addMinutes';
 import { v4 as uuidv4 } from 'uuid';
@@ -73,13 +74,13 @@ export const authRouter = router({
     });
 
     const invitationIds: string[] = [];
-    let authorityIdsToJoin: string[] = [];
+    let agentInvitations: AgentInvitation[] = [];
     let setAsAdmin = false;
     for (const pendingInvitation of pendingInvitations) {
       invitationIds.push(pendingInvitation.id);
 
       if (pendingInvitation.AgentInvitation) {
-        authorityIdsToJoin.push(pendingInvitation.AgentInvitation.authorityId);
+        agentInvitations.push(pendingInvitation.AgentInvitation);
       }
 
       if (pendingInvitation.AdminInvitation) {
@@ -88,10 +89,10 @@ export const authRouter = router({
     }
 
     // Remove duplicates
-    authorityIdsToJoin = authorityIdsToJoin.filter((x, i, a) => a.indexOf(x) == i);
+    agentInvitations = agentInvitations.filter((x, i, a) => a.indexOf(x) == i);
 
     // Agent invitations imply linking this new user to authorities
-    for (const authorityIdToJoin of authorityIdsToJoin) {
+    for (const agentInvitation of agentInvitations) {
       await prisma.agent.create({
         data: {
           user: {
@@ -101,9 +102,16 @@ export const authRouter = router({
           },
           authority: {
             connect: {
-              id: authorityIdToJoin,
+              id: agentInvitation.authorityId,
             },
           },
+          AuthorityWhereMainAgent: agentInvitation.grantMainAgent
+            ? {
+                connect: {
+                  id: agentInvitation.authorityId,
+                },
+              }
+            : undefined,
         },
       });
     }

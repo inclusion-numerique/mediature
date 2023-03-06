@@ -3,6 +3,7 @@ import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
+import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AgentCard } from '@mediature/ui/src/AgentCard';
 
 type ComponentType = typeof AgentCard;
@@ -28,12 +29,27 @@ const NormalStory = Template.bind({});
 NormalStory.args = {
   ...agentsWrappers[0],
   removeAction: async () => {},
+  grantMainAgentAction: async () => {},
 };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);
 };
 
 export const Normal = prepareStory(NormalStory);
+
+const AsMainAgentStory = Template.bind({});
+AsMainAgentStory.args = {
+  ...NormalStory.args,
+  agent: {
+    ...(NormalStory.args.agent as AgentSchemaType),
+    isMainAgent: true,
+  },
+};
+AsMainAgentStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
+};
+
+export const AsMainAgent = prepareStory(AsMainAgentStory);
 
 const NoCasesStory = Template.bind({});
 NoCasesStory.args = {

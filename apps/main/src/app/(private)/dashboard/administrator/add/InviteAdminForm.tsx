@@ -65,7 +65,7 @@ export function InviteAdminForm({ prefill }: { prefill?: InviteAdminPrefillSchem
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" loading={inviteAdmin.isLoading} size="large" variant="contained" fullWidth>
-          Ajouter / Inviter
+          Ajouter
         </Button>
       </Grid>
     </BaseForm>

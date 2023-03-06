@@ -1,11 +1,13 @@
 'use client';
 
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -25,6 +27,7 @@ export interface AgentCardProps {
   openCases: number;
   closeCases: number;
   removeAction: () => Promise<void>;
+  grantMainAgentAction: () => Promise<void>;
 }
 
 export function AgentCard(props: AgentCardProps) {
@@ -52,6 +55,23 @@ export function AgentCard(props: AgentCardProps) {
       ),
       onConfirm: async () => {
         await props.removeAction();
+      },
+    });
+  };
+
+  const grantMainAgentAction = async () => {
+    showConfirmationDialog({
+      description: (
+        <>
+          Le fait de nommer{' '}
+          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+            {props.agent.firstname} {props.agent.lastname}
+          </Typography>{' '}
+          médiateur principal enlèvera les droits au précédent médiateur principal.
+        </>
+      ),
+      onConfirm: async () => {
+        await props.grantMainAgentAction();
       },
     });
   };
@@ -87,9 +107,10 @@ export function AgentCard(props: AgentCardProps) {
                 </Grid>
               )}
               <Grid item>
-                <Typography component="b" variant="h4">
+                <Typography component="b" variant="h4" sx={{ mr: 2 }}>
                   {props.agent.firstname} {props.agent.lastname}
                 </Typography>
+                {props.agent.isMainAgent && <Chip icon={<AdminPanelSettingsIcon fontSize="small" />} label="Médiateur principal" sx={{ my: 1 }} />}
                 <br />
                 <Typography component="span" variant="subtitle1">
                   {props.agent.email}
@@ -137,6 +158,14 @@ export function AgentCard(props: AgentCardProps) {
           </ListItemIcon>
           Supprimer de la collectivité
         </MenuItem>
+        {!props.agent.isMainAgent && (
+          <MenuItem onClick={grantMainAgentAction}>
+            <ListItemIcon>
+              <AdminPanelSettingsIcon fontSize="small" />
+            </ListItemIcon>
+            Nommer comme médiateur principal
+          </MenuItem>
+        )}
       </Menu>
     </Card>
   );

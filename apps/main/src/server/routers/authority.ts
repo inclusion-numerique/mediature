@@ -201,11 +201,17 @@ export const authorityRouter = router({
         mainAgent: {
           include: {
             user: true,
+            AuthorityWhereMainAgent: {
+              select: { id: true },
+            },
           },
         },
         Agent: {
           include: {
             user: true,
+            AuthorityWhereMainAgent: {
+              select: { id: true },
+            },
           },
         },
         Case: {
