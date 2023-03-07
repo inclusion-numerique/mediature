@@ -1,7 +1,8 @@
 'use client';
 
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
-import SettingsIcon from '@mui/icons-material/Settings';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -14,6 +15,7 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
 import { logout } from '@mediature/main/src/utils/auth';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { Avatar } from '@mediature/ui/src/Avatar';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
@@ -71,18 +73,18 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
           sx={{ zIndex: 2000 }} // Needed to be displayed over the navbar on mobile devices
         >
           {props.showDashboardMenuItem === true && (
-            <MenuItem component={NextLink} href="#">
+            <MenuItem component={NextLink} href={linkRegistry.get('dashboard', undefined)}>
               <ListItemIcon>
-                <SettingsIcon fontSize="small" />
+                <DashboardIcon fontSize="small" />
               </ListItemIcon>
               Tableau de bord
             </MenuItem>
           )}
-          <MenuItem component={NextLink} href="#">
+          <MenuItem component={NextLink} href={linkRegistry.get('accountSettings', undefined)}>
             <ListItemIcon>
-              <SettingsIcon fontSize="small" />
+              <ManageAccountsIcon fontSize="small" />
             </ListItemIcon>
-            Paramètres
+            Mon compte
           </MenuItem>
           <MenuItem onClick={logout}>
             <ListItemIcon>

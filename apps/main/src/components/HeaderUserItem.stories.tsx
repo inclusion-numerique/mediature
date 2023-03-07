@@ -63,7 +63,7 @@ ClickedStory.play = async ({ canvasElement }) => {
 
   const dialog = await screen.findByRole('menu');
   await within(dialog).findByRole('menuitem', {
-    name: /paramètres/i,
+    name: /compte/i,
   });
 };
 

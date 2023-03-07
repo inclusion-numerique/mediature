@@ -152,6 +152,13 @@ export const localizedRoutes = {
       fr: (p) => `/authentification/inscription`,
     }
   ),
+  accountSettings: defineLocalizedRoute(
+    {},
+    {
+      en: (p) => `/account/settings`,
+      fr: (p) => `/compte/parametres`,
+    }
+  ),
 };
 
 // function createLocalizedRouter(lang: Lang, localeRoutes: typeof localizedRoutes) {
@@ -207,6 +214,7 @@ export const routes = {
     forgottenPassword: defineRoute(localizedRoutes.forgottenPassword.params, localizedRoutes.forgottenPassword.paths.en),
     signIn: defineRoute(localizedRoutes.signIn.params, localizedRoutes.signIn.paths.en),
     signUp: defineRoute(localizedRoutes.signUp.params, localizedRoutes.signUp.paths.en),
+    accountSettings: defineRoute(localizedRoutes.accountSettings.params, localizedRoutes.accountSettings.paths.en),
   }).routes,
   fr: createLocalizedRouter({
     addAgentToAuthority: defineRoute(localizedRoutes.addAgentToAuthority.params, localizedRoutes.addAgentToAuthority.paths.fr),
@@ -229,6 +237,7 @@ export const routes = {
     forgottenPassword: defineRoute(localizedRoutes.forgottenPassword.params, localizedRoutes.forgottenPassword.paths.fr),
     signIn: defineRoute(localizedRoutes.signIn.params, localizedRoutes.signIn.paths.fr),
     signUp: defineRoute(localizedRoutes.signUp.params, localizedRoutes.signUp.paths.fr),
+    accountSettings: defineRoute(localizedRoutes.accountSettings.params, localizedRoutes.accountSettings.paths.fr),
   }).routes,
 };
 
