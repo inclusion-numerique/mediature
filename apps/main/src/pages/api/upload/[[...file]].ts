@@ -36,7 +36,11 @@ const filesLocalDirectory = path.resolve(__dirname, './.files/');
 // Ref: https://github.com/tus/tus-node-server/issues/395
 const tusServer = new Server({
   // relativeLocation?: boolean;
-  // respectForwardedHeaders?: boolean;
+  // -
+  // When deployed and since behind a proxy or load balacancer the original URL scheme is always empty, making Tus returning a `http` upload URL for an `https` initial visit (making the browser complaining)
+  // So we tell Tus to look at headers provided by the provider like `X-Forwarded-Proto` to return the right scheme.
+  // Ref: https://github.com/transloadit/uppy/issues/2304#issuecomment-638156373
+  respectForwardedHeaders: true,
   path: '/api/upload',
   datastore: new FileStore({ directory: filesLocalDirectory }),
   namingFunction(req) {
