@@ -28,6 +28,7 @@ const NormalStory = Template.bind({});
 NormalStory.args = {
   ...authoritiesWrappers[0],
   authorityAgentsManagementLink: '',
+  authorityEditLink: '',
 };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);

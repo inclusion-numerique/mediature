@@ -125,6 +125,9 @@ export function AuthorityListPage() {
                   authorityAgentsManagementLink={linkRegistry.get('authorityAgentList', {
                     authorityId: authorityWrapper.authority.id,
                   })}
+                  authorityEditLink={linkRegistry.get('authorityEdit', {
+                    authorityId: authorityWrapper.authority.id,
+                  })}
                 />
               </Grid>
             ))}

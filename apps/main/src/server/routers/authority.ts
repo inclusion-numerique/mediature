@@ -31,13 +31,19 @@ export async function isUserAnAdmin(userId: string): Promise<boolean> {
   return !!admin;
 }
 
-export async function requiresThereIsNoSimilarAuthority(authorityName: string, authoritySlug: string, excludeAuthorityId?: string): Promise<void> {
+export async function requiresThereIsNoSimilarAuthority(
+  authorityName: string,
+  authoritySlug: string | undefined,
+  excludeAuthorityId?: string
+): Promise<void> {
   const existingAuthority = await prisma.authority.findFirst({
     where: {
       name: authorityName,
-      OR: {
-        slug: authoritySlug,
-      },
+      OR: authoritySlug
+        ? {
+            slug: authoritySlug,
+          }
+        : undefined,
     },
   });
 
@@ -88,28 +94,41 @@ export const authorityRouter = router({
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
-    await requiresThereIsNoSimilarAuthority(input.name, input.slug, input.authorityId);
+    await requiresThereIsNoSimilarAuthority(input.name, undefined, input.authorityId);
 
-    const authority = prisma.authority.update({
+    const authority = await prisma.authority.findUniqueOrThrow({
+      where: {
+        id: input.authorityId,
+      },
+    });
+
+    const { attachmentsToAdd, attachmentsToRemove, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
+      AttachmentKindSchema.Values.AUTHORITY_LOGO,
+      input.logoAttachmentId ? [input.logoAttachmentId] : [],
+      authority.logoAttachmentId ? [authority.logoAttachmentId] : []
+    );
+
+    const updatedAuthority = await prisma.authority.update({
       where: {
         id: input.authorityId,
       },
       data: {
         name: input.name,
-        slug: input.slug,
         type: input.type,
         logo: {
-          connect: input.logoAttachmentId
+          connect: attachmentsToAdd.length
             ? {
-                id: input.logoAttachmentId,
+                id: attachmentsToAdd[0],
               }
             : undefined,
-          disconnect: !input.logoAttachmentId ? true : undefined,
+          disconnect: attachmentsToRemove.length ? true : undefined,
         },
       },
     });
 
-    return authority;
+    await markNewAttachmentsAsUsed();
+
+    return updatedAuthority;
   }),
   deleteAuthority: privateProcedure.input(DeleteAuthoritySchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {

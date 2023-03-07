@@ -19,8 +19,6 @@ export const UpdateAuthoritySchema = z
   .object({
     authorityId: AuthoritySchema.shape.id,
     name: AuthoritySchema.shape.name,
-    slug: AuthoritySchema.shape.slug,
-    mainAgentId: AuthoritySchema.shape.mainAgentId,
     type: AuthoritySchema.shape.type,
     logoAttachmentId: AttachmentInputSchema.nullable(),
   })

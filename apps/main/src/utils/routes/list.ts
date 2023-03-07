@@ -47,6 +47,13 @@ export const localizedRoutes = {
       fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers/non-assignes`,
     }
   ),
+  authorityEdit: defineLocalizedRoute(
+    { authorityId: param.path.string },
+    {
+      en: (p) => `/dashboard/authority/${p.authorityId}/edit`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/editer`,
+    }
+  ),
   authorityCreation: defineLocalizedRoute(
     {},
     {
@@ -200,6 +207,7 @@ export const routes = {
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.en),
     myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.en),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.en),
+    authorityEdit: defineRoute(localizedRoutes.authorityEdit.params, localizedRoutes.authorityEdit.paths.en),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.en),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.en),
     addAdmin: defineRoute(localizedRoutes.addAdmin.params, localizedRoutes.addAdmin.paths.en),
@@ -223,6 +231,7 @@ export const routes = {
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.fr),
     myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.fr),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.fr),
+    authorityEdit: defineRoute(localizedRoutes.authorityEdit.params, localizedRoutes.authorityEdit.paths.fr),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.fr),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.fr),
     addAdmin: defineRoute(localizedRoutes.addAdmin.params, localizedRoutes.addAdmin.paths.fr),
