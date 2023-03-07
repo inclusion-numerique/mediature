@@ -374,10 +374,10 @@ importers:
         version: 10.4.3
       '@tus/file-store':
         specifier: 1.0.0-beta.1
-        version: 1.0.0-beta.1(@tus/server@1.0.0-beta.4)
+        version: 1.0.0-beta.1(@tus/server@1.0.0-beta.5)
       '@tus/server':
-        specifier: 1.0.0-beta.4
-        version: 1.0.0-beta.4
+        specifier: 1.0.0-beta.5
+        version: 1.0.0-beta.5
       '@uppy/core':
         specifier: ^3.0.6
         version: 3.0.6
@@ -9606,21 +9606,21 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: true
 
-  /@tus/file-store@1.0.0-beta.1(@tus/server@1.0.0-beta.4):
+  /@tus/file-store@1.0.0-beta.1(@tus/server@1.0.0-beta.5):
     resolution: {integrity: sha512-BhxeWMLdABIa6oQBaB0JaPtZE2hzWsGLUoBVJnU+eGVEmtALRHXZ5Pfj9Ps0S/0QTAKil9Y2RZuptJR7eMKVxg==}
     engines: {node: '>=16'}
     peerDependencies:
       '@tus/server': ^1.0.0-beta.1
     dependencies:
-      '@tus/server': 1.0.0-beta.4
+      '@tus/server': 1.0.0-beta.5
       configstore: 5.0.1
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@tus/server@1.0.0-beta.4:
-    resolution: {integrity: sha512-sl7io5DDy5ynxGu0q2NZ3tt+9VZfW2gVkJtOT5WdnRsbn+obfdXJS6jsl01SR/tEOZ0aYwiMSVbmQy6F92xbvA==}
+  /@tus/server@1.0.0-beta.5:
+    resolution: {integrity: sha512-mOyLDJJTC7lpO0OEgl8t2RS/aN9lfz4Auw/vrKQyb1JBC16Tqd6Efhy4KUPcBy/nWLN6/RlO0NQKqdvcSZ6P6w==}
     engines: {node: '>=16'}
     dependencies:
       debug: 4.3.4
