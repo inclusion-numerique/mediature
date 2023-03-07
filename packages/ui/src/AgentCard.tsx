@@ -135,7 +135,7 @@ export function AgentCard(props: AgentCardProps) {
                   Dossiers en cours : {props.openCases}
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  Dossiers clôs : {props.closeCases}
+                  Dossiers clos : {props.closeCases}
                 </Grid>
               </Grid>
             </Alert>
