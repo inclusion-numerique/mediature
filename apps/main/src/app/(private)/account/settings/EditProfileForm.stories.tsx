@@ -3,17 +3,18 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindForm } from '@mediature/docs/.storybook/testing';
-import { SignUpForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm';
-import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
+import { EditProfileForm } from '@mediature/main/src/app/(private)/account/settings/EditProfileForm';
+import { users } from '@mediature/main/src/fixtures/user';
+import { UpdateProfilePrefillSchema } from '@mediature/main/src/models/actions/user';
 import { UserSchema } from '@mediature/main/src/models/entities/user';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
-type ComponentType = typeof SignUpForm;
+type ComponentType = typeof EditProfileForm;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
 
 export default {
-  title: 'Forms/SignUp',
-  component: SignUpForm,
+  title: 'Forms/EditProfile',
+  component: EditProfileForm,
   ...generateMetaDefault({
     parameters: {},
   }),
@@ -24,24 +25,21 @@ const defaultMswParameters = {
     handlers: [
       getTRPCMock({
         type: 'mutation',
-        path: ['signUp'],
-        response: {
-          user: generateMock(UserSchema),
-        },
+        path: ['updateProfile'],
+        response: { user: users[0] },
       }),
     ],
   },
 };
 
 const Template: StoryFn<ComponentType> = (args) => {
-  return <SignUpForm {...args} />;
+  return <EditProfileForm {...args} />;
 };
 
 const EmptyStory = Template.bind({});
 EmptyStory.args = {
-  prefill: SignUpPrefillSchema.parse({
-    invitationToken: 'abc',
-  }),
+  email: users[0].email,
+  prefill: UpdateProfilePrefillSchema.parse({}),
 };
 EmptyStory.parameters = { ...defaultMswParameters };
 EmptyStory.play = async ({ canvasElement }) => {
@@ -52,13 +50,10 @@ export const Empty = prepareStory(EmptyStory);
 
 const FilledStory = Template.bind({});
 FilledStory.args = {
-  prefill: SignUpPrefillSchema.parse({
-    invitationToken: 'abc',
-    email: 'jean@france.fr',
-    password: 'mypassword',
-    firstname: 'Jean',
-    lastname: 'Derrien',
-    termsAccepted: true,
+  email: users[0].email,
+  prefill: UpdateProfilePrefillSchema.parse({
+    firstname: users[0].firstname,
+    lastname: users[0].lastname,
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };

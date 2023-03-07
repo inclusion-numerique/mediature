@@ -92,6 +92,8 @@ AsNewUserStory.play = async ({ canvasElement }) => {
   await playFindMain(canvasElement);
 };
 
+export const AsNewUser = prepareStory(AsNewUserStory);
+
 const AsMainAgentStory = Template.bind({});
 AsMainAgentStory.args = {};
 AsMainAgentStory.parameters = {

@@ -31,10 +31,20 @@ export async function playFindForm(parentElement: HTMLElement): Promise<HTMLElem
   return await within(parentElement).findByRole('form');
 }
 
+export async function playFindForms(parentElement: HTMLElement): Promise<HTMLElement[]> {
+  return await within(parentElement).findAllByRole('form');
+}
+
 export async function playFindFormInMain(parentElement: HTMLElement): Promise<HTMLElement> {
   const mainElement = await within(parentElement).findByRole('main');
 
   return await within(mainElement).findByRole('form');
+}
+
+export async function playFindFormsInMain(parentElement: HTMLElement): Promise<HTMLElement[]> {
+  const mainElement = await within(parentElement).findByRole('main');
+
+  return await within(mainElement).findAllByRole('form');
 }
 
 export async function playFindAlert(parentElement: HTMLElement): Promise<HTMLElement> {

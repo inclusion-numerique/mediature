@@ -8,10 +8,10 @@ import {
 } from '@mediature/main/src/models/actions/user';
 import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
+import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/agent';
+import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
-
-import { isUserMainAgentOfAuthority } from './agent';
-import { isUserAnAdmin } from './authority';
 
 export const userRouter = router({
   getPublicFacingInvitation: publicProcedure.input(GetPublicFacingInvitationSchema).query(async ({ ctx, input }) => {
@@ -58,7 +58,7 @@ export const userRouter = router({
     });
 
     // TODO: exclude hashed password
-    return { user };
+    return { user: userPrismaToModel(user) };
   }),
   getProfile: privateProcedure.input(GetProfileSchema).query(async ({ ctx, input }) => {
     const user = await prisma.user.findUnique({
@@ -67,8 +67,12 @@ export const userRouter = router({
       },
     });
 
+    if (!user) {
+      throw new Error(`cet utilisateur n'existe pas`);
+    }
+
     // TODO: exclude hashed password
-    return { user };
+    return { user: userPrismaToModel(user) };
   }),
   getInterfaceSession: privateProcedure.input(GetInterfaceSessionSchema).query(async ({ ctx, input }) => {
     const user = await prisma.user.findUnique({

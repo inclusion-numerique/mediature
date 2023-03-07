@@ -12,6 +12,7 @@ export const centeredContainerGridProps: GridProps = {
     ...wideContainerGridProps.sx,
     maxWidth: 'lg',
     mx: 'auto',
+    width: '100%', // [WORKAROUND] When using `mx: auto` it does a weird thing like `width: calc(100% + 2.5rem)`... maybe due to DSFR values
   },
 };
 

@@ -13,10 +13,9 @@ export const UserSchema = z
     firstname: z.string().min(1),
     lastname: z.string().min(1),
     email: z.string().email(),
-    passwordHash: z.string().min(1), // TODO: set to "z.never()"?
     status: UserStatusSchema,
     profilePicture: z.string().url().nullable(),
-    lastActivityAt: z.date(),
+    lastActivityAt: z.date().nullable(),
     createdAt: z.date(),
     updatedAt: z.date(),
     deletedAt: z.date().nullable(),

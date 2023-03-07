@@ -4,7 +4,23 @@ import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/atta
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { UserSchemaType } from '@mediature/main/src/models/entities/user';
 import { fileAuthSecret, generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+
+export function userPrismaToModel(user: User): UserSchemaType {
+  return {
+    id: user.id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    status: user.status,
+    profilePicture: user.profilePicture,
+    lastActivityAt: user.lastActivityAt,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    deletedAt: user.deletedAt,
+  };
+}
 
 export function adminPrismaToModel(
   admin: Admin & {

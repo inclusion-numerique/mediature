@@ -8,6 +8,7 @@ import { mailer } from '@mediature/main/src/emails/mailer';
 import { ChangePasswordSchema, RequestNewPasswordSchema, ResetPasswordSchema, SignUpSchema } from '@mediature/main/src/models/actions/auth';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserStatusSchema, VerificationTokenActionSchema } from '@mediature/main/src/models/entities/user';
+import { userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -148,7 +149,7 @@ export const authRouter = router({
     });
 
     // TODO: exclude hashed password
-    return { createdUser };
+    return { user: userPrismaToModel(createdUser) };
   }),
   requestNewPassword: publicProcedure.input(RequestNewPasswordSchema).mutation(async ({ ctx, input }) => {
     const user = await prisma.user.findUnique({
@@ -231,17 +232,16 @@ export const authRouter = router({
   }),
   changePassword: privateProcedure.input(ChangePasswordSchema).mutation(async ({ ctx, input }) => {
     const userId = ctx.user.id;
-    const currentHashedPassword = await hashPassword(input.currentPassword);
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUniqueOrThrow({
       where: {
         id: userId,
-        passwordHash: currentHashedPassword,
       },
     });
 
-    if (!user) {
-      throw new Error(`votre mot de passe actuel que vous venez de rentrer est invalide`);
+    const matchPassword = await bcrypt.compare(input.currentPassword, user.passwordHash);
+    if (!matchPassword) {
+      throw new Error(`le mot de passe actuel que vous venez de rentrer est invalide`);
     }
 
     const newHashedPassword = await hashPassword(input.newPassword);
