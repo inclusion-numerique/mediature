@@ -2,6 +2,8 @@ import { getTsconfig } from 'get-tsconfig';
 import nextJest from 'next/jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
+import { additionalJestPackages, commonPackages, formatTransformIgnorePatterns } from './transpilePackages';
+
 const createJestConfig = nextJest({
   dir: './',
 });
@@ -23,6 +25,7 @@ const customJestConfig = {
   },
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
+  transformIgnorePatterns: [],
   transform: {
     '\\.[jt]sx?$': [
       'ts-jest',
@@ -36,4 +39,19 @@ const customJestConfig = {
   },
 };
 
-export default createJestConfig(customJestConfig);
+// [WORKAROUND] To transpile additional dependencies we hack a bit as specified into https://github.com/vercel/next.js/discussions/31152#discussioncomment-1697047
+// (and we add our own logic to avoid hardcoding values)
+const asyncConfig = createJestConfig(customJestConfig);
+
+const defaultExport = async () => {
+  const config = await asyncConfig();
+
+  config.transformIgnorePatterns = formatTransformIgnorePatterns(
+    [...commonPackages, ...additionalJestPackages],
+    customJestConfig.transformIgnorePatterns ?? []
+  );
+
+  return config;
+};
+
+export default defaultExport;
