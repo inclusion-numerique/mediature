@@ -53,10 +53,10 @@ export function PublicLayout(props: PropsWithChildren) {
           {
             isActive: true, // TODO: should depends on the pathname
             linkProps: {
-              href: '#',
+              href: linkRegistry.get('features', undefined),
               target: '_self',
             },
-            text: 'Le service',
+            text: 'Fonctionnalités',
           },
           {
             linkProps: {

@@ -124,6 +124,13 @@ export const localizedRoutes = {
       fr: (p) => `/`,
     }
   ),
+  features: defineLocalizedRoute(
+    {},
+    {
+      en: (p) => `/features`,
+      fr: (p) => `/fonctionnalites`,
+    }
+  ),
   aboutUs: defineLocalizedRoute(
     {},
     {
@@ -225,6 +232,7 @@ export const routes = {
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.en),
     requestToAuthority: defineRoute(localizedRoutes.requestToAuthority.params, localizedRoutes.requestToAuthority.paths.en),
     home: defineRoute(localizedRoutes.home.params, localizedRoutes.home.paths.en),
+    features: defineRoute(localizedRoutes.features.params, localizedRoutes.features.paths.en),
     aboutUs: defineRoute(localizedRoutes.aboutUs.params, localizedRoutes.aboutUs.paths.en),
     resetPassword: defineRoute(localizedRoutes.resetPassword.params, localizedRoutes.resetPassword.paths.en),
     forgottenPassword: defineRoute(localizedRoutes.forgottenPassword.params, localizedRoutes.forgottenPassword.paths.en),
@@ -250,6 +258,7 @@ export const routes = {
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.fr),
     requestToAuthority: defineRoute(localizedRoutes.requestToAuthority.params, localizedRoutes.requestToAuthority.paths.fr),
     home: defineRoute(localizedRoutes.home.params, localizedRoutes.home.paths.fr),
+    features: defineRoute(localizedRoutes.features.params, localizedRoutes.features.paths.fr),
     aboutUs: defineRoute(localizedRoutes.aboutUs.params, localizedRoutes.aboutUs.paths.fr),
     resetPassword: defineRoute(localizedRoutes.resetPassword.params, localizedRoutes.resetPassword.paths.fr),
     forgottenPassword: defineRoute(localizedRoutes.forgottenPassword.params, localizedRoutes.forgottenPassword.paths.fr),

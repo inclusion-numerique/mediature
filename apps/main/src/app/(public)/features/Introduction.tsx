@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import * as React from 'react';
 
-import hero from '@mediature/main/public/assets/about-us/hero.png';
+import hero from '@mediature/main/public/assets/features/hero.png';
 import { IntroductionContainer } from '@mediature/ui/src/IntroductionContainer';
 
 export function Introduction() {
@@ -20,13 +20,14 @@ export function Introduction() {
           }}
         >
           <Typography component="h1" variant="h2" sx={{ my: 2, maxWidth: 500 }}>
-            Qui sommes-nous ?
+            Une multitude de fonctionnalités
           </Typography>
           <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 500 }}>
-            Plusieurs organisations sont derrière ce projet : l&apos;AMCT, l&apos;ANCT et beta.gouv
+            Afin de faciliter le plus possible la gestion des dossiers de médiation entre les usagers et les collectivitités, nous avons créer des
+            fonctionnalités clés pour votre service de médiation.
           </Typography>
           <Button onClick={() => {}} size="large" variant="contained" sx={{ mb: 3 }}>
-            En parler avec nous
+            Demander une démonstration
           </Button>
         </Box>
       }
