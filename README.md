@@ -344,3 +344,17 @@ As for any `hydratation issue` it worths taking a look at your browser extension
 For example:
 
 - Ad blockers _(whitelist the blocked URL in your extension)_
+
+#### Jest not working in VSCode
+
+Sometimes it appears Jest VSCode extension will be stuck and will keep throwing:
+
+```
+env: node: No such file or directory
+```
+
+We found no fix. The only solution is to relaunch VSCode, and if it still doesn't work, try to close entirely VSCode and open it through your terminal with a something like:
+
+```sh
+code /Users/xxxxx/yyyyy/mediature
+```
