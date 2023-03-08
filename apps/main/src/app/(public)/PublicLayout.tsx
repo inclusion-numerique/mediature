@@ -45,7 +45,7 @@ export function PublicLayout(props: PropsWithChildren) {
         navigation={[
           {
             linkProps: {
-              href: '#',
+              href: linkRegistry.get('home', undefined),
               target: '_self',
             },
             text: 'Accueil',
@@ -60,10 +60,10 @@ export function PublicLayout(props: PropsWithChildren) {
           },
           {
             linkProps: {
-              href: '#',
+              href: linkRegistry.get('aboutUs', undefined),
               target: '_self',
             },
-            text: 'Contact',
+            text: 'Qui sommes-nous ?',
           },
         ]}
       />
