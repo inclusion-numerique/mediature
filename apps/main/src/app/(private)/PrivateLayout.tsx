@@ -14,6 +14,7 @@ import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react'
 import { authoritySwichQuickAccessItem, commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import { hasPathnameThisMatch, hasPathnameThisRoot } from '@mediature/main/src/utils/url';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
@@ -56,43 +57,53 @@ export function PrivateLayout(props: PropsWithChildren) {
     return false;
   });
 
+  const dashboardLink = linkRegistry.get('dashboard', undefined);
+
   const navigation: MainNavigationProps.Item[] = [
     {
+      isActive: hasPathnameThisMatch(pathname, dashboardLink),
       text: 'Tableau de bord',
       linkProps: {
-        href: linkRegistry.get('dashboard', undefined),
+        href: dashboardLink,
         target: '_self',
       },
     },
   ];
 
   if (currentAuthority) {
+    const myCasesLink = linkRegistry.get('myCases', {
+      authorityId: currentAuthority.id,
+    });
+    const unassignedCaseListLink = linkRegistry.get('unassignedCaseList', {
+      authorityId: currentAuthority.id,
+    });
+    const requestToAuthorityLink = linkRegistry.get('requestToAuthority', {
+      authority: currentAuthority.slug,
+    });
+
     navigation.push(
       ...[
         {
+          isActive: hasPathnameThisMatch(pathname, myCasesLink),
           text: 'Mes dossiers',
           linkProps: {
-            href: linkRegistry.get('myCases', {
-              authorityId: currentAuthority.id,
-            }),
+            href: myCasesLink,
             target: '_self',
           },
         },
         {
+          isActive: hasPathnameThisMatch(pathname, unassignedCaseListLink),
           text: 'Dossiers non-assignés',
           linkProps: {
-            href: linkRegistry.get('unassignedCaseList', {
-              authorityId: currentAuthority.id,
-            }),
+            href: unassignedCaseListLink,
             target: '_self',
           },
         },
         {
+          isActive: hasPathnameThisMatch(pathname, requestToAuthorityLink),
           text: 'Déposer une saisine',
           linkProps: {
-            href: linkRegistry.get('requestToAuthority', {
-              authority: currentAuthority.slug,
-            }),
+            href: requestToAuthorityLink,
             target: '_self',
           },
         },
@@ -104,22 +115,27 @@ export function PrivateLayout(props: PropsWithChildren) {
     const menuLinks: MenuProps.Link[] = [];
 
     if (currentAuthority && currentAuthority.isMainAgent) {
+      const authorityAgentListLink = linkRegistry.get('authorityAgentList', {
+        authorityId: currentAuthority.id,
+      });
+      const caseListLink = linkRegistry.get('caseList', {
+        authorityId: currentAuthority.id,
+      });
+
       menuLinks.push(
         ...[
           {
+            isActive: hasPathnameThisMatch(pathname, authorityAgentListLink),
             text: 'Gérer les médiateurs de la collectivité',
             linkProps: {
-              href: linkRegistry.get('authorityAgentList', {
-                authorityId: currentAuthority.id,
-              }),
+              href: authorityAgentListLink,
             },
           },
           {
+            isActive: hasPathnameThisMatch(pathname, caseListLink),
             text: 'Voir tous les dossiers de la collectivité',
             linkProps: {
-              href: linkRegistry.get('caseList', {
-                authorityId: currentAuthority.id,
-              }),
+              href: caseListLink,
             },
           },
         ]
@@ -127,18 +143,23 @@ export function PrivateLayout(props: PropsWithChildren) {
     }
 
     if (userInterfaceSession.isAdmin) {
+      const authorityListLink = linkRegistry.get('authorityList', undefined);
+      const adminListLink = linkRegistry.get('adminList', undefined);
+
       menuLinks.push(
         ...[
           {
+            isActive: hasPathnameThisMatch(pathname, authorityListLink),
             text: 'Gérer les collectivités de la plateforme',
             linkProps: {
-              href: linkRegistry.get('authorityList', undefined),
+              href: authorityListLink,
             },
           },
           {
+            isActive: hasPathnameThisMatch(pathname, adminListLink),
             text: 'Gérer les administrateurs de la plateforme',
             linkProps: {
-              href: linkRegistry.get('adminList', undefined),
+              href: adminListLink,
             },
           },
         ]
@@ -146,13 +167,11 @@ export function PrivateLayout(props: PropsWithChildren) {
     }
 
     navigation.push({
+      isActive: menuLinks.filter((link) => link.isActive).length > 0,
       text: 'Administration',
-      // isActive: true,
       menuLinks: menuLinks,
     });
   }
-
-  // TODO: isActive done automatically? Or we need to add "addActiveFlag(navigation)" to look at all href?
 
   const quickAccessItems = [userQuickAccessItem(sessionWrapper.data?.user)];
 

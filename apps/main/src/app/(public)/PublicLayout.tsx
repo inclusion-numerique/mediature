@@ -2,16 +2,19 @@
 
 import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import { hasPathnameThisMatch } from '@mediature/main/src/utils/url';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export function PublicLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();
+  const pathname = usePathname();
 
   if (sessionWrapper.status === 'loading') {
     return <LoadingArea ariaLabelTarget="contenu" />;
@@ -37,6 +40,10 @@ export function PublicLayout(props: PropsWithChildren) {
     ];
   }
 
+  const homeLink = linkRegistry.get('home', undefined);
+  const featuresLink = linkRegistry.get('features', undefined);
+  const aboutUsLink = linkRegistry.get('aboutUs', undefined);
+
   return (
     <>
       <Header
@@ -44,23 +51,25 @@ export function PublicLayout(props: PropsWithChildren) {
         quickAccessItems={quickAccessItems}
         navigation={[
           {
+            isActive: hasPathnameThisMatch(pathname, homeLink),
             linkProps: {
-              href: linkRegistry.get('home', undefined),
+              href: homeLink,
               target: '_self',
             },
             text: 'Accueil',
           },
           {
-            isActive: true, // TODO: should depends on the pathname
+            isActive: hasPathnameThisMatch(pathname, featuresLink),
             linkProps: {
-              href: linkRegistry.get('features', undefined),
+              href: featuresLink,
               target: '_self',
             },
             text: 'Fonctionnalités',
           },
           {
+            isActive: hasPathnameThisMatch(pathname, aboutUsLink),
             linkProps: {
-              href: linkRegistry.get('aboutUs', undefined),
+              href: aboutUsLink,
               target: '_self',
             },
             text: 'Qui sommes-nous ?',

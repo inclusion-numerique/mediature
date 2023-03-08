@@ -15,3 +15,19 @@ export function getBaseUrl() {
 export function getListeningPort() {
   return process.env.PORT ?? 3000;
 }
+
+export function hasPathnameThisRoot(pathname: string | null, rootPathname: string): boolean {
+  if (!pathname) {
+    return false;
+  }
+
+  return pathname.startsWith(rootPathname);
+}
+
+export function hasPathnameThisMatch(pathname: string | null, rootPathname: string): boolean {
+  if (!pathname) {
+    return false;
+  }
+
+  return pathname === rootPathname;
+}
