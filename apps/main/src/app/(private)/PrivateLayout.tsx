@@ -132,6 +132,9 @@ export function PrivateLayout(props: PropsWithChildren) {
       const caseListLink = linkRegistry.get('caseList', {
         authorityId: currentAuthority.id,
       });
+      const authorityEditLink = linkRegistry.get('authorityEdit', {
+        authorityId: currentAuthority.id,
+      });
 
       menuLinks.push(
         ...[
@@ -147,6 +150,13 @@ export function PrivateLayout(props: PropsWithChildren) {
             text: 'Voir tous les dossiers de la collectivité',
             linkProps: {
               href: caseListLink,
+            },
+          },
+          {
+            isActive: hasPathnameThisMatch(pathname, authorityEditLink),
+            text: 'Modifier les informations de la collectivité',
+            linkProps: {
+              href: authorityEditLink,
             },
           },
         ]
