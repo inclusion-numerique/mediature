@@ -12,6 +12,11 @@ declare module '*.scss?raw' {
 declare module '*.module.css';
 declare module '*.module.scss';
 
+declare module '*.png' {
+  const data: StaticImageData;
+  export default data;
+}
+
 declare module '*.svg' {
   const value: any;
   export default value;
