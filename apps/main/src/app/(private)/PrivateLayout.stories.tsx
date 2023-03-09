@@ -6,6 +6,7 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { PrivateLayout } from '@mediature/main/src/app/(private)/PrivateLayout';
 import { Loading as PublicLayoutLoadingStory, Lorem as PublicLayoutLoremStory } from '@mediature/main/src/app/(public)/PublicLayout.stories';
+import { agentOfSample } from '@mediature/main/src/fixtures/ui';
 import { UserInterfaceSessionSchema, UserInterfaceSessionSchemaType } from '@mediature/main/src/models/entities/ui';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -16,6 +17,7 @@ const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>(
 export default {
   title: 'Layouts/PrivatePages',
   component: PrivateLayout,
+  excludeStories: ['interfaceSessionQueryFactory'],
   ...generateMetaDefault({
     parameters: {
       layout: 'fullscreen',
@@ -26,7 +28,7 @@ export default {
   }),
 } as Meta<ComponentType>;
 
-function interfaceSessionQueryFactory(session: UserInterfaceSessionSchemaType) {
+export function interfaceSessionQueryFactory(session: UserInterfaceSessionSchemaType) {
   return {
     msw: {
       handlers: [
@@ -41,30 +43,6 @@ function interfaceSessionQueryFactory(session: UserInterfaceSessionSchemaType) {
     },
   };
 }
-
-const agentOfSample = [
-  {
-    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
-    name: 'Bretagne',
-    slug: 'bzh',
-    logo: null,
-    isMainAgent: true,
-  },
-  {
-    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e02',
-    name: 'Mairie de Paris',
-    slug: 'mairie-de-paris',
-    logo: null,
-    isMainAgent: true,
-  },
-  {
-    id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e03',
-    name: 'Bordeaux',
-    slug: 'bordeaux',
-    logo: null,
-    isMainAgent: true,
-  },
-];
 
 const Template: StoryFn<ComponentType> = (args) => {
   return <PrivateLayout {...args} />;

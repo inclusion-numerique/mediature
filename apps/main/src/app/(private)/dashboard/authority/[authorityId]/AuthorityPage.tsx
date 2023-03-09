@@ -40,7 +40,14 @@ export function AuthorityPage({ params: { authorityId } }: AuthorityPageProps) {
   const authority = data.authority;
 
   return (
-    <Container sx={{ py: { xs: 4, md: 8 } }}>
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        py: 3,
+      }}
+    >
       {!!authority.logo && (
         <Image
           src={authority.logo.url}

@@ -1,11 +1,20 @@
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import Button from '@mui/lab/LoadingButton';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Image, { StaticImageData } from 'next/image';
 import NextLink from 'next/link';
 
+const isRemoteUrl = (url: string | StaticImageData) => {
+  try {
+    return Boolean(new URL(url as unknown as string));
+  } catch (e) {
+    return false;
+  }
+};
+
 export interface QuickAccessCardProps {
-  image: StaticImageData;
+  image: StaticImageData | string;
   imageAlt: string;
   text: string;
   link: string;
@@ -13,6 +22,8 @@ export interface QuickAccessCardProps {
 
 export function QuickAccessCard(props: QuickAccessCardProps) {
   const theme = useColors();
+
+  let isImageAnUrl: boolean = isRemoteUrl(props.image);
 
   return (
     <Card
@@ -23,15 +34,34 @@ export function QuickAccessCard(props: QuickAccessCardProps) {
         p: 20,
       }}
     >
-      <Image
-        src={props.image}
-        alt={props.imageAlt}
-        style={{
-          width: '100%',
-          height: 'auto',
-          objectFit: 'contain',
-        }}
-      />
+      {isImageAnUrl ? (
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: '150px',
+          }}
+        >
+          <Image
+            src={props.image}
+            alt={props.imageAlt}
+            fill={true}
+            style={{
+              objectFit: 'contain',
+            }}
+          />
+        </Box>
+      ) : (
+        <Image
+          src={props.image}
+          alt={props.imageAlt}
+          style={{
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+          }}
+        />
+      )}
       <Button component={NextLink} href={props.link} size="large" variant="contained" fullWidth sx={{ mt: 1 }}>
         {props.text}
       </Button>

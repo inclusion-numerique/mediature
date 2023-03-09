@@ -71,6 +71,9 @@ export function PrivateLayout(props: PropsWithChildren) {
   ];
 
   if (currentAuthority) {
+    const authorityLink = linkRegistry.get('authority', {
+      authorityId: currentAuthority.id,
+    });
     const myCasesLink = linkRegistry.get('myCases', {
       authorityId: currentAuthority.id,
     });
@@ -83,6 +86,14 @@ export function PrivateLayout(props: PropsWithChildren) {
 
     navigation.push(
       ...[
+        {
+          isActive: hasPathnameThisMatch(pathname, authorityLink),
+          text: 'Ma collectivité',
+          linkProps: {
+            href: authorityLink,
+            target: '_self',
+          },
+        },
         {
           isActive: hasPathnameThisMatch(pathname, myCasesLink),
           text: 'Mes dossiers',

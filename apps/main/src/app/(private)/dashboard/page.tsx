@@ -1,7 +1,7 @@
 'use client';
 
-import { OverviewPage } from '@mediature/main/src/app/(private)/dashboard/OverviewPage';
+import { DashboardPage } from '@mediature/main/src/app/(private)/dashboard/DashboardPage';
 
 export default function Page() {
-  return <OverviewPage />;
+  return <DashboardPage />;
 }
