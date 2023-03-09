@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import Button from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
+import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
@@ -91,8 +92,15 @@ export function EditAuthorityForm(props: EditAuthorityFormProps) {
           type="slug"
           label="Identifiant technique (slug)"
           value={props.slug}
+          aria-describedby="slug-helper-text"
           fullWidth
         />
+        <FormHelperText id="slug-helper-text">
+          Le &quot;slug&quot; est l&apos;identifiant technique qui a été choisi à la création de votre collectivité sur la plateforme, il ne peut plus
+          être modifié. Il est limité à des lettres minuscules sans accent et des tirets ([a-z]) afin d&apos;être facilement utilisé dans
+          l&apos;adresse internet de votre formulaire de médiation. À titre d&apos;exemple une collectivité dont le nom est &quot;Mairie de
+          Reims&quot; a pu choisir &quot;mairie-de-reims&quot;.
+        </FormHelperText>
       </Grid>
       <Grid item xs={12}>
         <Typography
