@@ -5,9 +5,12 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import hero from '@mediature/main/public/assets/about-us/hero.png';
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { IntroductionContainer } from '@mediature/ui/src/IntroductionContainer';
 
 export function Introduction() {
+  const { showLiveChat, isLiveChatLoading } = useLiveChat();
+
   return (
     <IntroductionContainer
       containerMaxHeight={{ xs: 350, sm: 375, xl: 400 }}
@@ -25,7 +28,7 @@ export function Introduction() {
           <Typography color="text.secondary" sx={{ mb: 3, maxWidth: 500 }}>
             Plusieurs organisations sont derrière ce projet : l&apos;AMCT, l&apos;ANCT et beta.gouv
           </Typography>
-          <Button onClick={() => {}} size="large" variant="contained" sx={{ mb: 3 }}>
+          <Button onClick={showLiveChat} loading={isLiveChatLoading} size="large" variant="contained" sx={{ mb: 3 }}>
             En parler avec nous
           </Button>
         </Box>

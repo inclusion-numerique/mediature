@@ -15,6 +15,9 @@ export const ProvidersContext = createContext({
   ContextualSessionProvider: SessionProvider,
 });
 
+// [IMPORTANT] Some providers rely on hooks so we extracted them from here so this can be reused in Storybook without a burden
+// Consider `Providers` as something common to both Storybook and the runtime application
+
 export function Providers(props: PropsWithChildren) {
   const { ContextualSessionProvider } = useContext(ProvidersContext);
 

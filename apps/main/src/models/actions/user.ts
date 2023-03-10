@@ -46,3 +46,9 @@ export type GetInterfaceSessionSchemaType = z.infer<typeof GetInterfaceSessionSc
 
 export const GetInterfaceSessionPrefillSchema = GetInterfaceSessionSchema.deepPartial();
 export type GetInterfaceSessionPrefillSchemaType = z.infer<typeof GetInterfaceSessionPrefillSchema>;
+
+export const GetLiveChatSettingsSchema = z.object({}).strict();
+export type GetLiveChatSettingsSchemaType = z.infer<typeof GetLiveChatSettingsSchema>;
+
+export const GetLiveChatSettingsPrefillSchema = GetLiveChatSettingsSchema.deepPartial();
+export type GetLiveChatSettingsPrefillSchemaType = z.infer<typeof GetLiveChatSettingsPrefillSchema>;

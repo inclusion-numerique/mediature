@@ -1,7 +1,7 @@
 'use client';
 
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
-import Button from '@mui/material/Button';
+import Button from '@mui/lab/LoadingButton';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -10,6 +10,7 @@ import admin1 from '@mediature/main/public/assets/dashboard/quick-access/admin_1
 import admin2 from '@mediature/main/public/assets/dashboard/quick-access/admin_2.png';
 import agent1 from '@mediature/main/public/assets/dashboard/quick-access/agent_1.png';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
@@ -20,6 +21,7 @@ export interface DashboardPageProps {}
 
 export function DashboardPage(props: DashboardPageProps) {
   const theme = useColors();
+  const { showLiveChat, isLiveChatLoading } = useLiveChat();
 
   const { data, error, isLoading, refetch } = trpc.getInterfaceSession.useQuery({});
 
@@ -109,7 +111,7 @@ export function DashboardPage(props: DashboardPageProps) {
             Vous n&apos;avez actuellement aucun accès spécifique à la plateforme. Veuillez vous rapprocher de votre médiateur principal ou nous
             contacter par la messagerie.
           </Typography>
-          <Button onClick={() => {}} size="large" variant="contained">
+          <Button onClick={showLiveChat} loading={isLiveChatLoading} size="large" variant="contained">
             Ouvrir la messagerie
           </Button>
         </Grid>

@@ -8,6 +8,7 @@ import { MuiDsfrThemeProvider } from '@mediature/main/src/app/MuiDsfrThemeProvid
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import '@mediature/main/src/app/layout.scss';
 import { Providers } from '@mediature/main/src/app/providers';
+import { LiveChatProvider } from '@mediature/main/src/components/live-chat/LiveChatProvider';
 import { defaultColorScheme } from '@mediature/main/src/utils/dsfr';
 
 export interface RootLayoutProps {
@@ -25,7 +26,9 @@ function MainStructure(props: PropsWithChildren) {
       <body>
         <DsfrProvider defaultColorScheme={defaultColorScheme}>
           <MuiDsfrThemeProvider>
-            <Providers>{props.children}</Providers>
+            <Providers>
+              <LiveChatProvider>{props.children}</LiveChatProvider>
+            </Providers>
           </MuiDsfrThemeProvider>
           <Display />
         </DsfrProvider>

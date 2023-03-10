@@ -59,3 +59,15 @@ export const JwtDataSchema = z
   })
   .strict();
 export type JwtDataSchemaType = z.infer<typeof JwtDataSchema>;
+
+export const LiveChatSettingsSchema = z
+  .object({
+    userId: UserSchema.shape.id,
+    email: UserSchema.shape.email,
+    emailSignature: z.string(),
+    firstname: UserSchema.shape.firstname,
+    lastname: UserSchema.shape.lastname,
+    sessionToken: z.string(),
+  })
+  .strict();
+export type LiveChatSettingsSchemaType = z.infer<typeof LiveChatSettingsSchema>;

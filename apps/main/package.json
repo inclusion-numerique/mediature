@@ -83,6 +83,7 @@
     "blob-util": "^2.0.2",
     "content-disposition": "^0.5.4",
     "country-data": "^0.0.31",
+    "crisp-sdk-web": "^1.0.13",
     "date-fns": "^2.29.3",
     "eventemitter3": "^5.0.0",
     "fast-array-diff": "^1.0.1",

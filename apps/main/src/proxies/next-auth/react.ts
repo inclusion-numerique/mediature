@@ -1,5 +1,6 @@
 import { signIn as real_signIn } from 'next-auth/react';
 import { signOut as real_signOut } from 'next-auth/react';
+import { getSession as real_getSession } from 'next-auth/react';
 
 import { areMocksGloballyEnabled } from '@mediature/main/src/utils/environment';
 
@@ -27,3 +28,13 @@ const mock_signOut: typeof real_signOut = async function () {
 };
 
 export const signOut: typeof real_signOut = areMocksGloballyEnabled() ? mock_signOut : real_signOut;
+
+const mock_getSession: typeof real_getSession = async function () {
+  console.log(`"getSession" mock has been called`);
+
+  return {
+    status: 'loading',
+  } as any;
+};
+
+export const getSession: typeof real_getSession = areMocksGloballyEnabled() ? mock_getSession : real_getSession;

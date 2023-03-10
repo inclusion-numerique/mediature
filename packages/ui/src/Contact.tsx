@@ -2,16 +2,19 @@ import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import Button from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
+
 export function Contact() {
   const theme = useColors();
+  const { showLiveChat, isLiveChatLoading } = useLiveChat();
 
   return (
     <Container
@@ -41,7 +44,7 @@ export function Contact() {
               <Typography color="text.secondary" sx={{ mb: 2 }}>
                 Si vous souhaitez en savoir plus sur le service ou rencontrez un problème, une messagerie est à votre disposition.
               </Typography>
-              <Button onClick={() => {}} size="large" variant="contained">
+              <Button onClick={showLiveChat} loading={isLiveChatLoading} size="large" variant="contained">
                 Nous écrire
               </Button>
             </Box>

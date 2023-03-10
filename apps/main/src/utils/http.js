@@ -4,6 +4,15 @@ const fontSrcValues = ["'self'", 'https:', 'data:'];
 const imgSrcValues = ["'self'", 'data:'];
 const styleSrcValues = ["'self'", 'https:', "'unsafe-inline'"];
 
+// Crisp settings
+{
+  scriptSrcValues.push('https://client.crisp.chat/');
+  connectSrcValues.push('wss://client.relay.crisp.chat/', 'https://client.crisp.chat/static/', 'https://storage.crisp.chat/users/upload/');
+  styleSrcValues.push('https://client.crisp.chat/');
+  imgSrcValues.push('https://*.crisp.chat/');
+  fontSrcValues.push('https://client.crisp.chat/static/');
+}
+
 // Sentry settings
 if (process.env.SENTRY_URL) {
   const sentryUrl = new URL(process.env.SENTRY_URL);

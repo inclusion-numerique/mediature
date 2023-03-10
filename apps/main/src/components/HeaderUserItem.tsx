@@ -1,6 +1,7 @@
 'use client';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import { EventEmitter } from 'eventemitter3';
 import NextLink from 'next/link';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
 import { logout } from '@mediature/main/src/utils/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -26,6 +28,8 @@ export interface HeaderUserItemProps {
 }
 
 export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
+  const { showLiveChat } = useLiveChat();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,6 +89,12 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
               <ManageAccountsIcon fontSize="small" />
             </ListItemIcon>
             Mon compte
+          </MenuItem>
+          <MenuItem onClick={showLiveChat}>
+            <ListItemIcon>
+              <HelpOutlineIcon fontSize="small" />
+            </ListItemIcon>
+            Obtenir de l&apos;aide
           </MenuItem>
           <MenuItem onClick={logout}>
             <ListItemIcon>

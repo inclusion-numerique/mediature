@@ -114,6 +114,8 @@ For each build and runtime (since they are shared), you should have set some env
 - `FILE_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this token is just for the short-lived read permission of private attachments)_
 - `NEXT_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note that if this secret is lost, all users will have to log in again)_
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
+- `CRISP_SIGNING_SECRET_KEY`: [SECRET] _(this secret is generated from your Crisp account and depends on the development or production environment)_
+- `NEXT_PUBLIC_CRISP_WEBSITE_ID`: [TO_DEFINE] _(this ID is defined in your Crisp account and depends on the development or production environment)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
 - `MAILER_DEFAULT_DOMAIN`: [TO_DEFINE] _(format `xxx.yyy.zzz` depending on the environment application URL)_
 - `MAILER_DOMAINS_TO_CATCH`: `domain.demo` _(this should only be set in the development environment)_
@@ -251,6 +253,37 @@ Sending verified emails must be taken seriously so they don't end into the spam 
 Also you need to configure your DNS records to handle from both providers on the 2 environments (development and production): DMARC/DKIM/SPF. It's well explained when adding sending domains on their interface. It will make your emails signed according to your domain.
 
 When creating SMTP credentials make sure sure to use different ones between the development and the production environment.
+
+### Crisp
+
+Crisp is used as a livechat both for visitors and users.
+
+From their interface we create 2 websites:
+
+- Production: use the production domain
+- Development: use the development domain
+
+Set the name:
+
+- Production: `Médiature`
+- Development: `Médiature [DEV]`
+
+And upload as the icon the one used for the website (usually `apple-touch-icon.png` has enough quality).
+
+Add to the team the people you need (without giving too many rights depending on their role).
+
+Into the `Chatbox & Email settings` section go to `Chat Appearance` and set:
+
+- Color theme (chatbot color): `Red`
+- Chatbox background (message texture): `Default (No background)`
+
+Then go to `Chatbox Security` and enable `Lock the chatbox to website domain (and subdomains)` (not need to enable it inside the development environment).
+
+And inside `Advanced configuration`, enable `Verify user emails with cryptographic signatures`. This will help making sure someone named "John Doe" engaging the conversation in the livechat is really our agent "John Doe" of the platform and not someone trying to impersonate his identity. Since Crisp messaging is initialized from the frontend, without the cryptographic trick it would be impossible to certify a user asking for sensitive operation is the expected one.
+
+It will give you a secret you that you need to serve to your backend as `CRISP_SIGNING_SECRET_KEY` (it should not be available on the frontend side contrarily to the website ID). _(for now, we only use it in production since it requires ugprading the Crisp plan)_
+
+On the other site, the public "website ID" will be used as `NEXT_PUBLIC_CRISP_WEBSITE_ID`.
 
 ### IDE
 

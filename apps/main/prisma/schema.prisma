@@ -100,11 +100,24 @@ model User {
   deletedAt DateTime?
   // TODO: https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
 
-  Account        Account?
-  Session        Session[]
-  Agent          Agent[]
-  Admin          Admin?
-  InvitationSent Invitation[]
+  Account          Account?
+  LiveChatSettings LiveChatSettings?
+  Session          Session[]
+  Agent            Agent[]
+  Admin            Admin?
+  InvitationSent   Invitation[]
+}
+
+/// @@Gen.model(hide: true)
+model LiveChatSettings {
+  userId       String @id @db.Uuid
+  sessionToken String @unique @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 /// @@Gen.model(hide: true)

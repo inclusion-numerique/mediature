@@ -1,17 +1,23 @@
+import { LiveChatSettings } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
+
 import { prisma } from '@mediature/main/prisma/client';
 import {
   CancelInvitationSchema,
   GetInterfaceSessionSchema,
+  GetLiveChatSettingsSchema,
   GetProfileSchema,
   GetPublicFacingInvitationSchema,
   UpdateProfileSchema,
 } from '@mediature/main/src/models/actions/user';
 import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
+import { LiveChatSettingsSchema, LiveChatSettingsSchemaType } from '@mediature/main/src/models/entities/user';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/agent';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+import { signEmail } from '@mediature/main/src/utils/crisp';
 
 export const userRouter = router({
   getPublicFacingInvitation: publicProcedure.input(GetPublicFacingInvitationSchema).query(async ({ ctx, input }) => {
@@ -111,6 +117,46 @@ export const userRouter = router({
           };
         }),
         isAdmin: !!user.Admin,
+      }),
+    };
+  }),
+  getLiveChatSettings: privateProcedure.input(GetLiveChatSettingsSchema).query(async ({ ctx, input }) => {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: ctx.user.id,
+      },
+      include: {
+        LiveChatSettings: true,
+      },
+    });
+
+    let settings: LiveChatSettings;
+    if (!user) {
+      throw new Error(`cet utilisateur n'existe pas`);
+    } else if (!user.LiveChatSettings) {
+      // It has never been initialized, so we do it
+      settings = await prisma.liveChatSettings.create({
+        data: {
+          sessionToken: uuidv4(),
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    } else {
+      settings = user.LiveChatSettings;
+    }
+
+    return {
+      settings: LiveChatSettingsSchema.parse({
+        userId: user.id,
+        email: user.email,
+        emailSignature: signEmail(user.email),
+        firstname: user.firstname,
+        lastname: user.lastname,
+        sessionToken: settings.sessionToken,
       }),
     };
   }),
