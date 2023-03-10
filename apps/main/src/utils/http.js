@@ -1,4 +1,19 @@
 const scriptSrcValues = ["'self'", "'unsafe-inline'"];
+const connectSrcValues = ["'self'"];
+const fontSrcValues = ["'self'", 'https:', 'data:'];
+const imgSrcValues = ["'self'", 'data:'];
+const styleSrcValues = ["'self'", 'https:', "'unsafe-inline'"];
+
+// Sentry settings
+if (process.env.SENTRY_URL) {
+  const sentryUrl = new URL(process.env.SENTRY_URL);
+
+  connectSrcValues.push(sentryUrl.toString());
+
+  // Also allow subdomains for this URL
+  sentryUrl.host = `*.${sentryUrl.host}`;
+  connectSrcValues.push(decodeURIComponent(sentryUrl.toString()));
+}
 
 // Due to Next.js hot reload in development we need to allow `eval()`
 // Ref: https://github.com/vercel/next.js/issues/14221
@@ -9,9 +24,11 @@ if (process.env.NODE_ENV !== 'production') {
 // Those headers are directly inspired from the default of https://github.com/helmetjs/helmet
 // (they don't have a Next.js integration so dealing with it manually)
 const securityHeaders = {
-  'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src ${scriptSrcValues.join(
+  'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src ${fontSrcValues.join(
     ' '
-  )};script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests`,
+  )};form-action 'self';frame-ancestors 'self';img-src ${imgSrcValues.join(' ')};object-src 'none';script-src ${scriptSrcValues.join(
+    ' '
+  )};script-src-attr 'none';connect-src ${connectSrcValues.join(' ')};style-src ${styleSrcValues.join(' ')};upgrade-insecure-requests`,
   'Cross-Origin-Embedder-Policy': 'require-corp',
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Cross-Origin-Resource-Policy': 'same-origin',
