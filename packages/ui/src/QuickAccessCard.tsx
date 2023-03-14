@@ -39,7 +39,8 @@ export function QuickAccessCard(props: QuickAccessCardProps) {
           sx={{
             position: 'relative',
             width: '100%',
-            height: '150px',
+            height: '120px',
+            my: 1,
           }}
         >
           <Image

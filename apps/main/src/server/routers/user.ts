@@ -15,7 +15,7 @@ import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/
 import { LiveChatSettingsSchema, LiveChatSettingsSchemaType } from '@mediature/main/src/models/entities/user';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/agent';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
-import { userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
+import { attachmentIdPrismaToModel, userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { signEmail } from '@mediature/main/src/utils/crisp';
 
@@ -106,16 +106,17 @@ export const userRouter = router({
 
     return {
       session: UserInterfaceSessionSchema.parse({
-        agentOf: user.Agent.map((agent) => {
-          return {
-            id: agent.authority.id,
-            // logo: agent.authority.logo,
-            logo: null,
-            name: agent.authority.name,
-            slug: agent.authority.slug,
-            isMainAgent: agent.id === agent.authority.mainAgentId,
-          };
-        }),
+        agentOf: await Promise.all(
+          user.Agent.map(async (agent) => {
+            return {
+              id: agent.authority.id,
+              logo: await attachmentIdPrismaToModel(agent.authority.logoAttachmentId),
+              name: agent.authority.name,
+              slug: agent.authority.slug,
+              isMainAgent: agent.id === agent.authority.mainAgentId,
+            };
+          })
+        ),
         isAdmin: !!user.Admin,
       }),
     };
