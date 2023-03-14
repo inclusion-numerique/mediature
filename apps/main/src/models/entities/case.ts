@@ -20,7 +20,7 @@ export const incompleteCaseSchema = z
     agentId: z.string().uuid().nullable(),
     alreadyRequestedInThePast: z.boolean(),
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
-    description: z.string().min(100),
+    description: z.string().min(1),
     units: z.string(),
     emailCopyWanted: z.boolean(),
     termReminderAt: z.date().nullable(),
