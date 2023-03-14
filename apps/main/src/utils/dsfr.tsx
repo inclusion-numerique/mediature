@@ -7,6 +7,7 @@ import { HeaderAuthoritySwitchItem, HeaderAuthoritySwitchItemProps } from '@medi
 import { HeaderUserItem } from '@mediature/main/src/components/HeaderUserItem';
 import { PublicFacingAuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
+import { areMocksGloballyEnabled } from '@mediature/main/src/utils/environment';
 
 export const defaultColorScheme: DefaultColorScheme = 'system';
 
@@ -68,10 +69,6 @@ export const commonFooterAttributes = {
   accessibility: 'non compliant' as any,
   brandTop: brandTop,
   contentDescription: 'Ce site est géré par les collectivités.',
-  cookiesManagementLinkProps: {
-    // TODO
-    href: '#',
-  },
   homeLinkProps: homeLinkProps,
   personalDataLinkProps: {
     href: '#', // TODO
@@ -82,5 +79,25 @@ export const commonFooterAttributes = {
   // websiteMapLinkProps: {{
   //   href: '#',
   // }}
-  bottomItems: [headerFooterDisplayItem],
+  bottomItems: [
+    {
+      text: 'Gestion des cookies',
+      ...(areMocksGloballyEnabled()
+        ? {
+            linkProps: {
+              href: '',
+            },
+          }
+        : {
+            buttonProps: {
+              onClick: () => {
+                if (window.tarteaucitron) {
+                  window.tarteaucitron.userInterface.openPanel();
+                }
+              },
+            },
+          }),
+    },
+    headerFooterDisplayItem,
+  ],
 };

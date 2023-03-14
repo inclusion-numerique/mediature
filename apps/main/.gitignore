@@ -1,6 +1,7 @@
 /.files/
 /public/assets/fonts/
 /public/assets/images/email/social/
+/public/assets/tarteaucitronjs/
 # Sentry
 /.sentryclirc
 /sentry.properties

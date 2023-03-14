@@ -2,10 +2,12 @@ import { Display } from '@codegouvfr/react-dsfr/Display';
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { getColorSchemeHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getColorSchemeHtmlAttributes';
+import Script from 'next/script';
 import { PropsWithChildren } from 'react';
 
 import { MuiDsfrThemeProvider } from '@mediature/main/src/app/MuiDsfrThemeProvider';
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
+import '@mediature/main/src/app/cookie-consent-dsfr.scss';
 import '@mediature/main/src/app/layout.scss';
 import { Providers } from '@mediature/main/src/app/providers';
 import { LiveChatProvider } from '@mediature/main/src/components/live-chat/LiveChatProvider';
@@ -20,6 +22,11 @@ function MainStructure(props: PropsWithChildren) {
     <>
       {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
+        {/* The style of the DSFR "tarteaucitron" is in the app directory directly to benefit from SCSS */}
+        {/* The 3 scripts are needed due to the desisgn of the library... */}
+        <Script src="/assets/scripts/tarteaucitron.preinit.js" strategy="afterInteractive" />
+        <Script src="/assets/tarteaucitronjs/tarteaucitron.js" strategy="afterInteractive" />
+        <Script src="/assets/scripts/tarteaucitron.init.js" strategy="afterInteractive" />
         <StartDsfr />
         <DsfrHead defaultColorScheme={defaultColorScheme} />
       </head>

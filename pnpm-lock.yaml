@@ -489,6 +489,9 @@ importers:
       swiper:
         specifier: ^8.4.6
         version: 8.4.6
+      tarteaucitronjs:
+        specifier: ^1.10.0
+        version: 1.10.0
       ts-import:
         specifier: 4.0.0-beta.10
         version: 4.0.0-beta.10(typescript@4.9.3)
@@ -8325,8 +8328,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.0.0-rc.0:
-    resolution: {integrity: sha512-xkZItcHGvzek7IYEJdREGJWAkZV0/fg/P78x/CaOYIQzCXN9PgCYusaHXRqybv6YECafzFrglCBCFjiTejNvCg==}
+  /@storybook/client-logger@7.0.0-rc.1:
+    resolution: {integrity: sha512-ltdDjd5wwq1xyFmA7Q7PT0Rx4Jrd0u8m0hnjnlou7qjKd7J+tqi8019oC4t5CSWRhl8lDg0QbI11LUM2SmkRMA==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -9325,7 +9328,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0-rc.0
+      '@storybook/client-logger': 7.0.0-rc.1
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
@@ -23798,6 +23801,10 @@ packages:
       minizlib: 2.1.2
       mkdirp: 1.0.4
       yallist: 4.0.0
+
+  /tarteaucitronjs@1.10.0:
+    resolution: {integrity: sha512-+DcPWPA9VsoT+vGGegcxu9fFrCOdFPtvzmO1P6OXFiF8ngNG1SsCWpxn+05XY0I3B0hNaVJgkSOoGm9cZUMjKA==}
+    dev: false
 
   /telejson@3.3.0:
     resolution: {integrity: sha512-er08AylQ+LEbDLp1GRezORZu5wKOHaBczF6oYJtgC3Idv10qZ8A3p6ffT+J5BzDKkV9MqBvu8HAKiIIOp6KJ2w==}

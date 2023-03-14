@@ -4,6 +4,10 @@
 // are to enhance some modules while keeping other inner types accessible
 //
 
+declare interface Window {
+  tarteaucitron?: any;
+}
+
 declare module '*.yaml' {
   const content: object;
   export default content;

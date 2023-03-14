@@ -103,6 +103,22 @@ const moduleExports = async () => {
               to: path.resolve(__dirname, './public/assets/fonts/'),
             },
             {
+              from: require.resolve('tarteaucitronjs/lang/tarteaucitron.en.js'),
+              to: path.resolve(__dirname, './public/assets/tarteaucitronjs/lang/'),
+            },
+            {
+              from: require.resolve('tarteaucitronjs/lang/tarteaucitron.fr.js'),
+              to: path.resolve(__dirname, './public/assets/tarteaucitronjs/lang/'),
+            },
+            {
+              from: require.resolve('tarteaucitronjs/tarteaucitron.js'),
+              to: path.resolve(__dirname, './public/assets/tarteaucitronjs/'),
+            },
+            {
+              from: require.resolve('tarteaucitronjs/tarteaucitron.services.js'),
+              to: path.resolve(__dirname, './public/assets/tarteaucitronjs/'),
+            },
+            {
               from: require.resolve('@mediature/ui/src/fonts/index.css'),
               to: path.resolve(__dirname, './public/assets/fonts/'),
             },
