@@ -30,7 +30,11 @@ export const CreateAuthorityFormContext = createContext({
   ContextualUploader: Uploader,
 });
 
-export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPrefillSchemaType }) {
+export interface CreateAuthorityFormProps {
+  prefill?: CreateAuthorityPrefillSchemaType;
+}
+
+export function CreateAuthorityForm(props: CreateAuthorityFormProps) {
   const { t } = useTranslation('common');
   const { ContextualUploader } = useContext(CreateAuthorityFormContext);
   const router = useRouter();
@@ -47,7 +51,10 @@ export function CreateAuthorityForm({ prefill }: { prefill?: CreateAuthorityPref
     control,
   } = useForm<CreateAuthoritySchemaType>({
     resolver: zodResolver(CreateAuthoritySchema),
-    defaultValues: prefill,
+    defaultValues: {
+      ...props.prefill,
+      logoAttachmentId: null,
+    },
   });
 
   const onSubmit = async (input: CreateAuthoritySchemaType) => {
