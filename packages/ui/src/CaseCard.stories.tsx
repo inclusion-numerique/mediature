@@ -1,10 +1,12 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
+import addHours from 'date-fns/addHours';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
+import { CaseSchema } from '@mediature/main/src/models/entities/case';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
 
 type ComponentType = typeof CaseCard;
@@ -40,6 +42,20 @@ NormalStory.play = async ({ canvasElement }) => {
 };
 
 export const Normal = prepareStory(NormalStory);
+
+const ReminderSoonStory = Template.bind({});
+ReminderSoonStory.args = {
+  caseLink: '',
+  case: CaseSchema.parse({ ...cases[0], termReminderAt: addHours(new Date(), 3) }),
+  citizen: citizens[0],
+  agent: agents[0],
+  assignAction: async () => {},
+};
+ReminderSoonStory.play = async ({ canvasElement }) => {
+  await playFindElement(canvasElement);
+};
+
+export const ReminderSoon = prepareStory(ReminderSoonStory);
 
 const NotAssignedStory = Template.bind({});
 NotAssignedStory.args = {

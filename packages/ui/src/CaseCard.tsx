@@ -1,5 +1,7 @@
 'use client';
 
+import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -15,12 +17,15 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import NextLink from 'next/link';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
@@ -34,6 +39,8 @@ export interface CaseCardProps {
 }
 
 export function CaseCard(props: CaseCardProps) {
+  const { t } = useTranslation('common');
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -43,8 +50,15 @@ export function CaseCard(props: CaseCardProps) {
     setAnchorEl(null);
   };
 
+  const theme = useColors();
+
+  const reminderSoon: boolean = props.case.termReminderAt ? isReminderSoon(props.case.termReminderAt) : false;
+
   return (
-    <Card variant="outlined" sx={{ position: 'relative' }}>
+    <Card
+      variant="outlined"
+      sx={{ position: 'relative', backgroundColor: reminderSoon ? alpha(theme.decisions.background.actionLow.redMarianne.hover, 0.3) : undefined }}
+    >
       <CardHeader
         action={
           !!props.assignAction || !!props.assignAction ? (
@@ -67,6 +81,16 @@ export function CaseCard(props: CaseCardProps) {
       />
       <CardContent>
         <Grid container direction={'column'} spacing={2}>
+          {!!props.case.termReminderAt && (
+            <Grid item xs={12}>
+              <Typography color="error">
+                <Grid container direction="row" alignItems="center">
+                  <AccessTimeIcon sx={{ mr: '5px' }} />
+                  <span>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
+                </Grid>
+              </Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Link component={NextLink} href={props.caseLink} variant="h5" color="inherit" underline="none" style={{ fontWeight: 600 }}>
               {props.citizen.firstname} {props.citizen.lastname}
