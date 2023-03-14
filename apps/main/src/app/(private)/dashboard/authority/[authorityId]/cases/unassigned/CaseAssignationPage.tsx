@@ -30,7 +30,7 @@ export function CaseAssignationPage({ params: { authorityId } }: CaseAssignation
 
   return (
     <>
-      <Grid container sx={{ ...wideContainerGridProps.sx, px: 0 }}>
+      <Grid container sx={{ ...wideContainerGridProps.sx, px: 0 }} alignContent="flex-start">
         <Grid
           container
           sx={{
