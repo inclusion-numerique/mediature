@@ -68,10 +68,6 @@ export const commonFooterAttributes = {
   accessibility: 'non compliant' as any,
   brandTop: brandTop,
   contentDescription: 'Ce site est géré par les collectivités.',
-  cookiesManagementLinkProps: {
-    // TODO
-    href: '#',
-  },
   homeLinkProps: homeLinkProps,
   personalDataLinkProps: {
     href: '#', // TODO
