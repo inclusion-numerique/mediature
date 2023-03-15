@@ -94,6 +94,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   } = form;
 
   useMemo(() => {
+    // In case of a new getter fetch we adjust update to new values in case someone else modified the case
+    // This will happen only if no change are pending
+
     if (isDirty) {
       return;
     }
@@ -158,7 +161,31 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const attachments = caseWrapper.attachments;
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
-    const result = await updateCase.mutateAsync(input);
+    const { caseWrapper: updatedCaseWrapper } = await updateCase.mutateAsync(input);
+
+    // Reset default values so the form is no longer dirty
+    reset({
+      caseId: updatedCaseWrapper.case.id,
+      initiatedFrom: updatedCaseWrapper.case.initiatedFrom,
+      close: !!updatedCaseWrapper.case.closedAt,
+      status: updatedCaseWrapper.case.status,
+      address: {
+        street: updatedCaseWrapper.citizen.address.street,
+        city: updatedCaseWrapper.citizen.address.city,
+        postalCode: updatedCaseWrapper.citizen.address.postalCode,
+      },
+      phone: {
+        phoneType: updatedCaseWrapper.citizen.phone.phoneType,
+        callingCode: updatedCaseWrapper.citizen.phone.callingCode,
+        countryCode: updatedCaseWrapper.citizen.phone.countryCode,
+        number: updatedCaseWrapper.citizen.phone.number,
+      },
+      description: updatedCaseWrapper.case.description,
+      units: updatedCaseWrapper.case.units,
+      termReminderAt: updatedCaseWrapper.case.termReminderAt,
+      finalConclusion: updatedCaseWrapper.case.finalConclusion,
+      nextRequirements: updatedCaseWrapper.case.nextRequirements,
+    });
   };
 
   const onSubmit = async (input: UpdateCaseSchemaType) => {

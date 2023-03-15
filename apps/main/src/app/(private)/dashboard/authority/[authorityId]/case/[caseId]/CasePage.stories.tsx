@@ -42,7 +42,7 @@ const defaultMswParameters = {
       getTRPCMock({
         type: 'mutation',
         path: ['updateCase'],
-        response: { case: cases[0] },
+        response: { caseWrapper: casesWrappers[0] },
       }),
       getTRPCMock({
         type: 'mutation',

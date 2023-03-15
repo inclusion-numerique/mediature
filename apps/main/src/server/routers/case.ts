@@ -231,6 +231,7 @@ export const caseRouter = router({
       },
       data: {
         initiatedFrom: input.initiatedFrom,
+        description: input.description,
         units: input.units,
         termReminderAt: input.termReminderAt,
         status: input.status,
@@ -259,6 +260,14 @@ export const caseRouter = router({
           },
         },
       },
+      include: {
+        citizen: {
+          include: {
+            address: true,
+            phone: true,
+          },
+        },
+      },
     });
 
     if (statusSwitchedToClose && !!targetedCase.citizen.email) {
@@ -271,7 +280,16 @@ export const caseRouter = router({
       });
     }
 
-    return { case: updatedCase };
+    return {
+      caseWrapper: CaseWrapperSchema.parse({
+        case: casePrismaToModel(updatedCase),
+        citizen: citizenPrismaToModel(updatedCase.citizen),
+        // No need to provide the ones below for the UI for now
+        agent: null,
+        notes: null,
+        attachments: null,
+      }),
+    };
   }),
   assignCase: privateProcedure.input(AssignCaseSchema).mutation(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findFirst({
