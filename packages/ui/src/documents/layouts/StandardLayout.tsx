@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import React from 'react';
 
 import { useServerTranslation } from '@mediature/main/src/i18n';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 
 // Between DSFR values and how the PDF library reacts, we need to adjust a bit
@@ -231,7 +232,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
           {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image src={`${getBaseUrl()}/assets/images/logo.png`} style={layoutStyles.headerLogo} />
           <View style={layoutStyles.headerDescription}>
-            <Link src={getBaseUrl()} style={layoutStyles.headerDescriptionLink}>
+            <Link src={linkRegistry.get('home', undefined, { absolute: true })} style={layoutStyles.headerDescriptionLink}>
               <Text style={layoutStyles.headerTitle}>Médiature</Text>
               <Text style={layoutStyles.headerSubtitle}>Service public de médiation</Text>
             </Link>
@@ -248,7 +249,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
                 <View style={layoutStyles.footerItem}>
                   {pageNumber === 1 && (
                     <>
-                      {/* <Text style={{ ...layoutStyles.footerItemText, ...layoutStyles.footerItemTextWebsite }}>Généré par {getBaseUrl()}</Text> */}
+                      {/* <Text style={{ ...layoutStyles.footerItemText, ...layoutStyles.footerItemTextWebsite }}>Généré par {linkRegistry.get('home', undefined, { absolute: true })}</Text> */}
                     </>
                   )}
                 </View>

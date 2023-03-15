@@ -40,7 +40,7 @@ export class LinkRegistry {
 
     const route = routes[lang][key](params as unknown as any);
 
-    if (absoluteLink) {
+    if (absoluteLink && this.absoluteBaseUrl !== '') {
       // Concatenate pathname and base URL
       return new URL(route.href, this.absoluteBaseUrl).href;
     }
