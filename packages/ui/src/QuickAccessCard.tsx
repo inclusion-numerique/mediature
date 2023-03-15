@@ -27,10 +27,10 @@ export function QuickAccessCard(props: QuickAccessCardProps) {
 
   return (
     <Card
+      variant="outlined"
       sx={{
         width: '100%',
         maxWidth: '500px',
-        bgcolor: '#fff',
         p: 20,
       }}
     >
