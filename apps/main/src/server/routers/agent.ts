@@ -211,6 +211,7 @@ export const agentRouter = router({
 
     const existingAgentInvitation = await prisma.agentInvitation.findFirst({
       where: {
+        authorityId: input.authorityId,
         invitation: {
           inviteeEmail: input.inviteeEmail,
           status: InvitationStatusSchema.Values.PENDING,
