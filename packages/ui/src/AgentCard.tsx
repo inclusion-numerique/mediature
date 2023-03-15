@@ -107,11 +107,18 @@ export function AgentCard(props: AgentCardProps) {
                 </Grid>
               )}
               <Grid item>
-                <Typography component="b" variant="h4" sx={{ mr: 2 }}>
-                  {props.agent.firstname} {props.agent.lastname}
-                </Typography>
-                {props.agent.isMainAgent && <Chip icon={<AdminPanelSettingsIcon fontSize="small" />} label="Médiateur principal" sx={{ my: 1 }} />}
-                <br />
+                <Grid container alignItems="center" spacing={2}>
+                  <Grid item>
+                    <Typography component="b" variant="h4">
+                      {props.agent.firstname} {props.agent.lastname}
+                    </Typography>
+                  </Grid>
+                  {props.agent.isMainAgent && (
+                    <Grid item>
+                      <Chip icon={<AdminPanelSettingsIcon fontSize="small" />} label="Médiateur principal" sx={{ my: 1 }} />
+                    </Grid>
+                  )}
+                </Grid>
                 <Typography component="span" variant="subtitle1">
                   {props.agent.email}
                 </Typography>
