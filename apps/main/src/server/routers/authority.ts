@@ -10,6 +10,7 @@ import {
 import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import { isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import {
   agentPrismaToModel,
@@ -159,13 +160,15 @@ export const authorityRouter = router({
     return;
   }),
   getAuthority: privateProcedure.input(GetAuthoritySchema).query(async ({ ctx, input }) => {
-    if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    const authorityId = input.id;
+
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthority(authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être médiateur de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     const authority = await prisma.authority.findUnique({
       where: {
-        id: input.id,
+        id: authorityId,
       },
     });
 
