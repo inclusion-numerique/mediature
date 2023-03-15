@@ -249,6 +249,7 @@ export const agentRouter = router({
         AgentInvitation: {
           create: {
             authorityId: input.authorityId,
+            grantMainAgent: input.grantMainAgent,
           },
         },
       },
