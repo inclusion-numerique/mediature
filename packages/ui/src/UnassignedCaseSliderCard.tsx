@@ -146,7 +146,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Email :
             </Typography>
-            <Typography variant="body1">{props.citizen.email}</Typography>
+            <Typography variant="body1">{props.citizen.email || '-'}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Divider variant="fullWidth" sx={{ p: 0 }} />

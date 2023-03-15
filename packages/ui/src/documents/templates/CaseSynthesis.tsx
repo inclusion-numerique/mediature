@@ -58,9 +58,13 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
         </View>
         <View style={styles.gridItem}>
           <Text style={styles.label}>Email</Text>
-          <Link src={`mailto:${props.citizen.email}`} style={styles.link}>
-            {props.citizen.email}
-          </Link>
+          {!!props.citizen.email ? (
+            <Link src={`mailto:${props.citizen.email}`} style={styles.link}>
+              {props.citizen.email}
+            </Link>
+          ) : (
+            <Text>-</Text>
+          )}
         </View>
         {/* <View style={styles.gridBreak}></View> */}
         <View style={styles.gridItem}>

@@ -512,7 +512,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           }}
                           type="email"
                           label="Email"
-                          value={citizen.email}
+                          value={citizen.email || '-'}
                           fullWidth
                         />
                       </Grid>

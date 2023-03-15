@@ -6,7 +6,7 @@ import { PhoneSchema } from '@mediature/main/src/models/entities/phone';
 export const CitizenSchema = z
   .object({
     id: z.string().uuid(),
-    email: z.string().email(),
+    email: z.string().email().nullable(),
     firstname: z.string().min(1),
     lastname: z.string().min(1),
     address: AddressSchema,

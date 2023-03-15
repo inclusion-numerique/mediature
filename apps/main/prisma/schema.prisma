@@ -161,12 +161,12 @@ model Phone {
 
 /// @@Gen.model(hide: true)
 model Citizen {
-  id        String @id @default(uuid()) @db.Uuid
-  email     String
+  id        String  @id @default(uuid()) @db.Uuid
+  email     String?
   firstname String
   lastname  String
-  addressId String @unique @db.Uuid
-  phoneId   String @unique @db.Uuid
+  addressId String  @unique @db.Uuid
+  phoneId   String  @unique @db.Uuid
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt

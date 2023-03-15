@@ -49,9 +49,11 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
             <p>
               Vous avez demandé à recevoir une copie des informations renseignées que vous trouverez ci-dessous :
               <ul>
-                <li>
-                  {formatListHeader('Email :')} {props.submittedRequestData.email}
-                </li>
+                {!!props.submittedRequestData.email && (
+                  <li>
+                    {formatListHeader('Email :')} {props.submittedRequestData.email}
+                  </li>
+                )}
                 <li>
                   {formatListHeader('Prénom :')} {props.submittedRequestData.firstname}
                 </li>

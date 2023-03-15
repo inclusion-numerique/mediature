@@ -175,14 +175,17 @@ export const caseRouter = router({
       },
     });
 
-    await mailer.sendCaseRequestConfirmation({
-      recipient: newCase.citizen.email,
-      firstname: newCase.citizen.firstname,
-      lastname: newCase.citizen.lastname,
-      caseHumanId: newCase.humanId.toString(),
-      authorityName: newCase.authority.name,
-      submittedRequestData: input,
-    });
+    // If an email has been specified, notify the user of the case information
+    if (!!newCase.citizen.email) {
+      await mailer.sendCaseRequestConfirmation({
+        recipient: newCase.citizen.email,
+        firstname: newCase.citizen.firstname,
+        lastname: newCase.citizen.lastname,
+        caseHumanId: newCase.humanId.toString(),
+        authorityName: newCase.authority.name,
+        submittedRequestData: input,
+      });
+    }
 
     await markNewAttachmentsAsUsed();
 
@@ -258,7 +261,7 @@ export const caseRouter = router({
       },
     });
 
-    if (statusSwitchedToClose) {
+    if (statusSwitchedToClose && !!targetedCase.citizen.email) {
       await mailer.sendCaseClosed({
         recipient: targetedCase.citizen.email,
         firstname: targetedCase.citizen.firstname,

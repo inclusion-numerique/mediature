@@ -36,3 +36,11 @@ export function stopSubmitPropagation(callback: React.FormEventHandler<HTMLFormE
     await callback(event);
   };
 }
+
+export function setNullIfEmptyString(value?: string): string | null {
+  if (typeof value === 'string' && value.length > 0) {
+    return value;
+  }
+
+  return null;
+}
