@@ -504,7 +504,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Coordonnées
                         </Typography>
                       </Grid>
-                      {/* TODO: phone */}
                       <Grid item xs={12}>
                         <TextField
                           inputProps={{
