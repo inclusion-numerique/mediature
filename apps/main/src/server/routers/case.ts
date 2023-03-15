@@ -631,6 +631,7 @@ export const caseRouter = router({
     const targetedCase = await prisma.case.findFirst({
       where: {
         Note: {
+          some: {},
           every: {
             id: {
               equals: input.noteId,
@@ -657,6 +658,7 @@ export const caseRouter = router({
     const targetedCase = await prisma.case.findFirst({
       where: {
         Note: {
+          some: {},
           every: {
             id: {
               equals: input.noteId,
@@ -752,6 +754,7 @@ export const caseRouter = router({
     const targetedCase = await prisma.case.findFirst({
       where: {
         AttachmentsOnCases: {
+          some: {},
           every: {
             attachmentId: {
               equals: input.attachmentId,
