@@ -53,8 +53,10 @@
     "case": {
       "platform": {
         "enum": {
+          "OFFICE": "Bureau / Permanence",
           "MAIL": "Courrier postal",
           "PHONE": "Téléphone",
+          "EMAIL": "Email",
           "WEB": "Formulaire internet"
         }
       },

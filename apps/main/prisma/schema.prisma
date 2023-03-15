@@ -203,8 +203,10 @@ enum CaseStatus {
 }
 
 enum CaseInitialPlatform {
+  OFFICE
   MAIL
   PHONE
+  EMAIL
   WEB
 }
 
