@@ -4,6 +4,7 @@ import { Server } from '@tus/server';
 import fs from 'fs';
 import { fromMime } from 'human-filetypes';
 import { filetypeinfo } from 'magic-bytes.js';
+import mime from 'mime-types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken as nextAuthGetToken } from 'next-auth/jwt';
 import path from 'path';
@@ -124,7 +125,14 @@ const tusServer = new Server({
     });
 
     if (!foundMatchingType) {
-      throw { status_code: 500, body: `the file format does not match the announced MIME type` };
+      // The file content cannot bring information (it's always the case with CSV files for example)
+      // so we rely on a basic local file analysis to give this information, and if not we consider it as valid
+      // (there should not be a risk since when serving the file we force as `Content-Type` the one originally allowed)
+      const mimeLookup = mime.lookup(attachmentPath); // Returns false if no matching at all
+
+      if (mimeLookup !== upload.metadata?.type && mimeLookup !== false) {
+        throw { status_code: 500, body: `the file format does not match the announced MIME type` };
+      }
     }
 
     const attachmentKind = AttachmentKindSchema.parse(upload.metadata?.kind);

@@ -1,3 +1,5 @@
+import { CaseAnalytics } from '@prisma/client';
+
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import {
@@ -134,4 +136,61 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
   }),
+];
+
+export const casesAnalytics: CaseAnalytics[] = [
+  {
+    humanId: 55,
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    authorityName: 'Seine-Saint-Denis',
+    authorityType: 'SUBDIVISION',
+    createdAt: new Date('December 17, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 19, 2022 04:33:00 UTC'),
+    closedAt: null,
+    status: 'TO_PROCESS',
+    initiatedFrom: 'EMAIL',
+    assigned: false,
+    alreadyRequestedInThePast: false,
+    gotAnswerFromPreviousRequest: null,
+    citizenHasEmail: true,
+    citizenCity: 'Rennes',
+    citizenPostalCode: '35000',
+    citizenCountryCode: 'FR',
+  },
+  {
+    humanId: 47,
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    authorityName: 'Seine-Saint-Denis',
+    authorityType: 'SUBDIVISION',
+    createdAt: new Date('December 20, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 22, 2022 04:33:00 UTC'),
+    closedAt: new Date('December 22, 2022 04:33:00 UTC'),
+    status: 'TO_PROCESS',
+    initiatedFrom: 'WEB',
+    assigned: true,
+    alreadyRequestedInThePast: true,
+    gotAnswerFromPreviousRequest: true,
+    citizenHasEmail: false,
+    citizenCity: 'Rennes',
+    citizenPostalCode: '35000',
+    citizenCountryCode: 'FR',
+  },
+  {
+    humanId: 48,
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    authorityName: 'Seine-Saint-Denis',
+    authorityType: 'SUBDIVISION',
+    createdAt: new Date('December 27, 2022 03:24:00 UTC'),
+    updatedAt: new Date('December 29, 2022 04:33:00 UTC'),
+    closedAt: null,
+    status: 'TO_PROCESS',
+    initiatedFrom: 'WEB',
+    assigned: false,
+    alreadyRequestedInThePast: false,
+    gotAnswerFromPreviousRequest: null,
+    citizenHasEmail: true,
+    citizenCity: 'Rennes',
+    citizenPostalCode: '35000',
+    citizenCountryCode: 'FR',
+  },
 ];

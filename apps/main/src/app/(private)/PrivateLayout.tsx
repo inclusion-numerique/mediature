@@ -83,6 +83,9 @@ export function PrivateLayout(props: PropsWithChildren) {
     const requestToAuthorityLink = linkRegistry.get('requestToAuthority', {
       authority: currentAuthority.slug,
     });
+    const authorityMetricsLink = linkRegistry.get('authorityMetrics', {
+      authorityId: currentAuthority.id,
+    });
 
     navigation.push(
       ...[
@@ -115,6 +118,14 @@ export function PrivateLayout(props: PropsWithChildren) {
           text: 'Déposer une saisine',
           linkProps: {
             href: requestToAuthorityLink,
+            target: '_self',
+          },
+        },
+        {
+          isActive: hasPathnameThisMatch(pathname, authorityMetricsLink),
+          text: 'Statistiques',
+          linkProps: {
+            href: authorityMetricsLink,
             target: '_self',
           },
         },
@@ -166,6 +177,7 @@ export function PrivateLayout(props: PropsWithChildren) {
     if (userInterfaceSession.isAdmin) {
       const authorityListLink = linkRegistry.get('authorityList', undefined);
       const adminListLink = linkRegistry.get('adminList', undefined);
+      const globalMetricsLink = linkRegistry.get('globalMetrics', undefined);
 
       menuLinks.push(
         ...[
@@ -181,6 +193,13 @@ export function PrivateLayout(props: PropsWithChildren) {
             text: 'Gérer les administrateurs de la plateforme',
             linkProps: {
               href: adminListLink,
+            },
+          },
+          {
+            isActive: hasPathnameThisMatch(pathname, globalMetricsLink),
+            text: 'Voir les statistiques de la plateforme',
+            linkProps: {
+              href: globalMetricsLink,
             },
           },
         ]

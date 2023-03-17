@@ -231,3 +231,20 @@ export async function uploadPdfFile(options: UploadPdfFileOptions): Promise<stri
     file: fileBuffer,
   });
 }
+
+export interface UploadCsvFileOptions {
+  filename: string;
+  kind: AttachmentKindRequirementsSchemaType;
+  fileContent: string;
+}
+
+export async function uploadCsvFile(options: UploadCsvFileOptions): Promise<string> {
+  const fileBuffer = Buffer.from(options.fileContent);
+
+  return await uploadFile({
+    filename: options.filename,
+    contentType: 'text/csv',
+    kind: options.kind,
+    file: fileBuffer,
+  });
+}

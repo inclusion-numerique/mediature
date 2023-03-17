@@ -24,6 +24,43 @@
     "relative": "{{ date, relative }}",
     "short": "{{ date, short }}"
   },
+  "document": {
+    "csv": {
+      "boolean": {
+        "true": "Oui",
+        "false": "Non"
+      },
+      "date": {
+        "default": "{{ date, spreadsheetDate }}",
+        "withTime": "{{ date, spreadsheetDateTime }}"
+      }
+    },
+    "template": {
+      "CaseAnalytics": {
+        "naming": {
+          "authorityFilename": "Statistiques de la collectivité {authorityName}",
+          "globalFilename": "Statistiques de la plateforme Médiature"
+        },
+        "columns": {
+          "alreadyRequestedInThePast": "Premier recours à l'amiable",
+          "assigned": "Assigné",
+          "authorityName": "Collectivité",
+          "authorityType": "Type de collectivité",
+          "citizenCity": "Ville",
+          "citizenCountryCode": "Pays",
+          "citizenHasEmail": "Email renseigné",
+          "citizenPostalCode": "Code postal",
+          "closedAt": "Date de clôture",
+          "createdAt": "Date de création",
+          "gotAnswerFromPreviousRequest": "Réponse pour le premier recours",
+          "humanId": "Dossier",
+          "initiatedFrom": "Origine",
+          "status": "Statut",
+          "updatedAt": "Date de dernière mise à jour"
+        }
+      }
+    }
+  },
   "email": {
     "template": {
       "AgentActivitySumUpEmail": {

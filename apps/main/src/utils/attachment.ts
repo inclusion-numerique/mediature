@@ -24,6 +24,14 @@ export const attachmentKindList: AttachmentKindList = {
     requiresAuthToUpload: false,
     isAttachmentPublic: false,
   },
+  [AttachmentKindSchema.Values.CASES_ANALYTICS]: {
+    id: AttachmentKindSchema.Values.CASES_ANALYTICS,
+    maxSize: 20 * bitsFor.MiB,
+    allowedFileTypes: [FileKind.Spreadsheet],
+    postUploadOperations: null,
+    requiresAuthToUpload: false,
+    isAttachmentPublic: false,
+  },
   [AttachmentKindSchema.Values.AUTHORITY_LOGO]: {
     id: AttachmentKindSchema.Values.AUTHORITY_LOGO,
     maxSize: 750 * bitsFor.KiB,

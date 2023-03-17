@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["fullTextSearch", "views"]
 }
 
 datasource db {
@@ -286,6 +286,7 @@ enum AttachmentStatus {
 enum AttachmentKind {
   CASE_DOCUMENT
   CASE_SYNTHESIS
+  CASES_ANALYTICS
   AUTHORITY_LOGO
   MESSAGE_DOCUMENT
 }
@@ -422,4 +423,25 @@ model AdminInvitation {
   canEverything Boolean @default(true)
 
   invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+}
+
+/// @@Gen.model(hide: true)
+view CaseAnalytics {
+  humanId                      Int                 @unique
+  authorityId                  String              @db.Uuid
+  authorityName                String
+  authorityType                AuthorityType
+  createdAt                    DateTime
+  updatedAt                    DateTime
+  closedAt                     DateTime?
+  status                       CaseStatus
+  initiatedFrom                CaseInitialPlatform
+  assigned                     Boolean
+  alreadyRequestedInThePast    Boolean
+  gotAnswerFromPreviousRequest Boolean?
+  // TODO: domain
+  citizenHasEmail              Boolean
+  citizenCity                  String
+  citizenPostalCode            String
+  citizenCountryCode           String
 }

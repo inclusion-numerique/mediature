@@ -105,6 +105,16 @@ export type GeneratePdfFromCaseSchemaType = z.infer<typeof GeneratePdfFromCaseSc
 export const GeneratePdfFromCasePrefillSchema = GeneratePdfFromCaseSchema.deepPartial();
 export type GeneratePdfFromCasePrefillSchemaType = z.infer<typeof GeneratePdfFromCasePrefillSchema>;
 
+export const GenerateCsvFromCaseAnalyticsSchema = z
+  .object({
+    authorityId: AuthoritySchema.shape.id.nullish(),
+  })
+  .strict();
+export type GenerateCsvFromCaseAnalyticsSchemaType = z.infer<typeof GenerateCsvFromCaseAnalyticsSchema>;
+
+export const GenerateCsvFromCaseAnalyticsPrefillSchema = GenerateCsvFromCaseAnalyticsSchema.deepPartial();
+export type GenerateCsvFromCaseAnalyticsPrefillSchemaType = z.infer<typeof GenerateCsvFromCaseAnalyticsPrefillSchema>;
+
 export const AddNoteToCaseSchema = z
   .object({
     caseId: incompleteCaseSchema.shape.id,

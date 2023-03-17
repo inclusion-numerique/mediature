@@ -47,6 +47,13 @@ export const localizedRoutes = {
       fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/dossiers/non-assignes`,
     }
   ),
+  authorityMetrics: defineLocalizedRoute(
+    { authorityId: param.path.string },
+    {
+      en: (p) => `/dashboard/authority/${p.authorityId}/metrics`,
+      fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}/statistiques`,
+    }
+  ),
   authorityEdit: defineLocalizedRoute(
     { authorityId: param.path.string },
     {
@@ -87,6 +94,13 @@ export const localizedRoutes = {
     {
       en: (p) => `/dashboard/authority/${p.authorityId}`,
       fr: (p) => `/tableau-de-bord/collectivite/${p.authorityId}`,
+    }
+  ),
+  globalMetrics: defineLocalizedRoute(
+    {},
+    {
+      en: (p) => `/dashboard/metrics`,
+      fr: (p) => `/tableau-de-bord/statistiques`,
     }
   ),
   dashboard: defineLocalizedRoute(
@@ -221,12 +235,14 @@ export const routes = {
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.en),
     myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.en),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.en),
+    authorityMetrics: defineRoute(localizedRoutes.authorityMetrics.params, localizedRoutes.authorityMetrics.paths.en),
     authorityEdit: defineRoute(localizedRoutes.authorityEdit.params, localizedRoutes.authorityEdit.paths.en),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.en),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.en),
     addAdmin: defineRoute(localizedRoutes.addAdmin.params, localizedRoutes.addAdmin.paths.en),
     adminList: defineRoute(localizedRoutes.adminList.params, localizedRoutes.adminList.paths.en),
     authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.en),
+    globalMetrics: defineRoute(localizedRoutes.globalMetrics.params, localizedRoutes.globalMetrics.paths.en),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.en),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.en),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.en),
@@ -247,12 +263,14 @@ export const routes = {
     caseList: defineRoute(localizedRoutes.caseList.params, localizedRoutes.caseList.paths.fr),
     myCases: defineRoute(localizedRoutes.myCases.params, localizedRoutes.myCases.paths.fr),
     unassignedCaseList: defineRoute(localizedRoutes.unassignedCaseList.params, localizedRoutes.unassignedCaseList.paths.fr),
+    authorityMetrics: defineRoute(localizedRoutes.authorityMetrics.params, localizedRoutes.authorityMetrics.paths.fr),
     authorityEdit: defineRoute(localizedRoutes.authorityEdit.params, localizedRoutes.authorityEdit.paths.fr),
     authorityCreation: defineRoute(localizedRoutes.authorityCreation.params, localizedRoutes.authorityCreation.paths.fr),
     authorityList: defineRoute(localizedRoutes.authorityList.params, localizedRoutes.authorityList.paths.fr),
     addAdmin: defineRoute(localizedRoutes.addAdmin.params, localizedRoutes.addAdmin.paths.fr),
     adminList: defineRoute(localizedRoutes.adminList.params, localizedRoutes.adminList.paths.fr),
     authority: defineRoute(localizedRoutes.authority.params, localizedRoutes.authority.paths.fr),
+    globalMetrics: defineRoute(localizedRoutes.globalMetrics.params, localizedRoutes.globalMetrics.paths.fr),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.fr),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.fr),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.fr),

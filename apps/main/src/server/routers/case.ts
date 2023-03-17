@@ -8,6 +8,7 @@ import {
   AddAttachmentToCaseSchema,
   AddNoteToCaseSchema,
   AssignCaseSchema,
+  GenerateCsvFromCaseAnalyticsSchema,
   GeneratePdfFromCaseSchema,
   GetCaseSchema,
   ListCasesSchema,
@@ -25,7 +26,7 @@ import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attach
 import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
-import { formatSafeAttachmentsToProcess, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
+import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
 import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
@@ -36,6 +37,7 @@ import {
 } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
+import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
@@ -602,6 +604,53 @@ export const caseRouter = router({
       filename: `${t('model.case.technicalName', { humanId: targetedCase.humanId.toString() })}.pdf`,
       kind: attachmentKindList[AttachmentKindSchema.Values.CASE_SYNTHESIS],
       file: fileStream,
+    });
+
+    const attachmentUi = await attachmentIdPrismaToModel(fileId);
+
+    return {
+      attachment: attachmentUi,
+    };
+  }),
+  generateCsvFromCaseAnalytics: privateProcedure.input(GenerateCsvFromCaseAnalyticsSchema).mutation(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité de ce dossier pour le mettre à jour`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const { t } = useServerTranslation('common');
+
+    let filenameBase: string;
+    if (!!input.authorityId) {
+      const authority = await prisma.authority.findUniqueOrThrow({
+        where: {
+          id: input.authorityId,
+        },
+      });
+
+      filenameBase = t('document.template.CaseAnalytics.naming.authorityFilename', { authorityId: authority.name });
+    } else {
+      filenameBase = t('document.template.CaseAnalytics.naming.globalFilename');
+    }
+
+    // For now it's synchronous and not a stream since not supported (https://github.com/prisma/prisma/issues/5055)
+    // Everything needs to fit in memory, it should not be an issue for now
+    const analytics = await prisma.caseAnalytics.findMany({
+      where: {
+        authorityId: input.authorityId || undefined,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    const csvString = caseAnalyticsPrismaToCsv(analytics);
+
+    const fileId = await uploadCsvFile({
+      filename: `${filenameBase}.csv`,
+      kind: attachmentKindList[AttachmentKindSchema.Values.CASES_ANALYTICS],
+      fileContent: csvString,
     });
 
     const attachmentUi = await attachmentIdPrismaToModel(fileId);

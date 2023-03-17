@@ -120,6 +120,11 @@ export const parameters = {
           id: 'aria-required-children',
           selector: '*:not(.MuiDataGrid-root)',
         },
+        {
+          // Cannot add the missign piece triggering the error
+          id: 'scrollable-region-focusable',
+          selector: '*:not(.MuiDataGrid-virtualScroller)',
+        },
       ],
     },
   },
