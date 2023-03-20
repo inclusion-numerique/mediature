@@ -125,7 +125,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                               <br />
                               <br />
                               <Typography component="span" sx={{ fontStyle: 'italic' }}>
-                                Le requérant sera notifié de la fermerture du dossier.
+                                Le requérant sera notifié de la fermeture du dossier.
                               </Typography>
                             </>
                           ),
