@@ -1,7 +1,7 @@
 lockfileVersion: '6.0'
 
 overrides:
-  '@codegouvfr/react-dsfr': 0.31.1
+  '@codegouvfr/react-dsfr': 0.40.0
   '@glen/jest-raw-loader': ^2.0.0
   '@gouvfr/dsfr': ^1.8.5
   '@lhci/cli': ^0.10.0
@@ -78,8 +78,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       '@codegouvfr/react-dsfr':
-        specifier: 0.31.1
-        version: 0.31.1(react@18.2.0)
+        specifier: 0.40.0
+        version: 0.40.0(react@18.2.0)
       '@mediature/main':
         specifier: workspace:main@*
         version: link:../main
@@ -304,8 +304,8 @@ importers:
   apps/main:
     dependencies:
       '@codegouvfr/react-dsfr':
-        specifier: 0.31.1
-        version: 0.31.1(react@18.2.0)
+        specifier: 0.40.0
+        version: 0.40.0(react@18.2.0)
       '@hookform/resolvers':
         specifier: ^2.9.10
         version: 2.9.10(react-hook-form@7.40.0)
@@ -774,8 +774,8 @@ importers:
   packages/ui:
     dependencies:
       '@codegouvfr/react-dsfr':
-        specifier: 0.31.1
-        version: 0.31.1(react@18.2.0)
+        specifier: 0.40.0
+        version: 0.40.0(react@18.2.0)
       '@fragaria/address-formatter':
         specifier: ^5.0.1
         version: 5.0.1
@@ -4647,8 +4647,8 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@codegouvfr/react-dsfr@0.31.1(react@18.2.0):
-    resolution: {integrity: sha512-8V9UQLKL8oiXujPlwh540uS2vGgly9MNcQ+Veprg3HoXdwBAEAly8s4CmvhvQnN6x64+4I+1u1oWAYG1sB3+xg==}
+  /@codegouvfr/react-dsfr@0.40.0(react@18.2.0):
+    resolution: {integrity: sha512-DAD0Y87CKEohhiIwtrt9Q/Z5mCQBogTyUO5InKfzympN9WqowbJoGjbtRtwRfX0cVD45MLk2Fx/NXiFuXbKZGg==}
     hasBin: true
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0

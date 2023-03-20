@@ -19,7 +19,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "0.31.1",
+    "@codegouvfr/react-dsfr": "0.40.0",
     "@fragaria/address-formatter": "^5.0.1",
     "@gouvfr/dsfr": "^1.8.5",
     "@lexical/clipboard": "0.7.6",
