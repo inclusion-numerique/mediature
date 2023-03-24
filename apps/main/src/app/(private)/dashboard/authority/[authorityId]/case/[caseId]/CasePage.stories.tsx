@@ -5,6 +5,7 @@ import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/tes
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { Empty as AddNoteFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm.stories';
 import { CasePage, CasePageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/CasePage';
+import { Normal as CaseDomainFieldNormalStory } from '@mediature/main/src/components/CaseDomainField.stories';
 import { Normal as NoteCardNormalStory } from '@mediature/main/src/components/NoteCard.stories';
 import { Normal as UploaderNormalStory } from '@mediature/main/src/components/uploader/Uploader.stories';
 import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
@@ -85,6 +86,7 @@ export const Normal = prepareStory(NormalStory, {
       ContextualNoteCard: NoteCardNormalStory,
       ContextualAddNoteForm: AddNoteFormEmptyStory,
       ContextualUploader: UploaderNormalStory,
+      ContextualCaseDomainField: CaseDomainFieldNormalStory,
     },
   },
 });
@@ -109,6 +111,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
       ContextualNoteCard: NoteCardNormalStory,
       ContextualAddNoteForm: AddNoteFormEmptyStory,
       ContextualUploader: UploaderNormalStory,
+      ContextualCaseDomainField: CaseDomainFieldNormalStory,
     },
   },
 });

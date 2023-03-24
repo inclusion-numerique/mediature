@@ -11,6 +11,17 @@ export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 export const CaseStatusSchema = z.enum(['TO_PROCESS', 'MAKE_XXX_CALL', 'SYNC_WITH_CITIZEN', 'SYNC_WITH_ADMINISTATION', 'ABOUT_TO_CLOSE', 'STUCK']);
 export type CaseStatusSchemaType = z.infer<typeof CaseStatusSchema>;
 
+export const CaseDomainItemSchema = z
+  .object({
+    id: z.string().uuid(),
+    authorityId: z.string().nullable(),
+    parentId: z.string().nullable(),
+    parentName: z.string().nullable(),
+    name: z.string().min(1),
+  })
+  .strict();
+export type CaseDomainItemSchemaType = z.infer<typeof CaseDomainItemSchema>;
+
 export const incompleteCaseSchema = z
   .object({
     id: z.string().uuid(),
@@ -21,6 +32,7 @@ export const incompleteCaseSchema = z
     alreadyRequestedInThePast: z.boolean(),
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
     description: z.string().min(1),
+    domain: CaseDomainItemSchema.nullable(),
     units: z.string(),
     emailCopyWanted: z.boolean(),
     termReminderAt: z.date().nullable(),

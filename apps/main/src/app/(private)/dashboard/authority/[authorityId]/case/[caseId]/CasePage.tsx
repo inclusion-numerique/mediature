@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next';
 import { AddNoteForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { FileList } from '@mediature/main/src/components/FileList';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
@@ -54,6 +55,7 @@ export const CasePageContext = createContext({
   ContextualNoteCard: NoteCard,
   ContextualAddNoteForm: AddNoteForm,
   ContextualUploader: Uploader,
+  ContextualCaseDomainField: CaseDomainField,
 });
 
 export interface CasePageProps {
@@ -65,7 +67,7 @@ export interface CasePageProps {
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const { t } = useTranslation('common');
-  const { ContextualNoteCard, ContextualAddNoteForm, ContextualUploader } = useContext(CasePageContext);
+  const { ContextualNoteCard, ContextualAddNoteForm, ContextualUploader, ContextualCaseDomainField } = useContext(CasePageContext);
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.getCase.useQuery({
     id: caseId,
@@ -118,6 +120,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         number: caseWrapper?.citizen.phone.number,
       },
       description: caseWrapper?.case.description,
+      domainId: caseWrapper?.case.domain?.id,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
       finalConclusion: caseWrapper?.case.finalConclusion,
@@ -181,6 +184,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         number: updatedCaseWrapper.citizen.phone.number,
       },
       description: updatedCaseWrapper.case.description,
+      domainId: updatedCaseWrapper.case.domain?.id,
       units: updatedCaseWrapper.case.units,
       termReminderAt: updatedCaseWrapper.case.termReminderAt,
       finalConclusion: updatedCaseWrapper.case.finalConclusion,
@@ -292,6 +296,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     number: control._defaultValues.phone?.number || citizen.phone.number,
                   },
                   description: control._defaultValues.description || targetedCase.description,
+                  domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -376,6 +381,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       number: control._defaultValues.phone?.number || citizen.phone.number,
                     },
                     description: control._defaultValues.description || targetedCase.description,
+                    domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -652,7 +658,17 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>
-                        <TextField type="email" label="Email" fullWidth />
+                        <ContextualCaseDomainField
+                          authorityId={targetedCase.authorityId}
+                          value={targetedCase.domain}
+                          onChange={(item) => {
+                            setValue('domainId', item?.id || null, {
+                              // shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                          errorMessage={errors?.domainId?.message}
+                        />
                       </Grid>
                       <Grid item xs={12}>
                         <TextField
@@ -790,6 +806,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         number: control._formValues.phone.number,
                       },
                       description: control._formValues.description,
+                      domainId: control._formValues.domainId,
                       units: control._formValues.units,
                       close: control._formValues.close,
                       finalConclusion: control._formValues.finalConclusion,

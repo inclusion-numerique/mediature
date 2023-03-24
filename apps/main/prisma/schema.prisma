@@ -211,6 +211,25 @@ enum CaseInitialPlatform {
 }
 
 /// @@Gen.model(hide: true)
+model CaseDomainItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  parentItemId String? @db.Uuid
+  authorityId  String? @db.Uuid
+  name         String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  parentItem    CaseDomainItem?  @relation("ParentChildren", fields: [parentItemId], references: [id], onDelete: Cascade)
+  childrenItems CaseDomainItem[] @relation("ParentChildren")
+  authority     Authority?       @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  Case          Case[]
+
+  @@unique([parentItemId, authorityId, name])
+}
+
+/// @@Gen.model(hide: true)
 model Case {
   id                           String              @id @default(uuid()) @db.Uuid
   humanId                      Int                 @default(autoincrement())
@@ -225,11 +244,10 @@ model Case {
   termReminderAt               DateTime?
   initiatedFrom                CaseInitialPlatform @default(WEB)
   status                       CaseStatus
+  domainId                     String?             @db.Uuid
   closedAt                     DateTime?
   finalConclusion              String?
   nextRequirements             String?
-
-  // TODO: domain/origin
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -238,6 +256,7 @@ model Case {
   authority          Authority            @relation(fields: [authorityId], references: [id], onDelete: Cascade)
   citizen            Citizen              @relation(fields: [citizenId], references: [id], onDelete: Cascade)
   agent              Agent?               @relation(fields: [agentId], references: [id])
+  domain             CaseDomainItem?      @relation(fields: [domainId], references: [id])
   Note               Note[]
   AttachmentsOnCases AttachmentsOnCases[]
 }
@@ -335,6 +354,7 @@ model Authority {
   AgentInvitation AgentInvitation[]
   Case            Case[]
   Agent           Agent[]
+  CaseDomainItem  CaseDomainItem[]
 }
 
 enum CaseAttachmentType {

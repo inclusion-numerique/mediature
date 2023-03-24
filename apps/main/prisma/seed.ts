@@ -1,5 +1,6 @@
 import { CaseStatus, PhoneType, PrismaClient } from '@prisma/client';
 
+import { seedProductionDataIntoDatabase } from '@mediature/main/prisma/production-seed';
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
 
 export async function truncateDatabase(prismaClient: PrismaClient) {
@@ -21,6 +22,9 @@ export async function truncateDatabase(prismaClient: PrismaClient) {
 export async function seedDatabase(prismaClient: PrismaClient) {
   // Empty all tables to avoid managing upserts+conditions+fixedUuids
   await truncateDatabase(prismaClient);
+
+  // Add predefined production data as samples too
+  await seedProductionDataIntoDatabase(prismaClient);
 
   const testUserId = '5c03994c-fc16-47e0-bd02-d218a370a078';
   const sssId = '5c03994c-fc16-47e0-bd02-d218a370a111';

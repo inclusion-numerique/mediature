@@ -1,8 +1,8 @@
-import { Address, Admin, Agent, Attachment, Authority, Case, Citizen, Note, Phone, User } from '@prisma/client';
+import { Address, Admin, Agent, Attachment, Authority, Case, CaseDomainItem, Citizen, Note, Phone, User } from '@prisma/client';
 
 import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
-import { CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { CaseDomainItemSchemaType, CaseNoteSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { UserSchemaType } from '@mediature/main/src/models/entities/user';
 import { fileAuthSecret, generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
@@ -76,7 +76,43 @@ export async function authorityPrismaToModel(authority: Authority): Promise<Auth
   };
 }
 
-export function casePrismaToModel(targetedCase: Case): CaseSchemaType {
+export function caseDomainItemPrismaToModel(item: CaseDomainItem, parentItem?: CaseDomainItem): CaseDomainItemSchemaType {
+  return {
+    id: item.id,
+    name: item.name,
+    authorityId: item.authorityId,
+    parentId: item.parentItemId,
+    parentName: parentItem ? parentItem.name : null,
+  };
+}
+
+export function caseDomainItemsPrismaToModel(items: CaseDomainItem[]): CaseDomainItemSchemaType[] {
+  return items.map((item) => {
+    let parentItem: CaseDomainItem | null = null;
+    if (item.parentItemId) {
+      parentItem =
+        items.find((iterableItem) => {
+          return iterableItem.id === item.parentItemId;
+        }) || null;
+
+      if (!parentItem) {
+        throw new Error('when mapping items you need to provide all the needed ones so children can be linked to parent items');
+      }
+    }
+
+    return caseDomainItemPrismaToModel(item, parentItem || undefined);
+  });
+}
+
+export function casePrismaToModel(
+  targetedCase: Case & {
+    domain?:
+      | (CaseDomainItem & {
+          parentItem: CaseDomainItem | null;
+        })
+      | null;
+  }
+): CaseSchemaType {
   return {
     id: targetedCase.id,
     humanId: targetedCase.humanId,
@@ -86,6 +122,7 @@ export function casePrismaToModel(targetedCase: Case): CaseSchemaType {
     alreadyRequestedInThePast: targetedCase.alreadyRequestedInThePast,
     gotAnswerFromPreviousRequest: targetedCase.gotAnswerFromPreviousRequest,
     description: targetedCase.description,
+    domain: !!targetedCase.domain ? caseDomainItemPrismaToModel(targetedCase.domain, targetedCase.domain.parentItem || undefined) : null,
     units: targetedCase.units,
     emailCopyWanted: targetedCase.emailCopyWanted,
     termReminderAt: targetedCase.termReminderAt,

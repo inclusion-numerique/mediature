@@ -3,6 +3,7 @@ import { CaseAnalytics } from '@prisma/client';
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import {
+  CaseDomainItemSchemaType,
   CaseNoteSchema,
   CaseNoteSchemaType,
   CaseSchema,
@@ -11,6 +12,72 @@ import {
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
 import sampleHello from '@mediature/ui/src/Editor/sample-hello.lexical';
+
+export const caseDomains: CaseDomainItemSchemaType[] = [
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a010',
+    name: 'Parent A',
+    authorityId: null,
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a020',
+    name: 'Parent B',
+    authorityId: null,
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a021',
+    name: 'Child B1',
+    authorityId: null,
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a020',
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a022',
+    name: 'Child B2',
+    authorityId: null,
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a020',
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a030',
+    name: 'Parent C',
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a031',
+    name: 'Child C1',
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a032',
+    name: 'Child C2',
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a033',
+    name: 'Child C3',
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '5c03994c-fc16-47e0-bd02-c218a370a034',
+    name: 'Child C4',
+    authorityId: '5c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '5c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+];
 
 export const cases: CaseSchemaType[] = [
   CaseSchema.parse({
@@ -23,9 +90,10 @@ export const cases: CaseSchemaType[] = [
     gotAnswerFromPreviousRequest: null,
     description: `Veritatis ducimus quas atque. Velit cumque sunt tempore laboriosam nesciunt beatae aut. Blanditiis explicabo sint ut omnis doloribus necessitatibus magni molestias perspiciatis. Eveniet enim optio tenetur non voluptatum facilis. Harum reprehenderit quos nesciunt tenetur ut quo qui. Eos non est illo et dolorum ipsa.
 
-Ad quasi cum ut ipsa harum accusantium minima quo magnam. Similique repellendus ab dolor magnam officiis laboriosam repudiandae vitae. Rem aut quasi. Repudiandae vel aut commodi. Ullam deserunt nesciunt ullam quibusdam consequatur dolor reiciendis.
+    Ad quasi cum ut ipsa harum accusantium minima quo magnam. Similique repellendus ab dolor magnam officiis laboriosam repudiandae vitae. Rem aut quasi. Repudiandae vel aut commodi. Ullam deserunt nesciunt ullam quibusdam consequatur dolor reiciendis.
 
-Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat libero amet. Architecto provident recusandae.`,
+    Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat libero amet. Architecto provident recusandae.`,
+    domain: null,
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,
@@ -48,6 +116,7 @@ Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat l
     gotAnswerFromPreviousRequest: null,
     description:
       'Saepe itaque autem. Quibusdam magnam aliquid nihil. Autem mollitia ab. Blanditiis beatae odit molestiae dolores inventore tempora in blanditiis. Error tempore unde ex neque temporibus occaecati. Quia consectetur tenetur aut nam id.',
+    domain: caseDomains[0],
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,
@@ -70,6 +139,7 @@ Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat l
     gotAnswerFromPreviousRequest: null,
     description:
       'Quidem maxime natus veritatis voluptatem molestiae similique omnis voluptas voluptas. Consequatur nam vero architecto reiciendis qui quis vitae odio dolore. Ut odio illo quaerat vel maxime sit vitae. Velit velit id perspiciatis consequatur velit veniam non.',
+    domain: caseDomains[0],
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,

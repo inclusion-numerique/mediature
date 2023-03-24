@@ -1,4 +1,4 @@
-import { AttachmentKind, AttachmentStatus, CaseAttachmentType, Note } from '@prisma/client';
+import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, Note } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
 
 import { prisma } from '@mediature/main/prisma/client';
@@ -8,8 +8,12 @@ import {
   AddAttachmentToCaseSchema,
   AddNoteToCaseSchema,
   AssignCaseSchema,
+  CreateCaseDomainItemSchema,
+  DeleteCaseDomainItemSchema,
+  EditCaseDomainItemSchema,
   GenerateCsvFromCaseAnalyticsSchema,
   GeneratePdfFromCaseSchema,
+  GetCaseDomainItemsSchema,
   GetCaseSchema,
   ListCasesSchema,
   RemoveAttachmentFromCaseSchema,
@@ -31,6 +35,8 @@ import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
   attachmentPrismaToModel,
+  caseDomainItemPrismaToModel,
+  caseDomainItemsPrismaToModel,
   caseNotePrismaToModel,
   casePrismaToModel,
   citizenPrismaToModel,
@@ -106,6 +112,22 @@ export async function canUserManageThisCase(userId: string, caseId: string): Pro
   return true;
 }
 
+export async function assertCaseDomainParentItemIsAllowed(parentItemId: string, expectedAuthorityId?: string): Promise<void> {
+  const parentItem = await prisma.caseDomainItem.findUniqueOrThrow({
+    where: {
+      id: parentItemId,
+    },
+  });
+
+  if (!!parentItem.parentItemId) {
+    throw new Error(`vous ne pouvez que créer des domaines de niveau 1 ou 2`);
+  } else if (!!expectedAuthorityId && parentItem.authorityId !== null && expectedAuthorityId !== parentItem.authorityId) {
+    throw new Error(`vous ne pouvez rattacher votre domaine qu'à un domaine de la plateforme ou de votre propre collectivité`);
+  } else if (!expectedAuthorityId && parentItem.authorityId !== null) {
+    throw new Error(`vous ne pouvez rattacher votre domaine de plateforme qu'à un autre domaine de plateforme`);
+  }
+}
+
 export const caseRouter = router({
   requestCase: publicProcedure.input(RequestCaseSchema).mutation(async ({ ctx, input }) => {
     const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
@@ -174,6 +196,11 @@ export const caseRouter = router({
       include: {
         citizen: true,
         authority: true,
+        domain: {
+          include: {
+            parentItem: true,
+          },
+        },
       },
     });
 
@@ -216,6 +243,20 @@ export const caseRouter = router({
       throw new Error(`vous devez faire partie de la collectivité de ce dossier pour le mettre à jour`);
     }
 
+    if (!!input.domainId) {
+      const domain = await prisma.caseDomainItem.findUnique({
+        where: {
+          id: input.domainId,
+        },
+      });
+
+      if (!domain) {
+        throw new Error(`le domaine que vous essayez de lier n'existe pas`);
+      } else if (domain.authorityId !== null && domain.authorityId !== targetedCase.authorityId) {
+        throw new Error(`vous ne pouvez lier qu'un domaine de la plateforme ou un appartenant à votre collectivité`);
+      }
+    }
+
     let closedAt: Date | null = null;
     let statusSwitchedToClose = false;
     if (input.close) {
@@ -240,6 +281,14 @@ export const caseRouter = router({
         closedAt: closedAt,
         finalConclusion: input.finalConclusion,
         nextRequirements: input.nextRequirements,
+        domain: {
+          connect: input.domainId
+            ? {
+                id: input.domainId,
+              }
+            : undefined,
+          disconnect: !input.domainId ? true : undefined,
+        },
         citizen: {
           update: {
             address: {
@@ -267,6 +316,11 @@ export const caseRouter = router({
           include: {
             address: true,
             phone: true,
+          },
+        },
+        domain: {
+          include: {
+            parentItem: true,
           },
         },
       },
@@ -351,7 +405,7 @@ export const caseRouter = router({
       },
     });
 
-    return { case: assignedCase };
+    return { case: casePrismaToModel(assignedCase) };
   }),
   unassignCase: privateProcedure.input(UnassignCaseSchema).mutation(async ({ ctx, input }) => {
     const agentIdToUnassign = input.agentId;
@@ -373,7 +427,7 @@ export const caseRouter = router({
       throw new Error(`vous ne pouvez désassigner que vous-même d'un dossier`);
     }
 
-    const assignedCase = await prisma.case.update({
+    const unassignedCase = await prisma.case.update({
       where: {
         id: input.caseId,
       },
@@ -384,7 +438,138 @@ export const caseRouter = router({
       },
     });
 
-    return { case: assignedCase };
+    return { case: casePrismaToModel(unassignedCase) };
+  }),
+  getCaseDomainItems: privateProcedure.input(GetCaseDomainItemsSchema).query(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour récupérer ses domaines`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const items = await prisma.caseDomainItem.findMany({
+      where: {
+        OR: [
+          {
+            authorityId: input.authorityId,
+          },
+          {
+            authorityId: null,
+          },
+        ],
+      },
+    });
+
+    return {
+      items: caseDomainItemsPrismaToModel(items),
+    };
+  }),
+  createCaseDomainItem: privateProcedure.input(CreateCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui créer un domaine`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    if (!!input.parentId) {
+      await assertCaseDomainParentItemIsAllowed(input.parentId, input.authorityId || undefined);
+    }
+
+    const item = await prisma.caseDomainItem.create({
+      data: {
+        name: input.name,
+        authority: {
+          connect: {
+            id: input.authorityId || undefined,
+          },
+        },
+        parentItem: {
+          connect: {
+            id: input.parentId || undefined,
+          },
+        },
+      },
+      include: {
+        parentItem: true,
+      },
+    });
+
+    return { item: caseDomainItemPrismaToModel(item, item.parentItem || undefined) };
+  }),
+  editCaseDomainItem: privateProcedure.input(EditCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
+    const item = await prisma.caseDomainItem.findUnique({
+      where: {
+        id: input.itemId,
+      },
+    });
+
+    if (!item) {
+      throw new Error(`ce domaine n'existe pas`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    } else if (!!item.authorityId && !(await isUserAnAgentPartOfAuthority(item.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour modifier l'un de ses domaines`);
+    }
+
+    if (!!input.parentId) {
+      await assertCaseDomainParentItemIsAllowed(input.parentId, item.authorityId || undefined);
+    }
+
+    const updatedItem = await prisma.caseDomainItem.update({
+      where: {
+        id: item.id,
+      },
+      data: {
+        name: input.name,
+        parentItem: {
+          connect: {
+            id: input.parentId || undefined,
+          },
+        },
+      },
+      include: {
+        parentItem: true,
+      },
+    });
+
+    return { item: caseDomainItemPrismaToModel(updatedItem, updatedItem.parentItem || undefined) };
+  }),
+  deleteCaseDomainItem: privateProcedure.input(DeleteCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer un domaine`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const item = await prisma.caseDomainItem.findFirst({
+      where: {
+        id: input.itemId,
+        authorityId: input.authorityId,
+      },
+      include: {
+        _count: {
+          select: {
+            childrenItems: true,
+            Case: true,
+          },
+        },
+      },
+    });
+    if (!item) {
+      throw new Error(`ce domaine n'existe pas`);
+    } else if (item._count.Case > 0) {
+      throw new Error(`aucun dossier ne doit être lié à ce domaine pour pouvoir être supprimé`);
+    } else if (item._count.childrenItems > 0) {
+      throw new Error(`aucun "domaine enfant" ne doit être lié à ce domaine pour pouvoir être supprimé`);
+    }
+
+    const deletedItem = await prisma.caseDomainItem.delete({
+      where: {
+        id: input.itemId,
+      },
+    });
+
+    return;
   }),
   getCase: privateProcedure.input(GetCaseSchema).query(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findUnique({
@@ -404,6 +589,11 @@ export const caseRouter = router({
             AuthorityWhereMainAgent: {
               select: { id: true },
             },
+          },
+        },
+        domain: {
+          include: {
+            parentItem: true,
           },
         },
         Note: true,
@@ -535,6 +725,11 @@ export const caseRouter = router({
             },
           },
         },
+        domain: {
+          include: {
+            parentItem: true,
+          },
+        },
         AttachmentsOnCases: {
           include: {
             attachment: {
@@ -580,6 +775,11 @@ export const caseRouter = router({
           include: {
             address: true,
             phone: true,
+          },
+        },
+        domain: {
+          include: {
+            parentItem: true,
           },
         },
       },

@@ -5,7 +5,7 @@ import { AddressInputSchema } from '@mediature/main/src/models/entities/address'
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentInputSchema, AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { CaseAttachmentTypeSchema, CaseNoteSchema, incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
+import { CaseAttachmentTypeSchema, CaseDomainItemSchema, CaseNoteSchema, incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
 
@@ -38,6 +38,7 @@ export const UpdateCaseSchema = z
     address: AddressInputSchema,
     phone: PhoneInputSchema,
     description: incompleteCaseSchema.shape.description,
+    domainId: z.string().uuid().nullable(),
     units: incompleteCaseSchema.shape.units,
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,
@@ -80,6 +81,48 @@ export const GetCaseSchema = z
   })
   .strict();
 export type GetCaseSchemaType = z.infer<typeof GetCaseSchema>;
+
+export const GetCaseDomainItemsSchema = z
+  .object({
+    authorityId: AuthoritySchema.shape.id.nullable(),
+  })
+  .strict();
+export type GetCaseDomainItemsSchemaType = z.infer<typeof GetCaseDomainItemsSchema>;
+
+export const CreateCaseDomainItemSchema = z
+  .object({
+    authorityId: AuthoritySchema.shape.id.nullish(),
+    parentId: CaseDomainItemSchema.shape.id.nullish(),
+    name: CaseDomainItemSchema.shape.name,
+  })
+  .strict();
+export type CreateCaseDomainItemSchemaType = z.infer<typeof CreateCaseDomainItemSchema>;
+
+export const CreateCaseDomainItemPrefillSchema = CreateCaseDomainItemSchema.deepPartial();
+export type CreateCaseDomainItemPrefillSchemaType = z.infer<typeof CreateCaseDomainItemPrefillSchema>;
+
+export const EditCaseDomainItemSchema = z
+  .object({
+    itemId: CaseDomainItemSchema.shape.id,
+    parentId: CaseDomainItemSchema.shape.id.nullish(),
+    name: CaseDomainItemSchema.shape.name,
+  })
+  .strict();
+export type EditCaseDomainItemSchemaType = z.infer<typeof EditCaseDomainItemSchema>;
+
+export const EditCaseDomainItemPrefillSchema = EditCaseDomainItemSchema.deepPartial();
+export type EditCaseDomainItemPrefillSchemaType = z.infer<typeof EditCaseDomainItemPrefillSchema>;
+
+export const DeleteCaseDomainItemSchema = z
+  .object({
+    itemId: CaseDomainItemSchema.shape.id,
+    authorityId: AuthoritySchema.shape.id.nullish(),
+  })
+  .strict();
+export type DeleteCaseDomainItemSchemaType = z.infer<typeof DeleteCaseDomainItemSchema>;
+
+export const DeleteCaseDomainItemPrefillSchema = DeleteCaseDomainItemSchema.deepPartial();
+export type DeleteCaseDomainItemPrefillSchemaType = z.infer<typeof DeleteCaseDomainItemPrefillSchema>;
 
 export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({
