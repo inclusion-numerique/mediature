@@ -456,10 +456,11 @@ view CaseAnalytics {
   closedAt                     DateTime?
   status                       CaseStatus
   initiatedFrom                CaseInitialPlatform
+  primaryDomain                String?
+  secondaryDomain              String?
   assigned                     Boolean
   alreadyRequestedInThePast    Boolean
   gotAnswerFromPreviousRequest Boolean?
-  // TODO: domain
   citizenHasEmail              Boolean
   citizenCity                  String
   citizenPostalCode            String

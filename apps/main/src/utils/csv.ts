@@ -26,6 +26,8 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
       { key: typedNameof('closedAt'), header: t('document.template.CaseAnalytics.columns.closedAt') },
       { key: typedNameof('status'), header: t('document.template.CaseAnalytics.columns.status') },
       { key: typedNameof('initiatedFrom'), header: t('document.template.CaseAnalytics.columns.initiatedFrom') },
+      { key: typedNameof('primaryDomain'), header: t('document.template.CaseAnalytics.columns.primaryDomain') },
+      { key: typedNameof('secondaryDomain'), header: t('document.template.CaseAnalytics.columns.secondaryDomain') },
       { key: typedNameof('assigned'), header: t('document.template.CaseAnalytics.columns.assigned') },
       { key: typedNameof('alreadyRequestedInThePast'), header: t('document.template.CaseAnalytics.columns.alreadyRequestedInThePast') },
       { key: typedNameof('gotAnswerFromPreviousRequest'), header: t('document.template.CaseAnalytics.columns.gotAnswerFromPreviousRequest') },

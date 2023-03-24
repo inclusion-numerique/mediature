@@ -55,6 +55,8 @@
           "gotAnswerFromPreviousRequest": "Réponse pour le premier recours",
           "humanId": "Dossier",
           "initiatedFrom": "Origine",
+          "primaryDomain": "Domaine principal",
+          "secondaryDomain": "Domaine secondaire",
           "status": "Statut",
           "updatedAt": "Date de dernière mise à jour"
         }
