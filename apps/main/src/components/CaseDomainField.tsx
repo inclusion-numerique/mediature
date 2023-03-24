@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CreateCaseDomainItemForm } from '@mediature/main/src/components/CreateCaseDomainItemForm';
@@ -25,16 +25,13 @@ import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal
 const filter = createFilterOptions<CaseDomainItemSchemaType>();
 
 export interface ItemActionsProps {
-  availableParentItems: CaseDomainItemSchemaType[];
   item: CaseDomainItemSchemaType;
   authorityId?: string;
+  openEditModal: (item: CaseDomainItemSchemaType) => void;
 }
 
 function ItemActions(props: ItemActionsProps) {
-  const { ContextualEditCaseDomainItemForm } = useContext(CaseDomainFieldContext);
-
   const deleteCaseDomainItem = trpc.deleteCaseDomainItem.useMutation();
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
@@ -50,44 +47,21 @@ function ItemActions(props: ItemActionsProps) {
     });
   };
 
-  const handleCloseEditModal = () => {
-    setEditModalOpen(false);
-  };
-
   return (
     <>
-      <IconButton aria-label="modifier le domaine" onClick={() => {}} size="small" sx={{ ml: 1 }}>
+      <IconButton
+        aria-label="modifier le domaine"
+        onClick={() => {
+          props.openEditModal(props.item);
+        }}
+        size="small"
+        sx={{ ml: 1 }}
+      >
         <EditIcon />
       </IconButton>
       <IconButton aria-label="supprimer le domaine" onClick={deleteCaseDomainItemAction} size="small">
         <DeleteIcon />
       </IconButton>
-      <Dialog open={editModalOpen} onClose={handleCloseEditModal}>
-        <DialogTitle>
-          <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-            <Grid item xs="auto">
-              Modification du domaine
-            </Grid>
-            <Grid item xs="auto">
-              <IconButton aria-label="fermer" onClick={handleCloseEditModal} size="small">
-                <CloseIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </DialogTitle>
-        <DialogContent>
-          La modification du libellé de ce domaine aura aussi effet sur les dossiers déjà attachés à ce domaine.
-          <ContextualEditCaseDomainItemForm
-            availableParentItems={props.availableParentItems}
-            prefill={EditCaseDomainItemPrefillSchema.parse({
-              itemId: props.item.id,
-              parentId: props.item.parentId,
-              name: props.item.name,
-            })}
-            onSuccess={handleCloseEditModal}
-          />
-        </DialogContent>
-      </Dialog>
     </>
   );
 }
@@ -130,7 +104,7 @@ export interface CaseDomainFieldProps {
 }
 
 export function CaseDomainField(props: CaseDomainFieldProps) {
-  const { ContextualCreateCaseDomainItemForm } = useContext(CaseDomainFieldContext);
+  const { ContextualCreateCaseDomainItemForm, ContextualEditCaseDomainItemForm } = useContext(CaseDomainFieldContext);
   const theme = useColors();
   const { onChange } = props;
 
@@ -150,6 +124,8 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
   const [value, setValue] = useState<CaseDomainItemSchemaType | null>(props.value || null);
   const [inputValue, setInputValue] = useState<string>('');
   const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
+  const [editModalItem, setEditModalItem] = useState<CaseDomainItemSchemaType | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const domains = useMemo(() => {
     return data?.items || [];
@@ -161,6 +137,21 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
   const handleCloseCreateModal = () => {
     setCreateModalOpen(false);
   };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setEditModalItem(null);
+  };
+
+  useEffect(() => {
+    // By default the `Autocomplete` component does not refresh the selected input (even if deleted in the list or edited on the same key)
+    // so we try to get new information from the current value if any
+    const foundItem = domains.find((item) => {
+      return item.id === value?.id;
+    });
+
+    setValue(foundItem || null);
+  }, [domains, value]);
 
   return (
     <>
@@ -277,7 +268,14 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
                   />
                   {option.name}
                   {editMode && (!props.authorityId || !!option.authorityId) && (
-                    <ItemActions availableParentItems={availableParentItems} item={option} authorityId={props.authorityId} />
+                    <ItemActions
+                      item={option}
+                      authorityId={props.authorityId}
+                      openEditModal={(item) => {
+                        setEditModalItem(item);
+                        setEditModalOpen(true);
+                      }}
+                    />
                   )}
                 </li>
               );
@@ -294,11 +292,19 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
                     '&:hover': {
                       backgroundColor: theme.decisions.background.default.grey.hover,
                     },
+                    zIndex: 1,
                   }}
                 >
                   {option.name}
                   {editMode && (!props.authorityId || !!option.authorityId) && (
-                    <ItemActions availableParentItems={availableParentItems} item={option} authorityId={props.authorityId} />
+                    <ItemActions
+                      item={option}
+                      authorityId={props.authorityId}
+                      openEditModal={(item) => {
+                        setEditModalItem(item);
+                        setEditModalOpen(true);
+                      }}
+                    />
                   )}
                 </Typography>
               );
@@ -365,6 +371,36 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
             }}
             onSuccess={handleCloseCreateModal}
           />
+        </DialogContent>
+      </Dialog>
+      <Dialog open={editModalOpen} onClose={handleCloseEditModal}>
+        <DialogTitle>
+          <Grid container spacing={2} justifyContent="space-between" alignItems="center">
+            <Grid item xs="auto">
+              Modification du domaine
+            </Grid>
+            <Grid item xs="auto">
+              <IconButton aria-label="fermer" onClick={handleCloseEditModal} size="small">
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Typography component="div" sx={{ pb: 3 }}>
+            La modification du libellé de ce domaine aura aussi effet sur les dossiers déjà attachés à ce domaine.
+          </Typography>
+          {!!editModalItem && (
+            <ContextualEditCaseDomainItemForm
+              availableParentItems={availableParentItems}
+              prefill={EditCaseDomainItemPrefillSchema.parse({
+                itemId: editModalItem.id,
+                parentId: editModalItem.parentId,
+                name: editModalItem.name,
+              })}
+              onSuccess={handleCloseEditModal}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </>

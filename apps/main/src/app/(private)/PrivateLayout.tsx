@@ -146,6 +146,9 @@ export function PrivateLayout(props: PropsWithChildren) {
       const authorityEditLink = linkRegistry.get('authorityEdit', {
         authorityId: currentAuthority.id,
       });
+      const authorityComponentsEditLink = linkRegistry.get('authorityComponentsEdit', {
+        authorityId: currentAuthority.id,
+      });
 
       menuLinks.push(
         ...[
@@ -170,6 +173,13 @@ export function PrivateLayout(props: PropsWithChildren) {
               href: authorityEditLink,
             },
           },
+          {
+            isActive: hasPathnameThisMatch(pathname, authorityComponentsEditLink),
+            text: 'Modifier les listes dynamiques de la collectivité',
+            linkProps: {
+              href: authorityComponentsEditLink,
+            },
+          },
         ]
       );
     }
@@ -178,6 +188,7 @@ export function PrivateLayout(props: PropsWithChildren) {
       const authorityListLink = linkRegistry.get('authorityList', undefined);
       const adminListLink = linkRegistry.get('adminList', undefined);
       const globalMetricsLink = linkRegistry.get('globalMetrics', undefined);
+      const globalComponentsEditLink = linkRegistry.get('globalComponentsEdit', undefined);
 
       menuLinks.push(
         ...[
@@ -193,6 +204,13 @@ export function PrivateLayout(props: PropsWithChildren) {
             text: 'Gérer les administrateurs de la plateforme',
             linkProps: {
               href: adminListLink,
+            },
+          },
+          {
+            isActive: hasPathnameThisMatch(pathname, globalComponentsEditLink),
+            text: 'Modifier les listes dynamiques de la plateforme',
+            linkProps: {
+              href: globalComponentsEditLink,
             },
           },
           {

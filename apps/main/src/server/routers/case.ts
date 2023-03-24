@@ -478,16 +478,20 @@ export const caseRouter = router({
     const item = await prisma.caseDomainItem.create({
       data: {
         name: input.name,
-        authority: {
-          connect: {
-            id: input.authorityId || undefined,
-          },
-        },
-        parentItem: {
-          connect: {
-            id: input.parentId || undefined,
-          },
-        },
+        authority: !!input.authorityId
+          ? {
+              connect: {
+                id: input.authorityId,
+              },
+            }
+          : undefined,
+        parentItem: !!input.parentId
+          ? {
+              connect: {
+                id: input.parentId,
+              },
+            }
+          : undefined,
       },
       include: {
         parentItem: true,
@@ -521,11 +525,13 @@ export const caseRouter = router({
       },
       data: {
         name: input.name,
-        parentItem: {
-          connect: {
-            id: input.parentId || undefined,
-          },
-        },
+        parentItem: !!input.parentId
+          ? {
+              connect: {
+                id: input.parentId,
+              },
+            }
+          : undefined,
       },
       include: {
         parentItem: true,

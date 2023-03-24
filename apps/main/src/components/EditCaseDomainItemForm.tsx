@@ -6,6 +6,7 @@ import Button from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -45,6 +46,10 @@ export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
     props.onSuccess && props.onSuccess();
   };
 
+  const sortedAvailableParentItems = useMemo(() => {
+    return props.availableParentItems.sort((a, b) => a.name.localeCompare(b.name));
+  }, [props.availableParentItems]);
+
   return (
     <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="créer une domaine">
       <Grid item xs={12}>
@@ -66,7 +71,7 @@ export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
           <MenuItem value="">
             <em>Aucun</em>
           </MenuItem>
-          {props.availableParentItems.map((availableParentItem) => (
+          {sortedAvailableParentItems.map((availableParentItem) => (
             <MenuItem key={availableParentItem.id} value={availableParentItem.id}>
               {availableParentItem.name}
             </MenuItem>
