@@ -3,7 +3,7 @@ import { MjmlText } from '@luma-team/mjml-react';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
 export function formatTitle() {
-  return `Nouveaux droits sur la plateforme`;
+  return `Droits révoqués sur la plateforme`;
 }
 
 export interface AdminRoleRevokedEmailProps {
