@@ -40,7 +40,7 @@ export const adminRouter = router({
 
     const revokedUser = await prisma.user.findUnique({
       where: {
-        id: ctx.user.id,
+        id: input.userId,
       },
     });
 
@@ -53,7 +53,7 @@ export const adminRouter = router({
     await prisma.admin.deleteMany({
       where: {
         user: {
-          id: input.userId,
+          id: revokedUser.id,
         },
       },
     });
