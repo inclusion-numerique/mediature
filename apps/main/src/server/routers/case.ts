@@ -821,7 +821,7 @@ export const caseRouter = router({
   generateCsvFromCaseAnalytics: privateProcedure.input(GenerateCsvFromCaseAnalyticsSchema).mutation(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité de ce dossier pour le mettre à jour`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
