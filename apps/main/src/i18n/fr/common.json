@@ -38,7 +38,7 @@
     "template": {
       "CaseAnalytics": {
         "naming": {
-          "authorityFilename": "Statistiques de la collectivité {authorityName}",
+          "authorityFilename": "Statistiques de la collectivité {{ authorityName }}",
           "globalFilename": "Statistiques de la plateforme Médiature"
         },
         "columns": {

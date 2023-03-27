@@ -835,7 +835,7 @@ export const caseRouter = router({
         },
       });
 
-      filenameBase = t('document.template.CaseAnalytics.naming.authorityFilename', { authorityId: authority.name });
+      filenameBase = t('document.template.CaseAnalytics.naming.authorityFilename', { authorityName: authority.name });
     } else {
       filenameBase = t('document.template.CaseAnalytics.naming.globalFilename');
     }
