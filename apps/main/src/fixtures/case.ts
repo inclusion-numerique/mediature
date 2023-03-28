@@ -3,6 +3,7 @@ import { CaseAnalytics } from '@prisma/client';
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import {
+  CaseCompetentThirdPartyItemSchemaType,
   CaseDomainItemSchemaType,
   CaseNoteSchema,
   CaseNoteSchemaType,
@@ -79,6 +80,72 @@ export const caseDomains: CaseDomainItemSchemaType[] = [
   },
 ];
 
+export const caseCompetentThirdParties: CaseCompetentThirdPartyItemSchemaType[] = [
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a010',
+    name: 'Parent A',
+    authorityId: null,
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a020',
+    name: 'Parent B',
+    authorityId: null,
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a021',
+    name: 'Child B1',
+    authorityId: null,
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a020',
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a022',
+    name: 'Child B2',
+    authorityId: null,
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a020',
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a030',
+    name: 'Parent C',
+    authorityId: '7c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: null,
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a031',
+    name: 'Child C1',
+    authorityId: '7c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a032',
+    name: 'Child C2',
+    authorityId: '7c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a033',
+    name: 'Child C3',
+    authorityId: '7c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+  {
+    id: '7c03994c-fc16-47e0-bd02-c218a370a034',
+    name: 'Child C4',
+    authorityId: '7c03994c-fc16-47e0-bd02-d218a370a111',
+    parentId: '7c03994c-fc16-47e0-bd02-c218a370a030',
+    parentName: null,
+  },
+];
+
 export const cases: CaseSchemaType[] = [
   CaseSchema.parse({
     id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
@@ -94,6 +161,8 @@ export const cases: CaseSchemaType[] = [
 
     Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat libero amet. Architecto provident recusandae.`,
     domain: null,
+    competent: true,
+    competentThirdParty: null,
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,
@@ -117,6 +186,8 @@ export const cases: CaseSchemaType[] = [
     description:
       'Saepe itaque autem. Quibusdam magnam aliquid nihil. Autem mollitia ab. Blanditiis beatae odit molestiae dolores inventore tempora in blanditiis. Error tempore unde ex neque temporibus occaecati. Quia consectetur tenetur aut nam id.',
     domain: caseDomains[0],
+    competent: false,
+    competentThirdParty: caseCompetentThirdParties[0],
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,
@@ -140,6 +211,8 @@ export const cases: CaseSchemaType[] = [
     description:
       'Quidem maxime natus veritatis voluptatem molestiae similique omnis voluptas voluptas. Consequatur nam vero architecto reiciendis qui quis vitae odio dolore. Ut odio illo quaerat vel maxime sit vitae. Velit velit id perspiciatis consequatur velit veniam non.',
     domain: caseDomains[0],
+    competent: false,
+    competentThirdParty: caseCompetentThirdParties[0],
     units: '',
     emailCopyWanted: false,
     termReminderAt: null,

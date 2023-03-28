@@ -7,6 +7,7 @@ import {
   AuthorityComponentsEditPage,
   AuthorityComponentsEditPageContext,
 } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/components/edit/AuthorityComponentsEditPage';
+import { Normal as CaseCompetentThirdPartyFieldNormalStory } from '@mediature/main/src/components/CaseCompetentThirdPartyField.stories';
 import { Normal as CaseDomainFieldNormalStory } from '@mediature/main/src/components/CaseDomainField.stories';
 
 type ComponentType = typeof AuthorityComponentsEditPage;
@@ -48,6 +49,7 @@ export const Normal = prepareStory(NormalStory, {
     context: AuthorityComponentsEditPageContext,
     value: {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
+      ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
     },
   },
 });
@@ -69,6 +71,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
     context: AuthorityComponentsEditPageContext,
     value: {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
+      ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
     },
   },
 });

@@ -8,11 +8,15 @@ import {
   AddAttachmentToCaseSchema,
   AddNoteToCaseSchema,
   AssignCaseSchema,
+  CreateCaseCompetentThirdPartyItemSchema,
   CreateCaseDomainItemSchema,
+  DeleteCaseCompetentThirdPartyItemSchema,
   DeleteCaseDomainItemSchema,
+  EditCaseCompetentThirdPartyItemSchema,
   EditCaseDomainItemSchema,
   GenerateCsvFromCaseAnalyticsSchema,
   GeneratePdfFromCaseSchema,
+  GetCaseCompetentThirdPartyItemsSchema,
   GetCaseDomainItemsSchema,
   GetCaseSchema,
   ListCasesSchema,
@@ -35,6 +39,8 @@ import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
   attachmentPrismaToModel,
+  caseCompetentThirdPartyItemPrismaToModel,
+  caseCompetentThirdPartyItemsPrismaToModel,
   caseDomainItemPrismaToModel,
   caseDomainItemsPrismaToModel,
   caseNotePrismaToModel,
@@ -128,6 +134,22 @@ export async function assertCaseDomainParentItemIsAllowed(parentItemId: string, 
   }
 }
 
+export async function assertCaseCompetentThirdPartyParentItemIsAllowed(parentItemId: string, expectedAuthorityId?: string): Promise<void> {
+  const parentItem = await prisma.caseCompetentThirdPartyItem.findUniqueOrThrow({
+    where: {
+      id: parentItemId,
+    },
+  });
+
+  if (!!parentItem.parentItemId) {
+    throw new Error(`vous ne pouvez que créer des entités tierces de niveau 1 ou 2`);
+  } else if (!!expectedAuthorityId && parentItem.authorityId !== null && expectedAuthorityId !== parentItem.authorityId) {
+    throw new Error(`vous ne pouvez rattacher votre entité tierce qu'à une entité de la plateforme ou de votre propre collectivité`);
+  } else if (!expectedAuthorityId && parentItem.authorityId !== null) {
+    throw new Error(`vous ne pouvez rattacher votre entité tierce de plateforme qu'à un autre entité de plateforme`);
+  }
+}
+
 export const caseRouter = router({
   requestCase: publicProcedure.input(RequestCaseSchema).mutation(async ({ ctx, input }) => {
     const { attachmentsToAdd, markNewAttachmentsAsUsed } = await formatSafeAttachmentsToProcess(
@@ -144,6 +166,7 @@ export const caseRouter = router({
         alreadyRequestedInThePast: input.alreadyRequestedInThePast,
         gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
+        competent: null,
         units: '', // TODO
         emailCopyWanted: input.emailCopyWanted,
         termReminderAt: null,
@@ -197,6 +220,11 @@ export const caseRouter = router({
         citizen: true,
         authority: true,
         domain: {
+          include: {
+            parentItem: true,
+          },
+        },
+        competentThirdParty: {
           include: {
             parentItem: true,
           },
@@ -257,6 +285,20 @@ export const caseRouter = router({
       }
     }
 
+    if (!!input.competentThirdPartyId) {
+      const competentThirdParty = await prisma.caseCompetentThirdPartyItem.findUnique({
+        where: {
+          id: input.competentThirdPartyId,
+        },
+      });
+
+      if (!competentThirdParty) {
+        throw new Error(`l'entité tierce que vous essayez de lier n'existe pas`);
+      } else if (competentThirdParty.authorityId !== null && competentThirdParty.authorityId !== targetedCase.authorityId) {
+        throw new Error(`vous ne pouvez lier qu'une entité tierce de la plateforme ou un appartenant à votre collectivité`);
+      }
+    }
+
     let closedAt: Date | null = null;
     let statusSwitchedToClose = false;
     if (input.close) {
@@ -289,6 +331,15 @@ export const caseRouter = router({
             : undefined,
           disconnect: !input.domainId ? true : undefined,
         },
+        competent: input.competent,
+        competentThirdParty: {
+          connect: input.competentThirdPartyId
+            ? {
+                id: input.competentThirdPartyId,
+              }
+            : undefined,
+          disconnect: !input.competentThirdPartyId ? true : undefined,
+        },
         citizen: {
           update: {
             address: {
@@ -319,6 +370,11 @@ export const caseRouter = router({
           },
         },
         domain: {
+          include: {
+            parentItem: true,
+          },
+        },
+        competentThirdParty: {
           include: {
             parentItem: true,
           },
@@ -570,6 +626,143 @@ export const caseRouter = router({
     }
 
     const deletedItem = await prisma.caseDomainItem.delete({
+      where: {
+        id: input.itemId,
+      },
+    });
+
+    return;
+  }),
+  getCaseCompetentThirdPartyItems: privateProcedure.input(GetCaseCompetentThirdPartyItemsSchema).query(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour récupérer ses entités tierces`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const items = await prisma.caseCompetentThirdPartyItem.findMany({
+      where: {
+        OR: [
+          {
+            authorityId: input.authorityId,
+          },
+          {
+            authorityId: null,
+          },
+        ],
+      },
+    });
+
+    return {
+      items: caseCompetentThirdPartyItemsPrismaToModel(items),
+    };
+  }),
+  createCaseCompetentThirdPartyItem: privateProcedure.input(CreateCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui créer une entité tierce`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    if (!!input.parentId) {
+      await assertCaseCompetentThirdPartyParentItemIsAllowed(input.parentId, input.authorityId || undefined);
+    }
+
+    const item = await prisma.caseCompetentThirdPartyItem.create({
+      data: {
+        name: input.name,
+        authority: !!input.authorityId
+          ? {
+              connect: {
+                id: input.authorityId,
+              },
+            }
+          : undefined,
+        parentItem: !!input.parentId
+          ? {
+              connect: {
+                id: input.parentId,
+              },
+            }
+          : undefined,
+      },
+      include: {
+        parentItem: true,
+      },
+    });
+
+    return { item: caseCompetentThirdPartyItemPrismaToModel(item, item.parentItem || undefined) };
+  }),
+  editCaseCompetentThirdPartyItem: privateProcedure.input(EditCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
+    const item = await prisma.caseCompetentThirdPartyItem.findUnique({
+      where: {
+        id: input.itemId,
+      },
+    });
+
+    if (!item) {
+      throw new Error(`cette entité tierce n'existe pas`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    } else if (!!item.authorityId && !(await isUserAnAgentPartOfAuthority(item.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour modifier l'une de ses entités tierces`);
+    }
+
+    if (!!input.parentId) {
+      await assertCaseCompetentThirdPartyParentItemIsAllowed(input.parentId, item.authorityId || undefined);
+    }
+
+    const updatedItem = await prisma.caseCompetentThirdPartyItem.update({
+      where: {
+        id: item.id,
+      },
+      data: {
+        name: input.name,
+        parentItem: !!input.parentId
+          ? {
+              connect: {
+                id: input.parentId,
+              },
+            }
+          : undefined,
+      },
+      include: {
+        parentItem: true,
+      },
+    });
+
+    return { item: caseCompetentThirdPartyItemPrismaToModel(updatedItem, updatedItem.parentItem || undefined) };
+  }),
+  deleteCaseCompetentThirdPartyItem: privateProcedure.input(DeleteCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
+    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer une entité tierce`);
+    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    }
+
+    const item = await prisma.caseCompetentThirdPartyItem.findFirst({
+      where: {
+        id: input.itemId,
+        authorityId: input.authorityId,
+      },
+      include: {
+        _count: {
+          select: {
+            childrenItems: true,
+            Case: true,
+          },
+        },
+      },
+    });
+    if (!item) {
+      throw new Error(`cette entité tierce n'existe pas`);
+    } else if (item._count.Case > 0) {
+      throw new Error(`aucun dossier ne doit être lié à cette entité tierce pour pouvoir être supprimée`);
+    } else if (item._count.childrenItems > 0) {
+      throw new Error(`aucune "entité tierce enfant" ne doit être liée à cette entité pour pouvoir être supprimée`);
+    }
+
+    const deletedItem = await prisma.caseCompetentThirdPartyItem.delete({
       where: {
         id: input.itemId,
       },

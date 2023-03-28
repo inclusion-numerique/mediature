@@ -5,12 +5,18 @@ import { AddressInputSchema } from '@mediature/main/src/models/entities/address'
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentInputSchema, AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
-import { CaseAttachmentTypeSchema, CaseDomainItemSchema, CaseNoteSchema, incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
+import {
+  CaseAttachmentTypeSchema,
+  CaseCompetentThirdPartyItemSchema,
+  CaseDomainItemSchema,
+  CaseNoteSchema,
+  incompleteCaseSchema,
+} from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
 
 export const requestCaseAttachmentsMax = 10;
-export const RequestCaseSchema = z
+export const incompleteRequestCaseSchema = z
   .object({
     authorityId: incompleteCaseSchema.shape.authorityId,
     email: CitizenSchema.shape.email,
@@ -25,13 +31,23 @@ export const RequestCaseSchema = z
     attachments: z.array(AttachmentInputSchema).max(requestCaseAttachmentsMax),
   })
   .strict();
+export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, ctx) => {
+  if (data) {
+    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant.`,
+      });
+    }
+  }
+});
 export type RequestCaseSchemaType = z.infer<typeof RequestCaseSchema>;
 
-export const RequestCasePrefillSchema = RequestCaseSchema.deepPartial();
+export const RequestCasePrefillSchema = incompleteRequestCaseSchema.deepPartial();
 export type RequestCasePrefillSchemaType = z.infer<typeof RequestCasePrefillSchema>;
 
 export const updateCaseAttachmentsMax = 100;
-export const UpdateCaseSchema = z
+export const incompleteUpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
@@ -39,6 +55,8 @@ export const UpdateCaseSchema = z
     phone: PhoneInputSchema,
     description: incompleteCaseSchema.shape.description,
     domainId: z.string().uuid().nullable(),
+    competent: incompleteCaseSchema.shape.competent,
+    competentThirdPartyId: z.string().uuid().nullable(),
     units: incompleteCaseSchema.shape.units,
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,
@@ -47,9 +65,19 @@ export const UpdateCaseSchema = z
     nextRequirements: incompleteCaseSchema.shape.nextRequirements,
   })
   .strict();
+export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ctx) => {
+  if (data) {
+    if (data.competent === true && data.competentThirdPartyId !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué ne pas être compétent pour traiter le dossier`,
+      });
+    }
+  }
+});
 export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
 
-export const UpdateCasePrefillSchema = UpdateCaseSchema.deepPartial();
+export const UpdateCasePrefillSchema = incompleteUpdateCaseSchema.deepPartial();
 export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema>;
 
 export const AssignCaseSchema = z
@@ -123,6 +151,48 @@ export type DeleteCaseDomainItemSchemaType = z.infer<typeof DeleteCaseDomainItem
 
 export const DeleteCaseDomainItemPrefillSchema = DeleteCaseDomainItemSchema.deepPartial();
 export type DeleteCaseDomainItemPrefillSchemaType = z.infer<typeof DeleteCaseDomainItemPrefillSchema>;
+
+export const GetCaseCompetentThirdPartyItemsSchema = z
+  .object({
+    authorityId: AuthoritySchema.shape.id.nullable(),
+  })
+  .strict();
+export type GetCaseCompetentThirdPartyItemsSchemaType = z.infer<typeof GetCaseCompetentThirdPartyItemsSchema>;
+
+export const CreateCaseCompetentThirdPartyItemSchema = z
+  .object({
+    authorityId: AuthoritySchema.shape.id.nullish(),
+    parentId: CaseCompetentThirdPartyItemSchema.shape.id.nullish(),
+    name: CaseCompetentThirdPartyItemSchema.shape.name,
+  })
+  .strict();
+export type CreateCaseCompetentThirdPartyItemSchemaType = z.infer<typeof CreateCaseCompetentThirdPartyItemSchema>;
+
+export const CreateCaseCompetentThirdPartyItemPrefillSchema = CreateCaseCompetentThirdPartyItemSchema.deepPartial();
+export type CreateCaseCompetentThirdPartyItemPrefillSchemaType = z.infer<typeof CreateCaseCompetentThirdPartyItemPrefillSchema>;
+
+export const EditCaseCompetentThirdPartyItemSchema = z
+  .object({
+    itemId: CaseCompetentThirdPartyItemSchema.shape.id,
+    parentId: CaseCompetentThirdPartyItemSchema.shape.id.nullish(),
+    name: CaseCompetentThirdPartyItemSchema.shape.name,
+  })
+  .strict();
+export type EditCaseCompetentThirdPartyItemSchemaType = z.infer<typeof EditCaseCompetentThirdPartyItemSchema>;
+
+export const EditCaseCompetentThirdPartyItemPrefillSchema = EditCaseCompetentThirdPartyItemSchema.deepPartial();
+export type EditCaseCompetentThirdPartyItemPrefillSchemaType = z.infer<typeof EditCaseCompetentThirdPartyItemPrefillSchema>;
+
+export const DeleteCaseCompetentThirdPartyItemSchema = z
+  .object({
+    itemId: CaseCompetentThirdPartyItemSchema.shape.id,
+    authorityId: AuthoritySchema.shape.id.nullish(),
+  })
+  .strict();
+export type DeleteCaseCompetentThirdPartyItemSchemaType = z.infer<typeof DeleteCaseCompetentThirdPartyItemSchema>;
+
+export const DeleteCaseCompetentThirdPartyItemPrefillSchema = DeleteCaseCompetentThirdPartyItemSchema.deepPartial();
+export type DeleteCaseCompetentThirdPartyItemPrefillSchemaType = z.infer<typeof DeleteCaseCompetentThirdPartyItemPrefillSchema>;
 
 export const ListCasesSchema = GetterInputSchema.extend({
   filterBy: z.object({

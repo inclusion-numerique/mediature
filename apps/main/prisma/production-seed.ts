@@ -145,11 +145,83 @@ const platformDomains: PlatformDomain[] = [
   },
 ];
 
+// This represents platform competent third-parties shared across all authorities
+// (no reason to populate authority specifics)
+interface PlatformCompetentThirdParty {
+  name: string;
+  children?: string[];
+}
+
+const platformCompetentThirdParties: PlatformCompetentThirdParty[] = [
+  {
+    name: 'Médiateur institutionnel',
+    children: [
+      'Défenseur des droits',
+      'Enseignement, formation',
+      'Autre Collectivité',
+      'CAF',
+      'Retraite',
+      'CPAM',
+      'Médiateur URSSAF',
+      'Médiateur UDAFF',
+      'Pôle Emploi',
+      'Communication postale ou électronique',
+      'Entreprises',
+      'Médiateur en Entreprise',
+      'Médiateur Économique et financier',
+      'Médiateur Énergie',
+      'Médiateur Eau',
+      'Banque, Assurance, Mutuelle',
+      'Santé',
+      'Transport',
+      'Médiateur MSAP',
+      'Médiateur CCI',
+      'Médiateur DIRECCTE',
+      'DGFIP Concilliateur fiscal',
+      'Médiateur Fédération des banques françaises',
+      'Médiateur Notariat',
+      'Médiateur Consommation',
+      'Conciliateur de justice',
+      'Médiateur Familial',
+      'Médiateur Médical',
+      'Médiateur Social',
+      'Médiateur Tourisme',
+    ],
+  },
+  {
+    name: 'Hors Médiateur',
+    children: [
+      'Bailleur',
+      'Tribunal administratif',
+      'Trésorerie',
+      'Centre Hospitalier',
+      'Centre de gestion',
+      'Maison de la justice et du droit',
+      'ADIL',
+      'Collectivité ou groupement de collectivités sans médiateur',
+      'Opérateur de téléphonie',
+      'Tribunal',
+      'Huissier de justice',
+      'Mutuelle S.Agricole',
+      'Transport',
+      'ARCEP',
+      'ARCOM',
+      'ACNUSA',
+      'Régulation de la concurrence',
+      'Autre Autorité de régulation',
+      'CNIL',
+      'Préfecture',
+      'Officier du ministère public',
+      'Prudhomme',
+    ],
+  },
+];
+
 // Some data is known in advance but does not fit into ENUMs, they are dynamic so we need
 // to define them through tables, the following code helps populating the database when
 // setting up an environment
 export async function seedProductionDataIntoDatabase(prismaClient: PrismaClient) {
-  const results = await Promise.all(
+  const domainsResults = await Promise.all(
     platformDomains.map(async (platformDomain) => {
       const result = await prismaClient.caseDomainItem.create({
         data: {
@@ -158,6 +230,29 @@ export async function seedProductionDataIntoDatabase(prismaClient: PrismaClient)
           childrenItems: platformDomain.children
             ? {
                 create: platformDomain.children.map((childItemName) => {
+                  return {
+                    authorityId: null,
+                    name: childItemName,
+                  };
+                }),
+              }
+            : undefined,
+        },
+      });
+
+      return result;
+    })
+  );
+
+  const competentThirdPartiesResults = await Promise.all(
+    platformCompetentThirdParties.map(async (platformCompetentThirdParty) => {
+      const result = await prismaClient.caseCompetentThirdPartyItem.create({
+        data: {
+          authorityId: null, // Since platform shared item
+          name: platformCompetentThirdParty.name,
+          childrenItems: platformCompetentThirdParty.children
+            ? {
+                create: platformCompetentThirdParty.children.map((childItemName) => {
                   return {
                     authorityId: null,
                     name: childItemName,

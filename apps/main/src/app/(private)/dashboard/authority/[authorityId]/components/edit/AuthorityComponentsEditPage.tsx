@@ -4,11 +4,13 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createContext, useContext } from 'react';
 
+import { CaseCompetentThirdPartyField } from '@mediature/main/src/components/CaseCompetentThirdPartyField';
 import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
 import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 
 export const AuthorityComponentsEditPageContext = createContext({
   ContextualCaseDomainField: CaseDomainField,
+  ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyField,
 });
 
 export interface AuthorityComponentsEditPageProps {
@@ -16,7 +18,7 @@ export interface AuthorityComponentsEditPageProps {
 }
 
 export function AuthorityComponentsEditPage(props: AuthorityComponentsEditPageProps) {
-  const { ContextualCaseDomainField } = useContext(AuthorityComponentsEditPageContext);
+  const { ContextualCaseDomainField, ContextualCaseCompetentThirdPartyField } = useContext(AuthorityComponentsEditPageContext);
 
   return (
     <>
@@ -43,7 +45,7 @@ export function AuthorityComponentsEditPage(props: AuthorityComponentsEditPagePr
               <ContextualCaseDomainField authorityId={props.params.authorityId} editMode={true} onChange={() => {}} />
             </Grid>
             <Grid item xs={12} md={6}>
-              {/* . */}
+              <ContextualCaseCompetentThirdPartyField authorityId={props.params.authorityId} editMode={true} onChange={() => {}} />
             </Grid>
           </Grid>
         </Grid>

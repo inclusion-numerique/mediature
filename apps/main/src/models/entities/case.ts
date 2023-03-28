@@ -22,6 +22,17 @@ export const CaseDomainItemSchema = z
   .strict();
 export type CaseDomainItemSchemaType = z.infer<typeof CaseDomainItemSchema>;
 
+export const CaseCompetentThirdPartyItemSchema = z
+  .object({
+    id: z.string().uuid(),
+    authorityId: z.string().nullable(),
+    parentId: z.string().nullable(),
+    parentName: z.string().nullable(),
+    name: z.string().min(1),
+  })
+  .strict();
+export type CaseCompetentThirdPartyItemSchemaType = z.infer<typeof CaseCompetentThirdPartyItemSchema>;
+
 export const incompleteCaseSchema = z
   .object({
     id: z.string().uuid(),
@@ -33,6 +44,8 @@ export const incompleteCaseSchema = z
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
     description: z.string().min(1),
     domain: CaseDomainItemSchema.nullable(),
+    competent: z.boolean().nullable(),
+    competentThirdParty: CaseCompetentThirdPartyItemSchema.nullable(),
     units: z.string(),
     emailCopyWanted: z.boolean(),
     termReminderAt: z.date().nullable(),
@@ -47,11 +60,20 @@ export const incompleteCaseSchema = z
   })
   .strict();
 export const CaseSchema = incompleteCaseSchema.superRefine((data, ctx) => {
-  if (data && data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant.`,
-    });
+  if (data) {
+    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `un dossier ne peut pas avoir eu une réponse de l'administration s'il est indiqué qu'aucune requête n'a été faite auparavant.`,
+      });
+    }
+
+    if (data.competent === true && data.competentThirdParty !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `une entité tierce compétente ne peut être définie que si le dossier est marqué avec "non-compétence"`,
+      });
+    }
   }
 });
 export type CaseSchemaType = z.infer<typeof CaseSchema>;

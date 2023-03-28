@@ -4,6 +4,7 @@ import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMainTitle } from '@mediature/docs/.storybook/testing';
 import { AsAdmin as PrivateLayoutAsAdminStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { ComponentsEditPage, ComponentsEditPageContext } from '@mediature/main/src/app/(private)/dashboard/components/edit/ComponentsEditPage';
+import { Normal as CaseCompetentThirdPartyFieldNormalStory } from '@mediature/main/src/components/CaseCompetentThirdPartyField.stories';
 import { Normal as CaseDomainFieldNormalStory } from '@mediature/main/src/components/CaseDomainField.stories';
 
 type ComponentType = typeof ComponentsEditPage;
@@ -37,6 +38,7 @@ export const Normal = prepareStory(NormalStory, {
     context: ComponentsEditPageContext,
     value: {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
+      ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
     },
   },
 });
@@ -56,6 +58,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
     context: ComponentsEditPageContext,
     value: {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
+      ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
     },
   },
 });

@@ -223,7 +223,26 @@ model CaseDomainItem {
 
   parentItem    CaseDomainItem?  @relation("ParentChildren", fields: [parentItemId], references: [id], onDelete: Cascade)
   childrenItems CaseDomainItem[] @relation("ParentChildren")
-  authority     Authority?       @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  authority     Authority?       @relation(fields: [authorityId], references: [id])
+  Case          Case[]
+
+  @@unique([parentItemId, authorityId, name])
+}
+
+/// @@Gen.model(hide: true)
+model CaseCompetentThirdPartyItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  parentItemId String? @db.Uuid
+  authorityId  String? @db.Uuid
+  name         String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  parentItem    CaseCompetentThirdPartyItem?  @relation("ParentChildren", fields: [parentItemId], references: [id], onDelete: Cascade)
+  childrenItems CaseCompetentThirdPartyItem[] @relation("ParentChildren")
+  authority     Authority?                    @relation(fields: [authorityId], references: [id])
   Case          Case[]
 
   @@unique([parentItemId, authorityId, name])
@@ -245,6 +264,8 @@ model Case {
   initiatedFrom                CaseInitialPlatform @default(WEB)
   status                       CaseStatus
   domainId                     String?             @db.Uuid
+  competent                    Boolean?
+  competentThirdPartyId        String?             @db.Uuid
   closedAt                     DateTime?
   finalConclusion              String?
   nextRequirements             String?
@@ -253,12 +274,13 @@ model Case {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  authority          Authority            @relation(fields: [authorityId], references: [id], onDelete: Cascade)
-  citizen            Citizen              @relation(fields: [citizenId], references: [id], onDelete: Cascade)
-  agent              Agent?               @relation(fields: [agentId], references: [id])
-  domain             CaseDomainItem?      @relation(fields: [domainId], references: [id])
-  Note               Note[]
-  AttachmentsOnCases AttachmentsOnCases[]
+  authority           Authority                    @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  citizen             Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  agent               Agent?                       @relation(fields: [agentId], references: [id])
+  domain              CaseDomainItem?              @relation(fields: [domainId], references: [id])
+  competentThirdParty CaseCompetentThirdPartyItem? @relation(fields: [competentThirdPartyId], references: [id])
+  Note                Note[]
+  AttachmentsOnCases  AttachmentsOnCases[]
 }
 
 /// @@Gen.model(hide: true)
@@ -349,12 +371,13 @@ model Authority {
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  mainAgent       Agent?            @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
-  logo            Attachment?       @relation(fields: [logoAttachmentId], references: [id])
-  AgentInvitation AgentInvitation[]
-  Case            Case[]
-  Agent           Agent[]
-  CaseDomainItem  CaseDomainItem[]
+  mainAgent                   Agent?                        @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
+  logo                        Attachment?                   @relation(fields: [logoAttachmentId], references: [id])
+  AgentInvitation             AgentInvitation[]
+  Case                        Case[]
+  Agent                       Agent[]
+  CaseDomainItem              CaseDomainItem[]
+  CaseCompetentThirdPartyItem CaseCompetentThirdPartyItem[]
 }
 
 enum CaseAttachmentType {

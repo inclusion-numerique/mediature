@@ -12,19 +12,23 @@ import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
-import { EditCaseDomainItemPrefillSchemaType, EditCaseDomainItemSchema, EditCaseDomainItemSchemaType } from '@mediature/main/src/models/actions/case';
-import { CaseDomainItemSchemaType } from '@mediature/main/src/models/entities/case';
+import {
+  CreateCaseCompetentThirdPartyItemPrefillSchemaType,
+  CreateCaseCompetentThirdPartyItemSchema,
+  CreateCaseCompetentThirdPartyItemSchemaType,
+} from '@mediature/main/src/models/actions/case';
+import { CaseCompetentThirdPartyItemSchemaType } from '@mediature/main/src/models/entities/case';
 
-export interface EditCaseDomainItemFormProps {
-  availableParentItems: CaseDomainItemSchemaType[];
-  prefill?: EditCaseDomainItemPrefillSchemaType;
+export interface CreateCaseCompetentThirdPartyItemFormProps {
+  availableParentItems: CaseCompetentThirdPartyItemSchemaType[];
+  prefill?: CreateCaseCompetentThirdPartyItemPrefillSchemaType;
   onSuccess?: () => void;
 }
 
-export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
+export function CreateCaseCompetentThirdPartyItemForm(props: CreateCaseCompetentThirdPartyItemFormProps) {
   const { t } = useTranslation('common');
 
-  const editCaseDomainItem = trpc.editCaseDomainItem.useMutation();
+  const createCaseCompetentThirdPartyItem = trpc.createCaseCompetentThirdPartyItem.useMutation();
 
   const {
     register,
@@ -32,16 +36,17 @@ export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
     formState: { errors },
     setValue,
     control,
-  } = useForm<EditCaseDomainItemSchemaType>({
-    resolver: zodResolver(EditCaseDomainItemSchema),
+  } = useForm<CreateCaseCompetentThirdPartyItemSchemaType>({
+    resolver: zodResolver(CreateCaseCompetentThirdPartyItemSchema),
     defaultValues: {
+      authorityId: null,
       parentId: null,
       ...props.prefill,
     },
   });
 
-  const onSubmit = async (input: EditCaseDomainItemSchemaType) => {
-    const { item } = await editCaseDomainItem.mutateAsync(input);
+  const onSubmit = async (input: CreateCaseCompetentThirdPartyItemSchemaType) => {
+    const { item } = await createCaseCompetentThirdPartyItem.mutateAsync(input);
 
     props.onSuccess && props.onSuccess();
   };
@@ -51,11 +56,11 @@ export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
   }, [props.availableParentItems]);
 
   return (
-    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="éditer le domaine">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="créer une entité tierce compétente">
       <Grid item xs={12}>
         <TextField
           select
-          label="Domaine parent"
+          label="Entité parent"
           defaultValue={control._defaultValues.parentId || ''}
           onChange={(event) => {
             if (event.target.value === '') {
@@ -82,7 +87,14 @@ export function EditCaseDomainItemForm(props: EditCaseDomainItemFormProps) {
         <TextField type="name" label="Nom" {...register('name')} error={!!errors.name} helperText={errors?.name?.message} fullWidth />
       </Grid>
       <Grid item xs={12}>
-        <Button type="submit" loading={editCaseDomainItem.isLoading} size="large" variant="contained" startIcon={<SaveIcon />} fullWidth>
+        <Button
+          type="submit"
+          loading={createCaseCompetentThirdPartyItem.isLoading}
+          size="large"
+          variant="contained"
+          startIcon={<SaveIcon />}
+          fullWidth
+        >
           Sauvegarder
         </Button>
       </Grid>

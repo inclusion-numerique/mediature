@@ -19,9 +19,15 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -34,6 +40,7 @@ import { useTranslation } from 'react-i18next';
 import { AddNoteForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { CaseCompetentThirdPartyField } from '@mediature/main/src/components/CaseCompetentThirdPartyField';
 import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { FileList } from '@mediature/main/src/components/FileList';
@@ -56,6 +63,7 @@ export const CasePageContext = createContext({
   ContextualAddNoteForm: AddNoteForm,
   ContextualUploader: Uploader,
   ContextualCaseDomainField: CaseDomainField,
+  ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyField,
 });
 
 export interface CasePageProps {
@@ -67,7 +75,8 @@ export interface CasePageProps {
 
 export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const { t } = useTranslation('common');
-  const { ContextualNoteCard, ContextualAddNoteForm, ContextualUploader, ContextualCaseDomainField } = useContext(CasePageContext);
+  const { ContextualNoteCard, ContextualAddNoteForm, ContextualUploader, ContextualCaseDomainField, ContextualCaseCompetentThirdPartyField } =
+    useContext(CasePageContext);
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.getCase.useQuery({
     id: caseId,
@@ -120,7 +129,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         number: caseWrapper?.citizen.phone.number,
       },
       description: caseWrapper?.case.description,
-      domainId: caseWrapper?.case.domain?.id,
+      domainId: caseWrapper?.case.domain?.id || null,
+      competent: caseWrapper?.case.competent,
+      competentThirdPartyId: caseWrapper?.case.competentThirdParty?.id || null,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
       finalConclusion: caseWrapper?.case.finalConclusion,
@@ -184,7 +195,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         number: updatedCaseWrapper.citizen.phone.number,
       },
       description: updatedCaseWrapper.case.description,
-      domainId: updatedCaseWrapper.case.domain?.id,
+      domainId: updatedCaseWrapper.case.domain?.id || null,
+      competent: updatedCaseWrapper.case.competent,
+      competentThirdPartyId: updatedCaseWrapper.case.competentThirdParty?.id || null,
       units: updatedCaseWrapper.case.units,
       termReminderAt: updatedCaseWrapper.case.termReminderAt,
       finalConclusion: updatedCaseWrapper.case.finalConclusion,
@@ -297,6 +310,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   },
                   description: control._defaultValues.description || targetedCase.description,
                   domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
+                  competent: control._defaultValues.competent || targetedCase.competent,
+                  competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -382,6 +397,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     },
                     description: control._defaultValues.description || targetedCase.description,
                     domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
+                    competent: control._defaultValues.competent || targetedCase.competent,
+                    competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
@@ -671,6 +688,46 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         />
                       </Grid>
                       <Grid item xs={12}>
+                        <FormControl error={!!errors.competent}>
+                          <FormLabel id="competent-radio-buttons-group-label">
+                            Est-ce que votre équipe de médiateurs est compétente pour traiter ce dossier ?
+                          </FormLabel>
+                          <RadioGroup
+                            defaultValue={control._defaultValues.competent?.toString()}
+                            onChange={(event) => {
+                              const value = event.target.value === 'true';
+
+                              setValue('competent', value);
+
+                              if (value) {
+                                setValue('competentThirdPartyId', null);
+                              }
+                            }}
+                            aria-labelledby="competent-radio-buttons-group-label"
+                          >
+                            <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                            <FormControlLabel value="false" control={<Radio />} label="Non" />
+                          </RadioGroup>
+                          <FormHelperText>{errors?.competent?.message}</FormHelperText>
+                        </FormControl>
+                      </Grid>
+                      {watch('competent') === false && (
+                        <Grid item xs={12}>
+                          <ContextualCaseCompetentThirdPartyField
+                            authorityId={targetedCase.authorityId}
+                            value={targetedCase.competentThirdParty}
+                            onChange={(item) => {
+                              setValue('competentThirdPartyId', item?.id || null, {
+                                // shouldValidate: true,
+                                shouldDirty: true,
+                              });
+                            }}
+                            errorMessage={errors?.competentThirdPartyId?.message}
+                          />
+                        </Grid>
+                      )}
+                      {/* TODO: remove the following "units" field from the database? */}
+                      {/* <Grid item xs={12}>
                         <TextField
                           label="Administration compétente"
                           {...register('units')}
@@ -678,7 +735,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           helperText={errors?.units?.message}
                           fullWidth
                         />
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   </CardContent>
                 </Card>
@@ -807,6 +864,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       },
                       description: control._formValues.description,
                       domainId: control._formValues.domainId,
+                      competent: control._formValues.competent,
+                      competentThirdPartyId: control._formValues.competentThirdPartyId,
                       units: control._formValues.units,
                       close: control._formValues.close,
                       finalConclusion: control._formValues.finalConclusion,
