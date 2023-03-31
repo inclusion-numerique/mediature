@@ -104,9 +104,6 @@ importers:
       '@tomfreudenberg/next-auth-mock':
         specifier: ^0.5.6
         version: 0.5.6(react@18.2.0)
-      chromatic:
-        specifier: ^6.11.4
-        version: 6.11.4
       cssnano:
         specifier: ^4.1.10
         version: 4.1.11
@@ -216,6 +213,9 @@ importers:
       axe-playwright:
         specifier: ^1.1.12
         version: 1.1.12
+      chromatic:
+        specifier: ^6.11.4
+        version: 6.11.4
       copy-webpack-plugin:
         specifier: ^11.0.0
         version: 11.0.0
@@ -4843,6 +4843,7 @@ packages:
   /@discoveryjs/json-ext@0.5.7:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
+    dev: true
 
   /@emotion/babel-plugin@11.10.5:
     resolution: {integrity: sha512-xE7/hyLHJac7D2Ve9dKroBBZqBT7WuPQmWcq7HSGb84sUuP4mlOWoB8dvVfD9yk5DHkU1m6RW7xSoDtnQHNQeA==}
@@ -12126,7 +12127,7 @@ packages:
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
       '@types/webpack-env': 1.18.0
-    dev: false
+    dev: true
 
   /chrome-launcher@0.13.4:
     resolution: {integrity: sha512-nnzXiDbGKjDSK6t2I+35OAPBy5Pw/39bgkb/ZAFwMhwJbdYBp6aH+vW28ZgtjdU890Q7D+3wN/tB8N66q5Gi2A==}
