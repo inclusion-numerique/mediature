@@ -107,7 +107,6 @@ For each build and runtime (since they are shared), you should have set some env
 
 ##### For the "main" app
 
-- `BUILDPACK_URL`: `https://github.com/TheSecurityDev/heroku-buildpack-nodejs-pnpm`
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
