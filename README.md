@@ -215,11 +215,7 @@ And in some cases you don't want to miss the notification, because it's a runtim
 
 _Find more context on those events on https://doc.scalingo.com/platform/app/notification_
 
-##### Sentry
-
-TODO: to write once it's compatible with Next.js 13 a new time
-
-#### Debug
+#### Debug the runtime
 
 To debug scalingo apps you may prefer using their CLI with some commands like:
 
@@ -239,6 +235,25 @@ Note that:
 - `db-tunnel` command sets up a SSH tunnel first, so you need to configure your public SSH key in your Scalingo account settings, but then you will be able to use local software to navigate through the database, or even migrating the schema with custom scripts.
 
 To debug a remote database we advise creating a specific user (because you are not suppose to store credentials of super users). Make sure the user created has been granted needed roles on business tables (through the `psql-console` command), something like `GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA $SCHEMA TO $USERNAME;` that you can customize as needed ;) . (If you still see no table that's probably because you logged into the wrong database)
+
+#### Debug the CI/CD pipeline
+
+Scalingo uses the Heroku technology of buildpacks to embed your application at runtime and it's quite complicated to replicate the logic locally. It does not bring the flexibility of a custom Docker image, nor the new "standard" tool to manage buildpacks (https://buildpacks.io/).
+
+In case you have an edge pipeline error, it may help to try using `herokuish` for mimicing the build embedding your application in the wanted buildpack. It's not a miror of the Scalingo pipeline but it can help. The easier thing we found for now is to use a custom Dockerfile:
+```dockerfile
+FROM gliderlabs/herokuish:latest
+
+COPY . /app
+
+ENV BUILD_APP_NAME=main
+```
+
+On the other side if you are looking for investigating a built image, Scalingo provides a paid addon to access the registry of images that passed their pipeline with success (those are Docker images). It helped us in the past to optimize excessive size of remaining dependencies for example.
+
+#### Sentry
+
+TODO: to write once it's compatible with Next.js 13 a new time
 
 ### Emails
 
