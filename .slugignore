@@ -1,0 +1,11 @@
+/.cache/
+/node_modules/
+/apps/docs/node_modules/
+/apps/docs/storybook-static/
+/apps/main/.cache/
+/apps/main/.next/
+/apps/main/.turbo/
+/apps/main/node_modules/
+/packages/eslint-config-custom/node_modules/
+/packages/trpc-next-layout/node_modules/
+/packages/ui/node_modules/

@@ -5,6 +5,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "heroku-postbuild": {
+      "cache": false
+    },
     "test:prepare": {
       "outputs": ["coverage/**"],
       "dependsOn": []

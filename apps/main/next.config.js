@@ -35,7 +35,7 @@ const moduleExports = async () => {
   let standardModuleExports = {
     reactStrictMode: true,
     swcMinify: true,
-    // output: 'standalone', // This was great to use in case of a Docker image, but it's totally incompatible with Scalingo build pipeline, giving up this size reducing way :D
+    output: 'standalone', // To debug locally the `next start` it's easier to comment this line (it will avoid using `prepare-standalone.sh` + `node`)
     env: {},
     serverRuntimeConfig: {},
     publicRuntimeConfig: {

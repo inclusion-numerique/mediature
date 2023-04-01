@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['prisma/generated-for-inspiration'],
+  ignorePatterns: ['dist', 'prisma/generated-for-inspiration'],
   extends: ['custom'],
   plugins: ['jsx-a11y', 'testing-library'],
   overrides: [
