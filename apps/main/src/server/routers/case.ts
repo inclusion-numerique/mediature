@@ -173,6 +173,9 @@ export const caseRouter = router({
         initiatedFrom: CasePlatformSchema.Values.WEB,
         status: CaseStatusSchema.Values.TO_PROCESS,
         closedAt: null,
+        outcome: null,
+        collectiveAgreement: null,
+        administrativeCourtNext: null,
         finalConclusion: null,
         nextRequirements: null,
         citizen: {
@@ -321,6 +324,9 @@ export const caseRouter = router({
         termReminderAt: input.termReminderAt,
         status: input.status,
         closedAt: closedAt,
+        outcome: input.outcome,
+        collectiveAgreement: input.collectiveAgreement,
+        administrativeCourtNext: input.administrativeCourtNext,
         finalConclusion: input.finalConclusion,
         nextRequirements: input.nextRequirements,
         domain: {

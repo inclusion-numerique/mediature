@@ -134,6 +134,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       competentThirdPartyId: caseWrapper?.case.competentThirdParty?.id || null,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
+      outcome: caseWrapper?.case.outcome,
+      collectiveAgreement: caseWrapper?.case.collectiveAgreement,
+      administrativeCourtNext: caseWrapper?.case.administrativeCourtNext,
       finalConclusion: caseWrapper?.case.finalConclusion,
       nextRequirements: caseWrapper?.case.nextRequirements,
     });
@@ -200,6 +203,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       competentThirdPartyId: updatedCaseWrapper.case.competentThirdParty?.id || null,
       units: updatedCaseWrapper.case.units,
       termReminderAt: updatedCaseWrapper.case.termReminderAt,
+      outcome: updatedCaseWrapper?.case.outcome,
+      collectiveAgreement: updatedCaseWrapper?.case.collectiveAgreement,
+      administrativeCourtNext: updatedCaseWrapper?.case.administrativeCourtNext,
       finalConclusion: updatedCaseWrapper.case.finalConclusion,
       nextRequirements: updatedCaseWrapper.case.nextRequirements,
     });
@@ -314,6 +320,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                   units: control._defaultValues.units || targetedCase.units,
                   close: control._defaultValues.close || !!targetedCase.closedAt,
+                  outcome: control._defaultValues.outcome || targetedCase.outcome,
+                  collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
+                  administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
                   finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                   nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
                 });
@@ -401,6 +410,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
+                    outcome: control._defaultValues.outcome || targetedCase.outcome,
+                    collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
+                    administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
                     finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
                     nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
                   });
@@ -868,6 +880,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       competentThirdPartyId: control._formValues.competentThirdPartyId,
                       units: control._formValues.units,
                       close: control._formValues.close,
+                      outcome: control._formValues.outcome,
+                      collectiveAgreement: control._formValues.collectiveAgreement,
+                      administrativeCourtNext: control._formValues.administrativeCourtNext,
                       finalConclusion: control._formValues.finalConclusion,
                       nextRequirements: control._formValues.nextRequirements,
                     });

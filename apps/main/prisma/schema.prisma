@@ -248,6 +248,16 @@ model CaseCompetentThirdPartyItem {
   @@unique([parentItemId, authorityId, name])
 }
 
+enum CaseOutcome {
+  FAVORABLE_TO_CITIZEN
+  PARTIAL
+  FAVORABLE_TO_ADMINISTRATION
+  INTERNAL_FORWARD
+  EXTERNAL_FORWARD
+  CITIZEN_WAIVER
+  CITIZEN_INACTIVITY
+}
+
 /// @@Gen.model(hide: true)
 model Case {
   id                           String              @id @default(uuid()) @db.Uuid
@@ -267,6 +277,9 @@ model Case {
   competent                    Boolean?
   competentThirdPartyId        String?             @db.Uuid
   closedAt                     DateTime?
+  outcome                      CaseOutcome?
+  collectiveAgreement          Boolean?
+  administrativeCourtNext      Boolean?
   finalConclusion              String?
   nextRequirements             String?
 
@@ -484,6 +497,9 @@ view CaseAnalytics {
   assigned                     Boolean
   alreadyRequestedInThePast    Boolean
   gotAnswerFromPreviousRequest Boolean?
+  outcome                      CaseOutcome?
+  collectiveAgreement          Boolean?
+  administrativeCourtNext      Boolean?
   citizenHasEmail              Boolean
   citizenCity                  String
   citizenPostalCode            String

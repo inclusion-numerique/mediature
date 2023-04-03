@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Collapse from '@mui/material/Collapse';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -15,7 +16,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
-import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { CaseOutcomeSchema, CaseOutcomeSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
@@ -34,6 +35,8 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
   const {
     register,
     formState: { errors },
+    setValue,
+    control,
   } = props.wrapperForm;
 
   const theme = useColors();
@@ -102,6 +105,75 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                     </Tooltip>
                   </Grid>
                 )}
+                <Grid item xs={12}>
+                  <TextField
+                    select
+                    label="Type de clôture"
+                    defaultValue={control._defaultValues.outcome || ''}
+                    onChange={(event) => {
+                      setValue('outcome', event.target.value === '' ? null : (event.target.value as CaseOutcomeSchemaType), {
+                        // shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                    error={!!errors.outcome}
+                    helperText={errors.outcome?.message}
+                    fullWidth
+                  >
+                    <MenuItem value="">
+                      <em>Non spécifié</em>
+                    </MenuItem>
+                    {Object.values(CaseOutcomeSchema.Values).map((outcome) => (
+                      <MenuItem key={outcome} value={outcome}>
+                        {t(`model.case.outcome.enum.${outcome}`)}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    label="Accord des parties"
+                    defaultValue={control._defaultValues.collectiveAgreement || ''}
+                    onChange={(event) => {
+                      setValue('collectiveAgreement', event.target.value === '' ? null : event.target.value === 'true', {
+                        // shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                    error={!!errors.collectiveAgreement}
+                    helperText={errors.collectiveAgreement?.message}
+                    fullWidth
+                  >
+                    <MenuItem value="">
+                      <em>Non spécifié</em>
+                    </MenuItem>
+                    <MenuItem value="true">{t('boolean.true')}</MenuItem>
+                    <MenuItem value="false">{t('boolean.false')}</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    label="Se poursuit au tribunal administratif"
+                    defaultValue={control._defaultValues.administrativeCourtNext || ''}
+                    onChange={(event) => {
+                      setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
+                        // shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }}
+                    error={!!errors.administrativeCourtNext}
+                    helperText={errors.administrativeCourtNext?.message}
+                    fullWidth
+                  >
+                    <MenuItem value="">
+                      <em>Non spécifié</em>
+                    </MenuItem>
+                    <MenuItem value="true">{t('boolean.true')}</MenuItem>
+                    <MenuItem value="false">{t('boolean.false')}</MenuItem>
+                  </TextField>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     label="Raisons de la décision (note interne)"

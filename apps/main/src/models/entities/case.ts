@@ -11,6 +11,17 @@ export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 export const CaseStatusSchema = z.enum(['TO_PROCESS', 'MAKE_XXX_CALL', 'SYNC_WITH_CITIZEN', 'SYNC_WITH_ADMINISTATION', 'ABOUT_TO_CLOSE', 'STUCK']);
 export type CaseStatusSchemaType = z.infer<typeof CaseStatusSchema>;
 
+export const CaseOutcomeSchema = z.enum([
+  'FAVORABLE_TO_CITIZEN',
+  'PARTIAL',
+  'FAVORABLE_TO_ADMINISTRATION',
+  'INTERNAL_FORWARD',
+  'EXTERNAL_FORWARD',
+  'CITIZEN_WAIVER',
+  'CITIZEN_INACTIVITY',
+]);
+export type CaseOutcomeSchemaType = z.infer<typeof CaseOutcomeSchema>;
+
 export const CaseDomainItemSchema = z
   .object({
     id: z.string().uuid(),
@@ -52,6 +63,9 @@ export const incompleteCaseSchema = z
     initiatedFrom: CasePlatformSchema,
     status: CaseStatusSchema,
     closedAt: z.date().nullable(),
+    outcome: CaseOutcomeSchema.nullable(),
+    collectiveAgreement: z.boolean().nullable(),
+    administrativeCourtNext: z.boolean().nullable(),
     finalConclusion: z.string().nullable(),
     nextRequirements: z.string().nullable(),
     createdAt: z.date(),
@@ -72,6 +86,13 @@ export const CaseSchema = incompleteCaseSchema.superRefine((data, ctx) => {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `une entité tierce compétente ne peut être définie que si le dossier est marqué avec "non-compétence"`,
+      });
+    }
+
+    if (data.closedAt && data.outcome === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `un type de clôture doit être spécifié quand le dossier est clôturé`,
       });
     }
   }

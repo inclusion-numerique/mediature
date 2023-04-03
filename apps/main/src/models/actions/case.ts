@@ -61,6 +61,9 @@ export const incompleteUpdateCaseSchema = z
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,
     close: z.boolean(),
+    outcome: incompleteCaseSchema.shape.outcome,
+    collectiveAgreement: incompleteCaseSchema.shape.collectiveAgreement,
+    administrativeCourtNext: incompleteCaseSchema.shape.administrativeCourtNext,
     finalConclusion: incompleteCaseSchema.shape.finalConclusion,
     nextRequirements: incompleteCaseSchema.shape.nextRequirements,
   })
@@ -71,6 +74,13 @@ export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ct
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué ne pas être compétent pour traiter le dossier`,
+      });
+    }
+
+    if (data.close === true && data.outcome === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous devez spécifier un type de clôture lorsque vous clôturer le dossier`,
       });
     }
   }

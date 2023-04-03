@@ -6,7 +6,7 @@ import {
 
 import { getServerTranslation } from '@mediature/main/src/i18n';
 import { AuthorityTypeSchemaType } from '@mediature/main/src/models/entities/authority';
-import { CasePlatformSchemaType, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import { CaseOutcomeSchemaType, CasePlatformSchemaType, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 import { nameof } from '@mediature/main/src/utils/typescript';
 
 const typedNameof = nameof<CaseAnalytics>;
@@ -31,6 +31,9 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
       { key: typedNameof('assigned'), header: t('document.template.CaseAnalytics.columns.assigned') },
       { key: typedNameof('alreadyRequestedInThePast'), header: t('document.template.CaseAnalytics.columns.alreadyRequestedInThePast') },
       { key: typedNameof('gotAnswerFromPreviousRequest'), header: t('document.template.CaseAnalytics.columns.gotAnswerFromPreviousRequest') },
+      { key: typedNameof('outcome'), header: t('document.template.CaseAnalytics.columns.outcome') },
+      { key: typedNameof('collectiveAgreement'), header: t('document.template.CaseAnalytics.columns.collectiveAgreement') },
+      { key: typedNameof('administrativeCourtNext'), header: t('document.template.CaseAnalytics.columns.administrativeCourtNext') },
       { key: typedNameof('citizenHasEmail'), header: t('document.template.CaseAnalytics.columns.citizenHasEmail') },
       { key: typedNameof('citizenCity'), header: t('document.template.CaseAnalytics.columns.citizenCity') },
       { key: typedNameof('citizenPostalCode'), header: t('document.template.CaseAnalytics.columns.citizenPostalCode') },
@@ -55,6 +58,8 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
           return t(`model.case.status.enum.${value as CaseStatusSchemaType}`);
         } else if (context.column === typedNameof('initiatedFrom')) {
           return t(`model.case.platform.enum.${value as CasePlatformSchemaType}`);
+        } else if (context.column === typedNameof('outcome')) {
+          return t(`model.case.outcome.enum.${value as CaseOutcomeSchemaType}`);
         }
 
         return value;
