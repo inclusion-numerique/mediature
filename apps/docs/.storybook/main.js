@@ -3,6 +3,7 @@ const cssnano = require('cssnano');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const webpack = require('webpack');
 
 const staticBuildFolderPath = path.resolve(__dirname, '../storybook-static/');
 
@@ -112,6 +113,13 @@ module.exports = {
             to: path.resolve(__dirname, '../public/assets/images/email/social/'),
           },
         ],
+      })
+    );
+
+    // Needed to use Buffer to decode base64 in the browser
+    config.plugins.push(
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
       })
     );
 

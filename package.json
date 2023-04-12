@@ -65,7 +65,7 @@
       "jest-resolver-tsconfig-paths": "^0.14.4",
       "lodash.debounce": "^4.0.8",
       "mjml": "^4.13.0",
-      "next": "^13.1.6",
+      "next": "13.1.6",
       "next-i18next": "^13.0.3",
       "react": "^18.2.0",
       "react-dom": "^18.2.0",
