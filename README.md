@@ -1,5 +1,9 @@
 # Mediature
 
+## Technical documentation
+
+You can retrieve technical documentation in the [dat file](dat.md)
+
 ## Technical setup
 
 ### AlwaysData
