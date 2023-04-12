@@ -7644,7 +7644,7 @@ packages:
       '@storybook/csf-plugin': 7.0.0-beta.41
       '@storybook/csf-tools': 7.0.0-beta.41
       '@storybook/global': 5.0.0
-      '@storybook/mdx2-csf': 1.0.0-next.7
+      '@storybook/mdx2-csf': 1.0.0-next.8
       '@storybook/node-logger': 7.0.0-beta.41
       '@storybook/postinstall': 7.0.0-beta.41
       '@storybook/preview-api': 7.0.0-beta.41
@@ -8126,7 +8126,7 @@ packages:
       '@storybook/client-logger': 7.0.0-beta.45
       '@storybook/core-common': 7.0.0-beta.45
       '@storybook/csf-plugin': 7.0.0-beta.45
-      '@storybook/mdx2-csf': 1.0.0-next.7
+      '@storybook/mdx2-csf': 1.0.0-next.8
       '@storybook/node-logger': 7.0.0-beta.45
       '@storybook/preview': 7.0.0-beta.45
       '@storybook/preview-api': 7.0.0-beta.45
@@ -8335,11 +8335,6 @@ packages:
       core-js: 3.26.1
       global: 4.4.0
 
-  /@storybook/client-logger@7.0.0:
-    resolution: {integrity: sha512-wRZZiPta37DFc8SVZ8Q3ZqyTrs5qgO6bcCuVDRLQAcO0Oz4xKEVPEVfVVxSPZU/+p2ypqdBBCP2pdL/Jy86AJg==}
-    dependencies:
-      '@storybook/global': 5.0.0
-
   /@storybook/client-logger@7.0.0-beta.41:
     resolution: {integrity: sha512-0ZvWt7t4NoPJBS3joMnrWeXiPGLZ4eqJFNLoujTLmJJzQbuJ6JY+Bt5WTCuSS/eD1Uqil9euf4vE8tSqkOesPg==}
     dependencies:
@@ -8350,6 +8345,11 @@ packages:
     dependencies:
       '@storybook/global': 5.0.0
     dev: true
+
+  /@storybook/client-logger@7.0.3:
+    resolution: {integrity: sha512-Hb+ecOEDDvXM61ElbAuKfQ1a0I2mIDkbtlS26C7S2GxRHRGE8aXA2toAKvBaJ4niQrXlVCR0umYfAZeDL85veg==}
+    dependencies:
+      '@storybook/global': 5.0.0
 
   /@storybook/codemod@7.0.0-beta.45:
     resolution: {integrity: sha512-1NuQtcvJ+kMZ01XOuTczyIESFeLqBXSDF68FsJSCc1BgbvGEq9uIzbYLZAoB6oIpmjIWN1sUlT5NuEV+ofekGw==}
@@ -8625,7 +8625,7 @@ packages:
       '@storybook/core-events': 7.0.0-beta.45
       '@storybook/csf': 0.0.2-next.11
       '@storybook/csf-tools': 7.0.0-beta.45
-      '@storybook/docs-mdx': 0.0.1-next.6
+      '@storybook/docs-mdx': 0.0.1-next.7
       '@storybook/global': 5.0.0
       '@storybook/manager': 7.0.0-beta.45
       '@storybook/node-logger': 7.0.0-beta.45
@@ -8773,8 +8773,8 @@ packages:
       type-fest: 2.19.0
     dev: true
 
-  /@storybook/docs-mdx@0.0.1-next.6:
-    resolution: {integrity: sha512-DjoSIXADmLJtdroXAjUotFiZlcZ2usWhqrS7aeOtZs0DVR0Ws5WQjnwtpDUXt8gryTSd+OZJ0cNsDcqg4JDEvQ==}
+  /@storybook/docs-mdx@0.0.1-next.7:
+    resolution: {integrity: sha512-JbgBf/EMBtx65iXtB3pOiX3818UeL9jZ+KAY241OAPqJVXjMQ5KaVOdg/57MSmd508HDIGx7CiImOMEmWwQ9/g==}
     dev: true
 
   /@storybook/docs-tools@7.0.0-beta.41:
@@ -8897,8 +8897,8 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/mdx2-csf@1.0.0-next.7:
-    resolution: {integrity: sha512-xcQ8w4IecABAjsakaZTGiUEnEgFZzVKsMjqECjd+qdkwgD3R/kwrBdfyC15CLM5Ye1miPwYBIwJGeBXB9qxsZg==}
+  /@storybook/mdx2-csf@1.0.0-next.8:
+    resolution: {integrity: sha512-t2O5s/HHTH5evZVHgVtCWTZgMZ/CaqDu3xVGgjVbKeTvpPAbi0Waab5SSX8T9PG5jNDei/x+jpAVCcNMOHoWzg==}
     dev: true
 
   /@storybook/nextjs@7.0.0-beta.41(react-dom@18.2.0)(react@18.2.0)(sass@1.57.1)(typescript@4.9.3):
@@ -9346,7 +9346,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.0
+      '@storybook/client-logger': 7.0.3
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
