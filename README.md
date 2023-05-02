@@ -405,3 +405,15 @@ We found no fix. The only solution is to relaunch VSCode, and if it still doesn'
 ```sh
 code /Users/xxxxx/yyyyy/mediature
 ```
+
+#### Podman (Docker replacement)
+
+In case you use `podman` instead of `docker`, it's possible `testcontainers` won't work out of the box. You need to tell where to find `podman` socket. For this just use `podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}'` and copy the provided path.
+
+Then in your `./apps/main/.env.jest.local` (create one if needed) add the following while replacing `${PATH_TO_PASTE}` accordingly:
+
+```
+export DOCKER_HOST=unix://${PATH_TO_PASTE}
+```
+
+_(If you are on MacOS also set in this file `export TESTCONTAINERS_RYUK_DISABLED=true` because Ryuk for `testcontainers` results in "operation not supported" errors as of now)_
