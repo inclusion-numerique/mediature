@@ -216,6 +216,9 @@ export class Mailer {
       } catch (err) {
         console.error('the second attempt to send the email has failed');
         console.error(err);
+
+        // Until we have a proper queue system we consider this as failing so the user (~= frontend) is aware something needs to be retried
+        throw err;
       }
     }
   }

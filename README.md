@@ -275,6 +275,8 @@ Also you need to configure your DNS records to handle from both providers on the
 
 When creating SMTP credentials make sure sure to use different ones between the development and the production environment.
 
+_Note: don't forget to enable the transactional emailing feature on SendInBlue by contacting the support, it will save you for the run :p_
+
 #### Incoming
 
 The project has a messenger-like feature through emails, and we use Mailjet to receive incoming emails. The idea is to configure our DNS records so incoming emails go to their servers and then they use a webhook to notify us of the content of this email.

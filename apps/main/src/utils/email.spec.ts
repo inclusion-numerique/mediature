@@ -34,11 +34,13 @@ describe('email', () => {
 
   describe('send', () => {
     it('SignUpConfirmation', async () => {
-      await mailer.sendSignUpConfirmation({
-        recipient: 'albert@mail.com',
-        firstname: 'Albert',
-        signInUrl: 'http://localhost:8080/#',
-      });
+      await expect(
+        mailer.sendSignUpConfirmation({
+          recipient: 'albert@mail.com',
+          firstname: 'Albert',
+          signInUrl: 'http://localhost:8080/#',
+        })
+      ).resolves.not.toThrow();
     });
   });
 
@@ -56,11 +58,13 @@ describe('email', () => {
         domainsToCatch: ['domain.demo'],
       });
 
-      await mailer.sendSignUpConfirmation({
-        recipient: 'alice@domain.demo',
-        firstname: 'Albert',
-        signInUrl: 'http://localhost:8080/#',
-      });
+      await expect(
+        mailer.sendSignUpConfirmation({
+          recipient: 'alice@domain.demo',
+          firstname: 'Albert',
+          signInUrl: 'http://localhost:8080/#',
+        })
+      ).resolves.not.toThrow();
     });
   });
 });
