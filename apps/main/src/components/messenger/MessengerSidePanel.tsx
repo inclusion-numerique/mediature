@@ -1,6 +1,8 @@
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { EventEmitter } from 'eventemitter3';
@@ -25,6 +27,8 @@ export function MessengerSidePanel({ caseId, messages, selectedMessage, onSelect
   const { ContextualMessengerSender } = useContext(MessengerSidePanelContext);
 
   const [senderModalEventEmitter, setSenderModalEventEmitter] = useState<EventEmitter>(() => new EventEmitter());
+  const [messagesToProcessExpanded, setMessagesToProcessExpanded] = useState<boolean>(true);
+  const [sortedMessagesExpanded, setSortedMessagesExpanded] = useState<boolean>(true);
 
   const { sortedMessages, messagesToProcess } = useMemo(() => {
     const sorted = messages.sort((a, b) => {
@@ -74,25 +78,39 @@ export function MessengerSidePanel({ caseId, messages, selectedMessage, onSelect
             >
               À traiter
             </Typography>
-            <IconButton aria-label="cacher la liste des messages à traiter" size="small" color="primary">
-              <KeyboardArrowDownRoundedIcon fontSize="small" color="primary" />
+            <IconButton
+              onClick={() => {
+                setMessagesToProcessExpanded(!messagesToProcessExpanded);
+              }}
+              size="small"
+              color="primary"
+              aria-label="montrer la liste des messages à traiter"
+              aria-expanded={messagesToProcessExpanded}
+            >
+              {messagesToProcessExpanded ? (
+                <KeyboardArrowUpRoundedIcon fontSize="small" color="primary" />
+              ) : (
+                <KeyboardArrowDownRoundedIcon fontSize="small" color="primary" />
+              )}
             </IconButton>
           </Box>
-          {messagesToProcess.length > 0 ? (
-            <MessengerMessageList
-              messages={messagesToProcess}
-              selectedMessage={selectedMessage}
-              onMessageClick={(message) => {
-                onSelectedMessage && onSelectedMessage(message);
-              }}
-            />
-          ) : (
-            <Box sx={{ py: 10 }}>
-              <Typography variant="body2" sx={{ textAlign: 'center' }}>
-                Vous avez traité tous les messages
-              </Typography>
-            </Box>
-          )}
+          <Collapse in={messagesToProcessExpanded} timeout="auto" unmountOnExit>
+            {messagesToProcess.length > 0 ? (
+              <MessengerMessageList
+                messages={messagesToProcess}
+                selectedMessage={selectedMessage}
+                onMessageClick={(message) => {
+                  onSelectedMessage && onSelectedMessage(message);
+                }}
+              />
+            ) : (
+              <Box sx={{ py: 10 }}>
+                <Typography variant="body2" sx={{ textAlign: 'center' }}>
+                  Vous avez traité tous les messages
+                </Typography>
+              </Box>
+            )}
+          </Collapse>
         </>
       )}
       <Box
@@ -113,25 +131,39 @@ export function MessengerSidePanel({ caseId, messages, selectedMessage, onSelect
         >
           Tous les messages
         </Typography>
-        <IconButton aria-label="cacher la liste des messages" size="small" color="primary">
-          <KeyboardArrowDownRoundedIcon fontSize="small" color="primary" />
+        <IconButton
+          onClick={() => {
+            setSortedMessagesExpanded(!sortedMessagesExpanded);
+          }}
+          size="small"
+          color="primary"
+          aria-label="montrer la liste des messages"
+          aria-expanded={sortedMessagesExpanded}
+        >
+          {sortedMessagesExpanded ? (
+            <KeyboardArrowUpRoundedIcon fontSize="small" color="primary" />
+          ) : (
+            <KeyboardArrowDownRoundedIcon fontSize="small" color="primary" />
+          )}
         </IconButton>
       </Box>
-      {sortedMessages.length > 0 ? (
-        <MessengerMessageList
-          messages={sortedMessages}
-          selectedMessage={selectedMessage}
-          onMessageClick={(message) => {
-            onSelectedMessage && onSelectedMessage(message);
-          }}
-        />
-      ) : (
-        <Box sx={{ py: 10 }}>
-          <Typography variant="body2" sx={{ textAlign: 'center' }}>
-            Il n&apos;y a aucun message
-          </Typography>
-        </Box>
-      )}
+      <Collapse in={sortedMessagesExpanded} timeout="auto" unmountOnExit>
+        {sortedMessages.length > 0 ? (
+          <MessengerMessageList
+            messages={sortedMessages}
+            selectedMessage={selectedMessage}
+            onMessageClick={(message) => {
+              onSelectedMessage && onSelectedMessage(message);
+            }}
+          />
+        ) : (
+          <Box sx={{ py: 10 }}>
+            <Typography variant="body2" sx={{ textAlign: 'center' }}>
+              Il n&apos;y a aucun message
+            </Typography>
+          </Box>
+        )}
+      </Collapse>
     </>
   );
 }

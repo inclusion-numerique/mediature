@@ -363,7 +363,7 @@ model Attachment {
   Authority              Authority?
   AttachmentsOnCases     AttachmentsOnCases?
   AttachmentsOnCaseNotes AttachmentsOnCaseNotes?
-  AttachmentsOnMessages  AttachmentsOnMessages?
+  AttachmentsOnMessages  AttachmentsOnMessages[]
 }
 
 enum AuthorityType {
@@ -551,7 +551,7 @@ model Message {
 /// @@Gen.model(hide: true)
 model RecipientContactsOnMessages {
   recipientId String @db.Uuid
-  messageId   String @unique @db.Uuid
+  messageId   String @db.Uuid
 
   recipient Contact @relation(fields: [recipientId], references: [id], onDelete: Cascade)
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
@@ -573,8 +573,9 @@ model MessagesOnCases {
 
 /// @@Gen.model(hide: true)
 model AttachmentsOnMessages {
-  messageId    String @db.Uuid
-  attachmentId String @unique @db.Uuid
+  messageId    String  @db.Uuid
+  attachmentId String  @unique @db.Uuid
+  inline       Boolean @default(false)
 
   message    Message    @relation(fields: [messageId], references: [id], onDelete: Cascade)
   attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)

@@ -35,6 +35,7 @@ export function CaseMessageEmail(props: CaseMessageEmailProps) {
       </MjmlText>
       <MjmlDivider />
       <MjmlText>
+        <p>{props.subject}</p>
         <MjmlRaw>
           <div dangerouslySetInnerHTML={{ __html: props.htmlMessageContent }} />
         </MjmlRaw>

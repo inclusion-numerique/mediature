@@ -1,5 +1,7 @@
+import dotenv from 'dotenv';
 import { getTsconfig } from 'get-tsconfig';
 import nextJest from 'next/jest';
+import path from 'path';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
 import { additionalJestPackages, commonPackages, formatTransformIgnorePatterns } from './transpilePackages';
@@ -12,6 +14,10 @@ const fullTsconfig = getTsconfig();
 if (!fullTsconfig) {
   throw new Error(`a "tsconfig.json" must be provided`);
 }
+
+// Load test variables if any
+dotenv.config({ path: path.resolve(__dirname, './.env.jest') });
+dotenv.config({ path: path.resolve(__dirname, './.env.jest.local') });
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {

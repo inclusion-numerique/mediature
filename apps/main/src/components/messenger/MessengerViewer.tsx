@@ -1,7 +1,10 @@
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import ForwardToInboxRoundedIcon from '@mui/icons-material/ForwardToInboxRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -11,11 +14,13 @@ import { EventEmitter } from 'eventemitter3';
 import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { trpc } from '@mediature/main/src/client/trpcClient';
 import { FileList } from '@mediature/main/src/components/FileList';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { Avatar } from '@mediature/ui/src/Avatar';
 import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
+import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
 
 export const MessengerViewerContext = createContext({
   ContextualMessengerSender: MessengerSender,
@@ -29,6 +34,9 @@ export interface MessengerViewerProps {
 export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
   const { ContextualMessengerSender } = useContext(MessengerViewerContext);
   const { t } = useTranslation('common');
+  const { showErrorDialog } = useSingletonErrorDialog();
+
+  const updateMessageMetadata = trpc.updateMessageMetadata.useMutation();
 
   const [senderModalEventEmitter, setSenderModalEventEmitter] = useState<EventEmitter>(() => new EventEmitter());
 
@@ -79,6 +87,31 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', height: '32px', flexDirection: 'row', gap: 2 }}>
+          {message.consideredAsProcessed !== null && (
+            <Button
+              onClick={async () => {
+                try {
+                  await updateMessageMetadata.mutateAsync({
+                    messageId: message.id,
+                    markAsProcessed: !message.consideredAsProcessed,
+                  });
+                } catch (err) {
+                  showErrorDialog({
+                    description: <>Une erreur est survenue au moment de changer le statut du message.</>,
+                    error: err as unknown as Error,
+                  });
+
+                  throw err;
+                }
+              }}
+              variant="outlined"
+              color="primary"
+              size="small"
+              startIcon={message.consideredAsProcessed ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+            >
+              Traité
+            </Button>
+          )}
           <ContextualMessengerSender
             caseId={caseId}
             eventEmitter={senderModalEventEmitter}

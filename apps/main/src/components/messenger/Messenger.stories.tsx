@@ -4,7 +4,7 @@ import { within } from '@storybook/testing-library';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Messenger, MessengerContext } from '@mediature/main/src/components/messenger/Messenger';
 import { Normal as MessengerSidePanelNormalStory } from '@mediature/main/src/components/messenger/MessengerSidePanel.stories';
-import { Normal as MessengerViewerNormalStory } from '@mediature/main/src/components/messenger/MessengerViewer.stories';
+import { ReceivedMessage as MessengerViewerReceivedMessageStory } from '@mediature/main/src/components/messenger/MessengerViewer.stories';
 import { messages } from '@mediature/main/src/fixtures/messenger';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
@@ -53,7 +53,7 @@ export const Normal = prepareStory(NormalStory, {
     context: MessengerContext,
     value: {
       ContextualMessengerSidePanel: MessengerSidePanelNormalStory,
-      ContextualMessengerViewer: MessengerViewerNormalStory,
+      ContextualMessengerViewer: MessengerViewerReceivedMessageStory,
     },
   },
 });

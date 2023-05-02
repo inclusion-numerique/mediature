@@ -1,4 +1,5 @@
 import { MessageStatus } from '@prisma/client';
+import addresscompiler from 'addresscompiler';
 import { JSDOM } from 'jsdom';
 
 import { prisma } from '@mediature/main/prisma/client';
@@ -16,6 +17,7 @@ import { canUserManageThisCase } from '@mediature/main/src/server/routers/case';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import { contactInputPrismaToModel, contactPrismaToModel, messagePrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { inlineEditorStateToHtml } from '@mediature/ui/src/utils/lexical';
 
 const serverJsdom = new JSDOM();
@@ -51,7 +53,7 @@ export const messengerRouter = router({
     const { t } = useServerTranslation('common');
 
     const fromContact: ContactInputSchemaType = {
-      email: `${t('model.case.technicalName', { humanId: targetedCase.humanId.toString() })}@${process.env.MAILER_DEFAULT_DOMAIN || ''}`,
+      email: getCaseEmail(t, targetedCase.humanId.toString()),
       name: `${senderUser.firstname} de Médiature`, // Only the firstname for privacy reasons
     };
 
@@ -109,12 +111,14 @@ export const messengerRouter = router({
             data: attachmentsToAdd.map((attachmentId) => {
               return {
                 attachmentId: attachmentId,
+                inline: false, // For now the editor does not allow inline documents
               };
             }),
           },
         },
       },
       include: {
+        from: true,
         to: {
           include: {
             recipient: true,
@@ -143,9 +147,14 @@ export const messengerRouter = router({
           contentType: aOM.attachment.contentType,
           filename: aOM.attachment.name || undefined,
           content: aOM.attachment.value,
+          inline: aOM.inline,
         };
       });
 
+      const sender = addresscompiler.compile({
+        address: fromContact.email,
+        name: fromContact.name,
+      });
       const recipients = newMessage.to.map((toContact) => toContact.recipient);
       const requesterRecipient = recipients.find((recipient) => recipient.email === targetedCase.citizen.email);
       const otherRecipients = recipients.filter((recipient) => recipient.email !== targetedCase.citizen.email);
@@ -153,6 +162,7 @@ export const messengerRouter = router({
       // Format the message differently either the recipient is the case requester, or another contact
       if (requesterRecipient) {
         await mailer.sendCaseMessageToRequester({
+          sender: sender,
           recipients: [requesterRecipient.email],
           subject: newMessage.subject,
           firstname: targetedCase.citizen.firstname,
@@ -165,6 +175,7 @@ export const messengerRouter = router({
 
       if (otherRecipients.length > 0) {
         await mailer.sendCaseMessage({
+          sender: sender,
           recipients: otherRecipients.map((recipient) => recipient.email),
           subject: newMessage.subject,
           caseHumanId: targetedCase.humanId.toString(),
@@ -202,9 +213,9 @@ export const messengerRouter = router({
             attachment: {
               select: {
                 id: true,
-                contentType: false,
+                contentType: true,
                 name: true,
-                size: false,
+                size: true,
               },
             },
           },
@@ -218,11 +229,14 @@ export const messengerRouter = router({
         consideredAsProcessed: updatedMessage.MessagesOnCases?.markedAsProcessed || null,
         from: updatedMessage.from,
         to: updatedMessage.to.map((toContact) => toContact.recipient),
-        attachments: updatedMessage.AttachmentsOnMessages.map((aOnM) => aOnM.attachment),
+        attachments: updatedMessage.AttachmentsOnMessages.map((aOnM) => ({
+          ...aOnM.attachment,
+          inline: aOnM.inline,
+        })),
       }),
     };
   }),
-  updateMessageMetada: privateProcedure.input(UpdateMessageMetadataSchema).mutation(async ({ ctx, input }) => {
+  updateMessageMetadata: privateProcedure.input(UpdateMessageMetadataSchema).mutation(async ({ ctx, input }) => {
     const message = await prisma.message.findUniqueOrThrow({
       where: {
         id: input.messageId,
@@ -332,9 +346,9 @@ export const messengerRouter = router({
             attachment: {
               select: {
                 id: true,
-                contentType: false,
+                contentType: true,
                 name: true,
-                size: false,
+                size: true,
               },
             },
           },
@@ -347,10 +361,13 @@ export const messengerRouter = router({
         messages.map(async (message): Promise<MessageSchemaType> => {
           return await messagePrismaToModel({
             ...message,
-            consideredAsProcessed: message.MessagesOnCases?.markedAsProcessed || null,
+            consideredAsProcessed: message.MessagesOnCases ? message.MessagesOnCases.markedAsProcessed : null,
             from: message.from,
             to: message.to.map((toContact) => toContact.recipient),
-            attachments: message.AttachmentsOnMessages.map((aOnM) => aOnM.attachment),
+            attachments: message.AttachmentsOnMessages.map((aOnM) => ({
+              ...aOnM.attachment,
+              inline: aOnM.inline,
+            })),
           });
         })
       ),

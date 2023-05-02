@@ -30,6 +30,8 @@ const isStorybookEnvironment: boolean = process.env.STORYBOOK_ENVIRONMENT === 't
 
 const emailCssWithAdjustedUrls = isStorybookEnvironment ? emailCss : emailCss.replace(/\/assets\//g, `${getBaseUrl()}/assets/`);
 
+export const quotedReplyMarkerClass: string = 'quoted-reply-marker';
+
 export interface StandardLayoutProps {
   title: string;
 }
@@ -71,7 +73,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
         </MjmlRaw>
       </MjmlHead>
       <MjmlBody width={500}>
-        <MjmlWrapper cssClass="light-body">
+        <MjmlWrapper cssClass={`light-body ${quotedReplyMarkerClass}`}>
           <MjmlSection>
             <MjmlGroup>
               <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="24%">

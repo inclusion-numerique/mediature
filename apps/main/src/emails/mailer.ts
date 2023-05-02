@@ -109,6 +109,8 @@ export interface Attachment {
   contentType: string;
   filename?: string;
   content: string | Buffer | Readable;
+  inline: boolean;
+  inlineId?: string;
 }
 
 export interface SendOptions {
@@ -266,16 +268,18 @@ export class Mailer {
     });
   }
 
-  public async sendCaseClosed(parameters: CaseClosedEmailProps & { recipient: string }) {
+  public async sendCaseClosed(parameters: CaseClosedEmailProps & { sender: string; recipient: string }) {
     await this.send({
+      sender: parameters.sender,
       recipients: [parameters.recipient],
       subject: CaseClosedEmailFormatTitle(),
       emailComponent: CaseClosedEmail(parameters),
     });
   }
 
-  public async sendCaseMessageToRequester(parameters: CaseMessageToRequesterEmailProps & { recipients: string[] }) {
+  public async sendCaseMessageToRequester(parameters: CaseMessageToRequesterEmailProps & { sender: string; recipients: string[] }) {
     await this.send({
+      sender: parameters.sender,
       recipients: parameters.recipients,
       subject: CaseMessageToRequesterEmailFormatTitle(),
       emailComponent: CaseMessageToRequesterEmail(parameters),
@@ -283,8 +287,9 @@ export class Mailer {
     });
   }
 
-  public async sendCaseMessage(parameters: CaseMessageEmailProps & { recipients: string[] }) {
+  public async sendCaseMessage(parameters: CaseMessageEmailProps & { sender: string; recipients: string[] }) {
     await this.send({
+      sender: parameters.sender,
       recipients: parameters.recipients,
       subject: CaseMessageEmailFormatTitle(),
       emailComponent: CaseMessageEmail(parameters),
@@ -292,8 +297,9 @@ export class Mailer {
     });
   }
 
-  public async sendCaseRequestConfirmation(parameters: CaseRequestConfirmationEmailProps & { recipient: string }) {
+  public async sendCaseRequestConfirmation(parameters: CaseRequestConfirmationEmailProps & { sender: string; recipient: string }) {
     await this.send({
+      sender: parameters.sender,
       recipients: [parameters.recipient],
       subject: CaseRequestConfirmationEmailFormatTitle(),
       emailComponent: CaseRequestConfirmationEmail(parameters),

@@ -3,6 +3,7 @@ import { base64StringToBlob } from 'blob-util';
 import { Readable } from 'stream';
 
 import { Attachment as EmailAttachment } from '@mediature/main/src/emails/mailer';
+import { imageB64Data, imageContentType } from '@mediature/main/src/fixtures/image';
 import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 
 export const uiAttachments: UiAttachmentSchemaType[] = [
@@ -29,9 +30,7 @@ export const uiAttachments: UiAttachmentSchemaType[] = [
   },
 ];
 
-const contentType = 'image/png';
-const b64Data = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
-const blob = base64StringToBlob(b64Data, contentType);
+const blob = base64StringToBlob(imageB64Data, imageContentType);
 
 export const uppyFiles: UppyFile[] = [
   {
@@ -70,11 +69,13 @@ export const emailAttachments: EmailAttachment[] = [
   {
     contentType: 'image/jpeg',
     filename: 'sample-1.jpg',
-    content: Buffer.from(b64Data, 'base64'),
+    content: Buffer.from(imageB64Data, 'base64'),
+    inline: false,
   },
   {
     contentType: 'image/jpeg',
     filename: 'sample-2.jpg',
-    content: Buffer.from(b64Data, 'base64'),
+    content: Buffer.from(imageB64Data, 'base64'),
+    inline: false,
   },
 ];

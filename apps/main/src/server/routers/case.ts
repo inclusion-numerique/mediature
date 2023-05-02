@@ -1,5 +1,6 @@
 import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, Note } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
+import addresscompiler from 'addresscompiler';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
@@ -49,7 +50,9 @@ import {
 } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
+import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
+import { mailjetClient } from '@mediature/main/src/utils/mailjet';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
@@ -235,9 +238,20 @@ export const caseRouter = router({
       },
     });
 
+    const { t } = useServerTranslation('common');
+
+    // TODO: must be in a queue as for the email sending?
+    await mailjetClient.createInboundEmail(getCaseEmail(t, newCase.humanId.toString()));
+
     // If an email has been specified, notify the user of the case information
     if (!!newCase.citizen.email) {
+      const sender = addresscompiler.compile({
+        address: getCaseEmail(t, newCase.humanId.toString()),
+        name: 'Médiature',
+      });
+
       await mailer.sendCaseRequestConfirmation({
+        sender: sender,
         recipient: newCase.citizen.email,
         firstname: newCase.citizen.firstname,
         lastname: newCase.citizen.lastname,
@@ -389,7 +403,15 @@ export const caseRouter = router({
     });
 
     if (statusSwitchedToClose && !!targetedCase.citizen.email) {
+      const { t } = useServerTranslation('common');
+
+      const sender = addresscompiler.compile({
+        address: getCaseEmail(t, targetedCase.humanId.toString()),
+        name: 'Médiature',
+      });
+
       await mailer.sendCaseClosed({
+        sender: sender,
         recipient: targetedCase.citizen.email,
         firstname: targetedCase.citizen.firstname,
         lastname: targetedCase.citizen.lastname,

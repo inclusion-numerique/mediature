@@ -279,10 +279,30 @@ export async function messagePrismaToModel(
     attachments: {
       id: string;
       name: string | null;
+      contentType: string;
+      size: number;
+      inline: boolean;
     }[];
     consideredAsProcessed: boolean | null;
   }
 ): Promise<MessageSchemaType> {
+  const attachments: UiAttachmentSchemaType[] = [];
+  for (const iAttachment of message.attachments) {
+    const attachment = await attachmentPrismaToModel({
+      id: iAttachment.id,
+      name: iAttachment.name,
+      contentType: iAttachment.contentType,
+      size: iAttachment.size,
+    });
+
+    // If inline, make the link with the content with the generated URL
+    if (iAttachment.inline) {
+      message.content = message.content.replace(`cid:${iAttachment.id}`, attachment.url);
+    }
+
+    attachments.push(attachment);
+  }
+
   return {
     id: message.id,
     subject: message.subject,
@@ -291,14 +311,7 @@ export async function messagePrismaToModel(
     consideredAsProcessed: message.consideredAsProcessed,
     from: contactPrismaToModel(message.from),
     to: message.to.map((toContact) => contactPrismaToModel(toContact)),
-    attachments: await Promise.all(
-      message.attachments.map((attachment) => {
-        return attachmentPrismaToModel({
-          id: attachment.id,
-          name: attachment.name,
-        });
-      })
-    ),
+    attachments: attachments,
     createdAt: message.createdAt,
     updatedAt: message.updatedAt,
     deletedAt: message.deletedAt,

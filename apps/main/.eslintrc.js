@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['dist', 'prisma/generated-for-inspiration'],
+  ignorePatterns: ['dist', 'prisma/generated-for-inspiration', 'src/fixtures/mailjet/mailjet-real-email.html'],
   extends: ['custom'],
   plugins: ['jsx-a11y', 'testing-library'],
   overrides: [

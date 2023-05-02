@@ -44,7 +44,7 @@
     "html-to-text": "^9.0.3",
     "i18next": "^22.4.5",
     "katex": "^0.15.2",
-    "lexical": "0.7.6",
+    "lexical": "0.10.0",
     "lodash.debounce": "^4.0.8",
     "mjml": "^4.13.0",
     "next": "13.1.6",

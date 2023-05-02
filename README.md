@@ -78,7 +78,7 @@ For the `www` subdomain:
 - Hostname: `www`
 - Value: `xxxxxxxxxx.scalingo.io` _(depending on the environment)_
 
-And since the root domain cannnot use a `CNAME` we have to use fixed IPs:
+And since the root domain cannot use a `CNAME` we have to use fixed IPs:
 
 - Type: `A`
 - Hostname: ``
@@ -126,6 +126,10 @@ For each build and runtime (since they are shared), you should have set some env
 - `MAILER_FALLBACK_SMTP_PORT`: [SECRET]
 - `MAILER_FALLBACK_SMTP_USER`: [SECRET]
 - `MAILER_FALLBACK_SMTP_PASSWORD`: [SECRET]
+- `MAILJET_API_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
+- `MAILJET_SECRET_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
+- `MAILJET_WEBHOOK_AUTH_USERNAME`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
+- `MAILJET_WEBHOOK_AUTH_PASSWORD`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
 
 #### Review apps
 
@@ -241,6 +245,7 @@ To debug a remote database we advise creating a specific user (because you are n
 Scalingo uses the Heroku technology of buildpacks to embed your application at runtime and it's quite complicated to replicate the logic locally. It does not bring the flexibility of a custom Docker image, nor the new "standard" tool to manage buildpacks (https://buildpacks.io/).
 
 In case you have an edge pipeline error, it may help to try using `herokuish` for mimicing the build embedding your application in the wanted buildpack. It's not a miror of the Scalingo pipeline but it can help. The easier thing we found for now is to use a custom Dockerfile:
+
 ```dockerfile
 FROM gliderlabs/herokuish:latest
 
@@ -257,6 +262,8 @@ TODO: to write once it's compatible with Next.js 13 a new time
 
 ### Emails
 
+#### Outgoing
+
 We use 2 providers to send emails:
 
 - the main one (Mailjet)
@@ -267,6 +274,21 @@ Sending verified emails must be taken seriously so they don't end into the spam 
 Also you need to configure your DNS records to handle from both providers on the 2 environments (development and production): DMARC/DKIM/SPF. It's well explained when adding sending domains on their interface. It will make your emails signed according to your domain.
 
 When creating SMTP credentials make sure sure to use different ones between the development and the production environment.
+
+#### Incoming
+
+The project has a messenger-like feature through emails, and we use Mailjet to receive incoming emails. The idea is to configure our DNS records so incoming emails go to their servers and then they use a webhook to notify us of the content of this email.
+
+Each "inbox" we want to manage is explicitly created/deleted by the API client (there is no way to do a "wildcard" address).
+
+For each environment, just add this DNS record:
+
+- Type: `MX`
+- Hostname: ``
+- Priority: `0`
+- Value: `parse.mailjet.com.`
+
+_The only authentication method allowed for the webhook was to include inside the URL Basic Authentication, so don't forget to set `MAILJET_WEBHOOK_AUTH_USERNAME` and `MAILJET_WEBHOOK_AUTH_PASSWORD` from the start (because you change it you need to recreate all virtual inboxes so they have the webhook URL with the right credentials)._
 
 ### Crisp
 

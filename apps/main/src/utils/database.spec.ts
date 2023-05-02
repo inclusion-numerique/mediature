@@ -24,7 +24,7 @@ describe('database', () => {
     if (postgres) {
       await postgres.container.stop();
     }
-  });
+  }, 30 * 1000);
 
   describe('testcontainers', () => {
     it('should be working', () => {

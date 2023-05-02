@@ -1,6 +1,6 @@
 import path from 'path';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
-import { StartedGenericContainer } from 'testcontainers/dist/generic-container/started-generic-container';
+import { StartedGenericContainer } from 'testcontainers/dist/src/generic-container/started-generic-container';
 
 import { EmailServerSettings } from '@mediature/main/src/emails/mailer';
 import { bindContainerLogs, defaultEnvironment, formatContainerNameWithSuffix } from '@mediature/main/src/utils/testcontainers';

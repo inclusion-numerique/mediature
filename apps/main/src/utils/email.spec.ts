@@ -30,7 +30,7 @@ describe('email', () => {
     if (mailcatcher) {
       await mailcatcher.container.stop();
     }
-  });
+  }, 30 * 1000);
 
   describe('send', () => {
     it('SignUpConfirmation', async () => {

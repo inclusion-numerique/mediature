@@ -4,6 +4,7 @@ import { within } from '@storybook/testing-library';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import sampleAllElement from '@mediature/ui/src/Editor/sample-all-elements.lexical';
 import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
+import { inlineEditorStateFromHtml } from '@mediature/ui/src/utils/lexical';
 
 type ComponentType = typeof LexicalRenderer;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
@@ -16,7 +17,15 @@ export default {
   }),
 } as Meta<ComponentType>;
 
-const Template: StoryFn<ComponentType> = (args) => {
+const Template: StoryFn<ComponentType> = (args, { loaded: { inlineEditorState } }) => {
+  if (!args.inlineEditorState && !inlineEditorState) {
+    return <span>Loading...</span>;
+  }
+
+  if (inlineEditorState) {
+    args.inlineEditorState = inlineEditorState;
+  }
+
   return <LexicalRenderer {...args} />;
 };
 
@@ -36,3 +45,21 @@ EveryElementStory.play = async ({ canvasElement }) => {
 };
 
 export const EveryElement = prepareStory(EveryElementStory);
+
+const FromParsedHtmlStory = Template.bind({});
+FromParsedHtmlStory.args = {};
+FromParsedHtmlStory.parameters = {
+  ...EveryElementStory.parameters,
+};
+FromParsedHtmlStory.loaders = [
+  async () => ({
+    inlineEditorState: await inlineEditorStateFromHtml(
+      '<div dir="ltr">Hi,<div><br></div><div>Important notice: it&#39;s Friday. Friday <i>afternoon</i>, even!</div><div><br><br></div><div>Have a <i style="font-weight:bold">great</i> weekend!</div><div><br></div><div>The Anonymous Friday Teller</div></div>'
+    ),
+  }),
+];
+FromParsedHtmlStory.play = async ({ canvasElement }) => {
+  await within(canvasElement).findByText(/weekend/i);
+};
+
+export const FromParsedHtml = prepareStory(FromParsedHtmlStory);

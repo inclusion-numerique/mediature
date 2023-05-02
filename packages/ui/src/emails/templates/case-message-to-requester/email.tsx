@@ -39,6 +39,7 @@ export function CaseMessageToRequesterEmail(props: CaseMessageToRequesterEmailPr
       </MjmlText>
       <MjmlDivider />
       <MjmlText>
+        <p>{props.subject}</p>
         <MjmlRaw>
           <div dangerouslySetInnerHTML={{ __html: props.htmlMessageContent }} />
         </MjmlRaw>

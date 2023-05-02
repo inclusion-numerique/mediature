@@ -1,4 +1,4 @@
-import { StartedGenericContainer } from 'testcontainers/dist/generic-container/started-generic-container';
+import { StartedGenericContainer } from 'testcontainers/dist/src/generic-container/started-generic-container';
 
 export interface ContainerLogsOptions {
   enabled: boolean;

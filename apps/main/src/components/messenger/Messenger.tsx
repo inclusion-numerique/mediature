@@ -25,12 +25,26 @@ export function Messenger(props: MessengerProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageSchemaType | null>(null);
 
-  const { data, error, isLoading, refetch } = trpc.listMessages.useQuery({
-    orderBy: {},
-    filterBy: {
-      caseIds: [props.caseId],
+  const { data, error, isLoading, refetch } = trpc.listMessages.useQuery(
+    {
+      orderBy: {},
+      filterBy: {
+        caseIds: [props.caseId],
+      },
     },
-  });
+    {
+      onSuccess: (data) => {
+        // Update the selected message in case its data has changed
+        if (selectedMessage) {
+          const updatedMessage = data.messages.find((message) => {
+            return message.id === selectedMessage.id;
+          });
+
+          setSelectedMessage(updatedMessage || null);
+        }
+      },
+    }
+  );
 
   const messages = useMemo(() => {
     return data?.messages || [];

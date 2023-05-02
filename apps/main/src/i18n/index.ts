@@ -28,13 +28,17 @@ interface DateLocales {
 
 export const dateFnsLocales: DateLocales = { fr: frDateLocale };
 
+export type Lang = 'fr' | 'en'; // If more locales available, add them here
+export const supportedLanguages: Lang[] = ['fr'];
+const fallbackLanguage: Lang = 'fr';
+
 i18next.use(LanguageDetector).init(
   {
     detection: {
       order: ['cookie', 'localStorage', 'navigator'],
     },
-    supportedLngs: ['fr'],
-    fallbackLng: 'fr',
+    supportedLngs: supportedLanguages,
+    fallbackLng: fallbackLanguage,
     defaultNS: defaultNamespace,
     returnEmptyString: false,
     returnNull: false,

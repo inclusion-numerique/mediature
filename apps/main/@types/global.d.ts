@@ -43,6 +43,8 @@ interface RuntimeConfig {
   publicRuntimeConfig: PublicRuntimeConfig;
 }
 
+declare module 'addresscompiler';
+declare module 'email-reply-parser';
 declare module 'next/config' {
   const value: () => RuntimeConfig;
   export default value;

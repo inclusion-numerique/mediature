@@ -454,6 +454,23 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         </Grid>
         <Grid item xs={12}>
           <Grid container direction="column">
+            <Dialog open={messengerModalOpen} onClose={handleCloseMessengerModal} fullWidth maxWidth={false}>
+              <DialogTitle>
+                <Grid container spacing={2} justifyContent="space-between" alignItems="center">
+                  <Grid item xs="auto">
+                    Messagerie pour le dossier n°{targetedCase.humanId}
+                  </Grid>
+                  <Grid item xs="auto">
+                    <IconButton aria-label="fermer" onClick={handleCloseMessengerModal} size="small">
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </DialogTitle>
+              <DialogContent sx={{ display: 'flex', height: '80vh' }}>
+                <ContextualMessenger caseId={targetedCase.id} />
+              </DialogContent>
+            </Dialog>
             <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="modifier un dossier">
               <Grid
                 item
@@ -468,23 +485,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               >
                 <Grid container spacing={2}>
                   <Grid item xs="auto" minWidth="33%">
-                    <Dialog open={messengerModalOpen} onClose={handleCloseMessengerModal} fullWidth maxWidth={false}>
-                      <DialogTitle>
-                        <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-                          <Grid item xs="auto">
-                            Messagerie pour le dossier n°{targetedCase.humanId}
-                          </Grid>
-                          <Grid item xs="auto">
-                            <IconButton aria-label="fermer" onClick={handleCloseMessengerModal} size="small">
-                              <CloseIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      </DialogTitle>
-                      <DialogContent sx={{ height: '80vh' }}>
-                        <ContextualMessenger caseId={targetedCase.id} />
-                      </DialogContent>
-                    </Dialog>
                     <Button
                       onClick={() => {
                         handeOpenMessengerModal();

@@ -84,7 +84,7 @@ export function SendMessageForm(props: SendMessageFormProps) {
         shouldValidate: false,
       }
     );
-  }, [selected]);
+  }, [selected, setValue]);
 
   function onChange(event: React.SyntheticEvent<Element, Event>, value: string[]) {
     const errorEmail = value.find((email) => !z.string().email().safeParse(email).success);
@@ -111,7 +111,7 @@ export function SendMessageForm(props: SendMessageFormProps) {
   }
 
   return (
-    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} preventParentFormTrigger control={control} ariaLabel="modifier la note du dossier">
+    <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} preventParentFormTrigger control={control} ariaLabel="envoyer un message">
       <Grid item xs={12}>
         <Autocomplete
           multiple
@@ -140,11 +140,19 @@ export function SendMessageForm(props: SendMessageFormProps) {
           inputValue={inputValue}
           onInputChange={onInputChange}
           options={props.recipientsSuggestions.map((recipient) => recipient.email)}
+          renderOption={(props, option) => {
+            // Redeclare to avoid "spread JSX" error (ref: https://stackoverflow.com/a/75968316/3608410)
+            return (
+              <li {...props} key={option}>
+                {option}
+              </li>
+            );
+          }}
           freeSolo
           renderTags={(value: readonly string[], getTagProps) =>
-            value.map((option: string, index: number) => (
-              <Chip variant="outlined" label={option} {...getTagProps({ index })} onDelete={() => onDelete(option)} />
-            ))
+            value.map((option: string, index: number) => {
+              return <Chip {...getTagProps({ index })} key={option} variant="outlined" label={option} onDelete={() => onDelete(option)} />;
+            })
           }
           renderInput={(params) => (
             <TextField

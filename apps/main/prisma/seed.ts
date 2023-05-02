@@ -1,4 +1,6 @@
-import { CaseStatus, PhoneType, PrismaClient } from '@prisma/client';
+import { CaseStatus, MessageStatus, PhoneType, PrismaClient } from '@prisma/client';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 import { seedProductionDataIntoDatabase } from '@mediature/main/prisma/production-seed';
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
@@ -28,6 +30,8 @@ export async function seedDatabase(prismaClient: PrismaClient) {
 
   const testUserId = '5c03994c-fc16-47e0-bd02-d218a370a078';
   const sssId = '5c03994c-fc16-47e0-bd02-d218a370a111';
+
+  const sampleHello = await fs.readFile(path.resolve(__dirname, '../../../packages/ui/src/Editor/sample-hello.lexical'), 'utf-8');
 
   // Create main user
   const mainUser = await prismaClient.user.upsert({
@@ -138,7 +142,8 @@ export async function seedDatabase(prismaClient: PrismaClient) {
   });
 
   // Create cases
-  await [...Array(20)].map(async () => {
+  let i: number = 0;
+  await [...Array(20).keys()].map(async (iteration) => {
     await prismaClient.case.create({
       data: {
         alreadyRequestedInThePast: false,
@@ -180,6 +185,68 @@ export async function seedDatabase(prismaClient: PrismaClient) {
           connect: {
             id: sssAuthority.id,
           },
+        },
+        MessagesOnCases: {
+          create: [
+            {
+              // Sent
+              markedAsProcessed: null,
+              message: {
+                create: {
+                  subject: 'Hello',
+                  content: sampleHello,
+                  status: MessageStatus.TRANSFERRED,
+                  from: {
+                    create: {
+                      email: `dossier-${iteration}@france.fr`,
+                      name: 'Thomas de Médiature',
+                    },
+                  },
+                  to: {
+                    create: {
+                      recipient: {
+                        create: {
+                          email: `jean@example${iteration}.fr`,
+                          name: 'Jean Derrien',
+                        },
+                      },
+                    },
+                  },
+                  AttachmentsOnMessages: undefined,
+                },
+              },
+            },
+            {
+              // Sent
+              markedAsProcessed: false,
+              message: {
+                create: {
+                  subject: 'Re: Hello',
+                  content: sampleHello,
+                  status: MessageStatus.TRANSFERRED,
+                  from: {
+                    create: {
+                      // Cannot easily "connect" to the one just before, creating another one, it does not matter
+                      email: `jean-second@example${iteration}.fr`,
+                      name: 'Jean Derrien',
+                    },
+                  },
+                  to: {
+                    create: {
+                      recipient: {
+                        create: {
+                          // Cannot easily "connect" to the one just before, creating another one, it does not matter
+                          email: `dossier-${iteration}@france.fr`,
+                          name: null,
+                        },
+                      },
+                    },
+                  },
+                  AttachmentsOnMessages: undefined,
+                },
+              },
+            },
+          ],
         },
       },
     });
