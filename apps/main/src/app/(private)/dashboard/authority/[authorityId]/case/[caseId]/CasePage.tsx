@@ -481,7 +481,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                 sx={{
                   position: 'sticky',
                   top: 0,
-                  zIndex: 1000,
+                  zIndex: 450,
                   background: theme.decisions.background.default.grey.default,
                   pb: 2,
                 }}
