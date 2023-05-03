@@ -74,7 +74,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                       </>
                     ),
                     onConfirm: async () => {
-                      await props.closeAction(true);
+                      await props.closeAction(false);
                     },
                   });
                 }}
