@@ -65,6 +65,7 @@ COPY --from=installer "/app/apps/${APP_NAME}/package.json" .
 
 COPY --from=installer --chown=nextjs:nodejs "/app/apps/${APP_NAME}/.next/standalone" ./
 COPY --from=installer --chown=nextjs:nodejs "/app/apps/${APP_NAME}/.next/static" "./apps/${APP_NAME}/.next/static"
+COPY --from=installer --chown=nextjs:nodejs "/app/apps/${APP_NAME}/public" "./apps/${APP_NAME}/public"
 
 ENV CMD_APP_NAME $APP_NAME
 ENV PORT $PORT
