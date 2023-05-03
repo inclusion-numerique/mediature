@@ -6,6 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Alert from '@mui/material/Alert';
+import Badge from '@mui/material/Badge';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -26,6 +27,7 @@ import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
+import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
@@ -34,6 +36,7 @@ export interface CaseCardProps {
   case: CaseSchemaType;
   citizen: CitizenSchemaType;
   agent?: AgentSchemaType;
+  unprocessedMessages: number;
   assignAction?: () => Promise<void>;
   unassignAction?: () => Promise<void>;
 }
@@ -96,8 +99,11 @@ export function CaseCard(props: CaseCardProps) {
               {props.citizen.firstname} {props.citizen.lastname}
             </Link>
             <br />
-            <Typography component="b" variant="subtitle1">
+            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex' }}>
               Dossier n°{props.case.humanId}
+              {!!props.unprocessedMessages && props.unprocessedMessages > 0 && (
+                <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={props.unprocessedMessages} />
+              )}
               {!!props.agent && (
                 <Typography component="span" variant="body2">
                   {' '}

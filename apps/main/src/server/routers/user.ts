@@ -100,20 +100,33 @@ export const userRouter = router({
         session: UserInterfaceSessionSchema.parse({
           agentOf: [],
           isAdmin: false,
+          assignedUnprocessedMessages: 0,
         }),
       };
     }
+
+    const unprocessedMessagesCountObjects = await prisma.$queryRaw<
+      {
+        authorityId: string;
+        count: BigInt;
+      }[]
+    >`SELECT a."authorityId", COUNT(*) AS count FROM "MessagesOnCases" moc INNER JOIN "Case" c ON c.id = moc."caseId" INNER JOIN "Agent" a ON a.id = c."agentId" INNER JOIN "User" u ON u.id = a."userId" WHERE (moc."markedAsProcessed" = false AND u.id = ${user.id}::uuid) GROUP BY a."authorityId"`;
 
     return {
       session: UserInterfaceSessionSchema.parse({
         agentOf: await Promise.all(
           user.Agent.map(async (agent) => {
+            const unprocessedMessagesCountObject = unprocessedMessagesCountObjects.find(
+              (countObject) => countObject.authorityId === agent.authorityId
+            );
+
             return {
               id: agent.authority.id,
               logo: await attachmentIdPrismaToModel(agent.authority.logoAttachmentId),
               name: agent.authority.name,
               slug: agent.authority.slug,
               isMainAgent: agent.id === agent.authority.mainAgentId,
+              assignedUnprocessedMessages: unprocessedMessagesCountObject ? Number(unprocessedMessagesCountObject.count) : 0,
             };
           })
         ),

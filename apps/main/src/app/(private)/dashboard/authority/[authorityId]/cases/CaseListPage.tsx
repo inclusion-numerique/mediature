@@ -126,6 +126,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
                       agent={caseWrapper.agent || undefined}
+                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
                     />
                   </Grid>
                 ))}
@@ -152,6 +153,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
                       agent={caseWrapper.agent || undefined}
+                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
                     />
                   </Grid>
                 ))}

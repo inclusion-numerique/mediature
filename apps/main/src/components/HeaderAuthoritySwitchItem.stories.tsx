@@ -26,6 +26,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     slug: authorities[0].slug,
     logo: authorities[0].logo,
     isMainAgent: false,
+    assignedUnprocessedMessages: 3,
   },
   {
     id: authorities[1].id,
@@ -33,6 +34,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     slug: authorities[1].slug,
     logo: authorities[1].logo,
     isMainAgent: true,
+    assignedUnprocessedMessages: 4,
   },
   {
     id: authorities[2].id,
@@ -40,6 +42,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     slug: authorities[2].slug,
     logo: authorities[2].logo,
     isMainAgent: false,
+    assignedUnprocessedMessages: 1,
   },
 ];
 

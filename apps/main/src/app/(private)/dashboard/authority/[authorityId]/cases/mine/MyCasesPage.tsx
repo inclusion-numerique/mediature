@@ -144,6 +144,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                       })}
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
+                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
                       assignAction={async () => {
                         // TODO: bind to API
                       }}
@@ -175,6 +176,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                       })}
                       case={caseWrapper.case}
                       citizen={caseWrapper.citizen}
+                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
                       assignAction={async () => {
                         // TODO: bind to API
                       }}

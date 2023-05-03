@@ -3,6 +3,7 @@
 import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import addressFormatter from '@fragaria/address-formatter';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -21,6 +22,7 @@ import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/atta
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
+import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
@@ -33,6 +35,7 @@ export interface UnassignedCaseSliderCardProps {
   case: CaseSchemaType;
   citizen: CitizenSchemaType;
   attachments: UiAttachmentSchemaType[];
+  unprocessedMessages: number;
   assignAction: (caseId: string) => Promise<void>;
 }
 
@@ -108,6 +111,9 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               <Grid item sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
                 <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                   Dossier n°{props.case.humanId}
+                  {!!props.unprocessedMessages && props.unprocessedMessages > 0 && (
+                    <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={props.unprocessedMessages} />
+                  )}
                 </Typography>
               </Grid>
             </Grid>

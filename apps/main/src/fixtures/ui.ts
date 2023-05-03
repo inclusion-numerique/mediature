@@ -8,6 +8,7 @@ export const agentOfSample = [
       url: 'https://via.placeholder.com/300x150',
     },
     isMainAgent: true,
+    assignedUnprocessedMessages: 4,
   },
   {
     id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e02',
@@ -18,6 +19,7 @@ export const agentOfSample = [
       url: 'https://via.placeholder.com/300x400',
     },
     isMainAgent: true,
+    assignedUnprocessedMessages: 8,
   },
   {
     id: 'b79cb3ba-745e-5d9a-8903-4a02327a7e03',
@@ -25,5 +27,6 @@ export const agentOfSample = [
     slug: 'bordeaux',
     logo: null,
     isMainAgent: true,
+    assignedUnprocessedMessages: 11,
   },
 ];

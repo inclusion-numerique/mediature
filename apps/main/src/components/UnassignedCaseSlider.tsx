@@ -95,6 +95,7 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
               case={caseWrapper.case}
               citizen={caseWrapper.citizen}
               attachments={caseWrapper.attachments || []}
+              unprocessedMessages={caseWrapper.unprocessedMessages || 0}
               assignAction={assignAction}
             />
           </SwiperSlide>

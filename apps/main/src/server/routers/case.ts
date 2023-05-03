@@ -428,6 +428,7 @@ export const caseRouter = router({
         agent: null,
         notes: null,
         attachments: null,
+        unprocessedMessages: null,
       }),
     };
   }),
@@ -845,6 +846,15 @@ export const caseRouter = router({
       throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
     }
 
+    const unprocessedMessagesCount = await prisma.message.count({
+      where: {
+        MessagesOnCases: {
+          caseId: targetedCase.id,
+          markedAsProcessed: false,
+        },
+      },
+    });
+
     const attachments = await Promise.all(
       targetedCase.AttachmentsOnCases.map(async (attachmentOnCase) => {
         return await attachmentPrismaToModel(attachmentOnCase.attachment);
@@ -858,6 +868,7 @@ export const caseRouter = router({
         agent: targetedCase.agent ? agentPrismaToModel(targetedCase.agent) : null,
         notes: targetedCase.Note.map((note: Note) => caseNotePrismaToModel(note)),
         attachments: attachments,
+        unprocessedMessages: unprocessedMessagesCount,
       }),
     };
   }),
@@ -972,6 +983,21 @@ export const caseRouter = router({
       },
     });
 
+    const unprocessedMessagesCountObjects = await prisma.messagesOnCases.groupBy({
+      by: ['caseId'],
+      where: {
+        markedAsProcessed: false,
+        case: {
+          id: {
+            in: cases.map((iCase) => iCase.id),
+          },
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    });
+
     return {
       casesWrappers: await Promise.all(
         cases.map(async (iterationCase): Promise<CaseWrapperSchemaType> => {
@@ -981,12 +1007,15 @@ export const caseRouter = router({
             })
           );
 
+          const unprocessedMessagesCountObject = unprocessedMessagesCountObjects.find((countObject) => countObject.caseId === iterationCase.id);
+
           return {
             case: casePrismaToModel(iterationCase),
             citizen: citizenPrismaToModel(iterationCase.citizen),
             agent: iterationCase.agent ? agentPrismaToModel(iterationCase.agent) : null,
             notes: null,
             attachments: attachments,
+            unprocessedMessages: unprocessedMessagesCountObject ? unprocessedMessagesCountObject._count._all : 0,
           };
         })
       ),

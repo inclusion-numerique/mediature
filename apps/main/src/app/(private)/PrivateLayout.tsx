@@ -4,6 +4,7 @@ import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header } from '@codegouvfr/react-dsfr/Header';
 import { MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation';
 import { MenuProps } from '@codegouvfr/react-dsfr/MainNavigation/Menu';
+import Badge from '@mui/material/Badge';
 import Grid from '@mui/material/Grid';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -11,7 +12,13 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
-import { authoritySwichQuickAccessItem, commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
+import {
+  authoritySwichQuickAccessItem,
+  commonFooterAttributes,
+  commonHeaderAttributes,
+  unprocessedMessagesBadgeAttributes,
+  userQuickAccessItem,
+} from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { hasPathnameThisMatch, hasPathnameThisRoot } from '@mediature/main/src/utils/url';
@@ -99,7 +106,14 @@ export function PrivateLayout(props: PropsWithChildren) {
         },
         {
           isActive: hasPathnameThisMatch(pathname, myCasesLink),
-          text: 'Mes dossiers',
+          text: (
+            <span>
+              Mes dossiers
+              {!!currentAuthority.assignedUnprocessedMessages && currentAuthority.assignedUnprocessedMessages > 0 && (
+                <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={currentAuthority.assignedUnprocessedMessages} />
+              )}
+            </span>
+          ),
           linkProps: {
             href: myCasesLink,
             target: '_self',

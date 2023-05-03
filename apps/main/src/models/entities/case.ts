@@ -135,6 +135,7 @@ export const CaseWrapperSchema = z
     agent: AgentSchema.nullable(),
     notes: z.array(CaseNoteSchema).nullable(),
     attachments: z.array(UiAttachmentSchema).nullable(),
+    unprocessedMessages: z.number().nullable(),
   })
   .strict();
 export type CaseWrapperSchemaType = z.infer<typeof CaseWrapperSchema>;

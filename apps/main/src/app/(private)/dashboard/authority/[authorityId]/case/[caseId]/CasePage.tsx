@@ -11,6 +11,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import Button from '@mui/lab/LoadingButton';
+import Badge from '@mui/material/Badge';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -53,6 +54,7 @@ import { CaseAttachmentTypeSchema, CasePlatformSchema, CaseStatusSchema, CaseSta
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
+import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
@@ -192,6 +194,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const citizen = caseWrapper.citizen;
   const notes = caseWrapper.notes;
   const attachments = caseWrapper.attachments;
+  const unprocessedMessages = caseWrapper.unprocessedMessages;
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
     const { caseWrapper: updatedCaseWrapper } = await updateCase.mutateAsync(input);
@@ -495,6 +498,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       startIcon={<MailOutlineIcon />}
                     >
                       Messagerie
+                      {!!unprocessedMessages && unprocessedMessages > 0 && (
+                        <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={unprocessedMessages} />
+                      )}
                     </Button>
                   </Grid>
                   {isDirty ? (

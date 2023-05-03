@@ -1,6 +1,7 @@
 import { headerFooterDisplayItem } from '@codegouvfr/react-dsfr/Display';
 import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import type { DefaultColorScheme } from '@codegouvfr/react-dsfr/next-appdir';
+import { BadgeProps } from '@mui/material/Badge';
 import { EventEmitter } from 'eventemitter3';
 
 import { HeaderAuthoritySwitchItem, HeaderAuthoritySwitchItemProps } from '@mediature/main/src/components/HeaderAuthoritySwitchItem';
@@ -79,4 +80,19 @@ export const commonFooterAttributes = {
   //   href: '#',
   // }}
   bottomItems: [headerFooterDisplayItem],
+};
+
+export const unprocessedMessagesBadgeAttributes: BadgeProps = {
+  max: 99,
+  title: 'Nombre de messages non-traités',
+  color: 'error',
+  sx: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    '& .MuiBadge-badge': {
+      position: 'relative',
+      transform: 'none',
+      marginLeft: '0.5rem',
+    },
+  },
 };
