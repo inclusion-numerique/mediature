@@ -56,9 +56,13 @@ export const authRouter = router({
         firstname: input.firstname,
         lastname: input.lastname,
         email: input.email,
-        passwordHash: passwordHash,
         status: UserStatusSchema.Values.CONFIRMED, // "confirmed" directly since we avoid sending an email confirmation, the user has been invited with a token so little chance it's not the right email
         profilePicture: null,
+        Secrets: {
+          create: {
+            passwordHash: passwordHash,
+          },
+        },
       },
     });
 
@@ -211,7 +215,11 @@ export const authRouter = router({
         id: verificationToken.identifier,
       },
       data: {
-        passwordHash: hashedPassword,
+        Secrets: {
+          update: {
+            passwordHash: hashedPassword,
+          },
+        },
       },
     });
 
@@ -237,9 +245,16 @@ export const authRouter = router({
       where: {
         id: userId,
       },
+      include: {
+        Secrets: {
+          select: {
+            passwordHash: true,
+          },
+        },
+      },
     });
 
-    const matchPassword = await bcrypt.compare(input.currentPassword, user.passwordHash);
+    const matchPassword = await bcrypt.compare(input.currentPassword, user.Secrets?.passwordHash || '');
     if (!matchPassword) {
       throw new Error(`le mot de passe actuel que vous venez de rentrer est invalide`);
     }
@@ -251,7 +266,11 @@ export const authRouter = router({
         id: user.id,
       },
       data: {
-        passwordHash: newHashedPassword,
+        Secrets: {
+          update: {
+            passwordHash: newHashedPassword,
+          },
+        },
       },
     });
 

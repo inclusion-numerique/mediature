@@ -39,13 +39,20 @@ export const nextAuthOptions: NextAuthOptions = {
           where: {
             email: credentials.email,
           },
+          include: {
+            Secrets: {
+              select: {
+                passwordHash: true,
+              },
+            },
+          },
         });
 
-        if (!user) {
+        if (!user || !user.Secrets) {
           throw new Error('no_credentials_match');
         }
 
-        const matchPassword = await bcrypt.compare(credentials.password, user.passwordHash);
+        const matchPassword = await bcrypt.compare(credentials.password, user.Secrets.passwordHash);
         if (!matchPassword) {
           throw new Error('no_credentials_match');
         }

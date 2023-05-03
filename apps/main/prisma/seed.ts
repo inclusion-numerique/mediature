@@ -43,12 +43,16 @@ export async function seedDatabase(prismaClient: PrismaClient) {
       firstname: 'John',
       lastname: 'Doe',
       email: 'john@domain.demo',
-      passwordHash: '$2a$11$L2SjShQuoJoYqMPmoINuWeRLRWnzNuQf22.VgculPIlpnS8bleLEG', // Value: "test"
       status: 'CONFIRMED',
       profilePicture: null,
       Admin: {
         create: {
           canEverything: true,
+        },
+      },
+      Secrets: {
+        create: {
+          passwordHash: '$2a$11$L2SjShQuoJoYqMPmoINuWeRLRWnzNuQf22.VgculPIlpnS8bleLEG', // Value: "test"
         },
       },
     },
