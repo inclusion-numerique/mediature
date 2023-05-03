@@ -1,7 +1,11 @@
 # tools settings folders
 /**/.*/**/*
 !.github/**/*
-!.well-known/
+!.vscode/extensions.json
+!.vscode/i18n-ally-reviews.yml
+!.vscode/launch.json
+!.vscode/settings.json
+!.well-known/**/*
 
 # dependencies
 node_modules
@@ -30,6 +34,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.jest.local
 
 # turbo
 .turbo

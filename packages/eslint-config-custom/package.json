@@ -1,20 +1,30 @@
 {
   "name": "eslint-config-custom",
   "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "packages/eslint-config-custom"
+  },
+  "license": "AGPL-3.0",
   "main": "index.js",
-  "license": "MIT",
   "dependencies": {
     "eslint-config-next": "^12.0.8",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-config-turbo": "latest",
+    "eslint-config-turbo": "0.0.8",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-mdx": "^2.0.5",
     "eslint-plugin-react": "7.28.0"
   },
   "devDependencies": {
     "eslint": "7.32.0",
-    "next": "latest",
-    "react": "18.2",
-    "react-dom": "18.2",
-    "typescript": "^4.5.3"
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-storybook": "^0.6.8",
+    "next": "13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.9.3"
   },
   "publishConfig": {
     "access": "public"

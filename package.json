@@ -1,26 +1,87 @@
 {
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git"
+  },
+  "license": "AGPL-3.0",
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo run clean",
     "dev": "turbo run dev --no-cache --parallel --continue",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint:prepare": "turbo run lint:prepare",
     "lint": "turbo run lint",
-    "test": "turbo run test",
-    "heroku-postbuild": "turbo run build --filter=\"${BUILD_APP_NAME}\"...",
-    "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run start"
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mdx}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,mdx}\"",
+    "test:prepare": "turbo run test:prepare",
+    "test:unit": "turbo run test:unit",
+    "test:unit:watch": "turbo run test:unit:watch",
+    "test:e2e:headless": "turbo run test:e2e:headless",
+    "heroku-postbuild": "turbo run heroku-postbuild --filter=\"${BUILD_APP_NAME}\"...",
+    "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run heroku-start",
+    "accessibility": "turbo run accessibility",
+    "accessibility:open": "turbo run accessibility:open"
   },
   "devDependencies": {
-    "eslint-config-custom": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "eslint": "7.32.0",
+    "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",
-    "turbo": "latest"
+    "turbo": "1.9.3",
+    "typescript": "^4.9.3"
   },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+  "pnpm": {
+    "overrides": {
+      "@codegouvfr/react-dsfr": "0.40.0",
+      "@glen/jest-raw-loader": "^2.0.0",
+      "@gouvfr/dsfr": "^1.8.5",
+      "@lhci/cli": "^0.10.0",
+      "@luma-team/mjml-react": "^0.2.0",
+      "@mui/icons-material": "^5.10.16",
+      "@mui/lab": "5.0.0-alpha.118",
+      "@mui/material": "^5.10.16",
+      "@react-pdf/renderer": "^3.1.6",
+      "@storybook/instrumenter": "7.0.0-beta.41",
+      "@storybook/react": "7.0.0-beta.41",
+      "@storybook/testing-library": "0.0.14-next.1",
+      "@types/country-data": "^0.0.2",
+      "@types/google-libphonenumber": "^7.4.23",
+      "@types/lodash.debounce": "^4.0.7",
+      "@types/mjml": "^4.7.0",
+      "@types/mjml-react": "^2.0.6",
+      "@types/react": "^18.0.26",
+      "copy-webpack-plugin": "^11.0.0",
+      "country-data": "^0.0.31",
+      "cssnano": "^4.1.10",
+      "date-fns": "^2.29.3",
+      "dotenv": "^16.0.3",
+      "dotenv-run-script": "^0.2.0",
+      "get-tsconfig": "^4.2.0",
+      "google-libphonenumber": "^3.2.32",
+      "i18next": "^22.4.5",
+      "jest": "^29.3.1",
+      "jest-environment-jsdom": "^29.3.1",
+      "jest-environment-node": "^29.4.1",
+      "jest-resolver-tsconfig-paths": "^0.14.4",
+      "lodash.debounce": "^4.0.8",
+      "mjml": "^4.13.0",
+      "next": "13.1.6",
+      "next-i18next": "^13.0.3",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-i18next": "^12.1.1",
+      "start-server-and-test": "^1.14.0",
+      "testcontainers": "^9.6.0",
+      "ts-jest": "^29.0.3",
+      "ts-node": "^10.9.1",
+      "tsconfig-paths-webpack-plugin": "^4.0.0",
+      "typescript": "^4.9.3",
+      "typescript-plugin-css-modules": "^4.1.1",
+      "usehooks-ts": "^2.9.1",
+      "yaml-loader": "^0.8.0"
+    }
   },
-  "packageManager": "pnpm@7.16.0",
+  "packageManager": "pnpm@7.27.1",
   "engines": {
     "node": "16.15.0"
   }

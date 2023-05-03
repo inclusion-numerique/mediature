@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "AuthorityType" ADD VALUE 'FEDERATION_OF_CITIES';

@@ -1,2 +1,10 @@
+/apps/docs/public/mockServiceWorker.js
+/apps/docs/storybook-static/
+/apps/main/.next/
+/apps/main/prisma/generated-for-inspiration/
 **/.dockerignore
 /pnpm-lock.yaml
+/.vscode/i18n-ally-reviews.yml
+/packages/trpc-next-layout/**/*.ts
+/packages/trpc-next-layout/**/*.tsx
+/packages/ui/src/animations/**/*.json

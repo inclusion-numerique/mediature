@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/storybook.json",
+  "compilerOptions": {
+    "types": ["axe-playwright"],
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "../../apps/main/@types", "../../packages/ui/@types"],
+  "exclude": ["node_modules"]
+}

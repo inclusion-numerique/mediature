@@ -1,3 +1,5 @@
-!/.storybook/main.js
+!/.storybook/**/*
+/public/assets/fonts/
+/public/assets/images/
 /storybook-static/
 /build-storybook.log

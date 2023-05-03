@@ -1,0 +1,32 @@
+{
+  "scripts": {
+    "first-deploy": "cd apps/$BUILD_APP_NAME && pnpm db:seed:unsecure"
+  },
+  "env": {
+    "APP_IS_EPHEMERAL": {
+      "description": "All the variables in this file adapt the environment to review apps (temporary environments)",
+      "value": "true"
+    },
+    "APP_MODE": {
+      "value": "test"
+    },
+    "FILE_AUTH_SECRET": {
+      "value": "seed-to-forge-jwt-tokens-not-sensitive-in-temporary-environments"
+    },
+    "NEXT_AUTH_SECRET": {
+      "value": "seed-to-forge-jwt-tokens-not-sensitive-in-temporary-environments"
+    },
+    "CRISP_SIGNING_SECRET_KEY": {
+      "value": "seed-to-sign-emails-cannot-work-without-a-remote-crisp-account"
+    },
+    "NEXT_PUBLIC_CRISP_WEBSITE_ID": {
+      "value": "random-one-since-cannot-work-without-a-remote-crisp-account"
+    },
+    "NEXT_PUBLIC_APP_BASE_URL": {
+      "generator": "url"
+    },
+    "NEXT_PUBLIC_SENTRY_DSN": {
+      "value": ""
+    }
+  }
+}

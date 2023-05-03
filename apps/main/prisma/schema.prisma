@@ -1,0 +1,597 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["filteredRelationCount", "fullTextSearch", "views"]
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
+}
+
+//
+// The following tRPC generator can be uncomment to get some boilerplate code
+// This generated code should not be used directly, it should be copy/paste/clean to match our standards
+// It may just help to quickstart something quickly when having tons of new models
+// (you can remove the comment above models that prevent their generation, so it's easier to find them into the generated folder)
+//
+// Tip: once generated, looks for "ThomasCreateInput> = z" in the folder (replace "Thomas" by your model name)
+//
+
+// generator trpc {
+//   provider          = "prisma-trpc-generator"
+//   output            = "./generated-for-inspiration"
+//   withMiddleware    = false
+//   withShield        = false
+//   contextPath       = "../../../../server/context"
+//   isGenerateSelect  = false
+//   isGenerateInclude = false
+// }
+
+// TODO: check uuid types... should be the extension of Postgres
+
+// Account, Session, User and VerificationToken
+// Match next-auth model https://next-auth.js.org/adapters/prisma
+// Underscored names are from there too
+
+/// @@Gen.model(hide: true)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @unique @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+/// @@Gen.model(hide: true)
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String   @db.Uuid
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum VerificationTokenAction {
+  RESET_PASSWORD
+}
+
+/// @@Gen.model(hide: true)
+model VerificationToken {
+  token      String                  @id
+  action     VerificationTokenAction
+  identifier String // Email or other user identifier
+  expires    DateTime
+
+  @@unique([token])
+}
+
+enum UserStatus {
+  REGISTERED
+  CONFIRMED
+  DISABLED
+}
+
+/// @@Gen.model(hide: true)
+model UserSecrets {
+  id           String @id @default(uuid()) @db.Uuid
+  userId       String @unique @db.Uuid
+  passwordHash String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// @@Gen.model(hide: true)
+model User {
+  id             String     @id @default(uuid()) @db.Uuid
+  firstname      String
+  lastname       String
+  email          String     @unique
+  status         UserStatus @default(REGISTERED)
+  profilePicture String?
+  lastActivityAt DateTime?  @default(now())
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+  // TODO: https://www.prisma.io/docs/concepts/components/prisma-client/middleware/soft-delete-middleware
+
+  Secrets          UserSecrets?
+  Account          Account?
+  LiveChatSettings LiveChatSettings?
+  Session          Session[]
+  Agent            Agent[]
+  Admin            Admin?
+  InvitationSent   Invitation[]
+}
+
+/// @@Gen.model(hide: true)
+model LiveChatSettings {
+  userId       String @id @db.Uuid
+  sessionToken String @unique @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+/// @@Gen.model(hide: true)
+model Address {
+  id          String @id @default(uuid()) @db.Uuid
+  street      String
+  city        String
+  postalCode  String
+  countryCode String
+  subdivision String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Citizen Citizen?
+}
+
+enum PhoneType {
+  UNSPECIFIED
+  HOME
+  MOBILE
+}
+
+/// @@Gen.model(hide: true)
+model Phone {
+  // manage enum objects like Phone/Address through native Postgres objects? To simplify structure/relations?
+
+  id          String    @id @default(uuid()) @db.Uuid
+  phoneType   PhoneType @default(UNSPECIFIED)
+  callingCode String
+  countryCode String
+  number      String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Citizen Citizen?
+}
+
+/// @@Gen.model(hide: true)
+model Citizen {
+  id        String  @id @default(uuid()) @db.Uuid
+  email     String?
+  firstname String
+  lastname  String
+  addressId String  @unique @db.Uuid
+  phoneId   String  @unique @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  address       Address         @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  phone         Phone           @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  IdentityStamp IdentityStamp[]
+  Case          Case?
+}
+
+/// @@Gen.model(hide: true)
+model IdentityStamp {
+  id        String @id @default(uuid()) @db.Uuid
+  ownerType String // TODO: how to specify this... old Laravel hehe
+  ownerId   String @db.Uuid
+  value     String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  // TODO... should be type agnostic
+  owner Citizen @relation(fields: [ownerId], references: [id])
+}
+
+enum CaseStatus {
+  TO_PROCESS
+  MAKE_XXX_CALL // TODO: ... typo?
+  SYNC_WITH_CITIZEN
+  SYNC_WITH_ADMINISTATION
+  ABOUT_TO_CLOSE
+  STUCK
+}
+
+enum CaseInitialPlatform {
+  OFFICE
+  MAIL
+  PHONE
+  EMAIL
+  WEB
+}
+
+/// @@Gen.model(hide: true)
+model CaseDomainItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  parentItemId String? @db.Uuid
+  authorityId  String? @db.Uuid
+  name         String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  parentItem    CaseDomainItem?  @relation("ParentChildren", fields: [parentItemId], references: [id], onDelete: Cascade)
+  childrenItems CaseDomainItem[] @relation("ParentChildren")
+  authority     Authority?       @relation(fields: [authorityId], references: [id])
+  Case          Case[]
+
+  @@unique([parentItemId, authorityId, name])
+}
+
+/// @@Gen.model(hide: true)
+model CaseCompetentThirdPartyItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  parentItemId String? @db.Uuid
+  authorityId  String? @db.Uuid
+  name         String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  parentItem    CaseCompetentThirdPartyItem?  @relation("ParentChildren", fields: [parentItemId], references: [id], onDelete: Cascade)
+  childrenItems CaseCompetentThirdPartyItem[] @relation("ParentChildren")
+  authority     Authority?                    @relation(fields: [authorityId], references: [id])
+  Case          Case[]
+
+  @@unique([parentItemId, authorityId, name])
+}
+
+enum CaseOutcome {
+  FAVORABLE_TO_CITIZEN
+  PARTIAL
+  FAVORABLE_TO_ADMINISTRATION
+  INTERNAL_FORWARD
+  EXTERNAL_FORWARD
+  CITIZEN_WAIVER
+  CITIZEN_INACTIVITY
+}
+
+/// @@Gen.model(hide: true)
+model Case {
+  id                           String              @id @default(uuid()) @db.Uuid
+  humanId                      Int                 @default(autoincrement())
+  citizenId                    String              @unique @db.Uuid
+  authorityId                  String              @db.Uuid
+  agentId                      String?             @db.Uuid
+  alreadyRequestedInThePast    Boolean
+  gotAnswerFromPreviousRequest Boolean?
+  description                  String              @db.Text
+  units                        String
+  emailCopyWanted              Boolean
+  termReminderAt               DateTime?
+  initiatedFrom                CaseInitialPlatform @default(WEB)
+  status                       CaseStatus
+  domainId                     String?             @db.Uuid
+  competent                    Boolean?
+  competentThirdPartyId        String?             @db.Uuid
+  closedAt                     DateTime?
+  outcome                      CaseOutcome?
+  collectiveAgreement          Boolean?
+  administrativeCourtNext      Boolean?
+  finalConclusion              String?
+  nextRequirements             String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  authority           Authority                    @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  citizen             Citizen                      @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  agent               Agent?                       @relation(fields: [agentId], references: [id])
+  domain              CaseDomainItem?              @relation(fields: [domainId], references: [id])
+  competentThirdParty CaseCompetentThirdPartyItem? @relation(fields: [competentThirdPartyId], references: [id])
+  Note                Note[]
+  AttachmentsOnCases  AttachmentsOnCases[]
+  MessagesOnCases     MessagesOnCases[]
+}
+
+/// @@Gen.model(hide: true)
+model Note {
+  id      String   @id @default(uuid()) @db.Uuid
+  caseId  String   @db.Uuid
+  date    DateTime @default(now()) @db.Date
+  content String   @db.Text
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  case                   Case?                    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  AttachmentsOnCaseNotes AttachmentsOnCaseNotes[]
+}
+
+/// @@Gen.model(hide: true)
+model Agent {
+  id          String @id @default(uuid()) @db.Uuid
+  userId      String @db.Uuid
+  authorityId String @db.Uuid
+
+  // rights?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user                    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authority               Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+  CaseAssigned            Case[]
+  AuthorityWhereMainAgent Authority? @relation("AuthorityWhereMainAgent")
+}
+
+// TODO: Admin model?
+
+enum AttachmentStatus {
+  PENDING_UPLOAD
+  VALID
+  EXPIRED
+}
+
+enum AttachmentKind {
+  CASE_DOCUMENT
+  CASE_SYNTHESIS
+  CASES_ANALYTICS
+  AUTHORITY_LOGO
+  MESSAGE_DOCUMENT
+}
+
+/// @@Gen.model(hide: true)
+model Attachment {
+  id          String           @id @default(uuid()) @db.Uuid
+  kind        AttachmentKind
+  contentType String
+  value       Bytes            @db.ByteA
+  size        Int
+  name        String?
+  status      AttachmentStatus @default(PENDING_UPLOAD)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  Authority              Authority?
+  AttachmentsOnCases     AttachmentsOnCases?
+  AttachmentsOnCaseNotes AttachmentsOnCaseNotes?
+  AttachmentsOnMessages  AttachmentsOnMessages[]
+}
+
+enum AuthorityType {
+  CITY
+  FEDERATION_OF_CITIES
+  SUBDIVISION // TODO: trad pour département
+  REGION // TODO: trad pour région
+}
+
+/// @@Gen.model(hide: true)
+model Authority {
+  id               String        @id @default(uuid()) @db.Uuid
+  name             String        @unique
+  slug             String        @unique
+  mainAgentId      String?       @unique @db.Uuid
+  type             AuthorityType @default(CITY)
+  logoAttachmentId String?       @unique @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  mainAgent                   Agent?                        @relation("AuthorityWhereMainAgent", fields: [mainAgentId], references: [id])
+  logo                        Attachment?                   @relation(fields: [logoAttachmentId], references: [id])
+  AgentInvitation             AgentInvitation[]
+  Case                        Case[]
+  Agent                       Agent[]
+  CaseDomainItem              CaseDomainItem[]
+  CaseCompetentThirdPartyItem CaseCompetentThirdPartyItem[]
+}
+
+enum CaseAttachmentType {
+  AGENT
+  ADMINISTRATION
+  CITIZEN
+}
+
+/// @@Gen.model(hide: true)
+model AttachmentsOnCases {
+  caseId       String             @db.Uuid
+  attachmentId String             @unique @db.Uuid
+  transmitter  CaseAttachmentType @default(CITIZEN)
+
+  case       Case       @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+
+  @@id([caseId, attachmentId])
+}
+
+/// @@Gen.model(hide: true)
+model AttachmentsOnCaseNotes {
+  noteId       String             @db.Uuid
+  attachmentId String             @unique @db.Uuid
+  transmitter  CaseAttachmentType @default(CITIZEN)
+
+  note       Note       @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+
+  @@id([noteId, attachmentId])
+}
+
+/// @@Gen.model(hide: true)
+model Admin {
+  id            String  @id @default(uuid()) @db.Uuid
+  userId        String  @unique @db.Uuid
+  canEverything Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  CANCELED
+}
+
+/// @@Gen.model(hide: true)
+model Invitation {
+  id               String           @id @default(uuid()) @db.Uuid
+  issuerId         String           @db.Uuid
+  inviteeEmail     String
+  inviteeFirstname String?
+  inviteeLastname  String?
+  token            String
+  status           InvitationStatus @default(PENDING)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  issuer          User             @relation(fields: [issuerId], references: [id], onDelete: Cascade)
+  AgentInvitation AgentInvitation?
+  AdminInvitation AdminInvitation?
+}
+
+/// @@Gen.model(hide: true)
+model AgentInvitation {
+  id             String  @id @default(uuid()) @db.Uuid
+  invitationId   String  @unique @db.Uuid
+  authorityId    String  @db.Uuid
+  grantMainAgent Boolean @default(false)
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  authority  Authority  @relation(fields: [authorityId], references: [id], onDelete: Cascade)
+}
+
+/// @@Gen.model(hide: true)
+model AdminInvitation {
+  id            String  @id @default(uuid()) @db.Uuid
+  invitationId  String  @unique @db.Uuid
+  canEverything Boolean @default(true)
+
+  invitation Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+}
+
+/// @@Gen.model(hide: true)
+view CaseAnalytics {
+  humanId                      Int                 @unique
+  authorityId                  String              @db.Uuid
+  authorityName                String
+  authorityType                AuthorityType
+  createdAt                    DateTime
+  updatedAt                    DateTime
+  closedAt                     DateTime?
+  status                       CaseStatus
+  initiatedFrom                CaseInitialPlatform
+  primaryDomain                String?
+  secondaryDomain              String?
+  assigned                     Boolean
+  alreadyRequestedInThePast    Boolean
+  gotAnswerFromPreviousRequest Boolean?
+  outcome                      CaseOutcome?
+  collectiveAgreement          Boolean?
+  administrativeCourtNext      Boolean?
+  citizenHasEmail              Boolean
+  citizenCity                  String
+  citizenPostalCode            String
+  citizenCountryCode           String
+}
+
+/// @@Gen.model(hide: true)
+model Contact {
+  id    String  @id @default(uuid()) @db.Uuid
+  email String
+  name  String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  MessagesAsSender            Message[]                     @relation("MessagesAsSender")
+  RecipientContactsOnMessages RecipientContactsOnMessages[]
+
+  @@unique([email, name])
+}
+
+enum MessageStatus {
+  PENDING
+  TRANSFERRED
+  ERROR
+}
+
+/// @@Gen.model(hide: true)
+model Message {
+  id      String        @id @default(uuid()) @db.Uuid
+  fromId  String        @db.Uuid
+  subject String
+  content String        @db.Text
+  status  MessageStatus @default(PENDING)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  deletedAt DateTime?
+
+  from                  Contact                       @relation("MessagesAsSender", fields: [fromId], references: [id])
+  to                    RecipientContactsOnMessages[]
+  MessagesOnCases       MessagesOnCases?
+  AttachmentsOnMessages AttachmentsOnMessages[]
+}
+
+/// @@Gen.model(hide: true)
+model RecipientContactsOnMessages {
+  recipientId String @db.Uuid
+  messageId   String @db.Uuid
+
+  recipient Contact @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([recipientId, messageId])
+}
+
+/// @@Gen.model(hide: true)
+model MessagesOnCases {
+  caseId            String   @db.Uuid
+  messageId         String   @unique @db.Uuid
+  markedAsProcessed Boolean?
+
+  case    Case    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([caseId, messageId])
+}
+
+/// @@Gen.model(hide: true)
+model AttachmentsOnMessages {
+  messageId    String  @db.Uuid
+  attachmentId String  @unique @db.Uuid
+  inline       Boolean @default(false)
+
+  message    Message    @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  attachment Attachment @relation(fields: [attachmentId], references: [id], onDelete: Cascade)
+
+  @@id([messageId, attachmentId])
+}

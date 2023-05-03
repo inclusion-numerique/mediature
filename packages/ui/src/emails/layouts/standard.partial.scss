@@ -1,0 +1,74 @@
+/*
+There is no easy way to manage colors with MJML when set with `mj-attributes` (no usage of `--var(xxx)` or so...)
+We have to guess where it may be changed, so we use `cssClass` attribute to help a bit locating elements to style
+
+Notes:
+- we have to differenciate email client and Storybook environments because in Storybook we can manually switch between the light/dark modes, so we cannot rely on global browser media queries
+- that's weird but inside Storybook the DSFR dark mode seems not compliant for contrasts...
+- impossible to set a class to `mj-body` so we guess a `body` will be present (there is no way to detect it...), and so to apply a background color
+*/
+
+$darkWrapperBackground: #161616;
+
+hr {
+  color: #000000; // Otherwise it's grey
+}
+
+th {
+  background: none !important; // Prevent the heading column/row to have a color
+}
+
+a {
+  color: #000091;
+  text-underline-offset: 3px;
+}
+
+h1,
+h2 {
+  // Bigger headings were rendering all tight on multiple lines
+  line-height: 1.2em;
+}
+
+@mixin darkStyle {
+  a {
+    color: #8585f6 !important;
+  }
+
+  h1 {
+    color: #fff !important;
+  }
+
+  h2 {
+    color: #fff !important;
+  }
+
+  .light-text,
+  .light-text div {
+    color: #cecece !important;
+  }
+
+  .light-button a,
+  .light-button p // `p` is needed because on Storybook when we replace with no link it's a paragraph instead of a `a`
+  {
+    background: #8585f6 !important;
+    color: #000091 !important;
+  }
+
+  .light-main-section,
+  .light-main-section > table {
+    background: #1e1e1e !important;
+  }
+
+  hr {
+    color: #fff !important;
+  }
+
+  .divider > p {
+    border-color: #fff !important;
+  }
+
+  th,
+  td {
+    border-color: #fff !important;
+  }
+}

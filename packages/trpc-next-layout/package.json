@@ -1,0 +1,26 @@
+{
+  "name": "trpc-next-layout",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inclusion-numerique/mediature.git",
+    "directory": "packages/trpc-next-layout"
+  },
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@tanstack/query-core": "^4.19.1",
+    "@tanstack/react-query": "^4.19.1",
+    "@trpc/server": "^10.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.0.26",
+    "tsconfig": "workspace:*"
+  }
+}

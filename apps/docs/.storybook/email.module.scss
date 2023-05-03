@@ -1,0 +1,78 @@
+// The following style is inspired from an open-source Mozilla project
+
+.protectedFromStyleSwitchWorkaround {
+  // This file will not see its style definition received a `media="not all"` (that was needed due to DSFR style leakage)
+  display: none;
+}
+
+.emailTemplate {
+  .message {
+    margin: 0;
+  }
+
+  header {
+    background: #f2f2f2;
+    color: #000;
+    padding: 16px;
+  }
+}
+
+.emailTemplate .message,
+.emailTemplate header,
+.templateContainer .badge {
+  font-family: 'Helvetica Neue', Helvetica, arial, sans-serif;
+}
+
+.templateName {
+  font-size: 22px;
+  margin: 0 0 10px;
+
+  span {
+    color: #777;
+    font-weight: 500;
+  }
+}
+
+.emailSubject {
+  margin: 0;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.templateContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 20px 20px;
+
+  .badge {
+    font-size: 12px;
+    text-transform: uppercase;
+    background-color: #eee;
+    padding: 3px 5px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    border-radius: 3px;
+    color: #444;
+  }
+}
+
+.templateHtml {
+  flex: 0.6 0 0;
+  border-right: 1px solid #ddd;
+  margin-right: 20px;
+  padding-right: 20px;
+}
+
+.templatePlaintext {
+  flex: 0.4 0 0;
+
+  div {
+    padding-top: 24px;
+    font-family: monospace;
+    white-space: pre-wrap;
+  }
+
+  .rtl {
+    direction: rtl;
+  }
+}

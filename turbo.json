@@ -5,9 +5,27 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "test": {
+    "heroku-postbuild": {
+      "cache": false
+    },
+    "test:prepare": {
       "outputs": ["coverage/**"],
       "dependsOn": []
+    },
+    "test:unit": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "test:unit:watch": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "test:e2e:headless": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "lint:prepare": {
+      "outputs": []
     },
     "lint": {
       "outputs": []
@@ -17,6 +35,67 @@
     },
     "clean": {
       "cache": false
+    },
+    "accessibility": {
+      "cache": false
+    },
+    "accessibility:open": {
+      "cache": false
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
+      "cache": false
     }
-  }
+  },
+  "globalEnv": [
+    "APP_BASE_URL",
+    "APP_MODE",
+    "CI",
+    "CONTAINER_VERSION",
+    "CRISP_SIGNING_SECRET_KEY",
+    "CRISP_WEBSITE_ID",
+    "DATABASE_URL",
+    "ENABLE_MOCKS",
+    "FILE_AUTH_SECRET",
+    "JEST_WORKER_ID",
+    "NEXT_AUTH_SECRET",
+    "NEXT_PUBLIC_APP_BASE_URL",
+    "NEXT_PUBLIC_APP_MODE",
+    "NEXT_PUBLIC_CRISP_WEBSITE_ID",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_RELEASE",
+    "NEXTAUTH_URL",
+    "NODE_ENV",
+    "npm_package_version",
+    "npm_package_repository_url",
+    "PORT",
+    "SENTRY_DSN",
+    "SENTRY_RELEASE_UPLOAD",
+    "SENTRY_RELEASE_TAG",
+    "SENTRY_URL",
+    "MAILER_DEFAULT_DOMAIN",
+    "MAILER_DOMAINS_TO_CATCH",
+    "MAILER_SMTP_HOST",
+    "MAILER_SMTP_PORT",
+    "MAILER_SMTP_USER",
+    "MAILER_SMTP_PASSWORD",
+    "MAILER_FALLBACK_SMTP_HOST",
+    "MAILER_FALLBACK_SMTP_PORT",
+    "MAILER_FALLBACK_SMTP_USER",
+    "MAILER_FALLBACK_SMTP_PASSWORD",
+    "MAILJET_API_KEY",
+    "MAILJET_SECRET_KEY",
+    "MAILJET_CLIENT_MOCK",
+    "MAILJET_WEBHOOK_AUTH_USERNAME",
+    "MAILJET_WEBHOOK_AUTH_PASSWORD",
+    "MAILJET_WEBHOOK_DOMAIN",
+    "SOURCE_VERSION",
+    "STORYBOOK_ENVIRONMENT",
+    "TEST_MANUAL",
+    "TESTCONTAINERS_RYUK_DISABLED",
+    "TIME_TO_WAIT_AFTER_CHANGING_THEME_MS",
+    "TRPC_SERVER_MOCK"
+  ]
 }
