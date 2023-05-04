@@ -86,6 +86,8 @@ And since the root domain cannot use a `CNAME` we have to use fixed IPs:
 
 _(you can find those IPs at https://doc.scalingo.com/platform/app/domain#configure-your-domain-name . There is a low risk they change so we should be fine... another dynamic solution would have been to use an `ALIAS` record if the DNS provider is compatible but it disables the `DNSSEC` and we are not confident yet of the real underlying risks so we stick we `A` records for now)_
 
+Once done, go to your Scalingo domains settings and add your domains for each environment. If for an environment you want to accept both `example.com` and `www.example.com`, make sure to promote within Scalingo `www.example.com` as canonical. It means other domains will redirect (HTTP 301) to the canonical one (just be sure of your choice, 301 is cached on the users browser so it cannot be reverted easily after some time... and Scalingo does not provide a 302 redirection for now).
+
 #### Postgres
 
 ##### Extensions
