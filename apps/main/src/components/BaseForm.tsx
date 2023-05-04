@@ -38,6 +38,8 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
         async (input: FormSchemaType) => {
           try {
             await props.onSubmit(input);
+
+            setOnSubmitError(null);
           } catch (err: unknown) {
             if (err instanceof Error) {
               setOnSubmitError(err);
