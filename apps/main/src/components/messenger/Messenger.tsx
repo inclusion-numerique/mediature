@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
@@ -95,7 +96,25 @@ export function Messenger(props: MessengerProps) {
             onSelectedMessage={setSelectedMessage}
           />
         </SidePanel>
-        <Main>{!!selectedMessage && <ContextualMessengerViewer caseId={props.caseId} message={selectedMessage} />}</Main>
+        <Main>
+          <Button
+            onClick={(event) => {
+              setDrawerOpen(true);
+            }}
+            size="large"
+            variant="contained"
+            fullWidth
+            sx={{
+              display: {
+                md: 'none',
+              },
+              mb: 2,
+            }}
+          >
+            Ouvrir le menu
+          </Button>
+          {!!selectedMessage && <ContextualMessengerViewer caseId={props.caseId} message={selectedMessage} />}
+        </Main>
       </Root>
     </>
   );

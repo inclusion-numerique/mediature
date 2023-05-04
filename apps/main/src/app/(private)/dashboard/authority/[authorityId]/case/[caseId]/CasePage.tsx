@@ -470,7 +470,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   </Grid>
                 </Grid>
               </DialogTitle>
-              <DialogContent sx={{ display: 'flex', height: '80vh' }}>
+              <DialogContent sx={{ height: '80vh' }}>
                 <ContextualMessenger caseId={targetedCase.id} />
               </DialogContent>
             </Dialog>
