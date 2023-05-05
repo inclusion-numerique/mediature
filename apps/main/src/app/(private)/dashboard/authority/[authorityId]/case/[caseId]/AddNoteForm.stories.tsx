@@ -41,6 +41,7 @@ const EmptyStory = Template.bind({});
 EmptyStory.args = {
   prefill: {
     caseId: '00000000-0000-0000-0000-000000000000',
+    date: new Date('December 15, 2022 03:24:00 UTC'), // Fix the date to avoid UI change during snapshots
   },
 };
 EmptyStory.parameters = { ...defaultMswParameters };

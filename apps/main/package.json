@@ -194,6 +194,7 @@
     "parse-github-url": "^1.0.2",
     "prisma-trpc-generator": "^0.7.2",
     "start-server-and-test": "^1.14.0",
+    "storybook-mock-date-decorator": "^1.0.0",
     "supertest": "^6.3.3",
     "testcontainers": "^9.6.0",
     "ts-jest": "^29.0.3",

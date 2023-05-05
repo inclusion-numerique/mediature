@@ -1,6 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 import addHours from 'date-fns/addHours';
+import { mockDateDecorator } from 'storybook-mock-date-decorator';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { agents } from '@mediature/main/src/fixtures/agent';
@@ -43,14 +44,19 @@ NormalStory.play = async ({ canvasElement }) => {
 
 export const Normal = prepareStory(NormalStory);
 
+const dateMock = new Date('December 15, 2022 03:24:00 UTC');
 const ReminderSoonStory = Template.bind({});
 ReminderSoonStory.args = {
   caseLink: '',
-  case: CaseSchema.parse({ ...cases[0], termReminderAt: addHours(new Date(), 3) }),
+  case: CaseSchema.parse({ ...cases[0], termReminderAt: addHours(dateMock, 3) }),
   citizen: citizens[0],
   agent: agents[0],
   assignAction: async () => {},
 };
+ReminderSoonStory.parameters = {
+  date: dateMock, // Mock date generation so underlying `isReminderSoon()` returns "true"
+};
+ReminderSoonStory.decorators = [mockDateDecorator];
 ReminderSoonStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);
 };

@@ -37,3 +37,5 @@ declare module 'mjml-browser' {
   import mjml2html from 'mjml';
   export default mjml2html;
 }
+
+declare module 'storybook-mock-date-decorator';

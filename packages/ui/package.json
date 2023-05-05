@@ -87,6 +87,7 @@
     "jest-environment-jsdom": "^29.3.1",
     "jest-resolver-tsconfig-paths": "^0.14.4",
     "mjml-browser": "^4.13.0",
+    "storybook-mock-date-decorator": "^1.0.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "tsconfig": "workspace:*",
