@@ -55,7 +55,7 @@ FilledStory.args = {
   prefill: SignUpPrefillSchema.parse({
     invitationToken: 'abc',
     email: 'jean@france.fr',
-    password: 'mypassword',
+    password: 'Mypassword@1',
     firstname: 'Jean',
     lastname: 'Derrien',
     termsAccepted: true,

@@ -6,7 +6,7 @@ import { UserPasswordSchema, UserSchema, VerificationTokenSchema } from '@mediat
 export const SignInSchema = z
   .object({
     email: UserSchema.shape.email,
-    password: UserPasswordSchema,
+    password: z.string().min(1), // Complex validation is done with `UserPasswordSchema` when mutating the password
     rememberMe: z.boolean(),
   })
   .strict();
@@ -51,7 +51,7 @@ export type ResetPasswordPrefillSchemaType = z.infer<typeof ResetPasswordPrefill
 
 export const ChangePasswordSchema = z
   .object({
-    currentPassword: UserPasswordSchema,
+    currentPassword: z.string().min(1),
     newPassword: UserPasswordSchema,
   })
   .strict();

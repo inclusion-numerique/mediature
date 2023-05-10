@@ -1,9 +1,36 @@
 import z from 'zod';
 
+import {
+  passwordRequiresANumericError,
+  passwordRequiresASpecialCharactersError,
+  passwordRequiresHeightCharactersError,
+  passwordRequiresLowerAndUpperCharactersError,
+} from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
+
 export const UserStatusSchema = z.enum(['REGISTERED', 'CONFIRMED', 'DISABLED']);
 export type UserStatusSchemaType = z.infer<typeof UserStatusSchema>;
 
-export const UserPasswordSchema = z.string().min(1); // TODO: implement the logic min/max/lower/upper/number
+export const UserPasswordSchema = z
+  .string()
+  .min(1)
+  .superRefine((data, ctx) => {
+    if (data === data.toUpperCase() || data === data.toLowerCase()) {
+      ctx.addIssue(customErrorToZodIssue(passwordRequiresLowerAndUpperCharactersError));
+    }
+
+    if (data.length < 8) {
+      ctx.addIssue(customErrorToZodIssue(passwordRequiresHeightCharactersError));
+    }
+
+    if (!/[0-9]+/.test(data)) {
+      ctx.addIssue(customErrorToZodIssue(passwordRequiresANumericError));
+    }
+
+    if (!/[^a-zA-Z0-9]+/.test(data)) {
+      ctx.addIssue(customErrorToZodIssue(passwordRequiresASpecialCharactersError));
+    }
+  });
 export type UserPasswordSchemaType = z.infer<typeof UserPasswordSchema>;
 
 export const UserSchema = z

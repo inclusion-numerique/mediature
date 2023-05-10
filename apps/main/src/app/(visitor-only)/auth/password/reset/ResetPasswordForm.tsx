@@ -9,11 +9,12 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { PasswordFieldHinter } from '@mediature/main/src/components/PasswordFieldHinter';
 import { ResetPasswordPrefillSchemaType, ResetPasswordSchema, ResetPasswordSchemaType } from '@mediature/main/src/models/actions/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -25,6 +26,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
     register,
     handleSubmit,
     formState: { errors },
+    watch,
     control,
   } = useForm<ResetPasswordSchemaType>({
     resolver: zodResolver(ResetPasswordSchema),
@@ -65,6 +67,7 @@ export function ResetPasswordForm({ prefill }: { prefill?: ResetPasswordPrefillS
             ),
           }}
         />
+        <PasswordFieldHinter password={watch('password')} headline={`Le nouveau mot de passe doit contenir :`} />
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" loading={resetPassword.isLoading} size="large" variant="contained" fullWidth>

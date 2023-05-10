@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { PasswordFieldHinter } from '@mediature/main/src/components/PasswordFieldHinter';
 import { SignUpPrefillSchemaType, SignUpSchema, SignUpSchemaType } from '@mediature/main/src/models/actions/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -33,6 +34,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
     control,
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(SignUpSchema),
@@ -89,6 +91,7 @@ export function SignUpForm({ prefill }: { prefill?: SignUpPrefillSchemaType }) {
             ),
           }}
         />
+        <PasswordFieldHinter password={watch('password')} />
       </Grid>
       <Grid item xs={12}>
         <FormControl error={!!errors.termsAccepted}>

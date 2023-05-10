@@ -43,8 +43,8 @@ export const Empty = prepareStory(EmptyStory);
 const FilledStory = Template.bind({});
 FilledStory.args = {
   prefill: ChangePasswordPrefillSchema.parse({
-    currentPassword: 'my-current-password',
-    newPassword: 'my-new-password',
+    currentPassword: 'MyCurrentPassword@1',
+    newPassword: 'MyNewPassword@1',
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };
