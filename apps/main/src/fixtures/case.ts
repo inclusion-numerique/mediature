@@ -15,6 +15,7 @@ import {
   CaseWrapperSchema,
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
+import { CitizenGenderIdentitySchema } from '@mediature/main/src/models/entities/citizen';
 import sampleHello from '@mediature/ui/src/Editor/sample-hello.lexical';
 
 export const caseDomains: CaseDomainItemSchemaType[] = [
@@ -316,6 +317,7 @@ export const casesAnalytics: CaseAnalytics[] = [
     collectiveAgreement: true,
     administrativeCourtNext: false,
     citizenHasEmail: true,
+    citizenGenderIdentity: CitizenGenderIdentitySchema.Values.FEMALE,
     citizenCity: 'Rennes',
     citizenPostalCode: '35000',
     citizenCountryCode: 'FR',
@@ -339,6 +341,7 @@ export const casesAnalytics: CaseAnalytics[] = [
     collectiveAgreement: false,
     administrativeCourtNext: true,
     citizenHasEmail: false,
+    citizenGenderIdentity: CitizenGenderIdentitySchema.Values.NON_BINARY,
     citizenCity: 'Rennes',
     citizenPostalCode: '35000',
     citizenCountryCode: 'FR',
@@ -362,6 +365,7 @@ export const casesAnalytics: CaseAnalytics[] = [
     collectiveAgreement: null,
     administrativeCourtNext: null,
     citizenHasEmail: true,
+    citizenGenderIdentity: null,
     citizenCity: 'Rennes',
     citizenPostalCode: '35000',
     citizenCountryCode: 'FR',

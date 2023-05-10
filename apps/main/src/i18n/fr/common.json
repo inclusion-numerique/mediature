@@ -57,6 +57,7 @@
           "authorityType": "Type de collectivité",
           "citizenCity": "Ville",
           "citizenCountryCode": "Pays",
+          "citizenGenderIdentity": "Identité de genre",
           "citizenHasEmail": "Email renseigné",
           "citizenPostalCode": "Code postal",
           "closedAt": "Date de clôture",
@@ -131,6 +132,15 @@
         }
       },
       "technicalName": "dossier-{{humanId}}"
+    },
+    "citizen": {
+      "genderIdentity": {
+        "enum": {
+          "FEMALE": "Femme",
+          "MALE": "Homme",
+          "NON_BINARY": "Non-binaire"
+        }
+      }
     }
   }
 }

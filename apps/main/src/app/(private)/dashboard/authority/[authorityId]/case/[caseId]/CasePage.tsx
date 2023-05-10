@@ -51,6 +51,7 @@ import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { CaseAttachmentTypeSchema, CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
@@ -127,6 +128,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: caseWrapper?.case.initiatedFrom,
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
+      genderIdentity: caseWrapper?.citizen.genderIdentity,
       address: {
         street: caseWrapper?.citizen.address.street,
         city: caseWrapper?.citizen.address.city,
@@ -320,6 +322,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   // Do not update values that need a form submit
                   initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                   caseId: control._defaultValues.caseId || targetedCase.id,
+                  genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
                   address: {
                     street: control._defaultValues.address?.street || citizen.address.street,
                     postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
@@ -410,6 +413,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
+                    genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
                     address: {
                       street: control._defaultValues.address?.street || citizen.address.street,
                       postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
@@ -613,7 +617,32 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Coordonnées
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} md={4}>
+                        <TextField
+                          select
+                          label="Identité de genre"
+                          defaultValue={control._defaultValues.genderIdentity || ''}
+                          onChange={(event) => {
+                            setValue('genderIdentity', event.target.value === '' ? null : (event.target.value as CitizenGenderIdentitySchemaType), {
+                              // shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                          error={!!errors.genderIdentity}
+                          helperText={errors.genderIdentity?.message}
+                          fullWidth
+                        >
+                          <MenuItem value="">
+                            <em>Non spécifié</em>
+                          </MenuItem>
+                          {Object.values(CitizenGenderIdentitySchema.Values).map((genderIdentity) => (
+                            <MenuItem key={genderIdentity} value={genderIdentity}>
+                              {t(`model.citizen.genderIdentity.enum.${genderIdentity}`)}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                      <Grid item xs={12} md={8}>
                         <TextField
                           inputProps={{
                             readOnly: true,
@@ -908,6 +937,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
+                      genderIdentity: control._formValues.genderIdentity,
                       address: {
                         street: control._formValues.address.street,
                         postalCode: control._formValues.address.postalCode,

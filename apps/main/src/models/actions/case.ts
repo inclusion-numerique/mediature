@@ -51,6 +51,7 @@ export const incompleteUpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
+    genderIdentity: CitizenSchema.shape.genderIdentity,
     address: AddressInputSchema,
     phone: PhoneInputSchema,
     description: incompleteCaseSchema.shape.description,
