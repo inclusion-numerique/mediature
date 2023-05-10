@@ -176,7 +176,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    label="Raisons de la décision (note interne)"
+                    label="Résultat final (note interne)"
                     {...register('finalConclusion')}
                     error={!!errors.finalConclusion}
                     helperText={errors?.finalConclusion?.message}
