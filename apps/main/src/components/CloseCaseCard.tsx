@@ -133,7 +133,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Accord des parties"
+                    label="Accord des parties ?"
                     defaultValue={control._defaultValues.collectiveAgreement || ''}
                     onChange={(event) => {
                       setValue('collectiveAgreement', event.target.value === '' ? null : event.target.value === 'true', {
@@ -155,7 +155,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Se poursuit au tribunal administratif"
+                    label="Se poursuit au tribunal administratif ?"
                     defaultValue={control._defaultValues.administrativeCourtNext || ''}
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
