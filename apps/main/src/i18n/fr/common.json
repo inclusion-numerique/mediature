@@ -77,7 +77,6 @@
   "email": {
     "template": {
       "AgentActivitySumUpEmail": {
-        "cases_html": "Il y a actuellement <span style='font-weight:bold;'>11 dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
         "casesNotAssigned_one": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
         "casesNotAssigned_other": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossiers</span> ne sont pas encore assignés à un médiateur de la collectivité.",
         "followingCasesHaveReminder_one": "Le dossier suivant a bientôt un rappel :",
