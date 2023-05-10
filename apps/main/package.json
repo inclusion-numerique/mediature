@@ -70,6 +70,7 @@
     "@sentry/integrations": "^7.21.1",
     "@sentry/nextjs": "^7.20.0",
     "@sentry/rrweb": "^0.3.3",
+    "@sindresorhus/slugify": "^2.2.0",
     "@storybook/react": "7.0.0-beta.41",
     "@storybook/testing-library": "0.0.14-next.1",
     "@tanstack/react-query": "^4.19.1",
