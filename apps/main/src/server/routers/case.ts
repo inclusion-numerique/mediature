@@ -40,6 +40,7 @@ import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
   attachmentPrismaToModel,
+  authorityPrismaToModel,
   caseCompetentThirdPartyItemPrismaToModel,
   caseCompetentThirdPartyItemsPrismaToModel,
   caseDomainItemPrismaToModel,
@@ -1027,6 +1028,7 @@ export const caseRouter = router({
         id: input.caseId,
       },
       include: {
+        authority: true,
         citizen: {
           include: {
             address: true,
@@ -1050,6 +1052,7 @@ export const caseRouter = router({
     const fileStream = await renderToStream(
       CaseSynthesisDocument({
         case: casePrismaToModel(targetedCase),
+        authority: await authorityPrismaToModel(targetedCase.authority),
         citizen: citizenPrismaToModel(targetedCase.citizen),
       })
     );

@@ -3,6 +3,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { WithDocumentRenderer } from '@mediature/docs/.storybook/document';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindDocumentStructure } from '@mediature/docs/.storybook/testing';
+import { authorities } from '@mediature/main/src/fixtures/authority';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { commonDocumentsParameters } from '@mediature/ui/src/documents/storybook-utils';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
@@ -32,6 +33,7 @@ const Template: StoryFn<ComponentType> = (args) => {
 const NormalStory = Template.bind({});
 NormalStory.args = {
   case: casesWrappers[0].case,
+  authority: authorities[0],
   citizen: casesWrappers[0].citizen,
 };
 NormalStory.decorators = [WithDocumentRenderer];

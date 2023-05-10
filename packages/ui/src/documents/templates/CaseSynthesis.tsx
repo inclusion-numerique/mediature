@@ -3,6 +3,7 @@ import { Link, Text, View } from '@react-pdf/renderer';
 import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 
 import { useServerTranslation } from '@mediature/main/src/i18n/index';
+import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { getCaseEmail } from '@mediature/main/src/utils/business/case';
@@ -13,6 +14,7 @@ const phoneNumberUtil = PhoneNumberUtil.getInstance();
 
 export interface CaseSynthesisDocumentProps {
   case: CaseSchemaType;
+  authority: AuthoritySchemaType;
   citizen: CitizenSchemaType;
 }
 
@@ -27,6 +29,10 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
       <Text style={styles.h1}>{title}</Text>
       <Text style={styles.h2}>Informations générales</Text>
       <View style={styles.gridContainer}>
+        <View style={styles.gridItem}>
+          <Text style={styles.label}>Collectivité saisie</Text>
+          <Text>{props.authority.name}</Text>
+        </View>
         <View style={styles.gridItem}>
           <Text style={styles.label}>Date de la demande</Text>
           <Text>{t('date.short', { date: props.case.createdAt })}</Text>
