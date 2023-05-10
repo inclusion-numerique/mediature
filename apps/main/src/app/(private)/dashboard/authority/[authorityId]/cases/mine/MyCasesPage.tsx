@@ -50,12 +50,20 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
   }, [debounedHandleClearQuery]);
 
   const casesWrappers = data?.casesWrappers || [];
-  const openCasesWrappers = casesWrappers.filter((caseWrapper) => {
-    return !caseWrapper.case.closedAt;
-  });
-  const closeCasesWrappers = casesWrappers.filter((caseWrapper) => {
-    return !!caseWrapper.case.closedAt;
-  });
+  const openCasesWrappers = casesWrappers
+    .filter((caseWrapper) => {
+      return !caseWrapper.case.closedAt;
+    })
+    .sort((a, b) => {
+      return +(a.case.termReminderAt || 0) - +(b.case.termReminderAt || 0);
+    });
+  const closeCasesWrappers = casesWrappers
+    .filter((caseWrapper) => {
+      return !!caseWrapper.case.closedAt;
+    })
+    .sort((a, b) => {
+      return +(b.case.closedAt as Date) - +(a.case.closedAt as Date);
+    });
 
   const unassignCase = trpc.unassignCase.useMutation();
   const { showConfirmationDialog } = useSingletonConfirmationDialog();
