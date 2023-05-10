@@ -5,6 +5,7 @@ import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import { useServerTranslation } from '@mediature/main/src/i18n/index';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { StandardLayout, styles } from '@mediature/ui/src/documents/layouts/StandardLayout';
 import { convertInputModelToGooglePhoneNumber } from '@mediature/ui/src/utils/phone';
 
@@ -19,10 +20,7 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
   const { t } = useServerTranslation('common');
   const title = `Synthèse du dossier n°${props.case.humanId.toString()}`;
 
-  // TODO: create generic function for this... or use t() to have translation too?
-  const caseEmail = `dossier-${props.case.humanId}@domain.fr`;
-
-  // Display "N/A" when null? --> for email soon
+  const caseEmail = getCaseEmail(t, props.case.humanId.toString());
 
   return (
     <StandardLayout title={title}>
