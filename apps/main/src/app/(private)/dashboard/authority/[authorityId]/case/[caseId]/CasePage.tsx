@@ -486,7 +486,15 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                 <ContextualMessenger caseId={targetedCase.id} />
               </DialogContent>
             </Dialog>
-            <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="modifier un dossier">
+            <BaseForm
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              control={control}
+              style={{
+                maxWidth: '100%', // This is needed otherwise the `nowrap` with long content into `NoteCard` makes the container expanding
+              }}
+              ariaLabel="modifier un dossier"
+            >
               <Grid
                 item
                 xs={12}
@@ -874,7 +882,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item xs={12}>
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{
+                          maxWidth: '100% !important', // This is needed otherwise the `nowrap` with long content into `NoteCard` makes the container expanding (need to be on `BaseForm` too)
+                        }}
+                      >
                         <Grid container component="ul" spacing={2} sx={ulComponentResetStyles}>
                           {notes &&
                             notes.map((note) => (

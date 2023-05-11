@@ -2,7 +2,7 @@ import { DevTool } from '@hookform/devtools';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import { Mutex } from 'locks';
-import { FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
+import { CSSProperties, FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ export interface BaseFormProps<FormSchemaType extends FieldValues> {
   control: Control<any>;
   ariaLabel: string;
   preventParentFormTrigger?: boolean;
+  style?: CSSProperties;
 }
 
 // When you want to debug a form, just uncomment the below line (I did not see the value to manage it through environment variable)
@@ -69,7 +70,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
     <>
       {/* <DevTool control={props.control} /> */}
 
-      <form onSubmit={onSubmit} aria-label={props.ariaLabel}>
+      <form onSubmit={onSubmit} aria-label={props.ariaLabel} style={props.style}>
         <Grid container spacing={2} ref={formRef}>
           {!!onSubmitError && (
             <Grid item xs={12} sx={{ py: 2 }}>
