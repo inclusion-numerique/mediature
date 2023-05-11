@@ -14,7 +14,7 @@ export interface CaseStatusChipProps {
 export function CaseStatusChip(props: CaseStatusChipProps) {
   const { t } = useTranslation('common');
 
-  // Main colors with different shades: green, blue, yellow, red
+  // Different colors and shades
   let statusNumber: number | '#' = 0;
   let statusNumberColor = 'black';
   let statusColor = 'black';
@@ -25,35 +25,38 @@ export function CaseStatusChip(props: CaseStatusChipProps) {
   switch (props.status) {
     case CaseStatusSchema.Values.TO_PROCESS:
       statusNumber = 1;
-      statusNumberColor = theme.options.success._950_100.hover;
-      statusColor = theme.options.success._950_100.default;
+      statusNumberColor = theme.options.greenTilleulVerveine._950_100.hover;
+      statusColor = theme.options.greenTilleulVerveine._950_100.default;
       break;
-    // TODO: 2 (green) (theme.options.success._950_100.default)
-    case CaseStatusSchema.Values.MAKE_XXX_CALL:
+    case CaseStatusSchema.Values.CONTACT_REQUESTER:
+      statusNumber = 2;
+      statusNumberColor = theme.options.greenEmeraude._950_100.hover;
+      statusColor = theme.options.greenEmeraude._950_100.default;
+      break;
+    case CaseStatusSchema.Values.WAITING_FOR_REQUESTER:
       statusNumber = 3;
-      statusNumberColor = theme.options.success._975_75.default;
-      statusColor = theme.options.success._975_75.default;
+      statusNumberColor = theme.options.greenEmeraude._925_125.hover;
+      statusColor = theme.options.greenEmeraude._925_125.default;
       break;
-    case CaseStatusSchema.Values.SYNC_WITH_CITIZEN:
+    case CaseStatusSchema.Values.CONTACT_ADMINISTRATION:
       statusNumber = 4;
-      statusNumberColor = theme.options.blueFrance._850_200.default;
-      statusColor = theme.options.blueFrance._850_200.default;
+      statusNumberColor = theme.options.blueFrance._950_100.hover;
+      statusColor = theme.options.blueFrance._950_100.default;
       break;
-    case CaseStatusSchema.Values.SYNC_WITH_ADMINISTATION:
+    case CaseStatusSchema.Values.WAITING_FOR_ADMINISTATION:
       statusNumber = 5;
       statusNumberColor = theme.options.blueFrance._925_125.hover;
       statusColor = theme.options.blueFrance._925_125.default;
       break;
     case CaseStatusSchema.Values.ABOUT_TO_CLOSE:
       statusNumber = 6;
-      statusNumberColor = theme.options.blueFrance._950_100.hover;
-      statusColor = theme.options.blueFrance._950_100.default;
+      statusNumberColor = theme.options.pinkTuile._950_100.hover;
+      statusColor = theme.options.pinkTuile._950_100.default;
       break;
-    // TODO: 7 (yellow) (theme.decisions.border.actionLow.yellowTournesol.default)
-    case CaseStatusSchema.Values.STUCK:
+    case CaseStatusSchema.Values.CLOSED:
       statusNumber = '#';
-      statusNumberColor = theme.options.error._950_100.hover;
-      statusColor = theme.options.error._950_100.default;
+      statusNumberColor = theme.options.brownOpera._925_125.hover;
+      statusColor = theme.options.brownOpera._925_125.default;
       break;
   }
 

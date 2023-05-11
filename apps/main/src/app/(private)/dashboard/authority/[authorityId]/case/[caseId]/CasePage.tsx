@@ -396,6 +396,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             <br />
             <TextField
               select
+              inputProps={{
+                readOnly: !!targetedCase.closedAt, // Reopening is only able from the bottom page section
+              }}
               aria-label="avancement du dossier"
               hiddenLabel={true}
               value={watch('status') || ''}
@@ -448,11 +451,16 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               margin="dense"
               fullWidth
             >
-              {Object.values(CaseStatusSchema.Values).map((status) => (
-                <MenuItem key={status} value={status}>
-                  <CaseStatusChip status={status} />
-                </MenuItem>
-              ))}
+              {Object.values(CaseStatusSchema.Values)
+                .filter((status) => {
+                  // Display the close status only when it has been closed by the bottom page section
+                  return !(!targetedCase.closedAt && status === CaseStatusSchema.Values.CLOSED);
+                })
+                .map((status) => (
+                  <MenuItem key={status} value={status}>
+                    <CaseStatusChip status={status} />
+                  </MenuItem>
+                ))}
             </TextField>
           </Typography>
         </Grid>

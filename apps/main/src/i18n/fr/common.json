@@ -123,12 +123,13 @@
       },
       "status": {
         "enum": {
-          "ABOUT_TO_CLOSE": "Étapes de finalisation",
-          "MAKE_XXX_CALL": "Appeler le requérant",
-          "STUCK": "Dossier bloqué",
-          "SYNC_WITH_ADMINISTATION": "Se synchroniser avec l'administration",
-          "SYNC_WITH_CITIZEN": "Se synchroniser avec le requérant",
-          "TO_PROCESS": "À traiter"
+          "ABOUT_TO_CLOSE": "Finalisation",
+          "CLOSED": "Clôture de la procédure",
+          "CONTACT_ADMINISTRATION": "Solliciter l'administration",
+          "CONTACT_REQUESTER": "Contacter le requérant",
+          "TO_PROCESS": "À traiter",
+          "WAITING_FOR_ADMINISTATION": "En attente de réponse de l'administration",
+          "WAITING_FOR_REQUESTER": "En attente de réponse du réquérant"
         }
       },
       "technicalName": "dossier-{{humanId}}"

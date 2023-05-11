@@ -1,4 +1,4 @@
-import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, Note } from '@prisma/client';
+import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, CaseStatus, Note } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
 import addresscompiler from 'addresscompiler';
 
@@ -32,7 +32,13 @@ import {
   updateCaseAttachmentsMax,
 } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
-import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
+import {
+  CasePlatformSchema,
+  CaseStatusSchema,
+  CaseStatusSchemaType,
+  CaseWrapperSchema,
+  CaseWrapperSchemaType,
+} from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
@@ -318,14 +324,23 @@ export const caseRouter = router({
       }
     }
 
+    let status: CaseStatus = input.status;
     let closedAt: Date | null = null;
     let statusSwitchedToClose = false;
     if (input.close) {
+      // When closing or if closed it requires having the status in its final state (no matter the status input)
+      status = CaseStatus.CLOSED;
+
       if (targetedCase.closedAt) {
         closedAt = targetedCase.closedAt;
       } else {
         closedAt = new Date();
         statusSwitchedToClose = true;
+      }
+    } else {
+      // If reopening or it remains open, we sure it does not stay in the final state
+      if (targetedCase.status === CaseStatus.CLOSED) {
+        status = CaseStatusSchema.Values.ABOUT_TO_CLOSE;
       }
     }
 
@@ -338,7 +353,7 @@ export const caseRouter = router({
         description: input.description,
         units: input.units,
         termReminderAt: input.termReminderAt,
-        status: input.status,
+        status: status,
         closedAt: closedAt,
         outcome: input.outcome,
         collectiveAgreement: input.collectiveAgreement,

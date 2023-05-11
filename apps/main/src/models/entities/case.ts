@@ -8,7 +8,15 @@ import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 export const CasePlatformSchema = z.enum(['OFFICE', 'MAIL', 'PHONE', 'EMAIL', 'WEB']);
 export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 
-export const CaseStatusSchema = z.enum(['TO_PROCESS', 'MAKE_XXX_CALL', 'SYNC_WITH_CITIZEN', 'SYNC_WITH_ADMINISTATION', 'ABOUT_TO_CLOSE', 'STUCK']);
+export const CaseStatusSchema = z.enum([
+  'TO_PROCESS',
+  'CONTACT_REQUESTER',
+  'WAITING_FOR_REQUESTER',
+  'CONTACT_ADMINISTRATION',
+  'WAITING_FOR_ADMINISTATION',
+  'ABOUT_TO_CLOSE',
+  'CLOSED',
+]);
 export type CaseStatusSchemaType = z.infer<typeof CaseStatusSchema>;
 
 export const CaseOutcomeSchema = z.enum([
