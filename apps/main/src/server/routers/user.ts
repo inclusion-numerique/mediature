@@ -13,8 +13,8 @@ import {
 import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
 import { LiveChatSettingsSchema, LiveChatSettingsSchemaType } from '@mediature/main/src/models/entities/user';
-import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/agent';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { attachmentIdPrismaToModel, userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
 import { signEmail } from '@mediature/main/src/utils/crisp';
