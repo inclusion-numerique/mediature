@@ -74,7 +74,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                       </>
                     ),
                     onConfirm: async () => {
-                      await props.closeAction(true);
+                      await props.closeAction(false);
                     },
                   });
                 }}
@@ -133,7 +133,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Accord des parties"
+                    label="Accord des parties ?"
                     defaultValue={control._defaultValues.collectiveAgreement || ''}
                     onChange={(event) => {
                       setValue('collectiveAgreement', event.target.value === '' ? null : event.target.value === 'true', {
@@ -155,7 +155,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Se poursuit au tribunal administratif"
+                    label="Se poursuit au tribunal administratif ?"
                     defaultValue={control._defaultValues.administrativeCourtNext || ''}
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
@@ -176,7 +176,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    label="Raisons de la décision (note interne)"
+                    label="Résultat final (note interne)"
                     {...register('finalConclusion')}
                     error={!!errors.finalConclusion}
                     helperText={errors?.finalConclusion?.message}

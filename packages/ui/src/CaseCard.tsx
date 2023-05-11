@@ -86,7 +86,7 @@ export function CaseCard(props: CaseCardProps) {
         <Grid container direction={'column'} spacing={2}>
           {!!props.case.termReminderAt && (
             <Grid item xs={12}>
-              <Typography component="div" color="error">
+              <Typography component="div" color={isReminderSoon(props.case.termReminderAt) ? 'error' : 'primary'}>
                 <Grid container direction="row" alignItems="center">
                   <AccessTimeIcon sx={{ mr: '5px' }} />
                   <span>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>

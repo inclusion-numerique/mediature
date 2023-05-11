@@ -31,7 +31,7 @@ const defaultMswParameters = {
 };
 
 async function playFindElement(canvasElement: HTMLElement): Promise<HTMLElement> {
-  return await within(canvasElement).findByText(/note/i);
+  return await within(canvasElement).findByText(/hello/i);
 }
 
 const Template: StoryFn<typeof NoteCard> = (args) => {

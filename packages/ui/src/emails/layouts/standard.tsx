@@ -79,7 +79,7 @@ export function StandardLayout(props: PropsWithChildren<StandardLayoutProps>) {
               <MjmlColumn cssClass="logo-section" verticalAlign="middle" width="24%">
                 {/* `MjmlColumn` width must be a percentage (ref: https://github.com/mjmlio/mjml/issues/2489) */}
                 {/* TODO: upload images on our own CDN, or use public folder of the app... */}
-                <MjmlImage src={`${getBaseUrl()}/assets/images/logo.png`} alt="logo" paddingRight={0} />
+                <MjmlImage src={`${getBaseUrl()}/assets/images/logo.png#${quotedReplyMarkerClass}`} alt="logo" paddingRight={0} />
               </MjmlColumn>
               <MjmlColumn verticalAlign="middle" width="76%">
                 <MjmlText fontSize={20} fontWeight={700} paddingBottom={2}>

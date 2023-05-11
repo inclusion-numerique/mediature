@@ -11,10 +11,11 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import slugify from '@sindresorhus/slugify';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { createContext, useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
@@ -83,17 +84,42 @@ export function CreateAuthorityForm(props: CreateAuthorityFormProps) {
         </TextField>
       </Grid>
       <Grid item xs={12}>
-        <TextField type="name" label="Nom" {...register('name')} error={!!errors.name} helperText={errors?.name?.message} fullWidth />
+        <TextField
+          type="text"
+          label="Nom"
+          {...register('name', {
+            onChange: (event) => {
+              // By default overwrite the slug (it's unlikely someone would change the name after manually changing the slug)
+              setValue('slug', slugify(event.target.value));
+            },
+          })}
+          error={!!errors.name}
+          helperText={errors?.name?.message}
+          fullWidth
+        />
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          type="slug"
-          label="Identifiant technique (slug)"
-          {...register('slug')}
-          error={!!errors.slug}
-          helperText={errors?.slug?.message}
-          aria-describedby="slug-helper-text"
-          fullWidth
+        {/* We use a `Controller` otherwise when the `setValue` is used the label would not move */}
+        <Controller
+          control={control}
+          name="slug"
+          defaultValue={control._defaultValues.slug || ''}
+          render={({ field: { onChange, onBlur, value, ref }, fieldState: { error }, formState }) => {
+            return (
+              <TextField
+                type="text"
+                label="Identifiant technique (slug)"
+                onBlur={onBlur} // notify when input is touched
+                onChange={onChange} // send value to hook form
+                value={value}
+                inputRef={ref}
+                error={!!errors.slug}
+                helperText={errors?.slug?.message}
+                aria-describedby="slug-helper-text"
+                fullWidth
+              />
+            );
+          }}
         />
         <FormHelperText id="slug-helper-text">
           Le &quot;slug&quot; est l&apos;identifiant technique de votre collectivité qui ne pourra être changé ! Il est limité à des lettres

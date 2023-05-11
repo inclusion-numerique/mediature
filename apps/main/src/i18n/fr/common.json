@@ -5,9 +5,15 @@
   },
   "components": {
     "BaseForm": {
-      "form_contains_errors_one": "Le formulaire soumi contient une erreur. Le champ invalide a été marqué en rouge.",
-      "form_contains_errors_other": "Le formulaire soumi contient plusieurs erreurs. Les champs invalides ont été marqués en rouge."
+      "form_contains_errors_one": "Le formulaire soumis contient une erreur. Le champ invalide a été marqué en rouge.",
+      "form_contains_errors_other": "Le formulaire soumis contient plusieurs erreurs. Les champs invalides ont été marqués en rouge."
     }
+  },
+  "errors": {
+    "passwordRequiresANumeric": "le mot de passe doit contenir au moins un chiffre",
+    "passwordRequiresHeightCharacters": "le mot de passe doit contenir au moins 8 caractères",
+    "passwordRequiresLowerAndUpperCharacters": "le mot de passe doit contenir au moins une majuscule et une minuscule",
+    "passwordRequiresASpecialCharacters": "le mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
   },
   "file": {
     "allowedExtensions_one": "Format supporté : {{extensions}}.",
@@ -51,6 +57,7 @@
           "authorityType": "Type de collectivité",
           "citizenCity": "Ville",
           "citizenCountryCode": "Pays",
+          "citizenGenderIdentity": "Identité de genre",
           "citizenHasEmail": "Email renseigné",
           "citizenPostalCode": "Code postal",
           "closedAt": "Date de clôture",
@@ -71,7 +78,6 @@
   "email": {
     "template": {
       "AgentActivitySumUpEmail": {
-        "cases_html": "Il y a actuellement <span style='font-weight:bold;'>11 dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
         "casesNotAssigned_one": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossier</span> qui n'est pas encore assigné à un médiateur de la collectivité.",
         "casesNotAssigned_other": "Il y a actuellement <span style='font-weight:bold;'>{{count}} dossiers</span> ne sont pas encore assignés à un médiateur de la collectivité.",
         "followingCasesHaveReminder_one": "Le dossier suivant a bientôt un rappel :",
@@ -117,15 +123,25 @@
       },
       "status": {
         "enum": {
-          "ABOUT_TO_CLOSE": "Étapes de finalisation",
-          "MAKE_XXX_CALL": "Appeler le requérant",
-          "STUCK": "Dossier bloqué",
-          "SYNC_WITH_ADMINISTATION": "Se synchroniser avec l'administration",
-          "SYNC_WITH_CITIZEN": "Se synchroniser avec le requérant",
-          "TO_PROCESS": "À traiter"
+          "ABOUT_TO_CLOSE": "Finalisation",
+          "CLOSED": "Clôture de la procédure",
+          "CONTACT_ADMINISTRATION": "Solliciter l'administration",
+          "CONTACT_REQUESTER": "Contacter le requérant",
+          "TO_PROCESS": "À traiter",
+          "WAITING_FOR_ADMINISTATION": "En attente de réponse de l'administration",
+          "WAITING_FOR_REQUESTER": "En attente de réponse du réquérant"
         }
       },
       "technicalName": "dossier-{{humanId}}"
+    },
+    "citizen": {
+      "genderIdentity": {
+        "enum": {
+          "FEMALE": "Femme",
+          "MALE": "Homme",
+          "NON_BINARY": "Non-binaire"
+        }
+      }
     }
   }
 }

@@ -131,6 +131,15 @@ export function prepareStory<ComponentType, ContextValueType extends MatchingCon
         story.parameters.nextAuthMock = {};
       }
 
+      // Some layouts require a specific URL to display information,
+      // if the current story does not provide one, inherit from the layout
+      if (options.layoutStory.parameters?.nextjs?.navigation && !story.parameters?.nextjs?.navigation) {
+        story.parameters.nextjs = {
+          ...(story.parameters?.nextjs ? story.parameters.nextjs : {}),
+          navigation: options.layoutStory.parameters.nextjs.navigation,
+        };
+      }
+
       story.parameters.nextAuthMock = { ...options.layoutStory.parameters.nextAuthMock, ...story.parameters.nextAuthMock };
     }
 

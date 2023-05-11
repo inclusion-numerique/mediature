@@ -20,13 +20,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $isDecoratorBlockNode } from '@lexical/react/LexicalDecoratorBlockNode';
 import { INSERT_HORIZONTAL_RULE_COMMAND } from '@lexical/react/LexicalHorizontalRuleNode';
 import { $createHeadingNode, $createQuoteNode, $isHeadingNode, HeadingTagType } from '@lexical/rich-text';
-import {
-  $getSelectionStyleValueForProperty,
-  $isParentElementRTL,
-  $patchStyleText,
-  $selectAll,
-  $setBlocksType_experimental,
-} from '@lexical/selection';
+import { $getSelectionStyleValueForProperty, $isParentElementRTL, $patchStyleText, $selectAll, $setBlocksType } from '@lexical/selection';
 import { $findMatchingParent, $getNearestBlockElementAncestorOrThrow, $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import AddIcon from '@mui/icons-material/Add';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -211,8 +205,7 @@ function BlockFormatDropDown({
     if (blockType !== 'paragraph') {
       editor.update(() => {
         const selection = $getSelection();
-        if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection))
-          $setBlocksType_experimental(selection, () => $createParagraphNode());
+        if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) $setBlocksType(selection, () => $createParagraphNode());
       });
     }
   };
@@ -222,7 +215,7 @@ function BlockFormatDropDown({
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
-          $setBlocksType_experimental(selection, () => $createHeadingNode(headingSize));
+          $setBlocksType(selection, () => $createHeadingNode(headingSize));
         }
       });
     }
@@ -257,7 +250,7 @@ function BlockFormatDropDown({
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
-          $setBlocksType_experimental(selection, () => $createQuoteNode());
+          $setBlocksType(selection, () => $createQuoteNode());
         }
       });
     }
@@ -270,7 +263,7 @@ function BlockFormatDropDown({
 
         if ($isRangeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
           if (selection.isCollapsed()) {
-            $setBlocksType_experimental(selection, () => $createCodeNode());
+            $setBlocksType(selection, () => $createCodeNode());
           } else {
             const textContent = selection.getTextContent();
             const codeNode = $createCodeNode();

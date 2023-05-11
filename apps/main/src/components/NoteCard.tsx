@@ -15,13 +15,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
-import { useState } from 'react';
-import { createContext, useContext } from 'react';
+import Typography from '@mui/material/Typography';
+import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseNoteSchemaType } from '@mediature/main/src/models/entities/case';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
+import { inlineEditorStateToText } from '@mediature/ui/src/utils/lexical';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 import { UpdateNoteForm } from '../app/(private)/dashboard/authority/[authorityId]/case/[caseId]/UpdateNoteForm';
@@ -80,10 +81,27 @@ export function NoteCard(props: NoteCardProps) {
           <CardContent>
             <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
               <Grid item xs="auto">
-                Note
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textColor: 'text.tertiary',
+                  }}
+                >
+                  {t('date.short', { date: props.note.date })}
+                </Typography>
               </Grid>
-              <Grid item xs="auto">
-                {t('date.short', { date: props.note.date })}
+              <Grid item xs={12}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textColor: 'text.tertiary',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {inlineEditorStateToText(props.note.content) || 'Note'}
+                </Typography>
               </Grid>
             </Grid>
           </CardContent>

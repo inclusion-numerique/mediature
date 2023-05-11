@@ -38,35 +38,45 @@ ToProcessStory.play = async ({ canvasElement }) => {
 
 export const ToProcess = prepareStory(ToProcessStory);
 
-const MakeXxxCallStory = Template.bind({});
-MakeXxxCallStory.args = {
-  status: CaseStatusSchema.Values.MAKE_XXX_CALL,
+const ContactRequesterStory = Template.bind({});
+ContactRequesterStory.args = {
+  status: CaseStatusSchema.Values.CONTACT_REQUESTER,
 };
-MakeXxxCallStory.play = async ({ canvasElement }) => {
+ContactRequesterStory.play = async ({ canvasElement }) => {
+  await playFindNumberedChip(canvasElement, 2);
+};
+
+export const ContactRequester = prepareStory(ContactRequesterStory);
+
+const WaitingForRequesterStory = Template.bind({});
+WaitingForRequesterStory.args = {
+  status: CaseStatusSchema.Values.WAITING_FOR_REQUESTER,
+};
+WaitingForRequesterStory.play = async ({ canvasElement }) => {
   await playFindNumberedChip(canvasElement, 3);
 };
 
-export const MakeXxxCall = prepareStory(MakeXxxCallStory);
+export const WaitingForRequester = prepareStory(WaitingForRequesterStory);
 
-const SyncWithCitizenStory = Template.bind({});
-SyncWithCitizenStory.args = {
-  status: CaseStatusSchema.Values.SYNC_WITH_CITIZEN,
+const ContactAdministrationStory = Template.bind({});
+ContactAdministrationStory.args = {
+  status: CaseStatusSchema.Values.CONTACT_ADMINISTRATION,
 };
-SyncWithCitizenStory.play = async ({ canvasElement }) => {
+ContactAdministrationStory.play = async ({ canvasElement }) => {
   await playFindNumberedChip(canvasElement, 4);
 };
 
-export const SyncWithCitizen = prepareStory(SyncWithCitizenStory);
+export const ContactAdministration = prepareStory(ContactAdministrationStory);
 
-const SyncWithAdministrationStory = Template.bind({});
-SyncWithAdministrationStory.args = {
-  status: CaseStatusSchema.Values.SYNC_WITH_ADMINISTATION,
+const WaitingForAdministrationStory = Template.bind({});
+WaitingForAdministrationStory.args = {
+  status: CaseStatusSchema.Values.WAITING_FOR_ADMINISTATION,
 };
-SyncWithAdministrationStory.play = async ({ canvasElement }) => {
+WaitingForAdministrationStory.play = async ({ canvasElement }) => {
   await playFindNumberedChip(canvasElement, 5);
 };
 
-export const SyncWithAdministration = prepareStory(SyncWithAdministrationStory);
+export const WaitingForAdministration = prepareStory(WaitingForAdministrationStory);
 
 const AboutToCloseStory = Template.bind({});
 AboutToCloseStory.args = {
@@ -78,12 +88,12 @@ AboutToCloseStory.play = async ({ canvasElement }) => {
 
 export const AboutToClose = prepareStory(AboutToCloseStory);
 
-const StuckStory = Template.bind({});
-StuckStory.args = {
-  status: CaseStatusSchema.Values.STUCK,
+const ClosedStory = Template.bind({});
+ClosedStory.args = {
+  status: CaseStatusSchema.Values.CLOSED,
 };
-StuckStory.play = async ({ canvasElement }) => {
+ClosedStory.play = async ({ canvasElement }) => {
   await playFindNumberedChip(canvasElement, '#');
 };
 
-export const Stuck = prepareStory(StuckStory);
+export const Closed = prepareStory(ClosedStory);

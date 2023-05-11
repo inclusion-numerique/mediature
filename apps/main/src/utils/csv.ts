@@ -7,6 +7,7 @@ import {
 import { getServerTranslation } from '@mediature/main/src/i18n';
 import { AuthorityTypeSchemaType } from '@mediature/main/src/models/entities/authority';
 import { CaseOutcomeSchemaType, CasePlatformSchemaType, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import { CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
 import { nameof } from '@mediature/main/src/utils/typescript';
 
 const typedNameof = nameof<CaseAnalytics>;
@@ -35,6 +36,7 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
       { key: typedNameof('collectiveAgreement'), header: t('document.template.CaseAnalytics.columns.collectiveAgreement') },
       { key: typedNameof('administrativeCourtNext'), header: t('document.template.CaseAnalytics.columns.administrativeCourtNext') },
       { key: typedNameof('citizenHasEmail'), header: t('document.template.CaseAnalytics.columns.citizenHasEmail') },
+      { key: typedNameof('citizenGenderIdentity'), header: t('document.template.CaseAnalytics.columns.citizenGenderIdentity') },
       { key: typedNameof('citizenCity'), header: t('document.template.CaseAnalytics.columns.citizenCity') },
       { key: typedNameof('citizenPostalCode'), header: t('document.template.CaseAnalytics.columns.citizenPostalCode') },
       { key: typedNameof('citizenCountryCode'), header: t('document.template.CaseAnalytics.columns.citizenCountryCode') },
@@ -60,6 +62,8 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
           return t(`model.case.platform.enum.${value as CasePlatformSchemaType}`);
         } else if (context.column === typedNameof('outcome')) {
           return t(`model.case.outcome.enum.${value as CaseOutcomeSchemaType}`);
+        } else if (context.column === typedNameof('citizenGenderIdentity')) {
+          return t(`model.citizen.genderIdentity.enum.${value as CitizenGenderIdentitySchemaType}`);
         }
 
         return value;

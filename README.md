@@ -86,6 +86,10 @@ And since the root domain cannot use a `CNAME` we have to use fixed IPs:
 
 _(you can find those IPs at https://doc.scalingo.com/platform/app/domain#configure-your-domain-name . There is a low risk they change so we should be fine... another dynamic solution would have been to use an `ALIAS` record if the DNS provider is compatible but it disables the `DNSSEC` and we are not confident yet of the real underlying risks so we stick we `A` records for now)_
 
+Once done, go to your Scalingo domains settings and add your domains for each environment. If for an environment you want to accept both `example.com` and `www.example.com`, make sure to promote within Scalingo `www.example.com` as canonical. It means other domains will redirect (HTTP 301) to the canonical one (just be sure of your choice, 301 is cached on the users browser so it cannot be reverted easily after some time... and Scalingo does not provide a 302 redirection for now).
+
+There is also an option to "force HTTPS" inside `Settings > Routing`, please use it.
+
 #### Postgres
 
 ##### Extensions
@@ -128,8 +132,9 @@ For each build and runtime (since they are shared), you should have set some env
 - `MAILER_FALLBACK_SMTP_PASSWORD`: [SECRET]
 - `MAILJET_API_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
 - `MAILJET_SECRET_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
+- `MAILJET_WEBHOOK_DOMAIN`: [TO_DEFINE] _(note `$MAILER_DEFAULT_DOMAIN` is used as a fallback but for example in production the target domain contains `www` in addition (compared to an email domain), so this variable allows taking this into account)_
 - `MAILJET_WEBHOOK_AUTH_USERNAME`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
-- `MAILJET_WEBHOOK_AUTH_PASSWORD`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
+- `MAILJET_WEBHOOK_AUTH_PASSWORD`: [SECRET] _(**it must not contain characters like `%` or `#` otherwise Mailjet will fail parsing the password since included in an URL (it's encoded but still, they fail).** If you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
 
 #### Review apps
 
@@ -168,7 +173,7 @@ First, create a Slack notifier named `tech` to keep an eye on the global activit
 - `app_crashed`
 - `app_crashed_repeated`
 - `app_deleted`
-- `app_deployed` _(only in `production`)_
+- `app_deployed` _(ideally only in `production` but finally to both, otherwise we are not notified of deployment failure (they should have a dedicated event for this...))_
 - `app_edited`
 - `app_region_migration_started`
 - `app_renamed`
@@ -236,7 +241,7 @@ scalingo -a ${SCALINGO_APP_NAME} db-tunnel ${SCALINGO_DATABASE_URL}
 Note that:
 
 - `pgsql-console` command will logs you onto the database but it's shell only (it uses the default Scalingo user)
-- `db-tunnel` command sets up a SSH tunnel first, so you need to configure your public SSH key in your Scalingo account settings, but then you will be able to use local software to navigate through the database, or even migrating the schema with custom scripts.
+- `db-tunnel` command sets up a SSH tunnel first, so you need to configure your public SSH key in your Scalingo account settings, but then you will be able to use local software to navigate through the database, or even migrating the schema with custom scripts. Also note `${SCALINGO_DATABASE_URL}` can be either replaced by the database URL content directly, or by an environment variable to get the content from (using the format `MY_ENV_VAR_FOR_DATABASE_URL`)
 
 To debug a remote database we advise creating a specific user (because you are not suppose to store credentials of super users). Make sure the user created has been granted needed roles on business tables (through the `psql-console` command), something like `GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA $SCHEMA TO $USERNAME;` that you can customize as needed ;) . (If you still see no table that's probably because you logged into the wrong database)
 

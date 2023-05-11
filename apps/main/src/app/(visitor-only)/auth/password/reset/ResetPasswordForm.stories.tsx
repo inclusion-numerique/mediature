@@ -46,7 +46,7 @@ const FilledStory = Template.bind({});
 FilledStory.args = {
   prefill: ResetPasswordPrefillSchema.parse({
     token: 'sunt-aut-quod',
-    password: 'mypassword',
+    password: 'Mypassword@1',
   }),
 };
 FilledStory.parameters = { ...defaultMswParameters };

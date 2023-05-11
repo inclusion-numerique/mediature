@@ -49,3 +49,4 @@ declare module 'next/config' {
   const value: () => RuntimeConfig;
   export default value;
 }
+declare module 'storybook-mock-date-decorator';

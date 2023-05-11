@@ -1,4 +1,4 @@
-import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, Note } from '@prisma/client';
+import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, CaseStatus, Note } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
 import addresscompiler from 'addresscompiler';
 
@@ -32,14 +32,22 @@ import {
   updateCaseAttachmentsMax,
 } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
-import { CasePlatformSchema, CaseStatusSchema, CaseWrapperSchema, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
+import {
+  CasePlatformSchema,
+  CaseStatusSchema,
+  CaseStatusSchemaType,
+  CaseWrapperSchema,
+  CaseWrapperSchemaType,
+} from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
+import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
 import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
   attachmentPrismaToModel,
+  authorityPrismaToModel,
   caseCompetentThirdPartyItemPrismaToModel,
   caseCompetentThirdPartyItemsPrismaToModel,
   caseDomainItemPrismaToModel,
@@ -186,6 +194,7 @@ export const caseRouter = router({
             email: input.email,
             firstname: input.firstname,
             lastname: input.lastname,
+            genderIdentity: null, // This can set by the agent
             address: {
               create: {
                 street: input.address.street,
@@ -316,14 +325,23 @@ export const caseRouter = router({
       }
     }
 
+    let status: CaseStatus = input.status;
     let closedAt: Date | null = null;
     let statusSwitchedToClose = false;
     if (input.close) {
+      // When closing or if closed it requires having the status in its final state (no matter the status input)
+      status = CaseStatus.CLOSED;
+
       if (targetedCase.closedAt) {
         closedAt = targetedCase.closedAt;
       } else {
         closedAt = new Date();
         statusSwitchedToClose = true;
+      }
+    } else {
+      // If reopening or it remains open, we sure it does not stay in the final state
+      if (targetedCase.status === CaseStatus.CLOSED) {
+        status = CaseStatusSchema.Values.ABOUT_TO_CLOSE;
       }
     }
 
@@ -336,7 +354,7 @@ export const caseRouter = router({
         description: input.description,
         units: input.units,
         termReminderAt: input.termReminderAt,
-        status: input.status,
+        status: status,
         closedAt: closedAt,
         outcome: input.outcome,
         collectiveAgreement: input.collectiveAgreement,
@@ -362,6 +380,7 @@ export const caseRouter = router({
         },
         citizen: {
           update: {
+            genderIdentity: input.genderIdentity,
             address: {
               update: {
                 street: input.address.street,
@@ -528,7 +547,7 @@ export const caseRouter = router({
   getCaseDomainItems: privateProcedure.input(GetCaseDomainItemsSchema).query(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour récupérer ses domaines`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
@@ -550,9 +569,9 @@ export const caseRouter = router({
     };
   }),
   createCaseDomainItem: privateProcedure.input(CreateCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
-    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+    if (!!input.authorityId && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour lui créer un domaine`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
@@ -594,9 +613,9 @@ export const caseRouter = router({
 
     if (!item) {
       throw new Error(`ce domaine n'existe pas`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
-    } else if (!!item.authorityId && !(await isUserAnAgentPartOfAuthority(item.authorityId, ctx.user.id))) {
+    } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour modifier l'un de ses domaines`);
     }
 
@@ -626,12 +645,6 @@ export const caseRouter = router({
     return { item: caseDomainItemPrismaToModel(updatedItem, updatedItem.parentItem || undefined) };
   }),
   deleteCaseDomainItem: privateProcedure.input(DeleteCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
-    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer un domaine`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
-    }
-
     const item = await prisma.caseDomainItem.findFirst({
       where: {
         id: input.itemId,
@@ -648,6 +661,10 @@ export const caseRouter = router({
     });
     if (!item) {
       throw new Error(`ce domaine n'existe pas`);
+    } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer un domaine`);
+    } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     } else if (item._count.Case > 0) {
       throw new Error(`aucun dossier ne doit être lié à ce domaine pour pouvoir être supprimé`);
     } else if (item._count.childrenItems > 0) {
@@ -665,7 +682,7 @@ export const caseRouter = router({
   getCaseCompetentThirdPartyItems: privateProcedure.input(GetCaseCompetentThirdPartyItemsSchema).query(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour récupérer ses entités tierces`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
@@ -687,9 +704,9 @@ export const caseRouter = router({
     };
   }),
   createCaseCompetentThirdPartyItem: privateProcedure.input(CreateCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
-    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
+    if (!!input.authorityId && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour lui créer une entité tierce`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
@@ -731,9 +748,9 @@ export const caseRouter = router({
 
     if (!item) {
       throw new Error(`cette entité tierce n'existe pas`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
+    } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
-    } else if (!!item.authorityId && !(await isUserAnAgentPartOfAuthority(item.authorityId, ctx.user.id))) {
+    } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
       throw new Error(`vous devez faire partie de la collectivité pour modifier l'une de ses entités tierces`);
     }
 
@@ -763,12 +780,6 @@ export const caseRouter = router({
     return { item: caseCompetentThirdPartyItemPrismaToModel(updatedItem, updatedItem.parentItem || undefined) };
   }),
   deleteCaseCompetentThirdPartyItem: privateProcedure.input(DeleteCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
-    if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer une entité tierce`);
-    } else if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
-    }
-
     const item = await prisma.caseCompetentThirdPartyItem.findFirst({
       where: {
         id: input.itemId,
@@ -785,6 +796,10 @@ export const caseRouter = router({
     });
     if (!item) {
       throw new Error(`cette entité tierce n'existe pas`);
+    } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer une entité tierce`);
+    } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
+      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     } else if (item._count.Case > 0) {
       throw new Error(`aucun dossier ne doit être lié à cette entité tierce pour pouvoir être supprimée`);
     } else if (item._count.childrenItems > 0) {
@@ -1027,6 +1042,7 @@ export const caseRouter = router({
         id: input.caseId,
       },
       include: {
+        authority: true,
         citizen: {
           include: {
             address: true,
@@ -1050,6 +1066,7 @@ export const caseRouter = router({
     const fileStream = await renderToStream(
       CaseSynthesisDocument({
         case: casePrismaToModel(targetedCase),
+        authority: await authorityPrismaToModel(targetedCase.authority),
         citizen: citizenPrismaToModel(targetedCase.citizen),
       })
     );

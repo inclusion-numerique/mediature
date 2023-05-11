@@ -172,14 +172,21 @@ model Phone {
   Citizen Citizen?
 }
 
+enum CitizenGenderIdentity {
+  MALE
+  FEMALE
+  NON_BINARY
+}
+
 /// @@Gen.model(hide: true)
 model Citizen {
-  id        String  @id @default(uuid()) @db.Uuid
-  email     String?
-  firstname String
-  lastname  String
-  addressId String  @unique @db.Uuid
-  phoneId   String  @unique @db.Uuid
+  id             String                 @id @default(uuid()) @db.Uuid
+  email          String?
+  genderIdentity CitizenGenderIdentity?
+  firstname      String
+  lastname       String
+  addressId      String                 @unique @db.Uuid
+  phoneId        String                 @unique @db.Uuid
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
@@ -208,11 +215,12 @@ model IdentityStamp {
 
 enum CaseStatus {
   TO_PROCESS
-  MAKE_XXX_CALL // TODO: ... typo?
-  SYNC_WITH_CITIZEN
-  SYNC_WITH_ADMINISTATION
+  CONTACT_REQUESTER
+  WAITING_FOR_REQUESTER
+  CONTACT_ADMINISTRATION
+  WAITING_FOR_ADMINISTATION
   ABOUT_TO_CLOSE
-  STUCK
+  CLOSED
 }
 
 enum CaseInitialPlatform {
@@ -498,8 +506,8 @@ model AdminInvitation {
 
 /// @@Gen.model(hide: true)
 view CaseAnalytics {
-  humanId                      Int                 @unique
-  authorityId                  String              @db.Uuid
+  humanId                      Int                    @unique
+  authorityId                  String                 @db.Uuid
   authorityName                String
   authorityType                AuthorityType
   createdAt                    DateTime
@@ -516,6 +524,7 @@ view CaseAnalytics {
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?
   citizenHasEmail              Boolean
+  citizenGenderIdentity        CitizenGenderIdentity?
   citizenCity                  String
   citizenPostalCode            String
   citizenCountryCode           String

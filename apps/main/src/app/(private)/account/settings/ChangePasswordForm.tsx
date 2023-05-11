@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { PasswordFieldHinter } from '@mediature/main/src/components/PasswordFieldHinter';
 import { ChangePasswordPrefillSchemaType, ChangePasswordSchema, ChangePasswordSchemaType } from '@mediature/main/src/models/actions/auth';
 
 export interface ChangePasswordFormProps {
@@ -27,6 +28,7 @@ export function ChangePasswordForm(props: ChangePasswordFormProps) {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
     control,
     reset,
   } = useForm<ChangePasswordSchemaType>({
@@ -99,6 +101,7 @@ export function ChangePasswordForm(props: ChangePasswordFormProps) {
             ),
           }}
         />
+        <PasswordFieldHinter password={watch('newPassword')} headline={`Le nouveau mot de passe doit contenir :`} />
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" loading={changePassword.isLoading} size="large" variant="contained" fullWidth>

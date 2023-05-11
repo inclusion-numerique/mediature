@@ -1,4 +1,4 @@
-import { CaseStatus, MessageStatus, PhoneType, PrismaClient } from '@prisma/client';
+import { CaseStatus, CitizenGenderIdentity, MessageStatus, PhoneType, PrismaClient } from '@prisma/client';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -166,6 +166,7 @@ export async function seedDatabase(prismaClient: PrismaClient) {
             email: 'savin@yahoo.fr',
             firstname: 'Savin',
             lastname: 'Deschamps',
+            genderIdentity: CitizenGenderIdentity.NON_BINARY,
             address: {
               create: {
                 street: '3 rue de la Gare',

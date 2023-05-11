@@ -2,6 +2,30 @@ import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
+export async function isUserMainAgentOfAuthorities(authorityIds: string[], userId: string): Promise<boolean> {
+  // Remove duplicates
+  authorityIds = authorityIds.filter((x, i, a) => a.indexOf(x) == i);
+
+  const authoritiesCount = await prisma.authority.count({
+    where: {
+      id: {
+        in: authorityIds,
+      },
+      mainAgent: {
+        user: {
+          id: userId,
+        },
+      },
+    },
+  });
+
+  return authorityIds.length === authoritiesCount;
+}
+
+export async function isUserMainAgentOfAuthority(authorityId: string, userId: string): Promise<boolean> {
+  return await isUserMainAgentOfAuthorities([authorityId], userId);
+}
+
 export interface AddAgentOptions {
   userId: string;
   authorityId: string;

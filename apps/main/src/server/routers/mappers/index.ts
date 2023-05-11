@@ -207,6 +207,7 @@ export function citizenPrismaToModel(citizen: Citizen & { address: Address; phon
     email: citizen.email,
     firstname: citizen.firstname,
     lastname: citizen.lastname,
+    genderIdentity: citizen.genderIdentity,
     address: citizen.address,
     phone: citizen.phone,
     createdAt: citizen.createdAt,
