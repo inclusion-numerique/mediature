@@ -334,7 +334,8 @@ export function removeQuotedReplyFromHtmlEmail(htmlContent: string, jsdomInstanc
   const dom = parser.parseFromString(htmlContent, 'text/html');
 
   // Some browser clients prefix or suffix the class names when they move the content as "quoted reply"
-  const elements = dom.querySelectorAll(`[class*="${quotedReplyMarkerClass}"]`);
+  // Note: in case next elements are indirectly removed from the current DOM that's fine to continue performing on them
+  const elements = dom.querySelectorAll(`[class*="${quotedReplyMarkerClass}"], img[src*="${quotedReplyMarkerClass}"]`);
   for (const element of elements) {
     const parentBlockquoteElement = element.closest('blockquote');
     const parentElement = element.parentElement;
@@ -350,6 +351,19 @@ export function removeQuotedReplyFromHtmlEmail(htmlContent: string, jsdomInstanc
     } else {
       element.remove();
     }
+  }
+
+  // With the first filter it won't catch all cases so we add specific cases for major email clients
+  //
+  // For example Gmail removes the classname but also removes the `#quoted-reply-marker` on the logo because they
+  // use a proxy to display each "link element" of the email (using already their own hash so they strip the other)
+  //
+  // Another solution could be to name `logo.png` with an unique name, or add a invisible image named `quoted-reply-marker.png`
+  // but I'm not sure email clients would not see that as a "pixel image for tracking" removing it.
+  // And it's still not perfect because Gmail does the `XXX wrote:` outside the `<blockquote>`... so for now, better to keep using specific filters
+  const gmailElements = dom.querySelectorAll(`.gmail_quote`);
+  for (const element of gmailElements) {
+    element.remove();
   }
 
   return dom.documentElement.innerHTML;

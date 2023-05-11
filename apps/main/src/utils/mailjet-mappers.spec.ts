@@ -102,12 +102,21 @@ describe('decodeParseApiWebhookPayload()', () => {
 describe('removeQuotedReplyFromHtmlEmail()', () => {
   const serverJsdom = new JSDOM();
 
-  it('should remove the blockquote', async () => {
+  it('should remove the blockquote (for Outlook and others)', async () => {
     const emailString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-email.html'), 'utf-8');
 
     const cleanEmailString = removeQuotedReplyFromHtmlEmail(emailString, serverJsdom);
 
     expect(cleanEmailString).not.toContain('<blockquote');
+  });
+
+  it('should remove the blockquote (for Gmail)', async () => {
+    const emailString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-gmail-email.html'), 'utf-8');
+
+    const cleanEmailString = removeQuotedReplyFromHtmlEmail(emailString, serverJsdom);
+
+    expect(cleanEmailString).not.toContain('<blockquote');
+    expect(cleanEmailString).not.toContain('wrote');
   });
 });
 
