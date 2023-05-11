@@ -133,7 +133,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `MAILJET_API_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
 - `MAILJET_SECRET_KEY`: [SECRET] _(from the Mailjet interface inside the `API Key Management` section)_
 - `MAILJET_WEBHOOK_AUTH_USERNAME`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
-- `MAILJET_WEBHOOK_AUTH_PASSWORD`: [SECRET] _(if you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
+- `MAILJET_WEBHOOK_AUTH_PASSWORD`: [SECRET] _(**it must not contain characters like `%` or `#` otherwise Mailjet will fail parsing the password since included in an URL (it's encoded but still, they fail).** If you change it you need to recreate all virtual inboxes so they have the webhook URL with the right Basic HTTP Authentication credentials)_
 
 #### Review apps
 
