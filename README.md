@@ -172,7 +172,7 @@ First, create a Slack notifier named `tech` to keep an eye on the global activit
 - `app_crashed`
 - `app_crashed_repeated`
 - `app_deleted`
-- `app_deployed` _(only in `production`)_
+- `app_deployed` _(ideally only in `production` but finally to both, otherwise we are not notified of deployment failure (they should have a dedicated event for this...))_
 - `app_edited`
 - `app_region_migration_started`
 - `app_renamed`
