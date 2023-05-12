@@ -1,7 +1,11 @@
 import addBusinessDays from 'date-fns/addBusinessDays';
 
-export function isReminderSoon(reminderAt: Date): boolean {
-  const reminderDateStartingBeSoon = addBusinessDays(new Date(), 1);
+export const startingToBeSoonWindowDays = 1;
 
-  return reminderAt < reminderDateStartingBeSoon;
+export function getDateStartingToBeSoon(): Date {
+  return addBusinessDays(new Date(), startingToBeSoonWindowDays);
+}
+
+export function isReminderSoon(reminderAt: Date): boolean {
+  return reminderAt < getDateStartingToBeSoon();
 }
