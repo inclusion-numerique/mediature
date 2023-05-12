@@ -3,6 +3,7 @@ import z from 'zod';
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
 import { AttachmentInputSchema } from '@mediature/main/src/models/entities/attachment';
 import { incompleteCaseSchema } from '@mediature/main/src/models/entities/case';
+import { EditorStateInputSchema } from '@mediature/main/src/models/entities/lexical';
 import { ContactInputSchema, MessageSchema } from '@mediature/main/src/models/entities/messenger';
 
 export const sendMessageAttachmentsMax = 10;
@@ -11,7 +12,7 @@ export const SendMessageSchema = z
     caseId: incompleteCaseSchema.shape.id,
     to: z.array(ContactInputSchema).min(1),
     subject: MessageSchema.shape.subject.min(1).max(255), // The max is specified according to https://www.theorchardagency.com.au/insights/subject-line-length-and-open-rates/
-    content: MessageSchema.shape.content,
+    content: EditorStateInputSchema,
     attachments: z.array(AttachmentInputSchema).max(sendMessageAttachmentsMax),
   })
   .strict();

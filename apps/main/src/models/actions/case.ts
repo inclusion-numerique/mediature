@@ -13,6 +13,7 @@ import {
   incompleteCaseSchema,
 } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
+import { EditorStateInputSchema } from '@mediature/main/src/models/entities/lexical';
 import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
 
 export const requestCaseAttachmentsMax = 10;
@@ -243,7 +244,7 @@ export const AddNoteToCaseSchema = z
   .object({
     caseId: incompleteCaseSchema.shape.id,
     date: CaseNoteSchema.shape.date,
-    content: CaseNoteSchema.shape.content,
+    content: EditorStateInputSchema,
   })
   .strict();
 export type AddNoteToCaseSchemaType = z.infer<typeof AddNoteToCaseSchema>;
@@ -265,7 +266,7 @@ export const UpdateCaseNoteSchema = z
   .object({
     noteId: CaseNoteSchema.shape.id,
     date: CaseNoteSchema.shape.date,
-    content: CaseNoteSchema.shape.content,
+    content: EditorStateInputSchema,
   })
   .strict();
 export type UpdateCaseNoteSchemaType = z.infer<typeof UpdateCaseNoteSchema>;
