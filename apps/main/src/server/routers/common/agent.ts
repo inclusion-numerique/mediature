@@ -83,8 +83,7 @@ export async function addAgent(options: AddAgentOptions) {
     originatorFirstname: originatorUser.firstname,
     originatorLastname: originatorUser.lastname,
     authorityName: agent.authority.name,
-    authorityDashboardUrl: linkRegistry.get('dashboard', undefined, { absolute: true }), // TODO: use below when the page exists
-    // authorityDashboardUrl: linkRegistry.get('authority', { authorityId: agent.authorityId }, { absolute: true }),
+    authorityDashboardUrl: linkRegistry.get('authority', { authorityId: agent.authorityId }, { absolute: true }),
   });
 
   return { agent };

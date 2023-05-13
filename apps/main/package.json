@@ -48,7 +48,8 @@
     "db:studio": "dotenv-run-script .env.test -- db:studio:unsecure",
     "db:studio:unsecure": "prisma studio",
     "heroku-postbuild": "pnpm run build && ./prepare-standalone.sh",
-    "heroku-start": "node ./dist/apps/main/server.js"
+    "heroku-start:test": "dotenv-run-script .env.test -- heroku-start",
+    "heroku-start": "./start-and-wait-to-init.sh"
   },
   "prisma": {
     "seed": "tsx --tsconfig ../../packages/tsconfig/tsx-fallback.json prisma/seed.script.ts"
@@ -120,6 +121,7 @@
     "next-superjson-plugin": "^0.5.2",
     "node-mailjet": "^6.0.2",
     "nodemailer": "^6.9.1",
+    "pg-boss": "^9.0.1",
     "pretty-bytes": "^6.1.0",
     "prisma": "^4.11.0",
     "raw-loader": "^4.0.2",

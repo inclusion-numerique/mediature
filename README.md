@@ -94,7 +94,10 @@ There is also an option to "force HTTPS" inside `Settings > Routing`, please use
 
 ##### Extensions
 
-- uuid-ossp
+Just enable with the SQL query `CREATE extension ${EXTENSION};` the following extensions needed by some of our libraries (on all environments):
+
+- `uuid-ossp`
+- `pgcrypto`
 
 ##### Tooling
 
@@ -346,6 +349,18 @@ Even if your project uses a TypeScript program located inside your `node_modules
 In addition, using the workspace TypeScript will load `compilerOptions.plugins` specified in your `tsconfig.json` files, which is not the case otherwise. Those plugins will bring more confort while developing!
 
 ### Tips
+
+#### Cron tasks
+
+Doing tasks on a regular basis is a real subject, ask yourself:
+
+- Is it critical if a task schedule is missed? (ideally it could be trigger manually if the support team notices that, so keep track of it)
+- Is it critical if multiple app instances run the same task concurrently?
+- Does the job needs to be restarted if it fails?
+
+... doing only in-app scheduling would break the persistence and concurrency challenges. On the other side, using a third-party to trigger our tasks is risky too since you rely on it and on the network. Even in the last case you should use a central locker to be sure you don't run 2 times the job in case of a close network retry.
+
+The conclusion, in all cases we need something out of the app and that can manage atomicity for concurrency. So we chose to adopt `pg-boss` that allows us to use our own PostgreSQL like a basic tasks queue, it brings persistence, locking, and task monitoring with states (scheduled, canceled, failed, archived)... this is great because in 1 place we now finally have all things to debug, same in case of backups we do have the "task log".
 
 #### Frontend development
 
