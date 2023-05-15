@@ -283,8 +283,7 @@ export const messengerRouter = router({
     const recipients = await prisma.contact.findMany({
       where: {
         RecipientContactsOnMessages: {
-          some: {},
-          every: {
+          some: {
             message: {
               MessagesOnCases: {
                 caseId: targetedCase.id,
