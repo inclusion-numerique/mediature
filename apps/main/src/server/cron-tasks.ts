@@ -40,6 +40,7 @@ export async function cleanPendingUploads() {
 export async function sendAgentsActivitySumUp() {
   if (process.env.APP_MODE !== 'prod') {
     console.log('skip the job of sending an activity sum up to all agents to not pollute their inboxes since not in production');
+    return;
   }
 
   console.log('starting the job of sending an activity sum up to all agents');
