@@ -169,7 +169,7 @@ export function inlineEditorStateToText(inlineEditorState: string): string {
     textContent = $getRoot().getTextContent();
   });
 
-  if (!textContent) {
+  if (textContent === null) {
     throw new Error('cannot get the text from the editor state');
   }
 
