@@ -17,10 +17,7 @@ export function createPlaygroundHeadlessEditor(): LexicalEditor {
 
 // `jsdomInstance` is required on the server to use the DOM API
 export function inlineEditorStateToHtml(inlineEditorState: string, jsdomInstance?: JSDOM): string {
-  const editor = createPlaygroundHeadlessEditor();
-
-  const editorStateJSON = JSON.parse(inlineEditorState);
-  editor.setEditorState(editor.parseEditorState(editorStateJSON));
+  const editor = createHeadlessEditorFromInlineState(inlineEditorState);
 
   let htmlContent: string | null = null;
 
@@ -157,12 +154,22 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
   });
 }
 
-export function inlineEditorStateToText(inlineEditorState: string): string {
+export function createHeadlessEditorFromInlineState(inlineEditorState: string): LexicalEditor {
   const editor = createPlaygroundHeadlessEditor();
 
   const editorStateJSON = JSON.parse(inlineEditorState);
   editor.setEditorState(editor.parseEditorState(editorStateJSON));
 
+  return editor;
+}
+
+export function inlineEditorStateToText(inlineEditorState: string): string {
+  const editor = createHeadlessEditorFromInlineState(inlineEditorState);
+
+  return editorStateToText(editor);
+}
+
+export function editorStateToText(editor: LexicalEditor): string {
   let textContent: string | null = null;
 
   editor.update(() => {
@@ -191,11 +198,12 @@ function sanitizeNode(node: LexicalNode): void {
 }
 
 export function validateEditorState(inlineEditorState: string): void {
-  const editor = createPlaygroundHeadlessEditor();
+  const editor = createHeadlessEditorFromInlineState(inlineEditorState);
 
-  const editorStateJSON = JSON.parse(inlineEditorState);
-  editor.setEditorState(editor.parseEditorState(editorStateJSON));
+  validateEditorStateFromEditor(editor, inlineEditorState);
+}
 
+export function validateEditorStateFromEditor(editor: LexicalEditor, inlineEditorState: string): void {
   editor.update(() => {
     const root = $getRoot();
 
