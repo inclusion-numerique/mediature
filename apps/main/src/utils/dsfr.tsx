@@ -80,7 +80,8 @@ export const commonFooterAttributes = {
     href: '#', // TODO
   },
   termsLinkProps: {
-    href: '#', // TODO
+    // href: linkRegistry.get('legalNotice', undefined),
+    href: '/mentions-legales',
   },
   // websiteMapLinkProps: {{
   //   href: '#',

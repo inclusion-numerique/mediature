@@ -131,6 +131,13 @@ export const localizedRoutes = {
       fr: (p) => `/accessibilite`,
     }
   ),
+  legalNotice: defineLocalizedRoute(
+    {},
+    {
+      en: (p) => `/legal-notice`,
+      fr: (p) => `/mentions-legales`,
+    }
+  ),
   termsOfUse: defineLocalizedRoute(
     {},
     {
@@ -261,6 +268,7 @@ export const routes = {
     globalComponentsEdit: defineRoute(localizedRoutes.globalComponentsEdit.params, localizedRoutes.globalComponentsEdit.paths.en),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.en),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.en),
+    legalNotice: defineRoute(localizedRoutes.legalNotice.params, localizedRoutes.legalNotice.paths.en),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.en),
     requestToAuthority: defineRoute(localizedRoutes.requestToAuthority.params, localizedRoutes.requestToAuthority.paths.en),
     home: defineRoute(localizedRoutes.home.params, localizedRoutes.home.paths.en),
@@ -291,6 +299,7 @@ export const routes = {
     globalComponentsEdit: defineRoute(localizedRoutes.globalComponentsEdit.params, localizedRoutes.globalComponentsEdit.paths.fr),
     dashboard: defineRoute(localizedRoutes.dashboard.params, localizedRoutes.dashboard.paths.fr),
     accessibility: defineRoute(localizedRoutes.accessibility.params, localizedRoutes.accessibility.paths.fr),
+    legalNotice: defineRoute(localizedRoutes.legalNotice.params, localizedRoutes.legalNotice.paths.fr),
     termsOfUse: defineRoute(localizedRoutes.termsOfUse.params, localizedRoutes.termsOfUse.paths.fr),
     requestToAuthority: defineRoute(localizedRoutes.requestToAuthority.params, localizedRoutes.requestToAuthority.paths.fr),
     home: defineRoute(localizedRoutes.home.params, localizedRoutes.home.paths.fr),
