@@ -76,9 +76,6 @@ export const commonFooterAttributes = {
   brandTop: brandTop,
   contentDescription: 'Ce site est géré par les collectivités.',
   homeLinkProps: homeLinkProps,
-  personalDataLinkProps: {
-    href: '#', // TODO
-  },
   termsLinkProps: {
     // href: linkRegistry.get('legalNotice', undefined),
     href: '/mentions-legales',
@@ -86,7 +83,25 @@ export const commonFooterAttributes = {
   // websiteMapLinkProps: {{
   //   href: '#',
   // }}
-  bottomItems: [headerFooterDisplayItem],
+  bottomItems: [
+    {
+      iconId: undefined as any,
+      linkProps: {
+        // href: linkRegistry.get('privacyPolicy', undefined),
+        href: '/politique-de-confidentialite',
+      },
+      text: 'Politique de confidentialité',
+    },
+    {
+      iconId: undefined as any,
+      linkProps: {
+        // href: linkRegistry.get('termsOfUse', undefined),
+        href: '/conditions-generales-d-utilisation',
+      },
+      text: `Conditions générales d'utilisation`,
+    },
+    headerFooterDisplayItem,
+  ],
   license: (
     <>
       Sauf mention contraire, tous les contenus de ce site sont sous{' '}
