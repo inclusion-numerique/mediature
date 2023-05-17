@@ -8,6 +8,7 @@ import { HeaderAuthoritySwitchItem, HeaderAuthoritySwitchItemProps } from '@medi
 import { HeaderUserItem } from '@mediature/main/src/components/HeaderUserItem';
 import { PublicFacingAuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export const defaultColorScheme: DefaultColorScheme = 'system';
 
@@ -67,6 +68,11 @@ export const commonHeaderAttributes = {
 
 export const commonFooterAttributes = {
   accessibility: 'non compliant' as any,
+  accessibilityLinkProps: {
+    // TODO: waiting for the following to be solved https://github.com/zilch/type-route/issues/125
+    // href: linkRegistry.get('accessibility', undefined),
+    href: '/accessibilite',
+  },
   brandTop: brandTop,
   contentDescription: 'Ce site est géré par les collectivités.',
   homeLinkProps: homeLinkProps,

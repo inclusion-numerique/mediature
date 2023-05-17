@@ -127,7 +127,7 @@ export const localizedRoutes = {
   accessibility: defineLocalizedRoute(
     {},
     {
-      en: (p) => `/acessibility`,
+      en: (p) => `/accessibility`,
       fr: (p) => `/accessibilite`,
     }
   ),
