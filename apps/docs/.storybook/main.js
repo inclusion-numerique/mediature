@@ -128,6 +128,10 @@ module.exports = {
     const originalRules = config.module.rules;
     config.module.rules = [
       {
+        test: /\.(txt|html)$/i,
+        use: 'raw-loader',
+      },
+      {
         test: /\.ya?ml$/i,
         use: 'yaml-loader',
       },

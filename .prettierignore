@@ -2,6 +2,7 @@
 /apps/docs/storybook-static/
 /apps/main/.next/
 /apps/main/prisma/generated-for-inspiration/
+/apps/main/src/**/*.docx
 **/.dockerignore
 /pnpm-lock.yaml
 /.vscode/i18n-ally-reviews.yml
