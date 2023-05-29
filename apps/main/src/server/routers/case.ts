@@ -839,6 +839,11 @@ export const caseRouter = router({
             parentItem: true,
           },
         },
+        competentThirdParty: {
+          include: {
+            parentItem: true,
+          },
+        },
         Note: true,
         AttachmentsOnCases: {
           include: {
@@ -983,6 +988,11 @@ export const caseRouter = router({
             parentItem: true,
           },
         },
+        competentThirdParty: {
+          include: {
+            parentItem: true,
+          },
+        },
         AttachmentsOnCases: {
           include: {
             attachment: {
@@ -1050,6 +1060,11 @@ export const caseRouter = router({
           },
         },
         domain: {
+          include: {
+            parentItem: true,
+          },
+        },
+        competentThirdParty: {
           include: {
             parentItem: true,
           },
