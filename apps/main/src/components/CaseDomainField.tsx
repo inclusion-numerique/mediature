@@ -108,7 +108,7 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
   const theme = useColors();
   const { onChange } = props;
 
-  const { data, error, isLoading, refetch } = trpc.getCaseDomainItems.useQuery({
+  const { data, error, isLoading, isSuccess, refetch } = trpc.getCaseDomainItems.useQuery({
     authorityId: props.authorityId || null,
   });
 
@@ -144,6 +144,10 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
   };
 
   useEffect(() => {
+    if (!isSuccess) {
+      return;
+    }
+
     // By default the `Autocomplete` component does not refresh the selected input (even if deleted in the list or edited on the same key)
     // so we try to get new information from the current value if any
     const foundItem = domains.find((item) => {
@@ -151,7 +155,7 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
     });
 
     setValue(foundItem || null);
-  }, [domains, value]);
+  }, [domains, value, isSuccess]);
 
   return (
     <>
