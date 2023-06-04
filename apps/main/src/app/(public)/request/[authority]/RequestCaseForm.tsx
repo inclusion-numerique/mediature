@@ -25,7 +25,7 @@ import {
 } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
-import { reactHookFormBooleanRadioGroupRegisterOptions, setNullIfEmptyString } from '@mediature/main/src/utils/form';
+import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export const RequestCaseFormContext = createContext({
@@ -121,7 +121,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
       </Grid>
       <Grid item xs={12}>
         <PhoneField
-          initialPhoneNumber={props.prefill?.phone}
+          initialPhoneNumber={props.prefill?.phone || undefined}
           onGlobalChange={(phoneNumber) => {
             setValue('phone', phoneNumber);
           }}
@@ -135,9 +135,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           type="email"
           label="Email"
           placeholder="ex: marie.dupont@mail.com"
-          {...register('email', {
-            setValueAs: setNullIfEmptyString,
-          })}
+          {...register('email')}
           error={!!errors.email}
           helperText={errors?.email?.message}
           fullWidth

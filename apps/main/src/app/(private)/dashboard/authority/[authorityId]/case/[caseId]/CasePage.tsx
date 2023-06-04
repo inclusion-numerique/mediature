@@ -52,6 +52,7 @@ import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from
 import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { CaseAttachmentTypeSchema, CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
+import { PhoneInputSchemaType, PhoneTypeSchema, PhoneTypeSchemaType } from '@mediature/main/src/models/entities/phone';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
@@ -60,7 +61,7 @@ import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponen
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { PhoneField } from '@mediature/ui/src/PhoneField';
+import { PhoneField, getDefaultPhoneValue } from '@mediature/ui/src/PhoneField';
 
 export const CasePageContext = createContext({
   ContextualNoteCard: NoteCard,
@@ -128,18 +129,27 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: caseWrapper?.case.initiatedFrom,
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
+      email: caseWrapper?.citizen.email,
       genderIdentity: caseWrapper?.citizen.genderIdentity,
-      address: {
-        street: caseWrapper?.citizen.address.street,
-        city: caseWrapper?.citizen.address.city,
-        postalCode: caseWrapper?.citizen.address.postalCode,
-      },
-      phone: {
-        phoneType: caseWrapper?.citizen.phone.phoneType,
-        callingCode: caseWrapper?.citizen.phone.callingCode,
-        countryCode: caseWrapper?.citizen.phone.countryCode,
-        number: caseWrapper?.citizen.phone.number,
-      },
+      address: caseWrapper?.citizen.address
+        ? {
+            street: caseWrapper?.citizen.address.street,
+            city: caseWrapper?.citizen.address.city,
+            postalCode: caseWrapper?.citizen.address.postalCode,
+          }
+        : {
+            street: '',
+            city: '',
+            postalCode: '',
+          },
+      phone: caseWrapper?.citizen.phone
+        ? {
+            phoneType: caseWrapper?.citizen.phone.phoneType,
+            callingCode: caseWrapper?.citizen.phone.callingCode,
+            countryCode: caseWrapper?.citizen.phone.countryCode,
+            number: caseWrapper?.citizen.phone.number,
+          }
+        : getDefaultPhoneValue(),
       description: caseWrapper?.case.description,
       domainId: caseWrapper?.case.domain?.id || null,
       competent: caseWrapper?.case.competent,
@@ -207,18 +217,27 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: updatedCaseWrapper.case.initiatedFrom,
       close: !!updatedCaseWrapper.case.closedAt,
       status: updatedCaseWrapper.case.status,
+      email: updatedCaseWrapper.citizen.email,
       genderIdentity: updatedCaseWrapper.citizen.genderIdentity,
-      address: {
-        street: updatedCaseWrapper.citizen.address.street,
-        city: updatedCaseWrapper.citizen.address.city,
-        postalCode: updatedCaseWrapper.citizen.address.postalCode,
-      },
-      phone: {
-        phoneType: updatedCaseWrapper.citizen.phone.phoneType,
-        callingCode: updatedCaseWrapper.citizen.phone.callingCode,
-        countryCode: updatedCaseWrapper.citizen.phone.countryCode,
-        number: updatedCaseWrapper.citizen.phone.number,
-      },
+      address: updatedCaseWrapper.citizen.address
+        ? {
+            street: updatedCaseWrapper.citizen.address.street,
+            city: updatedCaseWrapper.citizen.address.city,
+            postalCode: updatedCaseWrapper.citizen.address.postalCode,
+          }
+        : {
+            street: '',
+            city: '',
+            postalCode: '',
+          },
+      phone: updatedCaseWrapper.citizen.phone
+        ? {
+            phoneType: updatedCaseWrapper.citizen.phone.phoneType,
+            callingCode: updatedCaseWrapper.citizen.phone.callingCode,
+            countryCode: updatedCaseWrapper.citizen.phone.countryCode,
+            number: updatedCaseWrapper.citizen.phone.number,
+          }
+        : getDefaultPhoneValue(),
       description: updatedCaseWrapper.case.description,
       domainId: updatedCaseWrapper.case.domain?.id || null,
       competent: updatedCaseWrapper.case.competent,
@@ -323,20 +342,25 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   // Do not update values that need a form submit
                   initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                   caseId: control._defaultValues.caseId || targetedCase.id,
+                  email: control._defaultValues.email || citizen.email,
                   genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
-                  address: {
-                    street: control._defaultValues.address?.street || citizen.address.street,
-                    postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
-                    city: control._defaultValues.address?.city || citizen.address.city,
-                    subdivision: undefined as unknown as string,
-                    countryCode: undefined as unknown as string,
-                  },
-                  phone: {
-                    phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
-                    callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
-                    countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
-                    number: control._defaultValues.phone?.number || citizen.phone.number,
-                  },
+                  address: citizen.address
+                    ? {
+                        street: control._defaultValues.address?.street || citizen.address.street,
+                        postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
+                        city: control._defaultValues.address?.city || citizen.address.city,
+                        subdivision: undefined as unknown as string,
+                        countryCode: undefined as unknown as string,
+                      }
+                    : null,
+                  phone: citizen.phone
+                    ? {
+                        phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
+                        callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
+                        countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
+                        number: control._defaultValues.phone?.number || citizen.phone.number,
+                      }
+                    : null,
                   description: control._defaultValues.description || targetedCase.description,
                   domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                   competent: control._defaultValues.competent || targetedCase.competent,
@@ -417,20 +441,40 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
+                    email: control._defaultValues.email || citizen.email,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
-                    address: {
-                      street: control._defaultValues.address?.street || citizen.address.street,
-                      postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
-                      city: control._defaultValues.address?.city || citizen.address.city,
-                      subdivision: undefined as unknown as string,
-                      countryCode: undefined as unknown as string,
-                    },
-                    phone: {
-                      phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
-                      callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
-                      countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
-                      number: control._defaultValues.phone?.number || citizen.phone.number,
-                    },
+                    address: control._defaultValues.address
+                      ? {
+                          street: control._defaultValues.address.street || '',
+                          postalCode: control._defaultValues.address.postalCode || '',
+                          city: control._defaultValues.address.city || '',
+                          subdivision: undefined as unknown as string,
+                          countryCode: undefined as unknown as string,
+                        }
+                      : citizen.address
+                      ? {
+                          street: citizen.address.street,
+                          postalCode: citizen.address.postalCode,
+                          city: citizen.address.city,
+                          subdivision: undefined as unknown as string,
+                          countryCode: undefined as unknown as string,
+                        }
+                      : null,
+                    phone: control._defaultValues.phone
+                      ? {
+                          phoneType: control._defaultValues.phone.phoneType as PhoneTypeSchemaType,
+                          callingCode: control._defaultValues.phone.callingCode as string,
+                          countryCode: control._defaultValues.phone.countryCode as string,
+                          number: control._defaultValues.phone.number as string,
+                        }
+                      : citizen.phone
+                      ? {
+                          phoneType: citizen.phone.phoneType,
+                          callingCode: citizen.phone.callingCode,
+                          countryCode: citizen.phone.countryCode,
+                          number: citizen.phone.number,
+                        }
+                      : getDefaultPhoneValue(),
                     description: control._defaultValues.description || targetedCase.description,
                     domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                     competent: control._defaultValues.competent || targetedCase.competent,
@@ -661,12 +705,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       </Grid>
                       <Grid item xs={12} md={8}>
                         <TextField
-                          inputProps={{
-                            readOnly: true,
-                          }}
                           type="email"
                           label="Email"
-                          value={citizen.email || '-'}
+                          {...register('email')}
+                          error={!!errors.email}
+                          helperText={errors?.email?.message}
                           fullWidth
                         />
                       </Grid>
@@ -702,12 +745,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       </Grid>
                       <Grid item xs={12}>
                         <PhoneField
-                          initialPhoneNumber={{
-                            phoneType: citizen.phone.phoneType,
-                            callingCode: citizen.phone.callingCode,
-                            countryCode: citizen.phone.countryCode,
-                            number: citizen.phone.number,
-                          }}
+                          initialPhoneNumber={control._defaultValues.phone ? (control._defaultValues.phone as PhoneInputSchemaType) : undefined}
                           onGlobalChange={(phoneNumber) => {
                             setValue('phone', phoneNumber, {
                               // shouldValidate: true,
@@ -960,6 +998,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
+                      email: control._formValues.email,
                       genderIdentity: control._formValues.genderIdentity,
                       address: {
                         street: control._formValues.address.street,

@@ -195,23 +195,27 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: null, // This can set by the agent
-            address: {
-              create: {
-                street: input.address.street,
-                city: input.address.city,
-                postalCode: input.address.postalCode,
-                countryCode: input.address.countryCode,
-                subdivision: input.address.subdivision,
-              },
-            },
-            phone: {
-              create: {
-                phoneType: input.phone.phoneType,
-                callingCode: input.phone.callingCode,
-                countryCode: input.phone.countryCode,
-                number: input.phone.number,
-              },
-            },
+            address: input.address
+              ? {
+                  create: {
+                    street: input.address.street,
+                    city: input.address.city,
+                    postalCode: input.address.postalCode,
+                    countryCode: input.address.countryCode,
+                    subdivision: input.address.subdivision,
+                  },
+                }
+              : undefined,
+            phone: input.phone
+              ? {
+                  create: {
+                    phoneType: input.phone.phoneType,
+                    callingCode: input.phone.callingCode,
+                    countryCode: input.phone.countryCode,
+                    number: input.phone.number,
+                  },
+                }
+              : undefined,
           },
         },
         authority: {
@@ -345,6 +349,10 @@ export const caseRouter = router({
       }
     }
 
+    // No `deleteIfExists` so doing the following chaining "read + write" (if no longer expected, delete) (ref: https://github.com/prisma/prisma/issues/9460)
+    const deleteCitizenAddress: boolean = !!targetedCase.citizen.addressId && !input.address;
+    const deleteCitizenPhone: boolean = !!targetedCase.citizen.phoneId && !input.phone;
+
     const updatedCase = await prisma.case.update({
       where: {
         id: input.caseId,
@@ -380,23 +388,47 @@ export const caseRouter = router({
         },
         citizen: {
           update: {
+            email: input.email,
             genderIdentity: input.genderIdentity,
             address: {
-              update: {
-                street: input.address.street,
-                city: input.address.city,
-                postalCode: input.address.postalCode,
-                countryCode: input.address.countryCode,
-                subdivision: input.address.subdivision,
-              },
+              delete: deleteCitizenAddress,
+              upsert: input.address
+                ? {
+                    create: {
+                      street: input.address.street,
+                      city: input.address.city,
+                      postalCode: input.address.postalCode,
+                      countryCode: input.address.countryCode,
+                      subdivision: input.address.subdivision,
+                    },
+                    update: {
+                      street: input.address.street,
+                      city: input.address.city,
+                      postalCode: input.address.postalCode,
+                      countryCode: input.address.countryCode,
+                      subdivision: input.address.subdivision,
+                    },
+                  }
+                : undefined,
             },
             phone: {
-              update: {
-                phoneType: input.phone.phoneType,
-                callingCode: input.phone.callingCode,
-                countryCode: input.phone.countryCode,
-                number: input.phone.number,
-              },
+              delete: deleteCitizenPhone,
+              upsert: input.phone
+                ? {
+                    create: {
+                      phoneType: input.phone.phoneType,
+                      callingCode: input.phone.callingCode,
+                      countryCode: input.phone.countryCode,
+                      number: input.phone.number,
+                    },
+                    update: {
+                      phoneType: input.phone.phoneType,
+                      callingCode: input.phone.callingCode,
+                      countryCode: input.phone.countryCode,
+                      number: input.phone.number,
+                    },
+                  }
+                : undefined,
             },
           },
         },

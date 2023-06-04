@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Citizen" ALTER COLUMN "addressId" DROP NOT NULL,
+ALTER COLUMN "phoneId" DROP NOT NULL;

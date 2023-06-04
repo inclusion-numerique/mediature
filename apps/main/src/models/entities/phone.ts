@@ -66,3 +66,16 @@ export const PhoneInputSchema = z
     }
   });
 export type PhoneInputSchemaType = z.infer<typeof PhoneInputSchema>;
+
+export function emptyPhonetoNullPreprocessor(initialValidation: z.ZodNullable<typeof PhoneInputSchema>) {
+  return z.preprocess((value) => {
+    // Type is not propagated to this callback
+    const addressValue = value as PhoneInputSchemaType | null;
+
+    if (addressValue && (addressValue.number === '' || addressValue.number === 'invalid-')) {
+      return null;
+    }
+
+    return value;
+  }, initialValidation);
+}

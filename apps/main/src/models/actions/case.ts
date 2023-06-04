@@ -1,7 +1,7 @@
 import z from 'zod';
 
 import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
-import { AddressInputSchema } from '@mediature/main/src/models/entities/address';
+import { AddressInputSchema, emptyAddresstoNullPreprocessor } from '@mediature/main/src/models/entities/address';
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentInputSchema, AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchema } from '@mediature/main/src/models/entities/authority';
@@ -13,18 +13,19 @@ import {
   incompleteCaseSchema,
 } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
+import { emptyStringtoNullPreprocessor } from '@mediature/main/src/models/entities/common';
 import { EditorStateInputSchema } from '@mediature/main/src/models/entities/lexical';
-import { PhoneInputSchema } from '@mediature/main/src/models/entities/phone';
+import { PhoneInputSchema, emptyPhonetoNullPreprocessor } from '@mediature/main/src/models/entities/phone';
 
 export const requestCaseAttachmentsMax = 10;
 export const incompleteRequestCaseSchema = z
   .object({
     authorityId: incompleteCaseSchema.shape.authorityId,
-    email: CitizenSchema.shape.email,
+    email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
-    address: AddressInputSchema,
-    phone: PhoneInputSchema,
+    address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
+    phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
     gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
     description: incompleteCaseSchema.shape.description,
@@ -34,6 +35,13 @@ export const incompleteRequestCaseSchema = z
   .strict();
 export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, ctx) => {
   if (data) {
+    if (data.email === null && data.address === null && data.phone === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone`,
+      });
+    }
+
     if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -52,9 +60,10 @@ export const incompleteUpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
+    email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     genderIdentity: CitizenSchema.shape.genderIdentity,
-    address: AddressInputSchema,
-    phone: PhoneInputSchema,
+    address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
+    phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     description: incompleteCaseSchema.shape.description,
     domainId: z.string().uuid().nullable(),
     competent: incompleteCaseSchema.shape.competent,
@@ -72,6 +81,13 @@ export const incompleteUpdateCaseSchema = z
   .strict();
 export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ctx) => {
   if (data) {
+    if (data.email === null && data.address === null && data.phone === null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone`,
+      });
+    }
+
     if (data.competent === true && data.competentThirdPartyId !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

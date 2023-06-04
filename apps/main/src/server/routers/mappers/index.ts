@@ -201,7 +201,7 @@ export function casePrismaToModel(
   };
 }
 
-export function citizenPrismaToModel(citizen: Citizen & { address: Address; phone: Phone }): CitizenSchemaType {
+export function citizenPrismaToModel(citizen: Citizen & { address: Address | null; phone: Phone | null }): CitizenSchemaType {
   return {
     id: citizen.id,
     email: citizen.email,
