@@ -83,7 +83,11 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
 
           {Object.keys(validationErrors).length > 0 && (
             <Grid item xs={12} sx={{ py: 2 }}>
-              <Alert severity="error">{t('components.BaseForm.form_contains_errors', { count: Object.keys(validationErrors).length })}</Alert>
+              <Alert severity="error">
+                {validationErrors[''] !== undefined
+                  ? (validationErrors['']?.message as string)
+                  : t('components.BaseForm.form_contains_errors', { count: Object.keys(validationErrors).length })}
+              </Alert>
             </Grid>
           )}
 
