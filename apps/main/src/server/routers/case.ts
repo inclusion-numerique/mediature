@@ -40,6 +40,9 @@ import {
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
+import { CreateCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
+import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
+import { createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
@@ -60,7 +63,6 @@ import { privateProcedure, publicProcedure, router } from '@mediature/main/src/s
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
-import { mailjetClient } from '@mediature/main/src/utils/mailjet';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
@@ -253,8 +255,17 @@ export const caseRouter = router({
 
     const { t } = useServerTranslation('common');
 
-    // TODO: must be in a queue as for the email sending?
-    await mailjetClient.createInboundEmail(getCaseEmail(t, newCase.humanId.toString()));
+    const bossClient = await getBossClientInstance();
+    await bossClient.send(
+      createCaseInboundEmailTopic,
+      CreateCaseInboundEmailDataSchema.parse({
+        caseId: newCase.id,
+      }),
+      {
+        retryLimit: 50,
+        retryBackoff: true,
+      }
+    );
 
     // If an email has been specified, notify the user of the case information
     if (!!newCase.citizen.email) {
