@@ -38,6 +38,9 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
       const submitChain = props.handleSubmit(
         async (input: FormSchemaType) => {
           try {
+            // Validation has passed, reset validation errors
+            setValidationErrors({});
+
             await props.onSubmit(input);
 
             setOnSubmitError(null);
