@@ -207,6 +207,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       initiatedFrom: updatedCaseWrapper.case.initiatedFrom,
       close: !!updatedCaseWrapper.case.closedAt,
       status: updatedCaseWrapper.case.status,
+      genderIdentity: updatedCaseWrapper.citizen.genderIdentity,
       address: {
         street: updatedCaseWrapper.citizen.address.street,
         city: updatedCaseWrapper.citizen.address.city,
