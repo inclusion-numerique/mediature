@@ -48,6 +48,15 @@ function createCustomTextMaskInput(numberMask: string) {
   });
 }
 
+export function getDefaultPhoneValue(): PhoneInputSchemaType {
+  return {
+    phoneType: PhoneTypeSchema.Values.UNSPECIFIED,
+    callingCode: '+33',
+    countryCode: 'FR',
+    number: '',
+  };
+}
+
 // Set the PhoneField as customizable as TextField can be except for props we need
 export interface PhoneFieldProps extends Omit<StandardTextFieldProps, 'value' | 'InputProps' | 'placeholder' | 'onChange'> {
   initialPhoneNumber?: PhoneInputSchemaType;
@@ -87,8 +96,12 @@ export function PhoneField({ onGlobalChange, initialPhoneNumber, ...props }: Pho
       // It's fine since at the validation time it would say the number is invalid.
     } catch (err) {
       // If not a valid phone number yet we still give something to the parent that looks like a number for debug
-      // but we make sure it's fully invalid.
-      e164Number = `invalid-${numberFormattedValue.replace(/\D/g, '')}`;
+      // but we make sure it's fully invalid except in the case if was empty
+      if (numberFormattedValue === '') {
+        e164Number = '';
+      } else {
+        e164Number = `invalid-${numberFormattedValue.replace(/\D/g, '')}`;
+      }
     }
 
     onGlobalChange({

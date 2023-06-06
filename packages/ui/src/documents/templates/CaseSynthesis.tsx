@@ -74,23 +74,29 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
         <View style={styles.gridItem}>
           <Text style={styles.label}>Adresse</Text>
           <Text>
-            {addressFormatter.format({
-              street: props.citizen.address.street,
-              city: props.citizen.address.city,
-              postcode: props.citizen.address.postalCode,
-              state: props.citizen.address.subdivision,
-              countryCode: props.citizen.address.countryCode,
-            })}
+            {props.citizen.address
+              ? addressFormatter.format({
+                  street: props.citizen.address.street,
+                  city: props.citizen.address.city,
+                  postcode: props.citizen.address.postalCode,
+                  state: props.citizen.address.subdivision,
+                  countryCode: props.citizen.address.countryCode,
+                })
+              : '-'}
           </Text>
         </View>
         <View style={styles.gridItem}>
           <Text style={styles.label}>Téléphone</Text>
-          <Link
-            src={phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.RFC3966)}
-            style={styles.link}
-          >
-            {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL)}
-          </Link>
+          {!!props.citizen.phone ? (
+            <Link
+              src={phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.RFC3966)}
+              style={styles.link}
+            >
+              {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL)}
+            </Link>
+          ) : (
+            <Text>-</Text>
+          )}
         </View>
       </View>
       <Text style={styles.h2}>Demande</Text>

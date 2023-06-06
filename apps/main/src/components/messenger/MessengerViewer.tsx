@@ -115,7 +115,7 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
           <ContextualMessengerSender
             caseId={caseId}
             eventEmitter={senderModalEventEmitter}
-            prefillRecipients={message.to}
+            prefillRecipients={[message.from]}
             prefillSubject={message.subject}
           />
           <Button

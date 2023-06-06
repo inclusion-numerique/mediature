@@ -60,20 +60,24 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
                 <li>
                   {formatListHeader('Nom :')} {props.submittedRequestData.lastname}
                 </li>
-                <li>
-                  {formatListHeader('Adresse :')}{' '}
-                  {addressFormatter.format({
-                    street: props.submittedRequestData.address.street,
-                    city: props.submittedRequestData.address.city,
-                    postcode: props.submittedRequestData.address.postalCode,
-                    state: props.submittedRequestData.address.subdivision,
-                    countryCode: props.submittedRequestData.address.countryCode,
-                  })}
-                </li>
-                <li>
-                  {formatListHeader('Téléphone :')}{' '}
-                  {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.submittedRequestData.phone), PhoneNumberFormat.NATIONAL)}
-                </li>
+                {!!props.submittedRequestData.address && (
+                  <li>
+                    {formatListHeader('Adresse :')}{' '}
+                    {addressFormatter.format({
+                      street: props.submittedRequestData.address.street,
+                      city: props.submittedRequestData.address.city,
+                      postcode: props.submittedRequestData.address.postalCode,
+                      state: props.submittedRequestData.address.subdivision,
+                      countryCode: props.submittedRequestData.address.countryCode,
+                    })}
+                  </li>
+                )}
+                {!!props.submittedRequestData.phone && (
+                  <li>
+                    {formatListHeader('Téléphone :')}{' '}
+                    {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.submittedRequestData.phone), PhoneNumberFormat.NATIONAL)}
+                  </li>
+                )}
                 <li>
                   <>
                     {formatListHeader('Premier recours déjà effectué :')}{' '}

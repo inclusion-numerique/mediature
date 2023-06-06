@@ -131,13 +131,15 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               Adresse :
             </Typography>
             <Typography variant="body1">
-              {addressFormatter.format({
-                street: props.citizen.address.street,
-                city: props.citizen.address.city,
-                postcode: props.citizen.address.postalCode,
-                state: props.citizen.address.subdivision,
-                countryCode: props.citizen.address.countryCode,
-              })}
+              {props.citizen.address
+                ? addressFormatter.format({
+                    street: props.citizen.address.street,
+                    city: props.citizen.address.city,
+                    postcode: props.citizen.address.postalCode,
+                    state: props.citizen.address.subdivision,
+                    countryCode: props.citizen.address.countryCode,
+                  })
+                : '-'}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -145,7 +147,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               Téléphone :
             </Typography>
             <Typography variant="body1">
-              {phoneNumberUtil.format(convertModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL)}
+              {props.citizen.phone ? phoneNumberUtil.format(convertModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL) : '-'}
             </Typography>
           </Grid>
           <Grid item xs={12}>

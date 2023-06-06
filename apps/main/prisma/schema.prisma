@@ -185,15 +185,15 @@ model Citizen {
   genderIdentity CitizenGenderIdentity?
   firstname      String
   lastname       String
-  addressId      String                 @unique @db.Uuid
-  phoneId        String                 @unique @db.Uuid
+  addressId      String?                @unique @db.Uuid
+  phoneId        String?                @unique @db.Uuid
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   deletedAt DateTime?
 
-  address       Address         @relation(fields: [addressId], references: [id], onDelete: Cascade)
-  phone         Phone           @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  address       Address?        @relation(fields: [addressId], references: [id])
+  phone         Phone?          @relation(fields: [phoneId], references: [id])
   IdentityStamp IdentityStamp[]
   Case          Case?
 }

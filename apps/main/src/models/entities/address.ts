@@ -30,3 +30,16 @@ export const AddressInputSchema = z
   })
   .strict();
 export type AddressInputSchemaType = z.input<typeof AddressInputSchema>;
+
+export function emptyAddresstoNullPreprocessor(initialValidation: z.ZodNullable<typeof AddressInputSchema>) {
+  return z.preprocess((value) => {
+    // Type is not propagated to this callback
+    const addressValue = value as AddressInputSchemaType | null;
+
+    if (addressValue && addressValue.street === '' && addressValue.city === '' && addressValue.postalCode === '') {
+      return null;
+    }
+
+    return value;
+  }, initialValidation);
+}

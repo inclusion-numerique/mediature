@@ -1,43 +1,13 @@
-import { AttachmentStatus } from '@prisma/client';
-import subDays from 'date-fns/subDays';
+import PgBoss from 'pg-boss';
 
 import { prisma } from '@mediature/main/prisma';
 import { mailer } from '@mediature/main/src/emails/mailer';
 import { getDateStartingToBeSoon } from '@mediature/main/src/utils/business/reminder';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-export async function cleanPendingUploads() {
-  console.log('starting the job of cleaning pending uploads');
+export const sendAgentsActivitySumUpTopic = 'send-agents-activity-sum-up';
 
-  const deletedAttachments = await prisma.attachment.deleteMany({
-    where: {
-      createdAt: {
-        // Wait 7 days just for temporary file to be seen with valid link but also investigated
-        lte: subDays(new Date(), 7),
-      },
-      status: {
-        not: AttachmentStatus.VALID,
-      },
-      Authority: {
-        is: null,
-      },
-      AttachmentsOnCases: {
-        is: null,
-      },
-      AttachmentsOnCaseNotes: {
-        is: null,
-      },
-      AttachmentsOnMessages: {
-        // Look for no relation
-        none: {},
-      },
-    },
-  });
-
-  console.log(`the job of cleaning pending uploads has completed and removed ${deletedAttachments.count} attachments`);
-}
-
-export async function sendAgentsActivitySumUp() {
+export async function sendAgentsActivitySumUp(job: PgBoss.Job<void>) {
   if (process.env.APP_MODE !== 'prod') {
     console.log('skip the job of sending an activity sum up to all agents to not pollute their inboxes since not in production');
     return;

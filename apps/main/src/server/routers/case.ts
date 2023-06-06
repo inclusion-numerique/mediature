@@ -40,6 +40,9 @@ import {
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
+import { CreateCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
+import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
+import { createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
@@ -60,7 +63,6 @@ import { privateProcedure, publicProcedure, router } from '@mediature/main/src/s
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
-import { mailjetClient } from '@mediature/main/src/utils/mailjet';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
@@ -195,23 +197,27 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: null, // This can set by the agent
-            address: {
-              create: {
-                street: input.address.street,
-                city: input.address.city,
-                postalCode: input.address.postalCode,
-                countryCode: input.address.countryCode,
-                subdivision: input.address.subdivision,
-              },
-            },
-            phone: {
-              create: {
-                phoneType: input.phone.phoneType,
-                callingCode: input.phone.callingCode,
-                countryCode: input.phone.countryCode,
-                number: input.phone.number,
-              },
-            },
+            address: input.address
+              ? {
+                  create: {
+                    street: input.address.street,
+                    city: input.address.city,
+                    postalCode: input.address.postalCode,
+                    countryCode: input.address.countryCode,
+                    subdivision: input.address.subdivision,
+                  },
+                }
+              : undefined,
+            phone: input.phone
+              ? {
+                  create: {
+                    phoneType: input.phone.phoneType,
+                    callingCode: input.phone.callingCode,
+                    countryCode: input.phone.countryCode,
+                    number: input.phone.number,
+                  },
+                }
+              : undefined,
           },
         },
         authority: {
@@ -249,8 +255,17 @@ export const caseRouter = router({
 
     const { t } = useServerTranslation('common');
 
-    // TODO: must be in a queue as for the email sending?
-    await mailjetClient.createInboundEmail(getCaseEmail(t, newCase.humanId.toString()));
+    const bossClient = await getBossClientInstance();
+    await bossClient.send(
+      createCaseInboundEmailTopic,
+      CreateCaseInboundEmailDataSchema.parse({
+        caseId: newCase.id,
+      }),
+      {
+        retryLimit: 50,
+        retryBackoff: true,
+      }
+    );
 
     // If an email has been specified, notify the user of the case information
     if (!!newCase.citizen.email) {
@@ -345,6 +360,10 @@ export const caseRouter = router({
       }
     }
 
+    // No `deleteIfExists` so doing the following chaining "read + write" (if no longer expected, delete) (ref: https://github.com/prisma/prisma/issues/9460)
+    const deleteCitizenAddress: boolean = !!targetedCase.citizen.addressId && !input.address;
+    const deleteCitizenPhone: boolean = !!targetedCase.citizen.phoneId && !input.phone;
+
     const updatedCase = await prisma.case.update({
       where: {
         id: input.caseId,
@@ -380,23 +399,47 @@ export const caseRouter = router({
         },
         citizen: {
           update: {
+            email: input.email,
             genderIdentity: input.genderIdentity,
             address: {
-              update: {
-                street: input.address.street,
-                city: input.address.city,
-                postalCode: input.address.postalCode,
-                countryCode: input.address.countryCode,
-                subdivision: input.address.subdivision,
-              },
+              delete: deleteCitizenAddress,
+              upsert: input.address
+                ? {
+                    create: {
+                      street: input.address.street,
+                      city: input.address.city,
+                      postalCode: input.address.postalCode,
+                      countryCode: input.address.countryCode,
+                      subdivision: input.address.subdivision,
+                    },
+                    update: {
+                      street: input.address.street,
+                      city: input.address.city,
+                      postalCode: input.address.postalCode,
+                      countryCode: input.address.countryCode,
+                      subdivision: input.address.subdivision,
+                    },
+                  }
+                : undefined,
             },
             phone: {
-              update: {
-                phoneType: input.phone.phoneType,
-                callingCode: input.phone.callingCode,
-                countryCode: input.phone.countryCode,
-                number: input.phone.number,
-              },
+              delete: deleteCitizenPhone,
+              upsert: input.phone
+                ? {
+                    create: {
+                      phoneType: input.phone.phoneType,
+                      callingCode: input.phone.callingCode,
+                      countryCode: input.phone.countryCode,
+                      number: input.phone.number,
+                    },
+                    update: {
+                      phoneType: input.phone.phoneType,
+                      callingCode: input.phone.callingCode,
+                      countryCode: input.phone.countryCode,
+                      number: input.phone.number,
+                    },
+                  }
+                : undefined,
             },
           },
         },
