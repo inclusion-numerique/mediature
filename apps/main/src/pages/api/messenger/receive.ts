@@ -4,8 +4,31 @@ import { ProcessInboundMessageDataSchema } from '@mediature/main/src/models/jobs
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
 import { processInboundMessageTopic } from '@mediature/main/src/server/queueing/workers/process-inbound-message';
 
+export function isAuthenticated(authorizationHeader?: string): boolean {
+  if (!authorizationHeader) {
+    return false;
+  }
+
+  const encodedCredentials = authorizationHeader.replace('Basic ', '');
+  const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString('utf-8');
+  const [username, password] = decodedCredentials.split(':');
+
+  if (username === (process.env.MAILJET_WEBHOOK_AUTH_USERNAME || '') && password === (process.env.MAILJET_WEBHOOK_AUTH_PASSWORD || '')) {
+    return true;
+  }
+
+  return false;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: check `MAILJET_WEBHOOK_AUTH_USERNAME` and `MAILJET_WEBHOOK_AUTH_PASSWORD` for Mailjet authentication
+  // Check the request comes from a valid partner (those credentials has been set at the webhook URL set up)
+  if (!isAuthenticated(req.headers.authorization)) {
+    console.log('someone is trying to trigger the message webhook without being authenticated');
+
+    res.status(401).json({ error: true, message: `invalid authentication credentials` });
+    res.end();
+    return;
+  }
 
   try {
     // [WORKAROUND] Between tests and real cases sometimes it's not an object,

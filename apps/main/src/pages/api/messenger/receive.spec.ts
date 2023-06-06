@@ -15,10 +15,41 @@ const describeWhenManual = process.env.TEST_MANUAL === 'true' ? describe : descr
 const itWhenManual = process.env.TEST_MANUAL === 'true' ? it : it.skip;
 
 describeWhenManual('receive() handler', () => {
+  let encodedCredentials: string;
+
+  beforeAll(async () => {
+    encodedCredentials = Buffer.from(`${process.env.MAILJET_WEBHOOK_AUTH_USERNAME}:${process.env.MAILJET_WEBHOOK_AUTH_PASSWORD}`).toString('base64');
+  }, 30 * 1000);
+
+  it('not passing the authentication guard', async () => {
+    const wrongEncodedCredentials = Buffer.from(`aaa:bbb`).toString('base64');
+
+    await testApiHandler({
+      handler,
+      requestPatcher: (req) =>
+        (req.headers = {
+          'content-type': 'application/json',
+          authorization: `Basic ${wrongEncodedCredentials}`,
+        }),
+      test: async ({ fetch }) => {
+        const res = await fetch({
+          method: 'POST',
+          body: '',
+        });
+
+        expect(res.status).toBe(401);
+      },
+    });
+  });
+
   it('payload mock from Mailjet documentation (manual local test that requires launched application)', async () => {
     await testApiHandler({
       handler,
-      requestPatcher: (req) => (req.headers = {}),
+      requestPatcher: (req) =>
+        (req.headers = {
+          'content-type': 'application/json',
+          authorization: `Basic ${encodedCredentials}`,
+        }),
       test: async ({ fetch }) => {
         // Get existing case to format the email
         const targetedCase = await prisma.case.findFirstOrThrow({
@@ -35,9 +66,6 @@ describeWhenManual('receive() handler', () => {
 
         const res = await fetch({
           method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
           body: JSON.stringify(deepCopyPayload),
         });
 
@@ -52,7 +80,11 @@ describeWhenManual('receive() handler', () => {
   it('real payload we saved (manual local test that requires launched application)', async () => {
     await testApiHandler({
       handler,
-      requestPatcher: (req) => (req.headers = {}),
+      requestPatcher: (req) =>
+        (req.headers = {
+          'content-type': 'application/json',
+          authorization: `Basic ${encodedCredentials}`,
+        }),
       test: async ({ fetch }) => {
         // Get existing case to format the email
         const targetedCase = await prisma.case.findFirstOrThrow({
@@ -71,9 +103,6 @@ describeWhenManual('receive() handler', () => {
 
         const res = await fetch({
           method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
           body: JSON.stringify(deepCopyPayload),
         });
 
