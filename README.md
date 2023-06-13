@@ -1,5 +1,52 @@
 # Mediature
 
+A french national platform allowing citizens to request mediation for administrative issues. It provides to cities and regions an easy way to process and coordinate all the requests they receive by leveraging technology. It's an helpdesk, but dedicated to their experience!
+
+- The project is available on: https://www.mediateur-public.fr _(#production)_
+- The "test environment" with meaningless data is on: https://mediature.incubateur.net _(#development)_
+
+All the states of the application are described visually on a Storybook. It renders fake data but allows you to discover the project without dealing with real flows: https://dev--63755f407b1dc7a43c637c1d.chromatic.com
+
+## Usage
+
+This monorepository is managed with `pnpm`, have it installed and run:
+
+```
+pnpm install
+```
+
+Then you can have a look at the `Makefile` file to see common available commands.
+
+For example to start developing, launch the application and the Storybook with:
+
+```
+make serve
+```
+
+If you want to only launch one of the two:
+
+- Application: `cd apps/main && pnpm dev`
+- Storybook: `cd apps/docs && pnpm dev`
+
+**Note the application needs some tools to run locally:**
+
+- the database
+- a mail catcher to prevent using a real SMTP
+
+The easiest way to do so is by using `docker-compose`. In another terminal just set up all tools:
+
+```
+docker-compose up
+```
+
+And when calling it a day you can stop those containers with:
+
+```
+docker-compose down
+```
+
+That's it! But still, we advise you to read the documentation below to better understand how the project is structured.
+
 ## Technical setup
 
 ### AlwaysData
