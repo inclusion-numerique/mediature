@@ -525,9 +525,9 @@ view CaseAnalytics {
   administrativeCourtNext      Boolean?
   citizenHasEmail              Boolean
   citizenGenderIdentity        CitizenGenderIdentity?
-  citizenCity                  String
-  citizenPostalCode            String
-  citizenCountryCode           String
+  citizenCity                  String?
+  citizenPostalCode            String?
+  citizenCountryCode           String?
 }
 
 /// @@Gen.model(hide: true)
