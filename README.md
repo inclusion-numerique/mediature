@@ -517,3 +517,7 @@ In this repository you can use `./apps/main/format-legal-documents.sh` to transf
 
 - No matter the name of the file it will convert it (though 1 per folder)
 - It allows to collaborate on Word-like software (mainly used by legal people)
+
+## Technical architecture document
+
+It has been written into [TECHNICAL_ARCHITECTURE_DOCUMENT.md](./TECHNICAL_ARCHITECTURE_DOCUMENT.md).
