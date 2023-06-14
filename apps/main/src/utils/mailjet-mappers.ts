@@ -1,3 +1,4 @@
+import createCaseInsensitiveObject from 'case-insensitive-object';
 import contentDisposition from 'content-disposition';
 import contentType from 'content-type';
 import emailAddressUtil from 'email-addresses';
@@ -93,7 +94,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   const toContacts: ContactInputSchemaType[] = [];
 
   for (const recipientsHeaderKey of ['To', 'Cc', 'Bcc']) {
-    const recipientsHeader = headers.get(recipientsHeaderKey);
+    const recipientsHeader = headers[recipientsHeaderKey];
 
     if (recipientsHeader) {
       const results = emailAddressUtil.parseAddressList(recipientsHeader);
@@ -147,7 +148,18 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   let htmlContentToProcess: string | null = null;
 
   // Take the HTML part in priority and text as fallback
-  const htmlPart = decodedPayload.Parts.find((part) => part.ContentRef === 'Html-part');
+  const htmlPart = decodedPayload.Parts.find((part) => {
+    // We did not think about that but some clients send multiple HTML parts (`Html-part`, `Html-part2`...)
+    // We focus on extracting the one being UTF-8 since others seem always empty about human content (with often the charset `us-ascii`)
+    if (part.ContentRef && part.ContentRef.startsWith('Html-part')) {
+      const partHeaders = convertToCompatibleHeaders(part.Headers);
+      const contentTypeObject = contentType.parse(partHeaders['Content-Type']);
+
+      return contentTypeObject.parameters?.charset?.toLowerCase() === 'utf-8';
+    }
+
+    return false;
+  });
   if (htmlPart && htmlPart.ContentRef) {
     const htmlPartContent = decodedPayload[htmlPart.ContentRef];
 
@@ -156,7 +168,11 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
 
       htmlContentToProcess = cleanHtmlPartContent;
     } else {
-      const textPart = decodedPayload.Parts.find((part) => part.ContentRef === 'Text-part');
+      const textPart = decodedPayload.Parts.find((part) => {
+        // There should not have multiple `Text-part` with different charset but just in case
+        // take the first one since we had the surprize for `Html-part`
+        return part.ContentRef && part.ContentRef.startsWith('Text-part');
+      });
 
       if (textPart && textPart.ContentRef) {
         const textPartContent = decodedPayload[textPart.ContentRef];
@@ -186,14 +202,14 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     // Mailjet will always forward attachments in the base64 format
     const partHeaders = convertToCompatibleHeaders(part.Headers);
 
-    const contentTypeHeader = partHeaders.get('Content-Type');
-    const contentDispositionHeader = partHeaders.get('Content-Disposition');
+    const contentTypeHeader = partHeaders['Content-Type'];
+    const contentDispositionHeader = partHeaders['Content-Disposition'];
 
     if (
       part.ContentRef &&
       contentTypeHeader &&
       contentDispositionHeader &&
-      partHeaders.get('Content-Transfer-Encoding') === 'base64' &&
+      partHeaders['Content-Transfer-Encoding'] === 'base64' &&
       typeof decodedPayload[part.ContentRef] === 'string'
     ) {
       const contentTypeObject = contentType.parse(contentTypeHeader);
@@ -202,7 +218,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
       const filename = contentDispositionObject.parameters.filename || undefined;
 
       // Remove chevrons to ease post-process since it's formatted `<XXX>`
-      const contentIdHeader = partHeaders.get('Content-Id');
+      const contentIdHeader = partHeaders['Content-Id'];
       const cleanedContentId: string | undefined = contentIdHeader ? contentIdHeader.replace(/<|>/g, '') : undefined;
 
       attachments.push({
@@ -226,14 +242,19 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   };
 }
 
-export function convertToCompatibleHeaders(headers: Record<string, string | string[]>): Headers {
-  return convertHeadersMapToHeaders(removeMailjetTabulationOnHeaders(stripHeadersToHaveStringAsValues(headers)));
+export function convertToCompatibleHeaders(headers: Record<string, string | string[]>) {
+  return convertHeadersToCaseInsensitiveHeaders(removeMailjetTabulationOnHeaders(stripHeadersToHaveStringAsValues(headers)));
 }
 
 // It makes getting headers not case-sensitive (which is important since it depends on the email sender server)
 // (for example Outlook formats `Content-ID` instead of the expected `Content-Id` resulting in breaking if accessing as object properties)
-export function convertHeadersMapToHeaders(headers: Record<string, string | string[]>): Headers {
-  return new Headers(stripHeadersToHaveStringAsValues(headers));
+//
+// [IMPORTANT] We finally use the `case-insensitive-object` library instead of the native `Headers()` because the latter refuses some
+// unicode characters like `’` whereas some complex ones with a high unicode number pass... That's weird but ok.
+// Here the error we got:
+// `Cannot convert argument to a ByteString because the character at index 13 has a value of 8217 which is greater than 255.`
+export function convertHeadersToCaseInsensitiveHeaders(headers: Record<string, string>) {
+  return createCaseInsensitiveObject(headers);
 }
 
 // TODO: was it only inside the saved value because we stored it on the storage?
@@ -275,13 +296,13 @@ export function formatEmlFromMailetPayload(payload: ParseApiWebhookPayloadSchema
   const message = createMimeMessage();
 
   const headers = convertToCompatibleHeaders(payload.Headers);
-  message.setHeaders(Object.fromEntries(headers.entries()));
+  message.setHeaders(headers);
 
   for (const part of payload.Parts) {
     const partHeaders = convertToCompatibleHeaders(part.Headers);
 
-    const contentTypeHeader = partHeaders.get('Content-Type');
-    const contentDispositionHeader = partHeaders.get('Content-Disposition');
+    const contentTypeHeader = partHeaders['Content-Type'];
+    const contentDispositionHeader = partHeaders['Content-Disposition'];
 
     if (part.ContentRef && typeof payload[part.ContentRef] === 'string' && contentTypeHeader) {
       const typeObject = contentType.parse(contentTypeHeader);
@@ -290,7 +311,7 @@ export function formatEmlFromMailetPayload(payload: ParseApiWebhookPayloadSchema
         message.addMessage({
           contentType: contentTypeHeader,
           data: payload[part.ContentRef] as string,
-          headers: Object.fromEntries(partHeaders.entries()),
+          headers: partHeaders,
         });
       } else if (contentDispositionHeader) {
         const contentDispositionObject = contentDisposition.parse(contentDispositionHeader);
@@ -299,7 +320,7 @@ export function formatEmlFromMailetPayload(payload: ParseApiWebhookPayloadSchema
           contentType: contentTypeHeader,
           filename: contentDispositionObject.parameters.filename,
           data: payload[part.ContentRef] as string,
-          headers: Object.fromEntries(partHeaders.entries()),
+          headers: partHeaders,
           inline: contentDispositionObject.type === 'inline',
         });
       }

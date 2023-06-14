@@ -7,7 +7,11 @@ import path from 'path';
 
 import { imageB64Data } from '@mediature/main/src/fixtures/image';
 import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mailjet';
-import { decodeParseApiWebhookPayload, removeQuotedReplyFromHtmlEmail } from '@mediature/main/src/utils/mailjet-mappers';
+import {
+  convertHeadersToCaseInsensitiveHeaders,
+  decodeParseApiWebhookPayload,
+  removeQuotedReplyFromHtmlEmail,
+} from '@mediature/main/src/utils/mailjet-mappers';
 
 describe('decodeParseApiWebhookPayload()', () => {
   it('should return values with documentation example', async () => {
@@ -96,6 +100,33 @@ describe('decodeParseApiWebhookPayload()', () => {
         },
       ],
     });
+  });
+
+  it('should return values with real payload containing multiple html parts', async () => {
+    // We removed attachments even if we kept the same HTML content then above with `cid:xxxxx` image blocks (does not matter, we want to check the structure here)
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-multiple-html-parts.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.content).toStrictEqual(
+      `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola \",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"altText\":\"\",\"caption\":{\"editorState\":{\"root\":{\"children\":[],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}},\"height\":0,\"maxWidth\":500,\"showCaption\":false,\"src\":\"cid:d9ff1540-cb1a-4d03-9c39-1a403ad97ee8@EURPRD10.PROD.OUTLOOK.COM\",\"type\":\"image\",\"version\":1,\"width\":0},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Heyyy still there!?\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
+    );
+  });
+});
+
+describe('convertHeadersToCaseInsensitiveHeaders()', () => {
+  it('should get the value', () => {
+    const headers = convertHeadersToCaseInsensitiveHeaders({ 'helLo-cOntent': 'good' });
+
+    expect(headers['Hello-Content']).toBe('good');
+  });
+
+  it('should work even if passing specific unicode characters', () => {
+    // See comment of the definition to understand this
+    const headers = convertHeadersToCaseInsensitiveHeaders({ a: 'Mail de l’assistante sociale' });
+
+    expect(headers['a']).toBe('Mail de l’assistante sociale');
   });
 });
 

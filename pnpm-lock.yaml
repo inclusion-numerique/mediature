@@ -405,6 +405,9 @@ importers:
       blob-util:
         specifier: ^2.0.2
         version: 2.0.2
+      case-insensitive-object:
+        specifier: ^0.1.5
+        version: 0.1.5
       content-disposition:
         specifier: ^0.5.4
         version: 0.5.4
@@ -8453,8 +8456,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.0.11:
-    resolution: {integrity: sha512-3p+vXogcwPI9/9PgjqhJSzJsbcJUnvVyZ4rM4sQhwbXQkMjwl2j/LjI86zuYbQe9yQpKND1Yc4HPJd24225H/Q==}
+  /@storybook/client-logger@7.1.0-alpha.34:
+    resolution: {integrity: sha512-bb740Ex080V7/SgcxTVohO+aPFE0pHA4lkRAJEEKZkfluzBZrNTJzgT+THIdxHPux/EyKGHL2wS1wdREdcgfhw==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -8835,7 +8838,7 @@ packages:
     resolution: {integrity: sha512-Wojv8ljF/L/kv9Thzk5qi/cXcFoqhwi/PmxwkR4clnmik3yRL+oE60AwymXSCjGxM0MZUA4JWmMqS5GGnYi3pA==}
     dependencies:
       '@babel/types': 7.20.7
-      '@storybook/csf': 0.0.2-next.11
+      '@storybook/csf': 0.1.1-next.0
       '@storybook/types': 7.0.0-beta.41
       fs-extra: 11.1.0
       recast: 0.23.1
@@ -8879,6 +8882,11 @@ packages:
       lodash: 4.17.21
       type-fest: 2.19.0
     dev: true
+
+  /@storybook/csf@0.1.1-next.0:
+    resolution: {integrity: sha512-2M8E4CZOVW77P9lrgZZc2rcwxhNKVVykpzbcAauc3bots7xvDJMG60EasMRB/Y+cfqnSu6aaSUEVmKHTKsVJ3A==}
+    dependencies:
+      type-fest: 2.19.0
 
   /@storybook/docs-mdx@0.0.1-next.7:
     resolution: {integrity: sha512-JbgBf/EMBtx65iXtB3pOiX3818UeL9jZ+KAY241OAPqJVXjMQ5KaVOdg/57MSmd508HDIGx7CiImOMEmWwQ9/g==}
@@ -9150,7 +9158,7 @@ packages:
       '@storybook/channels': 7.0.0-beta.41
       '@storybook/client-logger': 7.0.0-beta.41
       '@storybook/core-events': 7.0.0-beta.41
-      '@storybook/csf': 0.0.2-next.11
+      '@storybook/csf': 0.1.1-next.0
       '@storybook/global': 5.0.0
       '@storybook/types': 7.0.0-beta.41
       '@types/qs': 6.9.7
@@ -9454,7 +9462,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.0.11
+      '@storybook/client-logger': 7.1.0-alpha.34
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
@@ -12187,6 +12195,10 @@ packages:
 
   /caniuse-lite@1.0.30001431:
     resolution: {integrity: sha512-zBUoFU0ZcxpvSt9IU66dXVT/3ctO1cy4y9cscs1szkPlcWb6pasYM144GqrUygUbT+k7cmUCW61cvskjcv0enQ==}
+
+  /case-insensitive-object@0.1.5:
+    resolution: {integrity: sha512-8vhj6sezC3/VQPt3sD81TKMAWkqhMfLa0PLJMHmwwvmH2z4YTKV6Kg2sAmJSsMmzO2+iTgzE29qq0x1Ru4UXMw==}
+    dev: false
 
   /case-sensitive-paths-webpack-plugin@2.4.0:
     resolution: {integrity: sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==}

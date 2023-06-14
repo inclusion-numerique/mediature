@@ -29,7 +29,7 @@ export function FeaturesPage() {
             <>
               <ul>
                 <li>Gérez tous vos dossiers depuis un seul endroit ;</li>
-                <li>Suivez leurs avancement facilement avec la date d&apos;échéance et l&apos;étape à laquelle est le dossier ;</li>
+                <li>Suivez leur avancement facilement avec la date d&apos;échéance et l&apos;étape à laquelle est le dossier ;</li>
                 <li>Complétez les dossiers grâce à des champs préremplis pour vous aider et pour aller plus vite dans la résolution du dossier.</li>
               </ul>
             </>
