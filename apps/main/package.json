@@ -88,6 +88,7 @@
     "addresscompiler": "^1.0.1",
     "bcrypt": "^5.1.0",
     "blob-util": "^2.0.2",
+    "case-insensitive-object": "^0.1.5",
     "content-disposition": "^0.5.4",
     "content-type": "^1.0.5",
     "country-data": "^0.0.31",

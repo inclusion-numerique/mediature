@@ -7,7 +7,11 @@ import path from 'path';
 
 import { imageB64Data } from '@mediature/main/src/fixtures/image';
 import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mailjet';
-import { decodeParseApiWebhookPayload, removeQuotedReplyFromHtmlEmail } from '@mediature/main/src/utils/mailjet-mappers';
+import {
+  convertHeadersToCaseInsensitiveHeaders,
+  decodeParseApiWebhookPayload,
+  removeQuotedReplyFromHtmlEmail,
+} from '@mediature/main/src/utils/mailjet-mappers';
 
 describe('decodeParseApiWebhookPayload()', () => {
   it('should return values with documentation example', async () => {
@@ -96,6 +100,21 @@ describe('decodeParseApiWebhookPayload()', () => {
         },
       ],
     });
+  });
+});
+
+describe('convertHeadersToCaseInsensitiveHeaders()', () => {
+  it('should get the value', () => {
+    const headers = convertHeadersToCaseInsensitiveHeaders({ 'helLo-cOntent': 'good' });
+
+    expect(headers['Hello-Content']).toBe('good');
+  });
+
+  it('should work even if passing specific unicode characters', () => {
+    // See comment of the definition to understand this
+    const headers = convertHeadersToCaseInsensitiveHeaders({ a: 'Mail de l’assistante sociale' });
+
+    expect(headers['a']).toBe('Mail de l’assistante sociale');
   });
 });
 
