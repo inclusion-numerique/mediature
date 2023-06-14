@@ -148,7 +148,18 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   let htmlContentToProcess: string | null = null;
 
   // Take the HTML part in priority and text as fallback
-  const htmlPart = decodedPayload.Parts.find((part) => part.ContentRef === 'Html-part');
+  const htmlPart = decodedPayload.Parts.find((part) => {
+    // We did not think about that but some clients send multiple HTML parts (`Html-part`, `Html-part2`...)
+    // We focus on extracting the one being UTF-8 since others seem always empty about human content (with often the charset `us-ascii`)
+    if (part.ContentRef && part.ContentRef.startsWith('Html-part')) {
+      const partHeaders = convertToCompatibleHeaders(part.Headers);
+      const contentTypeObject = contentType.parse(partHeaders['Content-Type']);
+
+      return contentTypeObject.parameters?.charset?.toLowerCase() === 'utf-8';
+    }
+
+    return false;
+  });
   if (htmlPart && htmlPart.ContentRef) {
     const htmlPartContent = decodedPayload[htmlPart.ContentRef];
 
@@ -157,7 +168,11 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
 
       htmlContentToProcess = cleanHtmlPartContent;
     } else {
-      const textPart = decodedPayload.Parts.find((part) => part.ContentRef === 'Text-part');
+      const textPart = decodedPayload.Parts.find((part) => {
+        // There should not have multiple `Text-part` with different charset but just in case
+        // take the first one since we had the surprize for `Html-part`
+        return part.ContentRef && part.ContentRef.startsWith('Text-part');
+      });
 
       if (textPart && textPart.ContentRef) {
         const textPartContent = decodedPayload[textPart.ContentRef];
