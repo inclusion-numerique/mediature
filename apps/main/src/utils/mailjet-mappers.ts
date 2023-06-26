@@ -145,7 +145,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     name: fromResult?.name,
   };
 
-  let htmlContentToProcess: string | null = null;
+  let lexicalContent: string | null = null;
 
   // Take the HTML part in priority and text as fallback
   const htmlPart = decodedPayload.Parts.find((part) => {
@@ -166,33 +166,43 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     if (htmlPartContent) {
       const cleanHtmlPartContent = removeQuotedReplyFromHtmlEmail(htmlPartContent, serverJsdom);
 
-      htmlContentToProcess = cleanHtmlPartContent;
-    } else {
-      const textPart = decodedPayload.Parts.find((part) => {
-        // There should not have multiple `Text-part` with different charset but just in case
-        // take the first one since we had the surprize for `Html-part`
-        return part.ContentRef && part.ContentRef.startsWith('Text-part');
-      });
-
-      if (textPart && textPart.ContentRef) {
-        const textPartContent = decodedPayload[textPart.ContentRef];
-
-        if (textPartContent) {
-          // Remove the quoted previous messages to only keep new content
-          const cleanTextPartContent = new EmailReplyParser().read(textPartContent).getVisibleText();
-
-          // First escape the text to avoid raw characters like "<, >, &"
-          const sanitizedTextContent = he.escape(cleanTextPartContent);
-
-          // Then try to infer paragraphs and set appropriate tags
-          // Inspired by https://stackoverflow.com/a/45658944/3608410
-          htmlContentToProcess = '<p>' + sanitizedTextContent.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
-        }
+      try {
+        // Make sure the HTML can be handled by Lexical before committing we do not need text part
+        lexicalContent = await inlineEditorStateFromHtml(cleanHtmlPartContent, serverJsdom);
+      } catch (error) {
+        console.warn(`cannot handle the html content but defaulting to text part if any: ${error}`);
       }
     }
   }
 
-  if (!htmlContentToProcess) {
+  // In case there is no HTML part or this one was not parsable, we try to read the text part
+  if (!lexicalContent) {
+    const textPart = decodedPayload.Parts.find((part) => {
+      // There should not have multiple `Text-part` with different charset but just in case
+      // take the first one since we had the surprize for `Html-part`
+      return part.ContentRef && part.ContentRef.startsWith('Text-part');
+    });
+
+    if (textPart && textPart.ContentRef) {
+      const textPartContent = decodedPayload[textPart.ContentRef];
+
+      if (textPartContent) {
+        // Remove the quoted previous messages to only keep new content
+        const cleanTextPartContent = new EmailReplyParser().read(textPartContent).getVisibleText();
+
+        // First escape the text to avoid raw characters like "<, >, &"
+        const sanitizedTextContent = he.escape(cleanTextPartContent);
+
+        // Then try to infer paragraphs and set appropriate tags
+        // Inspired by https://stackoverflow.com/a/45658944/3608410
+        const htmlContentToProcess = '<p>' + sanitizedTextContent.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+
+        lexicalContent = await inlineEditorStateFromHtml(htmlContentToProcess, serverJsdom);
+      }
+    }
+  }
+
+  if (!lexicalContent) {
     throw new Error('impossible to get content from this email');
   }
 
@@ -231,13 +241,11 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     }
   }
 
-  const content = await inlineEditorStateFromHtml(htmlContentToProcess, serverJsdom);
-
   return {
     from: fromContact,
     to: toContacts,
     subject: decodedPayload.Subject,
-    content: content,
+    content: lexicalContent,
     attachments: attachments,
   };
 }
