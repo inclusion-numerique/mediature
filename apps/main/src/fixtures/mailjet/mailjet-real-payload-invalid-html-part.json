@@ -1,0 +1,35 @@
+{
+  "Sender": "thomas.rame@beta.gouv.fr",
+  "Recipient": "dossier-61@mediature.incubateur.net",
+  "Date": "20230501T174932",
+  "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+  "Subject": "Re: Un médiateur vous a écrit",
+  "Headers": {
+    "Return-Path": ["<thomas.rame@beta.gouv.fr>"],
+    "Received": [
+      "from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04olkn2072.outbound.protection.outlook.com [40.92.73.72])\tby parse-in.mailjet.com (Mailjet) with ESMTPS id B7369200062\tfor <dossier-61@mediature.incubateur.net>; Mon,  1 May 2023 17:49:34 +0000 (UTC)",
+      "from GVXPR10MB5933.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:4::12) by AM7PR10MB3477.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:137::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Mon, 1 May 2023 17:49:32 +0000",
+      "from GVXPR10MB5933.EURPRD10.PROD.OUTLOOK.COM ([fe80::a80c:364e:9b16:1c2b]) by GVXPR10MB5933.EURPRD10.PROD.OUTLOOK.COM ([fe80::a80c:364e:9b16:1c2b%6]) with mapi id 15.20.6340.028; Mon, 1 May 2023 17:49:32 +0000"
+    ],
+    "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+    "To": "John de Médiature <dossier-61@mediature.incubateur.net>",
+    "Subject": "Re: Un médiateur vous a écrit",
+    "Thread-Topic": ["Un médiateur vous a écrit"],
+    "Thread-Index": ["AQHZfFVCZFfStsY1mUi4kGnM3Iz5TA=="],
+    "Date": "Mon, 1 May 2023 17:49:32 +0000",
+    "Message-ID": "<8794E766-4BC5-4D6F-AD92-E5B916438F09@outlook.com>",
+    "References": "<d704e782-6e55-91e5-f82f-9dee14160fc2@mediature.local.fr>",
+    "In-Reply-To": "<d704e782-6e55-91e5-f82f-9dee14160fc2@mediature.local.fr>",
+    "Accept-Language": ["en-GB, en-US, fr-FR"],
+    "MIME-Version": ["1.0"],
+    "Content-Language": ["en-US"],
+    "Content-Type": ["multipart/mixed;\tboundary=\"_006_8794E7664BC54D6FAD92E5B916438F09outlookcom_\""]
+  },
+  "Parts": [
+    { "Headers": { "Content-Type": ["text/plain;\tcharset=utf-8"], "Content-Transfer-Encoding": ["quoted-printable"] }, "ContentRef": "Text-part" },
+    { "Headers": { "Content-Type": ["text/html;\tcharset=utf-8"], "Content-Transfer-Encoding": ["7bit"] }, "ContentRef": "Html-part" }
+  ],
+  "Text-part": "Hola\r\n\r\n[cid:d9ff1540-cb1a-4d03-9c39-1a403ad97ee8@EURPRD10.PROD.OUTLOOK.COM]\r\n\r\nCool red one.\r\n\r\nNow PDF\r\n\r\n\r\nLalalalaa\r\n\r\nOn 1 May 2023, at 19:21, John de Médiature <dossier-61@mediature.local.fr> wrote:\r\n\r\n[logo]\r\n\r\nMédiature\r\nService public de médiation\r\nUn médiateur vous a écrit\r\n\r\nBonjour,\r\n\r\nUn médiateur vient de vous écrire concernant le dossier n°61.\r\n\r\nqsfdsqf\r\n\r\nfsddfsfsdfs\r\n\r\nÀ noter que vous pouvez apporter réponse directement en répondant à cet email.\r\n\r\n2023 © Médiature\r\n[Lien vers Twitter]<https://twitter.com/intent/tweet?url=https://twitter.com/AmctMediation>\r\n\r\n[Lien vers LinkedIn]<https://www.linkedin.com/shareArticle?mini=true&url=https://www.linkedin.com/company/association-des-m%C3%A9diateurs-des-collectivit%C3%A9s-territoriales&title=&summary=&source=>\r\n\r\nHeyyy still there!?\r\n",
+  "Html-part": "<html><body id=\"failing-content\"></body></html>",
+  "SpamAssassinScore": "0.000"
+}

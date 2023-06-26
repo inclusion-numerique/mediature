@@ -4,6 +4,7 @@ import contentType from 'content-type';
 import emailAddressUtil from 'email-addresses';
 import EmailReplyParser from 'email-reply-parser';
 import he from 'he';
+import iconv from 'iconv-lite';
 import { JSDOM } from 'jsdom';
 import { createMimeMessage } from 'mimetext';
 import z from 'zod';
@@ -145,54 +146,60 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     name: fromResult?.name,
   };
 
-  let htmlContentToProcess: string | null = null;
+  let lexicalContent: string | null = null;
 
-  // Take the HTML part in priority and text as fallback
-  const htmlPart = decodedPayload.Parts.find((part) => {
-    // We did not think about that but some clients send multiple HTML parts (`Html-part`, `Html-part2`...)
-    // We focus on extracting the one being UTF-8 since others seem always empty about human content (with often the charset `us-ascii`)
-    if (part.ContentRef && part.ContentRef.startsWith('Html-part')) {
-      const partHeaders = convertToCompatibleHeaders(part.Headers);
-      const contentTypeObject = contentType.parse(partHeaders['Content-Type']);
-
-      return contentTypeObject.parameters?.charset?.toLowerCase() === 'utf-8';
-    }
-
-    return false;
+  // We did not think about that but some clients send multiple HTML parts (`Html-part`, `Html-part2`...)
+  // with one being the real content and others that are just empty HTML as you can see in `apps/main/src/fixtures/mailjet/mailjet-real-payload-multiple-html-parts.json`
+  // So the idea is to try to parse all of them until having a valid Lexical content (requiring not being empty), if none, it will fallback to text part anyway
+  const htmlParts = decodedPayload.Parts.filter((part) => {
+    return part.ContentRef && part.ContentRef.startsWith('Html-part');
   });
-  if (htmlPart && htmlPart.ContentRef) {
-    const htmlPartContent = decodedPayload[htmlPart.ContentRef];
 
-    if (htmlPartContent) {
+  for (const htmlPart of htmlParts) {
+    if (htmlPart.ContentRef && decodedPayload[htmlPart.ContentRef]) {
+      // Make sure it's UTF-8
+      const htmlPartContent = getUtf8PartContent(decodedPayload[htmlPart.ContentRef] as string, htmlPart);
+
       const cleanHtmlPartContent = removeQuotedReplyFromHtmlEmail(htmlPartContent, serverJsdom);
 
-      htmlContentToProcess = cleanHtmlPartContent;
-    } else {
-      const textPart = decodedPayload.Parts.find((part) => {
-        // There should not have multiple `Text-part` with different charset but just in case
-        // take the first one since we had the surprize for `Html-part`
-        return part.ContentRef && part.ContentRef.startsWith('Text-part');
-      });
+      try {
+        // Make sure the HTML can be handled by Lexical before committing this is a content that can be handled
+        lexicalContent = await inlineEditorStateFromHtml(cleanHtmlPartContent, serverJsdom);
 
-      if (textPart && textPart.ContentRef) {
-        const textPartContent = decodedPayload[textPart.ContentRef];
-
-        if (textPartContent) {
-          // Remove the quoted previous messages to only keep new content
-          const cleanTextPartContent = new EmailReplyParser().read(textPartContent).getVisibleText();
-
-          // First escape the text to avoid raw characters like "<, >, &"
-          const sanitizedTextContent = he.escape(cleanTextPartContent);
-
-          // Then try to infer paragraphs and set appropriate tags
-          // Inspired by https://stackoverflow.com/a/45658944/3608410
-          htmlContentToProcess = '<p>' + sanitizedTextContent.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
-        }
+        break;
+      } catch (error) {
+        console.warn(`cannot handle the html content but defaulting to other html part or text part if any: ${error}`);
       }
     }
   }
 
-  if (!htmlContentToProcess) {
+  // In case there is no HTML part or this one was not parsable, we try to read the text part
+  if (!lexicalContent) {
+    const textPart = decodedPayload.Parts.find((part) => {
+      // There should not have multiple `Text-part` with different charset but just in case
+      // take the first one since we had the surprize for `Html-part`
+      return part.ContentRef && part.ContentRef.startsWith('Text-part');
+    });
+
+    if (textPart && textPart.ContentRef && decodedPayload[textPart.ContentRef]) {
+      // Make sure it's UTF-8
+      const textPartContent = getUtf8PartContent(decodedPayload[textPart.ContentRef] as string, textPart);
+
+      // Remove the quoted previous messages to only keep new content
+      const cleanTextPartContent = new EmailReplyParser().read(textPartContent).getVisibleText();
+
+      // First escape the text to avoid raw characters like "<, >, &"
+      const sanitizedTextContent = he.escape(cleanTextPartContent);
+
+      // Then try to infer paragraphs and set appropriate tags
+      // Inspired by https://stackoverflow.com/a/45658944/3608410
+      const htmlContentToProcess = '<p>' + sanitizedTextContent.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br>') + '</p>';
+
+      lexicalContent = await inlineEditorStateFromHtml(htmlContentToProcess, serverJsdom);
+    }
+  }
+
+  if (!lexicalContent) {
     throw new Error('impossible to get content from this email');
   }
 
@@ -231,15 +238,28 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     }
   }
 
-  const content = await inlineEditorStateFromHtml(htmlContentToProcess, serverJsdom);
-
   return {
     from: fromContact,
     to: toContacts,
     subject: decodedPayload.Subject,
-    content: content,
+    content: lexicalContent,
     attachments: attachments,
   };
+}
+
+export function getUtf8PartContent(partContent: string, part: ParseApiWebhookPayloadSchemaType['Parts'][0]): string {
+  const partHeaders = convertToCompatibleHeaders(part.Headers);
+  const contentTypeObject = contentType.parse(partHeaders['Content-Type']);
+
+  const charset = contentTypeObject.parameters?.charset?.toLowerCase();
+
+  if (!charset) {
+    // If no charset consider it as UTF-8 to avoid loosing messages
+    return partContent;
+  }
+
+  // We use `iconv` since native `Buffer` just supports a few encodings
+  return iconv.decode(Buffer.from(partContent), charset);
 }
 
 export function convertToCompatibleHeaders(headers: Record<string, string | string[]>) {

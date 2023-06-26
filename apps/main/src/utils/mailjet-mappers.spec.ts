@@ -10,6 +10,7 @@ import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mai
 import {
   convertHeadersToCaseInsensitiveHeaders,
   decodeParseApiWebhookPayload,
+  getUtf8PartContent,
   removeQuotedReplyFromHtmlEmail,
 } from '@mediature/main/src/utils/mailjet-mappers';
 
@@ -112,6 +113,38 @@ describe('decodeParseApiWebhookPayload()', () => {
     expect(decodedPayload.content).toStrictEqual(
       `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola \",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"altText\":\"\",\"caption\":{\"editorState\":{\"root\":{\"children\":[],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}},\"height\":0,\"maxWidth\":500,\"showCaption\":false,\"src\":\"cid:d9ff1540-cb1a-4d03-9c39-1a403ad97ee8@EURPRD10.PROD.OUTLOOK.COM\",\"type\":\"image\",\"version\":1,\"width\":0},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Heyyy still there!?\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
     );
+  });
+
+  it('should return values with real payload that has an invalid HTML part (unhandled, empty...)', async () => {
+    // We removed attachments even if we kept the same HTML content then above with `cid:xxxxx` image blocks (does not matter, we want to check the structure here)
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-invalid-html-part.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.content).toStrictEqual(
+      `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"[cid:d9ff1540-cb1a-4d03-9c39-1a403ad97ee8@EURPRD10.PROD.OUTLOOK.COM]\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1},{\"type\":\"linebreak\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
+    );
+  });
+});
+
+describe('getUtf8PartContent()', () => {
+  it('should work with utf-8 charset', () => {
+    const content = getUtf8PartContent('<html>\x68\x65\x6c\x6c\x6f</html>', {
+      Headers: { 'Content-Type': ['text/html; charset=utf-8'], 'Content-Transfer-Encoding': ['quoted-printable'] },
+      ContentRef: 'Html-part',
+    });
+
+    expect(content).toBe('<html>hello</html>');
+  });
+
+  it('should work with ISO-8859-15 charset', () => {
+    const content = getUtf8PartContent('<html>hello</html>', {
+      Headers: { 'Content-Type': ['text/html; charset=ISO-8859-15'], 'Content-Transfer-Encoding': ['quoted-printable'] },
+      ContentRef: 'Html-part',
+    });
+
+    expect(content).toBe('<html>hello</html>');
   });
 });
 
