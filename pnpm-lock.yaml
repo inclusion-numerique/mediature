@@ -462,6 +462,9 @@ importers:
       i18next-browser-languagedetector:
         specifier: ^7.0.1
         version: 7.0.1
+      iconv-lite:
+        specifier: ^0.6.3
+        version: 0.6.3
       jose:
         specifier: ^4.12.0
         version: 4.12.0
@@ -8456,8 +8459,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.1.0-alpha.34:
-    resolution: {integrity: sha512-bb740Ex080V7/SgcxTVohO+aPFE0pHA4lkRAJEEKZkfluzBZrNTJzgT+THIdxHPux/EyKGHL2wS1wdREdcgfhw==}
+  /@storybook/client-logger@7.1.0-alpha.39:
+    resolution: {integrity: sha512-x9QpVsCAlFuvzQzblIWV5E+ThB53cIBcyKFu2A9s9LiEO55hYz9G9FF9yGnwBMjQ0iZeqKuAtPy8TLj2wiugdQ==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -9462,7 +9465,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.1.0-alpha.34
+      '@storybook/client-logger': 7.1.0-alpha.39
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)

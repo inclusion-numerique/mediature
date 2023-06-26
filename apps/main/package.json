@@ -107,6 +107,7 @@
     "human-filetypes": "^0.2.1",
     "i18next": "^22.4.5",
     "i18next-browser-languagedetector": "^7.0.1",
+    "iconv-lite": "^0.6.3",
     "jose": "^4.12.0",
     "jsdom": "^21.1.1",
     "jwt-check-expiry": "^1.0.10",
