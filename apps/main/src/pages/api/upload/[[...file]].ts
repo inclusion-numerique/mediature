@@ -20,12 +20,10 @@ import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 //   internalMetaUrl: 'X-Upload-Internal-Meta-Url',
 // };
 
-/**
- * !Important. This will tell Next.js NOT Parse the body as tus requires
- * @see https://nextjs.org/docs/api-routes/request-helpers
- */
 export const config = {
   api: {
+    // This will tell Next.js to not parse the body as tus requires
+    // Implicitly it avoids having the default body size limit of 1MB (`bodyParser.sizeLimit`)
     bodyParser: false,
   },
 };
