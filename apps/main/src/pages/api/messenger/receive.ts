@@ -4,6 +4,18 @@ import { ProcessInboundMessageDataSchema } from '@mediature/main/src/models/jobs
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
 import { processInboundMessageTopic } from '@mediature/main/src/server/queueing/workers/process-inbound-message';
 
+export const config = {
+  api: {
+    bodyParser: {
+      // Avoid having the default body size limit of 1MB (`bodyParser.sizeLimit`)
+      // Mailjet has a limit of 15MB for inbound messages so we set it a bit above to handle
+      // the extra overhead of all attachments being base64-encoded by them (between 33%-37% more according to https://en.wikipedia.org/wiki/Base64)
+      // (if a user sends to Mailjet above their 15MB limit, they will receive an email answer to notify them)
+      sizeLimit: '50mb',
+    },
+  },
+};
+
 export function isAuthenticated(authorizationHeader?: string): boolean {
   if (!authorizationHeader) {
     return false;
