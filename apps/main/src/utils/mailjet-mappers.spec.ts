@@ -10,6 +10,7 @@ import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mai
 import {
   convertHeadersToCaseInsensitiveHeaders,
   decodeParseApiWebhookPayload,
+  deprecated_getUtf8PartContent,
   getUtf8PartContent,
   removeQuotedReplyFromHtmlEmail,
 } from '@mediature/main/src/utils/mailjet-mappers';
@@ -129,7 +130,7 @@ describe('decodeParseApiWebhookPayload()', () => {
 });
 
 describe('getUtf8PartContent()', () => {
-  it('should work with utf-8 charset', () => {
+  it('should work with utf-8 metadata charset', () => {
     const content = getUtf8PartContent('<html>\x68\x65\x6c\x6c\x6f</html>', {
       Headers: { 'Content-Type': ['text/html; charset=utf-8'], 'Content-Transfer-Encoding': ['quoted-printable'] },
       ContentRef: 'Html-part',
@@ -138,13 +139,27 @@ describe('getUtf8PartContent()', () => {
     expect(content).toBe('<html>hello</html>');
   });
 
-  it('should work with ISO-8859-15 charset', () => {
+  it('should work with ISO-8859-15 metadata charset', () => {
     const content = getUtf8PartContent('<html>hello</html>', {
       Headers: { 'Content-Type': ['text/html; charset=ISO-8859-15'], 'Content-Transfer-Encoding': ['quoted-printable'] },
       ContentRef: 'Html-part',
     });
 
     expect(content).toBe('<html>hello</html>');
+  });
+
+  it('should prove mailjet has already decoded themselves to encode into utf-8', () => {
+    const realIncomingPartContent = '<html>Réception</html>';
+    const part = {
+      Headers: { 'Content-Type': ['text/html; charset=ISO-8859-15'], 'Content-Transfer-Encoding': ['quoted-printable'] },
+      ContentRef: 'Html-part',
+    };
+
+    const contentConsideringMailjetDecoding = getUtf8PartContent(realIncomingPartContent, part);
+    const wrongContentWithDoubleDecoding = deprecated_getUtf8PartContent(realIncomingPartContent, part);
+
+    expect(contentConsideringMailjetDecoding).toBe('<html>Réception</html>');
+    expect(wrongContentWithDoubleDecoding).toBe('<html>RÃ©ception</html>');
   });
 });
 
