@@ -248,6 +248,13 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
 }
 
 export function getUtf8PartContent(partContent: string, part: ParseApiWebhookPayloadSchemaType['Parts'][0]): string {
+  // [IMPORTANT ]After investigation it seems Mailjet decodes with the right charset on their own and provide only UTF-8 encoded parts (both for HTML and text parts)
+  // so no need to do it on our own... Nonetheless we kept `deprecated_getUtf8PartContent` that we use for debug testing
+  return partContent;
+}
+
+// Refers to `getUtf8PartContent` for real usage with Mailjet preprocessing
+export function deprecated_getUtf8PartContent(partContent: string, part: ParseApiWebhookPayloadSchemaType['Parts'][0]): string {
   const partHeaders = convertToCompatibleHeaders(part.Headers);
   const contentTypeObject = contentType.parse(partHeaders['Content-Type']);
 
