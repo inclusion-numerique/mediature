@@ -6,7 +6,7 @@
  *
  */
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { LexicalTypeaheadMenuPlugin, QueryMatch, TypeaheadOption, useBasicTypeaheadTriggerMatch } from '@lexical/react/LexicalTypeaheadMenuPlugin';
+import { LexicalTypeaheadMenuPlugin, MenuOption, MenuTextMatch, useBasicTypeaheadTriggerMatch } from '@lexical/react/LexicalTypeaheadMenuPlugin';
 import { TextNode } from 'lexical';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
@@ -504,7 +504,7 @@ function useMentionLookupService(mentionString: string | null) {
   return results;
 }
 
-function checkForCapitalizedNameMentions(text: string, minMatchLength: number): QueryMatch | null {
+function checkForCapitalizedNameMentions(text: string, minMatchLength: number): MenuTextMatch | null {
   const match = CapitalizedNameMentionsRegex.exec(text);
   if (match !== null) {
     // The strategy ignores leading whitespace but we need to know it's
@@ -523,7 +523,7 @@ function checkForCapitalizedNameMentions(text: string, minMatchLength: number): 
   return null;
 }
 
-function checkForAtSignMentions(text: string, minMatchLength: number): QueryMatch | null {
+function checkForAtSignMentions(text: string, minMatchLength: number): MenuTextMatch | null {
   let match = AtSignMentionsRegex.exec(text);
 
   if (match === null) {
@@ -546,12 +546,12 @@ function checkForAtSignMentions(text: string, minMatchLength: number): QueryMatc
   return null;
 }
 
-function getPossibleQueryMatch(text: string): QueryMatch | null {
+function getPossibleMenuTextMatch(text: string): MenuTextMatch | null {
   const match = checkForAtSignMentions(text, 1);
   return match === null ? checkForCapitalizedNameMentions(text, 3) : match;
 }
 
-class MentionTypeaheadOption extends TypeaheadOption {
+class MentionMenuOption extends MenuOption {
   name: string;
   picture: JSX.Element;
 
@@ -573,7 +573,7 @@ function MentionsTypeaheadMenuItem({
   isSelected: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
-  option: MentionTypeaheadOption;
+  option: MentionMenuOption;
 }) {
   let className = 'item';
   if (isSelected) {
@@ -610,12 +610,12 @@ export default function NewMentionsPlugin(): JSX.Element | null {
   });
 
   const options = useMemo(
-    () => results.map((result) => new MentionTypeaheadOption(result, <i className="icon user" />)).slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
+    () => results.map((result) => new MentionMenuOption(result, <i className="icon user" />)).slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
     [results]
   );
 
   const onSelectOption = useCallback(
-    (selectedOption: MentionTypeaheadOption, nodeToReplace: TextNode | null, closeMenu: () => void) => {
+    (selectedOption: MentionMenuOption, nodeToReplace: TextNode | null, closeMenu: () => void) => {
       editor.update(() => {
         const mentionNode = $createMentionNode(selectedOption.name);
         if (nodeToReplace) {
@@ -630,7 +630,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
 
   const checkForMentionMatch = useCallback(
     (text: string) => {
-      const mentionMatch = getPossibleQueryMatch(text);
+      const mentionMatch = getPossibleMenuTextMatch(text);
       const slashMatch = checkForSlashTriggerMatch(text, editor);
       return !slashMatch && mentionMatch ? mentionMatch : null;
     },
@@ -638,7 +638,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
   );
 
   return (
-    <LexicalTypeaheadMenuPlugin<MentionTypeaheadOption>
+    <LexicalTypeaheadMenuPlugin<MentionMenuOption>
       onQueryChange={setQueryString}
       onSelectOption={onSelectOption}
       triggerFn={checkForMentionMatch}
