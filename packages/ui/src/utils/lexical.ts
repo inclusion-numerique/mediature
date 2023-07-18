@@ -97,6 +97,17 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
         }
 
         const dom = parser.parseFromString(htmlContent, 'text/html');
+
+        // [WORKAROUND] With Lexical v0.10 we had an issue with a ghost node into tables making the display breaking.
+        // By upgrading to v0.11.2 it worked but now all `<div><br></div>` were ignored by `$generateNodesFromDOM` whereas
+        // it works for `<br>`. Adding a workaround until we find a proper solution (maybe a Lexical fix is needed? Or a manual Playground nodes upgrade?)
+        // Ref: https://github.com/facebook/lexical/issues/3879#issuecomment-1640215777
+        dom.documentElement.querySelectorAll('div > br:only-child').forEach((brElement) => {
+          const newBrElement = dom.createElement('br');
+          const divElement = brElement.parentNode;
+          divElement?.parentNode?.replaceChild(newBrElement, divElement);
+        });
+
         nodes = $generateNodesFromDOM(editor, dom);
       } finally {
         if (jsdomInstance) {

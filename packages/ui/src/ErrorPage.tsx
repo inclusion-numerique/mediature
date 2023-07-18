@@ -1,11 +1,12 @@
 // import { fr } from '@codegouvfr/react-dsfr';
 import ovoidSprite from '@gouvfr/dsfr/dist/artwork/background/ovoid.svg';
 import technicalErrorSprite from '@gouvfr/dsfr/dist/artwork/pictograms/system/technical-error.svg';
-import Button from '@mui/material/Button';
+import Button from '@mui/lab/LoadingButton';
 import Grid from '@mui/material/Grid';
 import NextLink from 'next/link';
 import React from 'react';
 
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { centeredErrorContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
@@ -100,11 +101,15 @@ export const error500Props: ErrorPageProps = {
   summary: 'Essayez de rafraichir la page ou bien ressayez plus tard.',
   description: () => <>Désolé, le service rencontre un problème, nous travaillons pour le résoudre le plus rapidement possible.</>,
   buttons: [
-    () => (
-      <Button component={NextLink} href="/TODO" size="large" variant="contained">
-        Contactez-nous
-      </Button>
-    ),
+    () => {
+      const { showLiveChat, isLiveChatLoading } = useLiveChat();
+
+      return (
+        <Button onClick={showLiveChat} loading={isLiveChatLoading} size="large" variant="contained">
+          Contactez-nous
+        </Button>
+      );
+    },
   ],
 };
 
