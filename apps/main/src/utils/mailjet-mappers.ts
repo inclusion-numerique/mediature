@@ -414,5 +414,13 @@ export function removeQuotedReplyFromHtmlEmail(htmlContent: string, jsdomInstanc
     element.remove();
   }
 
+  // ---
+  // Before adding new workarounds make sure it's only targeting replies and not forwards,
+  // otherwise you will loose content from people who wants to just forward an email for information.
+  //
+  // The following clients are not managed because they send the same marker for a reply and a forward:
+  // - Zimbra web (marker `[data-marker="__QUOTED_TEXT__"]`)
+  // ---
+
   return dom.documentElement.innerHTML;
 }
