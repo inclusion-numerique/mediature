@@ -103,9 +103,14 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
         // it works for `<br>`. Adding a workaround until we find a proper solution (maybe a Lexical fix is needed? Or a manual Playground nodes upgrade?)
         // Ref: https://github.com/facebook/lexical/issues/3879#issuecomment-1640215777
         dom.documentElement.querySelectorAll('div > br:only-child').forEach((brElement) => {
-          const newBrElement = dom.createElement('br');
+          // Using `:only-child` is not sufficient because it does not work if raw text without tag is a sibling of the `<br />`
+          // Example: `<div>Salut toi<br /></div>` would unfortunately be catched, so we need to add a second verification
           const divElement = brElement.parentNode;
-          divElement?.parentNode?.replaceChild(newBrElement, divElement);
+
+          if (divElement && (divElement as HTMLDivElement).textContent?.replace('\n', '').trim() === '') {
+            const newBrElement = dom.createElement('br');
+            divElement.parentNode?.replaceChild(newBrElement, divElement);
+          }
         });
 
         nodes = $generateNodesFromDOM(editor, dom);
