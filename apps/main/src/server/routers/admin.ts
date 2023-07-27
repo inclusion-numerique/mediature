@@ -17,6 +17,7 @@ import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { grantAdmin } from '@mediature/main/src/server/routers/common/admin';
 import { adminPrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
+import { formatSearchQuery } from '@mediature/main/src/utils/prisma';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export const adminRouter = router({
@@ -224,23 +225,28 @@ export const adminRouter = router({
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
+    let formattedSearchQuery: string | undefined;
+    if (input.filterBy.query) {
+      formattedSearchQuery = formatSearchQuery(input.filterBy.query);
+    }
+
     const users = await prisma.user.findMany({
       where: {
         firstname: input.filterBy.query
           ? {
-              search: input.filterBy.query,
+              search: formattedSearchQuery,
               mode: 'insensitive',
             }
           : undefined,
         lastname: input.filterBy.query
           ? {
-              search: input.filterBy.query,
+              search: formattedSearchQuery,
               mode: 'insensitive',
             }
           : undefined,
         email: input.filterBy.query
           ? {
-              search: input.filterBy.query,
+              search: formattedSearchQuery,
               mode: 'insensitive',
             }
           : undefined,

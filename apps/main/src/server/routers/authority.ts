@@ -19,6 +19,7 @@ import {
   authorityPrismaToModel,
 } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, publicProcedure, router } from '@mediature/main/src/server/trpc';
+import { formatSearchQuery } from '@mediature/main/src/utils/prisma';
 
 export async function isUserAnAdmin(userId: string): Promise<boolean> {
   const admin = await prisma.admin.findFirst({
@@ -203,17 +204,22 @@ export const authorityRouter = router({
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
 
+    let formattedSearchQuery: string | undefined;
+    if (input.filterBy.query) {
+      formattedSearchQuery = formatSearchQuery(input.filterBy.query);
+    }
+
     const authorities = await prisma.authority.findMany({
       where: {
         name: input.filterBy.query
           ? {
-              search: input.filterBy.query,
+              search: formattedSearchQuery,
               mode: 'insensitive',
             }
           : undefined,
         slug: input.filterBy.query
           ? {
-              search: input.filterBy.query,
+              search: formattedSearchQuery,
               mode: 'insensitive',
             }
           : undefined,
