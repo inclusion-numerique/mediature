@@ -63,6 +63,7 @@ import { privateProcedure, publicProcedure, router } from '@mediature/main/src/s
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
+import { formatSearchQuery } from '@mediature/main/src/utils/prisma';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
 
@@ -949,7 +950,9 @@ export const caseRouter = router({
     }
 
     let humandIdSearch: number | undefined;
+    let formattedSearchQuery: string | undefined;
     if (input.filterBy.query) {
+      formattedSearchQuery = formatSearchQuery(input.filterBy.query);
       const value = parseInt(input.filterBy.query);
 
       if (!isNaN(value)) {
@@ -986,14 +989,14 @@ export const caseRouter = router({
                   },
                   {
                     description: {
-                      search: input.filterBy.query,
+                      search: formattedSearchQuery,
                       mode: 'insensitive',
                     },
                   },
                   {
                     citizen: {
                       firstname: {
-                        search: input.filterBy.query,
+                        search: formattedSearchQuery,
                         mode: 'insensitive',
                       },
                     },
@@ -1001,7 +1004,7 @@ export const caseRouter = router({
                   {
                     citizen: {
                       lastname: {
-                        search: input.filterBy.query,
+                        search: formattedSearchQuery,
                         mode: 'insensitive',
                       },
                     },
