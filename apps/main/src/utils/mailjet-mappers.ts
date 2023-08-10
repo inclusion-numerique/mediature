@@ -7,7 +7,7 @@ import he from 'he';
 import iconv from 'iconv-lite';
 import { JSDOM } from 'jsdom';
 import { createMimeMessage } from 'mimetext';
-import z from 'zod';
+import z, { RefinementCtx } from 'zod';
 
 import { Attachment as EmailAttachment } from '@mediature/main/src/emails/mailer';
 import { EditorStateSchemaType } from '@mediature/main/src/models/entities/lexical';
@@ -25,36 +25,57 @@ export interface ReceivedMessage {
   attachments: EmailAttachment[];
 }
 
+export const HeadersSchema = z.record(
+  z.string().min(1),
+  z
+    .string()
+    .min(0)
+    .or(z.array(z.string().min(0)))
+);
+export type HeadersSchemaType = z.infer<typeof HeadersSchema>;
+
+export const ContentRefSchema = z.string().min(1).nullish();
+export type ContentRefSchemaType = z.infer<typeof ContentRefSchema>;
+
+export const PartSchema = z.object({
+  Headers: HeadersSchema,
+  ContentRef: ContentRefSchema,
+});
+export type PartSchemaType = z.infer<typeof PartSchema>;
+
+export function refineHeadersAndContentRef(ctx: RefinementCtx, payload: ParseApiWebhookPayloadSchemaType, part: PartSchemaType) {
+  // Some parts are just metadata (like boundary string...), we can skip them
+  if (!part.ContentRef) {
+    return;
+  }
+
+  // Make sure the referenced content exists in the payload
+  if (typeof (payload as any)[part.ContentRef] !== 'string') {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'each part of the email must be included when specified into a "ContentRef"',
+    });
+  }
+
+  if (!part.Headers['Content-Type']) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'each part should have a "Content-Type" header',
+    });
+  }
+}
+
 export const ParseApiWebhookPayloadSchema = z
   .object({
     From: z.string().min(1),
     Recipient: z.string().min(1),
     Subject: z.string().min(1),
-    Parts: z
-      .array(
-        z.object({
-          Headers: z.record(
-            z.string().min(1),
-            z
-              .string()
-              .min(0)
-              .or(z.array(z.string().min(0)))
-          ),
-          ContentRef: z.string().min(1).nullish(),
-        })
-      )
-      .min(1),
-    Headers: z.record(
-      z.string().min(1),
-      z
-        .string()
-        .min(0)
-        .or(z.array(z.string().min(0)))
-    ),
+    Parts: z.array(PartSchema),
+    Headers: HeadersSchema,
+    ContentRef: ContentRefSchema.optional(),
     SpamAssassinScore: z.coerce.number(),
   })
   .catchall(z.string().nullish())
-  .required()
   .strict()
   .superRefine((data, ctx) => {
     if (data) {
@@ -64,29 +85,26 @@ export const ParseApiWebhookPayloadSchema = z
       // is to perform "JSON -> EML" to rebuild DKIM signature and so. Since it's character sensitive (double space, tabulation, encoding...),
       // having Mailjet not sharing a sample or their JSON builder does not help. Let's continue without those checks for now
 
-      for (const part of data.Parts) {
-        // Some parts are just metadata (like boundary string...), we can skip them
-        if (!part.ContentRef) {
-          continue;
+      // Usually the index is done into the `Parts` array to point to text, HTML, attachments
+      // but when a client only sends text or HTML, there is no part, it's directly merged at the root of the payload so we need to take this into account
+      if (data.Parts.length > 0) {
+        for (const part of data.Parts) {
+          refineHeadersAndContentRef(ctx, data, part);
         }
-
-        if (typeof (data as any)[part.ContentRef] !== 'string') {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'each part of the email must be included when specified into the "Parts" object',
-          });
-        }
-
-        if (!part.Headers['Content-Type']) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'each part should have a "Content-Type" header',
-          });
-        }
+      } else {
+        refineHeadersAndContentRef(ctx, data, data);
       }
     }
   });
 export type ParseApiWebhookPayloadSchemaType = z.infer<typeof ParseApiWebhookPayloadSchema>;
+
+export function isHtmlContentRef(contentRef: PartSchemaType['ContentRef']): boolean {
+  return !!contentRef && contentRef.startsWith('Html-part');
+}
+
+export function isTextContentRef(contentRef: PartSchemaType['ContentRef']): boolean {
+  return !!contentRef && contentRef.startsWith('Text-part');
+}
 
 export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise<ReceivedMessage> {
   const decodedPayload = ParseApiWebhookPayloadSchema.parse(jsonPayload);
@@ -152,8 +170,16 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   // with one being the real content and others that are just empty HTML as you can see in `apps/main/src/fixtures/mailjet/mailjet-real-payload-multiple-html-parts.json`
   // So the idea is to try to parse all of them until having a valid Lexical content (requiring not being empty), if none, it will fallback to text part anyway
   const htmlParts = decodedPayload.Parts.filter((part) => {
-    return part.ContentRef && part.ContentRef.startsWith('Html-part');
+    return isHtmlContentRef(part.ContentRef);
   });
+
+  // As descrived in the zod validation, when there is only one part, it may be merged into the root payload instead of inside the `Parts` array
+  if (!htmlParts.length && isHtmlContentRef(decodedPayload.ContentRef)) {
+    htmlParts.push({
+      ContentRef: decodedPayload.ContentRef,
+      Headers: decodedPayload.Headers,
+    });
+  }
 
   for (const htmlPart of htmlParts) {
     if (htmlPart.ContentRef && decodedPayload[htmlPart.ContentRef]) {
@@ -175,11 +201,19 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
 
   // In case there is no HTML part or this one was not parsable, we try to read the text part
   if (!lexicalContent) {
-    const textPart = decodedPayload.Parts.find((part) => {
+    let textPart = decodedPayload.Parts.find((part) => {
       // There should not have multiple `Text-part` with different charset but just in case
       // take the first one since we had the surprize for `Html-part`
       return part.ContentRef && part.ContentRef.startsWith('Text-part');
     });
+
+    // As descrived in the zod validation, when there is only one part, it may be merged into the root payload instead of inside the `Parts` array
+    if (!textPart && isTextContentRef(decodedPayload.ContentRef)) {
+      textPart = {
+        ContentRef: decodedPayload.ContentRef,
+        Headers: decodedPayload.Headers,
+      };
+    }
 
     if (textPart && textPart.ContentRef && decodedPayload[textPart.ContentRef]) {
       // Make sure it's UTF-8
