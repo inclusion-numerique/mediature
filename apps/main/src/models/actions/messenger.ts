@@ -23,6 +23,7 @@ export type SendMessagePrefillSchemaType = z.infer<typeof SendMessagePrefillSche
 
 export const UpdateMessageMetadataSchema = z
   .object({
+    caseId: incompleteCaseSchema.shape.id,
     messageId: MessageSchema.shape.id,
     markAsProcessed: z.boolean().nullish(),
   })

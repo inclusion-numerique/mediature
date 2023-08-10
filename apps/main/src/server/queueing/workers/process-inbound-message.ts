@@ -38,13 +38,34 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
 
   if (matchingCases.length === 0) {
     throw new Error(`only emails about cases are allowed`);
+  } else if (matchingCases.length > 5) {
+    // It may happen an email targets multiple cases (probably cases of the same citizen)
+    // But over 5 we consider it as spam since case emails are guessable and could be flooded
+    throw new Error(`the incoming email targets too many cases, which is not allowed`);
   } else if (matchingCases.length > 1) {
-    // It's really unlikely someone would tag 2 cases as recipients...
-    // So we disable it for now to avoid someone spamming multiple emails since guessable
-    throw new Error(`the incoming email targets multiple cases, which is not allowed`);
-  }
+    // For multiple cases as recipients, our Mailjet partner will receive multiple times the same email content on different inboxes.
+    // So it will trigger multiple times the webhook and to keep things simple we want to only consider one.
+    // We chose to sort them and keep the one of the first recipient (otherwise we could have skipped if exact same message is already in the database but we wanted to avoid global lock and transaction)
+    const humanIdString = extractCaseHumanIdFromEmail(decodedPayload.webhookTargetEmail);
 
-  const targetedCase = matchingCases[0];
+    if (!!humanIdString) {
+      const webhookTargetCaseHumanId = parseInt(humanIdString, 10);
+
+      const orderedCasesHumanIds = matchingCases
+        .map((matchingCase) => matchingCase.humanId)
+        .sort(function (a, b) {
+          return a - b;
+        });
+
+      if (webhookTargetCaseHumanId !== orderedCasesHumanIds[0]) {
+        console.log(
+          `we skip this incoming message to "${decodedPayload.webhookTargetEmail}" since it targets multiple cases. Only the webhook to the case n°${orderedCasesHumanIds[0]} for the same message is considered to avoid duplicates`
+        );
+
+        return;
+      }
+    }
+  }
 
   const uploadedFiles: {
     id: string;
@@ -126,13 +147,14 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
         }),
       },
       MessagesOnCases: {
-        create: {
-          markedAsProcessed: false,
-          case: {
-            connect: {
-              id: targetedCase.id,
-            },
-          },
+        createMany: {
+          skipDuplicates: true,
+          data: matchingCases.map((targetedCase) => {
+            return {
+              caseId: targetedCase.id,
+              markedAsProcessed: false,
+            };
+          }),
         },
       },
       AttachmentsOnMessages: {
@@ -155,5 +177,5 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
 
   await markNewAttachmentsAsUsed();
 
-  console.log(`an inbound message has been processed for the case ${targetedCase.id}`);
+  console.log(`an inbound message has been processed, it targets the cases: ${matchingCases.map((targetedCase) => targetedCase.id).join(', ')}`);
 }

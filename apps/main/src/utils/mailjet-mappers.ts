@@ -18,6 +18,7 @@ import { inlineEditorStateFromHtml } from '@mediature/ui/src/utils/lexical';
 const serverJsdom = new JSDOM();
 
 export interface ReceivedMessage {
+  webhookTargetEmail: string;
   from: ContactInputSchemaType;
   to: ContactInputSchemaType[];
   subject: string;
@@ -68,7 +69,7 @@ export function refineHeadersAndContentRef(ctx: RefinementCtx, payload: ParseApi
 export const ParseApiWebhookPayloadSchema = z
   .object({
     From: z.string().min(1),
-    Recipient: z.string().min(1),
+    Recipient: z.string().min(1), // This is among all To/Cc/Bcc recipients the one that is targetted by this webhook
     Subject: z.string().min(1),
     Parts: z.array(PartSchema),
     Headers: HeadersSchema,
@@ -273,6 +274,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   }
 
   return {
+    webhookTargetEmail: decodedPayload.Recipient,
     from: fromContact,
     to: toContacts,
     subject: decodedPayload.Subject,

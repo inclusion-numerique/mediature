@@ -92,6 +92,7 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
               onClick={async () => {
                 try {
                   await updateMessageMetadata.mutateAsync({
+                    caseId: caseId,
                     messageId: message.id,
                     markAsProcessed: !message.consideredAsProcessed,
                   });

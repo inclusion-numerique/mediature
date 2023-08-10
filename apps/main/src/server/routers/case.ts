@@ -910,12 +910,10 @@ export const caseRouter = router({
       throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
     }
 
-    const unprocessedMessagesCount = await prisma.message.count({
+    const unprocessedMessagesCount = await prisma.messagesOnCases.count({
       where: {
-        MessagesOnCases: {
-          caseId: targetedCase.id,
-          markedAsProcessed: false,
-        },
+        caseId: targetedCase.id,
+        markedAsProcessed: false,
       },
     });
 

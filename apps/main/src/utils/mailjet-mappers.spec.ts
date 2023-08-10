@@ -20,6 +20,7 @@ describe('decodeParseApiWebhookPayload()', () => {
     const decodedPayload = await decodeParseApiWebhookPayload(parseApiWebhookPayload);
 
     expect(decodedPayload).toStrictEqual({
+      webhookTargetEmail: 'passenger1@mailjet.com',
       from: {
         email: 'pilot@mailjet.com',
         name: 'Pilot',
@@ -73,6 +74,7 @@ describe('decodeParseApiWebhookPayload()', () => {
     const dummyPdfContent = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/dummy.pdf'));
 
     expect(decodedPayload).toStrictEqual({
+      webhookTargetEmail: 'dossier-61@mediature.incubateur.net',
       from: {
         email: 'thomas.rame@beta.gouv.fr',
         name: 'Thomas Ramé',
