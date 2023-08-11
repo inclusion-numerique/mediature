@@ -185,9 +185,10 @@ jobs:
           # Note: since we use `buildScriptName` we have to specify some of those parameters into the underlying `package.json` script named `chromatic`
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/docs
-          buildScriptName: chromatic
-          autoAcceptChanges: true # TODO: adjust in the future
-          onlyChanged: false # TODO: adjust in the future
+          buildScriptName: build
+          autoAcceptChanges: true
+          onlyChanged: true
+          externals: public/**
           exitZeroOnChanges: true
 
   #
