@@ -97,10 +97,12 @@ export const messengerRouter = router({
         },
         MessagesOnCases: {
           create: {
+            // If other cases are in the recipients we do not link them here,
+            // it will be handled in another message (on the receiver side)
             markedAsProcessed: null,
             case: {
               connect: {
-                id: input.caseId,
+                id: targetedCase.id,
               },
             },
           },
@@ -193,29 +195,39 @@ export const messengerRouter = router({
 
     await markNewAttachmentsAsUsed();
 
-    const updatedMessage = await prisma.message.update({
+    const updatedMessageOnCase = await prisma.messagesOnCases.update({
       where: {
-        id: newMessage.id,
+        caseId_messageId: {
+          caseId: targetedCase.id,
+          messageId: newMessage.id,
+        },
       },
       data: {
-        status: finalStatus,
-      },
-      include: {
-        from: true,
-        to: {
-          include: {
-            recipient: true,
+        message: {
+          update: {
+            status: finalStatus,
           },
         },
-        MessagesOnCases: true,
-        AttachmentsOnMessages: {
+      },
+      include: {
+        message: {
           include: {
-            attachment: {
-              select: {
-                id: true,
-                contentType: true,
-                name: true,
-                size: true,
+            from: true,
+            to: {
+              include: {
+                recipient: true,
+              },
+            },
+            AttachmentsOnMessages: {
+              include: {
+                attachment: {
+                  select: {
+                    id: true,
+                    contentType: true,
+                    name: true,
+                    size: true,
+                  },
+                },
               },
             },
           },
@@ -225,11 +237,11 @@ export const messengerRouter = router({
 
     return {
       message: await messagePrismaToModel({
-        ...updatedMessage,
-        consideredAsProcessed: updatedMessage.MessagesOnCases?.markedAsProcessed || null,
-        from: updatedMessage.from,
-        to: updatedMessage.to.map((toContact) => toContact.recipient),
-        attachments: updatedMessage.AttachmentsOnMessages.map((aOnM) => ({
+        ...updatedMessageOnCase.message,
+        consideredAsProcessed: updatedMessageOnCase.markedAsProcessed,
+        from: updatedMessageOnCase.message.from,
+        to: updatedMessageOnCase.message.to.map((toContact) => toContact.recipient),
+        attachments: updatedMessageOnCase.message.AttachmentsOnMessages.map((aOnM) => ({
           ...aOnM.attachment,
           inline: aOnM.inline,
         })),
@@ -237,30 +249,29 @@ export const messengerRouter = router({
     };
   }),
   updateMessageMetadata: privateProcedure.input(UpdateMessageMetadataSchema).mutation(async ({ ctx, input }) => {
-    const message = await prisma.message.findUniqueOrThrow({
+    const messageOnCase = await prisma.messagesOnCases.findUniqueOrThrow({
       where: {
-        id: input.messageId,
-      },
-      include: {
-        MessagesOnCases: true,
+        caseId_messageId: {
+          caseId: input.caseId,
+          messageId: input.messageId,
+        },
       },
     });
 
-    if (!message.MessagesOnCases) {
-      throw new Error('internal error TODO');
-    }
-
-    await canUserManageThisCase(ctx.user.id, message.MessagesOnCases.caseId);
+    await canUserManageThisCase(ctx.user.id, messageOnCase.caseId);
 
     if (input.markAsProcessed !== undefined) {
       // If `null` it means the message comes from the platform and cannot be toggled as processed or not
-      if (message.MessagesOnCases.markedAsProcessed === null) {
+      if (messageOnCase.markedAsProcessed === null) {
         throw new Error('vous ne pouvez que considérer comme traité ou non des messages reçus');
       }
 
       await prisma.messagesOnCases.update({
         where: {
-          messageId: message.id,
+          caseId_messageId: {
+            caseId: messageOnCase.caseId,
+            messageId: messageOnCase.messageId,
+          },
         },
         data: {
           markedAsProcessed: input.markAsProcessed,
@@ -286,7 +297,9 @@ export const messengerRouter = router({
           some: {
             message: {
               MessagesOnCases: {
-                caseId: targetedCase.id,
+                every: {
+                  caseId: targetedCase.id,
+                },
               },
             },
           },
@@ -326,28 +339,29 @@ export const messengerRouter = router({
     const caseId = input.filterBy.caseIds ? input.filterBy.caseIds[0] : ''; // For now, requires exactly 1 case
     await canUserManageThisCase(ctx.user.id, caseId);
 
-    const messages = await prisma.message.findMany({
+    const messagesOnCase = await prisma.messagesOnCases.findMany({
       where: {
-        MessagesOnCases: {
-          caseId: caseId,
-        },
+        caseId: caseId,
       },
       include: {
-        from: true,
-        to: {
+        message: {
           include: {
-            recipient: true,
-          },
-        },
-        MessagesOnCases: true,
-        AttachmentsOnMessages: {
-          include: {
-            attachment: {
-              select: {
-                id: true,
-                contentType: true,
-                name: true,
-                size: true,
+            from: true,
+            to: {
+              include: {
+                recipient: true,
+              },
+            },
+            AttachmentsOnMessages: {
+              include: {
+                attachment: {
+                  select: {
+                    id: true,
+                    contentType: true,
+                    name: true,
+                    size: true,
+                  },
+                },
               },
             },
           },
@@ -357,13 +371,13 @@ export const messengerRouter = router({
 
     return {
       messages: await Promise.all(
-        messages.map(async (message): Promise<MessageSchemaType> => {
+        messagesOnCase.map(async (messageOnCase): Promise<MessageSchemaType> => {
           return await messagePrismaToModel({
-            ...message,
-            consideredAsProcessed: message.MessagesOnCases ? message.MessagesOnCases.markedAsProcessed : null,
-            from: message.from,
-            to: message.to.map((toContact) => toContact.recipient),
-            attachments: message.AttachmentsOnMessages.map((aOnM) => ({
+            ...messageOnCase.message,
+            consideredAsProcessed: messageOnCase.markedAsProcessed,
+            from: messageOnCase.message.from,
+            to: messageOnCase.message.to.map((toContact) => toContact.recipient),
+            attachments: messageOnCase.message.AttachmentsOnMessages.map((aOnM) => ({
               ...aOnM.attachment,
               inline: aOnM.inline,
             })),

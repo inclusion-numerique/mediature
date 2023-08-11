@@ -1,0 +1,23 @@
+{
+  "Sender": "thomas.rame@beta.gouv.fr",
+  "Recipient": "dossier-61@mediature.incubateur.net",
+  "Date": "20230501T174932",
+  "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+  "Subject": "Re: Un médiateur vous a écrit",
+  "Headers": {
+    "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+    "To": "John de Médiature <dossier-61@mediature.incubateur.net>",
+    "Subject": "Re: Un médiateur vous a écrit",
+    "Date": "Mon, 1 May 2023 17:49:32 +0000",
+    "Message-ID": "<8794E766-4BC5-4D6F-AD92-E5B916438F09@outlook.com>",
+    "References": "<d704e782-6e55-91e5-f82f-9dee14160fc2@mediature.local.fr>",
+    "In-Reply-To": "<d704e782-6e55-91e5-f82f-9dee14160fc2@mediature.local.fr>",
+    "MIME-Version": ["1.0"],
+    "Content-Type": ["text/html; charset=UTF-8"],
+    "Content-Transfer-Encoding": ["base64"]
+  },
+  "Parts": [],
+  "ContentRef": "Html-part",
+  "Html-part": "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">Hello,<div dir=\"auto\"><br></div><div dir=\"auto\">Just to say hi!</div><div dir=\"auto\"><br></div><div dir=\"auto\">Regards</div>",
+  "SpamAssassinScore": "0.000"
+}

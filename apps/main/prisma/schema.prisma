@@ -566,7 +566,7 @@ model Message {
 
   from                  Contact                       @relation("MessagesAsSender", fields: [fromId], references: [id])
   to                    RecipientContactsOnMessages[]
-  MessagesOnCases       MessagesOnCases?
+  MessagesOnCases       MessagesOnCases[]
   AttachmentsOnMessages AttachmentsOnMessages[]
 }
 
@@ -584,13 +584,13 @@ model RecipientContactsOnMessages {
 /// @@Gen.model(hide: true)
 model MessagesOnCases {
   caseId            String   @db.Uuid
-  messageId         String   @unique @db.Uuid
+  messageId         String   @db.Uuid
   markedAsProcessed Boolean?
 
   case    Case    @relation(fields: [caseId], references: [id], onDelete: Cascade)
   message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-  @@id([caseId, messageId])
+  @@unique([caseId, messageId])
 }
 
 /// @@Gen.model(hide: true)

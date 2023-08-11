@@ -20,6 +20,7 @@ describe('decodeParseApiWebhookPayload()', () => {
     const decodedPayload = await decodeParseApiWebhookPayload(parseApiWebhookPayload);
 
     expect(decodedPayload).toStrictEqual({
+      webhookTargetEmail: 'passenger1@mailjet.com',
       from: {
         email: 'pilot@mailjet.com',
         name: 'Pilot',
@@ -73,6 +74,7 @@ describe('decodeParseApiWebhookPayload()', () => {
     const dummyPdfContent = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/dummy.pdf'));
 
     expect(decodedPayload).toStrictEqual({
+      webhookTargetEmail: 'dossier-61@mediature.incubateur.net',
       from: {
         email: 'thomas.rame@beta.gouv.fr',
         name: 'Thomas Ramé',
@@ -125,6 +127,28 @@ describe('decodeParseApiWebhookPayload()', () => {
 
     expect(decodedPayload.content).toStrictEqual(
       `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"[cid:d9ff1540-cb1a-4d03-9c39-1a403ad97ee8@EURPRD10.PROD.OUTLOOK.COM]\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1},{\"type\":\"linebreak\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
+    );
+  });
+
+  it('should return values with real payload that has only one part being text since different payload structure', async () => {
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-one-part-text.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.content).toStrictEqual(
+      `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
+    );
+  });
+
+  it('should return values with real payload that has only one part being html since different payload structure', async () => {
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-one-part-html.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.content).toStrictEqual(
+      `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hello,\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Just to say hi!\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Regards\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
     );
   });
 });

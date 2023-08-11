@@ -164,6 +164,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
+- `MAINTENANCE_API_KEY`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this is needed to perform maintenance through dedicated API endpoints)_
 - `FILE_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this token is just for the short-lived read permission of private attachments)_
 - `NEXT_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note that if this secret is lost, all users will have to log in again)_
 - `NEXT_PUBLIC_APP_BASE_URL`: [TO_DEFINE] _(must be the root URL to access the application, format `https://xxx.yyy.zzz`)_
@@ -377,6 +378,16 @@ And inside `Advanced configuration`, enable `Verify user emails with cryptograph
 It will give you a secret you that you need to serve to your backend as `CRISP_SIGNING_SECRET_KEY` (it should not be available on the frontend side contrarily to the website ID). _(for now, we only use it in production since it requires ugprading the Crisp plan)_
 
 On the other site, the public "website ID" will be used as `NEXT_PUBLIC_CRISP_WEBSITE_ID`.
+
+### Maintenance
+
+Since everything stateful is inside the PostgreSQL you should be able to do most of the maintenance from `DBeaver`.
+
+Except the case of replaying queueing jobs once they fail because they may be archived already. And since it's a bit tricky to move a job directly from SQL while cleaning its right properties, we decided to make an endpoint for this as an helper:
+
+- [POST] `/api/maintenance/jobs/replay` _(it expects as body `{ jobId: "..." }`)_
+
+**Note that to reach maintenance endpoints you have to pass a header `X-API-KEY` that must match the server environment variable `MAINTENANCE_API_KEY`.**
 
 ### IDE
 
