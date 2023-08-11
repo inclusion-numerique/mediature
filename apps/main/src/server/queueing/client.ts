@@ -27,6 +27,7 @@ databaseUrl = databaseUrl.replace('sslmode=prefer', 'sslmode=no-verify');
 const bossClient = new PgBoss({
   connectionString: databaseUrl,
   newJobCheckIntervalSeconds: 30, // No need to check every 2 seconds as set by default to look at new jobs
+  deleteAfterDays: 14, // Give some time before cleaning archives so an issue can be investigated without dealing with database backups
 });
 
 bossClient.on('error', (error) => {
