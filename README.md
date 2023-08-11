@@ -383,6 +383,30 @@ On the other site, the public "website ID" will be used as `NEXT_PUBLIC_CRISP_WE
 
 Since everything stateful is inside the PostgreSQL you should be able to do most of the maintenance from `DBeaver`.
 
+#### Retrieve old data from backups
+
+Just download the database backup from the Scalingo interface and run it locally with Docker with no volume (to be sure not keeping sensitive data locally):
+
+- Terminal 1:
+
+```sh
+docker run -it --rm -p 15432:5432 --name tmp_postgres -e POSTGRES_PASSWORD=postgres -v $(pwd)/${BACKUP_FILENAME}.pgsql:/backup.pgsql postgres
+```
+
+- Terminal 2:
+
+```sh
+docker exec -it tmp_postgres bash
+pg_restore -U postgres -d postgres --no-owner -v /backup.pgsql
+psql -U postgres -d postgres
+```
+
+Then debug from SQL inline or use DBeaver to connect to `localhost:15432` with above credentials.
+
+Once done, stop the container and remove the downloaded `.tar.gz / .psql` files.
+
+#### Replay jobs
+
 Except the case of replaying queueing jobs once they fail because they may be archived already. And since it's a bit tricky to move a job directly from SQL while cleaning its right properties, we decided to make an endpoint for this as an helper:
 
 - [POST] `/api/maintenance/jobs/replay` _(it expects as body `{ jobId: "..." }`)_
