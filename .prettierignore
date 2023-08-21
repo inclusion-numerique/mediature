@@ -1,6 +1,8 @@
+/apps/docs/.cache/
 /apps/docs/public/mockServiceWorker.js
 /apps/docs/storybook-static/
 /apps/main/.next/
+/apps/main/dist/
 /apps/main/prisma/generated-for-inspiration/
 /apps/main/src/**/*.docx
 **/.dockerignore
