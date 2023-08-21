@@ -1,7 +1,7 @@
 lockfileVersion: '6.0'
 
 overrides:
-  '@codegouvfr/react-dsfr': 0.40.0
+  '@codegouvfr/react-dsfr': 0.46.4
   '@glen/jest-raw-loader': ^2.0.0
   '@gouvfr/dsfr': ^1.8.5
   '@lhci/cli': ^0.10.0
@@ -78,8 +78,8 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
       '@codegouvfr/react-dsfr':
-        specifier: 0.40.0
-        version: 0.40.0(react@18.2.0)
+        specifier: 0.46.4
+        version: 0.46.4(react@18.2.0)
       '@mediature/main':
         specifier: workspace:main@*
         version: link:../main
@@ -307,8 +307,8 @@ importers:
   apps/main:
     dependencies:
       '@codegouvfr/react-dsfr':
-        specifier: 0.40.0
-        version: 0.40.0(react@18.2.0)
+        specifier: 0.46.4
+        version: 0.46.4(react@18.2.0)
       '@hookform/resolvers':
         specifier: ^2.9.10
         version: 2.9.10(react-hook-form@7.40.0)
@@ -843,8 +843,8 @@ importers:
   packages/ui:
     dependencies:
       '@codegouvfr/react-dsfr':
-        specifier: 0.40.0
-        version: 0.40.0(react@18.2.0)
+        specifier: 0.46.4
+        version: 0.46.4(react@18.2.0)
       '@fragaria/address-formatter':
         specifier: ^5.0.1
         version: 5.0.1
@@ -4722,14 +4722,14 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@codegouvfr/react-dsfr@0.40.0(react@18.2.0):
-    resolution: {integrity: sha512-DAD0Y87CKEohhiIwtrt9Q/Z5mCQBogTyUO5InKfzympN9WqowbJoGjbtRtwRfX0cVD45MLk2Fx/NXiFuXbKZGg==}
+  /@codegouvfr/react-dsfr@0.46.4(react@18.2.0):
+    resolution: {integrity: sha512-HLMQZdQ79bAFLVtPdmZmKvA1a6nkZUf5+DF6qcEQu/Xt7i8bem7jVjfH+5X6v5jtLCMBTZV9ACHqJKQLurQCHw==}
     hasBin: true
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
-      tsafe: 1.4.1
+      tsafe: 1.6.4
     dev: false
 
   /@colors/colors@1.5.0:
@@ -8459,8 +8459,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.1.0-rc.2:
-    resolution: {integrity: sha512-O0JLRCFrL7YLMd8sBHdLCqbJBLxW8nCrj7cOwkxt1HY73vy4u/VRujmVZbElaG5QJIoZNUZERyL+oSChthKWlg==}
+  /@storybook/client-logger@7.4.0-alpha.0:
+    resolution: {integrity: sha512-gQTfh3gFVHpmw2CGZSWsk9qZDZuY/AdZZYC+uvyXtXLF1+TrmBkmJTWBEjk93Hm9LJu83Q+z1scCqIUyu6aGHQ==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -8738,7 +8738,7 @@ packages:
       '@storybook/core-events': 7.0.0-beta.45
       '@storybook/csf': 0.1.1-next.0
       '@storybook/csf-tools': 7.0.0-beta.45
-      '@storybook/docs-mdx': 0.0.1-next.7
+      '@storybook/docs-mdx': 0.1.1-next.0
       '@storybook/global': 5.0.0
       '@storybook/manager': 7.0.0-beta.45
       '@storybook/node-logger': 7.0.0-beta.45
@@ -8886,8 +8886,8 @@ packages:
     dependencies:
       type-fest: 2.19.0
 
-  /@storybook/docs-mdx@0.0.1-next.7:
-    resolution: {integrity: sha512-JbgBf/EMBtx65iXtB3pOiX3818UeL9jZ+KAY241OAPqJVXjMQ5KaVOdg/57MSmd508HDIGx7CiImOMEmWwQ9/g==}
+  /@storybook/docs-mdx@0.1.1-next.0:
+    resolution: {integrity: sha512-t5gehdVj1GxicE2W3mslaqaLGKg6u1wZRySVrWNM4Ue7PmuI0LvJDLcOcaIzizc4Duh+JljMvShK8NTaxhE1PA==}
     dev: true
 
   /@storybook/docs-tools@7.0.0-beta.41:
@@ -9460,7 +9460,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.1.0-rc.2
+      '@storybook/client-logger': 7.4.0-alpha.0
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
@@ -25163,8 +25163,8 @@ packages:
       typescript: 4.9.3
     dev: false
 
-  /tsafe@1.4.1:
-    resolution: {integrity: sha512-3IDBalvf6SyvHFS14UiwCWzqdSdo+Q0k2J7DZyJYaHW/iraW9DJpaBKDJpry3yQs3o/t/A+oGaRW3iVt2lKxzA==}
+  /tsafe@1.6.4:
+    resolution: {integrity: sha512-l4Z54QFGHO8GF0gBpb3yPGHjkIkIirl8rwW+lMBmtEMzOJeRs8BdjkDEx6nU8Ak9PQVp/KNDtECxTja8MMIDoA==}
     dev: false
 
   /tsconfig-paths-webpack-plugin@4.0.0:
