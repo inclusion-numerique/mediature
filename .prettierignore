@@ -1,10 +1,14 @@
 /apps/docs/.cache/
+/apps/docs/coverage/
 /apps/docs/public/mockServiceWorker.js
 /apps/docs/storybook-static/
+/apps/main/.cache/
+/apps/main/.lighthouseci/
 /apps/main/.next/
 /apps/main/dist/
 /apps/main/prisma/generated-for-inspiration/
 /apps/main/src/**/*.docx
+/apps/main/src/**/*.transformed.html
 **/.dockerignore
 /pnpm-lock.yaml
 /.vscode/i18n-ally-reviews.yml
