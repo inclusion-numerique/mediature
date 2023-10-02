@@ -372,6 +372,8 @@ export const caseRouter = router({
       },
       data: {
         initiatedFrom: input.initiatedFrom,
+        alreadyRequestedInThePast: input.alreadyRequestedInThePast,
+        gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
         units: input.units,
         termReminderAt: input.termReminderAt,

@@ -45,7 +45,7 @@ export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, 
     if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant.`,
+        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant`,
       });
     }
   }
@@ -66,6 +66,8 @@ export const incompleteUpdateCaseSchema = z
     genderIdentity: CitizenSchema.shape.genderIdentity,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
+    alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
+    gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
     description: incompleteCaseSchema.shape.description,
     domainId: z.string().uuid().nullable(),
     competent: incompleteCaseSchema.shape.competent,
@@ -87,6 +89,13 @@ export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ct
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone`,
+      });
+    }
+
+    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser qu'il y a eu une réponse de l'administration si vous indiquez qu'il n'y a pas eu une requête auparavant`,
       });
     }
 

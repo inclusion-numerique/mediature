@@ -153,6 +153,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             number: caseWrapper?.citizen.phone.number,
           }
         : getDefaultPhoneValue(),
+      alreadyRequestedInThePast: caseWrapper?.case.alreadyRequestedInThePast,
+      gotAnswerFromPreviousRequest: caseWrapper?.case.gotAnswerFromPreviousRequest,
       description: caseWrapper?.case.description,
       domainId: caseWrapper?.case.domain?.id || null,
       competent: caseWrapper?.case.competent,
@@ -242,6 +244,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             number: updatedCaseWrapper.citizen.phone.number,
           }
         : getDefaultPhoneValue(),
+      alreadyRequestedInThePast: updatedCaseWrapper.case.alreadyRequestedInThePast,
+      gotAnswerFromPreviousRequest: updatedCaseWrapper.case.gotAnswerFromPreviousRequest,
       description: updatedCaseWrapper.case.description,
       domainId: updatedCaseWrapper.case.domain?.id || null,
       competent: updatedCaseWrapper.case.competent,
@@ -369,6 +373,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           number: control._defaultValues.phone?.number || citizen.phone.number,
                         }
                       : null,
+                    alreadyRequestedInThePast: control._defaultValues.alreadyRequestedInThePast || targetedCase.alreadyRequestedInThePast,
+                    gotAnswerFromPreviousRequest: control._defaultValues.gotAnswerFromPreviousRequest || targetedCase.gotAnswerFromPreviousRequest,
                     description: control._defaultValues.description || targetedCase.description,
                     domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                     competent: control._defaultValues.competent || targetedCase.competent,
@@ -488,6 +494,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           number: citizen.phone.number,
                         }
                       : getDefaultPhoneValue(),
+                    alreadyRequestedInThePast: control._defaultValues.alreadyRequestedInThePast || targetedCase.alreadyRequestedInThePast,
+                    gotAnswerFromPreviousRequest: control._defaultValues.gotAnswerFromPreviousRequest || targetedCase.gotAnswerFromPreviousRequest,
                     description: control._defaultValues.description || targetedCase.description,
                     domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                     competent: control._defaultValues.competent || targetedCase.competent,
@@ -821,19 +829,52 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         />
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                          Premier recours à l&apos;amiable effectué ?
-                        </Typography>
-                        <br />
-                        <Chip label={targetedCase.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
+                        <FormControl error={!!errors.alreadyRequestedInThePast}>
+                          <FormLabel id="previous-request-radio-buttons-group-label">Premier recours à l&apos;amiable effectué ?</FormLabel>
+                          <RadioGroup
+                            defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
+                            onChange={(event) => {
+                              const value = event.target.value === 'true';
+
+                              setValue('alreadyRequestedInThePast', value, {
+                                shouldDirty: true,
+                              });
+
+                              if (!value) {
+                                setValue('gotAnswerFromPreviousRequest', null, {
+                                  shouldDirty: true,
+                                });
+                              }
+                            }}
+                            aria-labelledby="previous-request-radio-buttons-group-label"
+                            aria-describedby="previous-request-helper-text"
+                          >
+                            <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                            <FormControlLabel value="false" control={<Radio />} label="Non" />
+                          </RadioGroup>
+                          <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
+                        </FormControl>
                       </Grid>
-                      {targetedCase.alreadyRequestedInThePast && (
+                      {watch('alreadyRequestedInThePast') && (
                         <Grid item xs={12}>
-                          <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                            Suite au premier recours, réponse de l&apos;administration reçue ?
-                          </Typography>
-                          <br />
-                          <Chip label={targetedCase.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')} />
+                          <FormControl error={!!errors.gotAnswerFromPreviousRequest}>
+                            <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
+                              Suite au premier recours, réponse de l&apos;administration reçue ?
+                            </FormLabel>
+                            <RadioGroup
+                              defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
+                              onChange={(event) => {
+                                setValue('gotAnswerFromPreviousRequest', event.target.value === 'true', {
+                                  shouldDirty: true,
+                                });
+                              }}
+                              aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
+                            >
+                              <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                              <FormControlLabel value="false" control={<Radio />} label="Non" />
+                            </RadioGroup>
+                            <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
+                          </FormControl>
                         </Grid>
                       )}
                     </Grid>
@@ -1054,6 +1095,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         countryCode: control._formValues.phone.countryCode,
                         number: control._formValues.phone.number,
                       },
+                      alreadyRequestedInThePast: control._formValues.alreadyRequestedInThePast,
+                      gotAnswerFromPreviousRequest: control._formValues.gotAnswerFromPreviousRequest,
                       description: control._formValues.description,
                       domainId: control._formValues.domainId,
                       competent: control._formValues.competent,
