@@ -51,7 +51,7 @@ async function playOpenAndFindElement(canvasElement: HTMLElement): Promise<HTMLE
   });
 }
 
-const Template: StoryFn<typeof MessengerSender> = (args) => {
+const Template: StoryFn<ComponentType> = (args) => {
   const eventEmitter = new EventEmitter();
 
   args.eventEmitter = eventEmitter;
@@ -71,7 +71,7 @@ const Template: StoryFn<typeof MessengerSender> = (args) => {
   );
 };
 
-const reusableTemplate: StoryFn<typeof MessengerSender> = (args) => {
+const reusableTemplate: StoryFn<ComponentType> = (args) => {
   return <MessengerSender {...args} />;
 };
 
