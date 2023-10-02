@@ -1,4 +1,3 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import Button from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -21,8 +20,6 @@ export interface QuickAccessCardProps {
 }
 
 export function QuickAccessCard(props: QuickAccessCardProps) {
-  const theme = useColors();
-
   let isImageAnUrl: boolean = isRemoteUrl(props.image);
 
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Grid from '@mui/material/Grid';
 
 import toReplace from '@mediature/main/public/assets/features/to_replace.png';
@@ -9,8 +9,6 @@ import { Introduction } from '@mediature/main/src/app/(public)/features/Introduc
 import { Contact } from '@mediature/ui/src/Contact';
 
 export function FeaturesPage() {
-  const theme = useColors();
-
   return (
     <Grid
       container
@@ -38,7 +36,7 @@ export function FeaturesPage() {
       />
       <Feature
         {...{
-          bgcolor: theme.decisions.background.alt.grey.default,
+          bgcolor: fr.colors.decisions.background.alt.grey.default,
           reverseItems: true,
           image: toReplace,
           imageAlt: ``,

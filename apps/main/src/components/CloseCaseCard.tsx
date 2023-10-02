@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -39,13 +39,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
     control,
   } = props.wrapperForm;
 
-  const theme = useColors();
-
   return (
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: theme.decisions.background.alt.yellowMoutarde.default,
+        backgroundColor: fr.colors.decisions.background.alt.yellowMoutarde.default,
       }}
     >
       <CardContent>

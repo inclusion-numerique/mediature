@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -164,7 +164,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     });
   }, [caseWrapper, isDirty, reset]);
 
-  const theme = useColors();
   const reminderAnchorRef = useRef<HTMLButtonElement | null>(null);
   const [reminderMinimumDate, setReminderMinimumDate] = useState<Date>(new Date());
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
@@ -547,7 +546,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   position: 'sticky',
                   top: 0,
                   zIndex: 450,
-                  background: theme.decisions.background.default.grey.default,
+                  background: fr.colors.decisions.background.default.grey.default,
                   pb: 2,
                 }}
               >

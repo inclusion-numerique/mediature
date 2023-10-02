@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import Grid from '@mui/material/Grid';
@@ -21,15 +21,13 @@ export interface PasswordFieldHinterItemProps {
 }
 
 export function PasswordFieldHinterItem(props: PasswordFieldHinterItemProps) {
-  const theme = useColors();
-
   return (
     <>
       <Grid item component="li" xs={12} sx={{ display: 'flex', alignItems: 'center' }}>
         {props.valid ? (
-          <CheckBoxIcon fontSize="small" sx={{ color: theme.decisions.text.actionHigh.blueFrance.default, mr: 1 }} />
+          <CheckBoxIcon fontSize="small" sx={{ color: fr.colors.decisions.text.actionHigh.blueFrance.default, mr: 1 }} />
         ) : (
-          <CheckBoxOutlineBlankIcon fontSize="small" sx={{ color: theme.decisions.text.actionHigh.blueFrance.default, mr: 1 }} />
+          <CheckBoxOutlineBlankIcon fontSize="small" sx={{ color: fr.colors.decisions.text.actionHigh.blueFrance.default, mr: 1 }} />
         )}
         {props.text}
       </Grid>

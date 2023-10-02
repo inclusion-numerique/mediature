@@ -1,6 +1,7 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -53,7 +54,8 @@ export function CaseCard(props: CaseCardProps) {
     setAnchorEl(null);
   };
 
-  const theme = useColors();
+  const { isDark } = useIsDark();
+  const theme = fr.colors.getHex({ isDark });
 
   const reminderSoon: boolean = props.case.termReminderAt ? isReminderSoon(props.case.termReminderAt) : false;
 

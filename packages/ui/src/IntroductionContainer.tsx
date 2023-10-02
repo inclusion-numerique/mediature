@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Box, { BoxProps } from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -17,15 +17,13 @@ export function IntroductionContainer({
   rightSx?: BoxProps['sx'];
   containerMaxHeight?: any; // Tried to type `BoxProps['sx']['maxHeight']` but it's not working
 }) {
-  const theme = useColors();
-
   const containerMaxHeightToUse = containerMaxHeight || { xs: 500, sm: 600, xl: 700 };
 
   return (
     <Box
       sx={{
         overflow: 'hidden',
-        borderBottom: `1px solid ${theme.decisions.background.alt.grey.active}`,
+        borderBottom: `1px solid ${fr.colors.decisions.background.alt.grey.active}`,
       }}
     >
       <Container
@@ -51,7 +49,7 @@ export function IntroductionContainer({
                   alignItems: 'center',
                   px: '3vw',
                   py: '20px',
-                  bgcolor: theme.decisions.background.alt.grey.default,
+                  bgcolor: fr.colors.decisions.background.alt.grey.default,
                   minWidth: {
                     md: `${100 / (12 / 5)}vw`,
                     lg: `${100 / (12 / 6)}vw`,

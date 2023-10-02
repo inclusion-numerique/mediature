@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Grid from '@mui/material/Grid';
 
 import amct from '@mediature/main/public/assets/partners/amct.png';
@@ -10,8 +10,6 @@ import { Introduction } from '@mediature/main/src/app/(public)/about-us/Introduc
 import { Partner } from '@mediature/main/src/app/(public)/about-us/Partner';
 
 export function AboutUsPage() {
-  const theme = useColors();
-
   return (
     <Grid
       container
@@ -39,7 +37,7 @@ export function AboutUsPage() {
       />
       <Partner
         {...{
-          bgcolor: theme.decisions.background.alt.grey.default,
+          bgcolor: fr.colors.decisions.background.alt.grey.default,
           link: 'https://beta.gouv.fr',
           image: betagouv,
           imageAlt: `logo de beta.gouv`,

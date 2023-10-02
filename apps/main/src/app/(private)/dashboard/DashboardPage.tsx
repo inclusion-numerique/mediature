@@ -1,6 +1,5 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import Button from '@mui/lab/LoadingButton';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -20,7 +19,6 @@ import { QuickAccessCard } from '@mediature/ui/src/QuickAccessCard';
 export interface DashboardPageProps {}
 
 export function DashboardPage(props: DashboardPageProps) {
-  const theme = useColors();
   const { showLiveChat, isLiveChatLoading } = useLiveChat();
 
   const { data, error, isLoading, refetch } = trpc.getInterfaceSession.useQuery({});

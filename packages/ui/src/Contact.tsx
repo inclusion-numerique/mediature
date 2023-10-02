@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 
 export function Contact() {
-  const theme = useColors();
   const { showLiveChat, isLiveChatLoading } = useLiveChat();
 
   return (
@@ -21,7 +20,7 @@ export function Contact() {
       maxWidth={false}
       disableGutters
       sx={{
-        bgcolor: theme.decisions.background.alt.blueFrance.default,
+        bgcolor: fr.colors.decisions.background.alt.blueFrance.default,
         py: { xs: 3, md: 4 },
       }}
     >
@@ -34,7 +33,7 @@ export function Contact() {
                   md: 6,
                 },
                 borderRight: {
-                  md: `1px solid ${theme.decisions.border.default.blueFrance.default}`,
+                  md: `1px solid ${fr.colors.decisions.border.default.blueFrance.default}`,
                 },
               }}
             >
@@ -67,7 +66,7 @@ export function Contact() {
                   size="large"
                   sx={{
                     pl: 0,
-                    color: theme.decisions.text.actionHigh.blueFrance.default,
+                    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
                     backgroundImage: 'none !important',
                     '&::after': {
                       display: 'none !important',
@@ -84,7 +83,7 @@ export function Contact() {
                   title="LinkedIn"
                   size="large"
                   sx={{
-                    color: theme.decisions.text.actionHigh.blueFrance.default,
+                    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
                     backgroundImage: 'none !important',
                     '&::after': {
                       display: 'none !important',
@@ -101,7 +100,7 @@ export function Contact() {
                   title="GitHub"
                   size="large"
                   sx={{
-                    color: theme.decisions.text.actionHigh.blueFrance.default,
+                    color: fr.colors.decisions.text.actionHigh.blueFrance.default,
                     backgroundImage: 'none !important',
                     '&::after': {
                       display: 'none !important',

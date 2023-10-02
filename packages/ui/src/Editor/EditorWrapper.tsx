@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import { InitialEditorStateType, LexicalComposer } from '@lexical/react/LexicalComposer';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import Card from '@mui/material/Card';
@@ -41,7 +41,6 @@ export function EditorWrapper(props: EditorWrapperProps): JSX.Element {
     theme: PlaygroundEditorTheme,
   };
 
-  const theme = useColors();
   const muiTheme = useTheme();
 
   return (
@@ -54,7 +53,7 @@ export function EditorWrapper(props: EditorWrapperProps): JSX.Element {
               className="editor-shell"
               sx={{
                 pt: 0,
-                backgroundColor: theme.decisions.background.overlap.grey.default,
+                backgroundColor: fr.colors.decisions.background.overlap.grey.default,
                 borderColor: !!props.error ? muiTheme.palette.error.main : undefined,
               }}
             >

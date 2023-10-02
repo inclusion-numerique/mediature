@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
@@ -21,8 +21,6 @@ export interface MessengerMessageListProps {
 export function MessengerMessageList({ messages, selectedMessage, onMessageClick }: MessengerMessageListProps) {
   const { t } = useTranslation('common');
 
-  const theme = useColors();
-
   return (
     <List>
       {messages.map((message) => {
@@ -38,12 +36,12 @@ export function MessengerMessageList({ messages, selectedMessage, onMessageClick
                 sx={{
                   ...(selected
                     ? {
-                        bgcolor: theme.decisions.background.contrast.blueFrance.default,
+                        bgcolor: fr.colors.decisions.background.contrast.blueFrance.default,
                         '&:hover': {
-                          bgcolor: theme.decisions.background.contrast.blueFrance.hover,
+                          bgcolor: fr.colors.decisions.background.contrast.blueFrance.hover,
                         },
                         '&:active': {
-                          bgcolor: theme.decisions.background.contrast.blueFrance.active,
+                          bgcolor: fr.colors.decisions.background.contrast.blueFrance.active,
                         },
                       }
                     : {}),

@@ -1,6 +1,7 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +21,8 @@ export function CaseStatusChip(props: CaseStatusChipProps) {
   let statusColor = 'black';
   let statusText = t(`model.case.status.enum.${props.status}`);
 
-  const theme = useColors();
+  const { isDark } = useIsDark();
+  const theme = fr.colors.getHex({ isDark });
 
   switch (props.status) {
     case CaseStatusSchema.Values.TO_PROCESS:

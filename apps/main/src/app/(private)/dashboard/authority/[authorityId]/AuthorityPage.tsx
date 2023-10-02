@@ -1,6 +1,5 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -21,8 +20,6 @@ export interface AuthorityPageProps {
 }
 
 export function AuthorityPage({ params: { authorityId } }: AuthorityPageProps) {
-  const theme = useColors();
-
   const { data, error, isLoading, refetch } = trpc.getAuthority.useQuery({
     id: authorityId,
   });

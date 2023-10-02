@@ -1,4 +1,5 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import Box, { BoxProps } from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { alpha } from '@mui/material/styles';
@@ -46,7 +47,8 @@ export const SidePanel = (props: BoxProps) => (
 export const Main = (props: BoxProps) => <Box {...props} sx={[{ pl: 2 }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]} />;
 
 export const SideDrawer = ({ onClose, ...props }: BoxProps & { onClose: React.MouseEventHandler<HTMLDivElement> }) => {
-  const theme = useColors();
+  const { isDark } = useIsDark();
+  const theme = fr.colors.getHex({ isDark });
 
   return (
     <Box
@@ -59,7 +61,7 @@ export const SideDrawer = ({ onClose, ...props }: BoxProps & { onClose: React.Mo
           zIndex: 1200,
           width: '100%',
           height: '100%',
-          bgcolor: () => alpha(theme.isDark ? '#ffffff' : '#161616', 0.3), // Don't remember for now how to retrieve values from `theme.decisions` but by inverting light and dark theme (in a hurry sorry)
+          bgcolor: () => alpha(isDark ? '#ffffff' : '#161616', 0.3), // Don't remember for now how to retrieve values from `theme.decisions` but by inverting light and dark theme (in a hurry sorry)
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}

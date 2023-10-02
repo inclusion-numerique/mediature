@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import { $isCodeHighlightNode } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -174,8 +175,7 @@ function TextFormatFloatingToolbar({
     );
   }, [editor, updateTextFormatFloatingToolbar]);
 
-  const theme = useColors();
-  const isDark = theme.isDark;
+  const { isDark } = useIsDark();
 
   return (
     <Grid
@@ -186,8 +186,8 @@ function TextFormatFloatingToolbar({
       sx={{
         width: 'auto',
         zIndex: 100,
-        backgroundColor: theme.decisions.background.overlap.grey.default,
-        border: `${theme.decisions.border.default.grey.default} solid 1px`,
+        backgroundColor: fr.colors.decisions.background.overlap.grey.default,
+        border: `${fr.colors.decisions.border.default.grey.default} solid 1px`,
         p: 1,
       }}
     >
