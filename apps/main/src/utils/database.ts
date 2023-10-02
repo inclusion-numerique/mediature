@@ -22,7 +22,7 @@ export async function setupPostgres(): Promise<PostgresContainer> {
   const composeFilePath = path.resolve(__dirname, '../../../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'postgres';
-  const containerName = formatContainerNameWithSuffix('postgres_container');
+  const containerName = formatContainerNameWithSuffix('mediature_postgres_container');
 
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
