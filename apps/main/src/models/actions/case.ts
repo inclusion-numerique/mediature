@@ -91,7 +91,12 @@ export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ct
     if (data.competent === true && data.competentThirdPartyId !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué ne pas être compétent pour traiter le dossier`,
+        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué que la collectivité n'est pas compétente pour traiter le dossier`,
+      });
+    } else if (data.competent === false && data.domainId !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser un domaine pour ce dossier si vous indiquez que la collectivité n'a pas la compétence pour le traiter`,
       });
     }
 

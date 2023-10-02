@@ -827,22 +827,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>
-                        <ContextualCaseDomainField
-                          authorityId={targetedCase.authorityId}
-                          value={targetedCase.domain}
-                          onChange={(item) => {
-                            setValue('domainId', item?.id || null, {
-                              // shouldValidate: true,
-                              shouldDirty: true,
-                            });
-                          }}
-                          errorMessage={errors?.domainId?.message}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
                         <FormControl error={!!errors.competent}>
                           <FormLabel id="competent-radio-buttons-group-label">
-                            Est-ce que votre équipe de médiateurs est compétente pour traiter ce dossier ?
+                            Est-ce que cette saisine entre dans le domaine de compétence de votre collectivité ?
                           </FormLabel>
                           <RadioGroup
                             defaultValue={control._defaultValues.competent?.toString()}
@@ -853,6 +840,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
 
                               if (value) {
                                 setValue('competentThirdPartyId', null);
+                              } else {
+                                setValue('domainId', null);
                               }
                             }}
                             aria-labelledby="competent-radio-buttons-group-label"
@@ -863,6 +852,21 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           <FormHelperText>{errors?.competent?.message}</FormHelperText>
                         </FormControl>
                       </Grid>
+                      {watch('competent') === true && (
+                        <Grid item xs={12}>
+                          <ContextualCaseDomainField
+                            authorityId={targetedCase.authorityId}
+                            value={targetedCase.domain}
+                            onChange={(item) => {
+                              setValue('domainId', item?.id || null, {
+                                // shouldValidate: true,
+                                shouldDirty: true,
+                              });
+                            }}
+                            errorMessage={errors?.domainId?.message}
+                          />
+                        </Grid>
+                      )}
                       {watch('competent') === false && (
                         <Grid item xs={12}>
                           <ContextualCaseCompetentThirdPartyField

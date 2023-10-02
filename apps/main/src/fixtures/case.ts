@@ -164,7 +164,7 @@ export const cases: CaseSchemaType[] = [
     Ad quasi cum ut ipsa harum accusantium minima quo magnam. Similique repellendus ab dolor magnam officiis laboriosam repudiandae vitae. Rem aut quasi. Repudiandae vel aut commodi. Ullam deserunt nesciunt ullam quibusdam consequatur dolor reiciendis.
 
     Sint sunt sed praesentium eum et consequuntur sint. Corporis molestiae quaerat libero amet. Architecto provident recusandae.`,
-    domain: null,
+    domain: caseDomains[0],
     competent: true,
     competentThirdParty: null,
     units: '',
@@ -192,7 +192,7 @@ export const cases: CaseSchemaType[] = [
     gotAnswerFromPreviousRequest: null,
     description:
       'Saepe itaque autem. Quibusdam magnam aliquid nihil. Autem mollitia ab. Blanditiis beatae odit molestiae dolores inventore tempora in blanditiis. Error tempore unde ex neque temporibus occaecati. Quia consectetur tenetur aut nam id.',
-    domain: caseDomains[0],
+    domain: null,
     competent: false,
     competentThirdParty: caseCompetentThirdParties[0],
     units: '',
@@ -220,7 +220,7 @@ export const cases: CaseSchemaType[] = [
     gotAnswerFromPreviousRequest: null,
     description:
       'Quidem maxime natus veritatis voluptatem molestiae similique omnis voluptas voluptas. Consequatur nam vero architecto reiciendis qui quis vitae odio dolore. Ut odio illo quaerat vel maxime sit vitae. Velit velit id perspiciatis consequatur velit veniam non.',
-    domain: caseDomains[0],
+    domain: null,
     competent: false,
     competentThirdParty: caseCompetentThirdParties[0],
     units: '',
