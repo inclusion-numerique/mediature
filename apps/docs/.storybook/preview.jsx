@@ -1,5 +1,6 @@
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
+import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes';
 import { withLinks } from '@storybook/addon-links';
 import addons from '@storybook/addons';
 import { configure as testingConfigure } from '@storybook/testing-library';
@@ -24,6 +25,9 @@ import { StorybookRendererLayout } from '@mediature/ui/src/emails/layouts/storyb
 import '@mediature/ui/src/fonts/index.css';
 
 // const channel = addons.getChannel();
+
+// [WORKAROUND] Since `react-dsfr` no longer passes the color scheme through `DsfrProvider` and `DsfrHead` we call this function to avoid an assert error
+getHtmlAttributes({ defaultColorScheme: 'light' });
 
 if (window.matchMedia) {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
@@ -172,8 +176,8 @@ export const decorators = [
       return (
         <>
           <StartDsfr />
-          <DsfrHead defaultColorScheme={context.parameters.darkMode.current} />
-          <DsfrProvider defaultColorScheme={context.parameters.darkMode.current}>
+          <DsfrHead />
+          <DsfrProvider>
             <MuiDsfrThemeProvider>
               <MockProvider>
                 <Providers>
