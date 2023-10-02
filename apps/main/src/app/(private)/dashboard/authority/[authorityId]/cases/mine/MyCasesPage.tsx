@@ -11,6 +11,7 @@ import debounce from 'lodash.debounce';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseCard } from '@mediature/ui/src/CaseCard';
@@ -66,6 +67,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
     });
 
   const unassignCase = trpc.unassignCase.useMutation();
+  const deleteCase = trpc.deleteCase.useMutation();
   const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
   if (error) {
@@ -85,6 +87,26 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
         await unassignCase.mutateAsync({
           caseId: caseId,
           agentId: agentId,
+        });
+      },
+    });
+  };
+
+  const deleteCaseAction = async (caseToDelete: CaseSchemaType) => {
+    showConfirmationDialog({
+      description: (
+        <>
+          Êtes-vous sûr de vouloir supprimer le dossier n°{caseToDelete.humanId} ?
+          <br />
+          <br />
+          <Typography component="span" sx={{ fontStyle: 'italic' }}>
+            Tous les éléments qu&apos;il contient seront définitivement supprimés.
+          </Typography>
+        </>
+      ),
+      onConfirm: async () => {
+        await deleteCase.mutateAsync({
+          caseId: caseToDelete.id,
         });
       },
     });
@@ -159,6 +181,9 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                       unassignAction={async () => {
                         await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
                       }}
+                      deleteAction={async () => {
+                        await deleteCaseAction(caseWrapper.case);
+                      }}
                     />
                   </Grid>
                 ))}
@@ -190,6 +215,9 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                       }}
                       unassignAction={async () => {
                         await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
+                      }}
+                      deleteAction={async () => {
+                        await deleteCaseAction(caseWrapper.case);
                       }}
                     />
                   </Grid>

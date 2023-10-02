@@ -113,6 +113,16 @@ export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
 export const UpdateCasePrefillSchema = incompleteUpdateCaseSchema.deepPartial();
 export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema>;
 
+export const DeleteCaseSchema = z
+  .object({
+    caseId: incompleteCaseSchema.shape.id,
+  })
+  .strict();
+export type DeleteCaseSchemaType = z.infer<typeof DeleteCaseSchema>;
+
+export const DeleteCasePrefillSchema = DeleteCaseSchema.deepPartial();
+export type DeleteCasePrefillSchemaType = z.infer<typeof DeleteCasePrefillSchema>;
+
 export const AssignCaseSchema = z
   .object({
     caseId: incompleteCaseSchema.shape.id,

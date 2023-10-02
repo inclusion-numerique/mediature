@@ -3,6 +3,7 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
@@ -40,6 +41,7 @@ export interface CaseCardProps {
   unprocessedMessages: number;
   assignAction?: () => Promise<void>;
   unassignAction?: () => Promise<void>;
+  deleteAction?: () => Promise<void>;
 }
 
 export function CaseCard(props: CaseCardProps) {
@@ -149,6 +151,14 @@ export function CaseCard(props: CaseCardProps) {
               <PersonRemoveIcon fontSize="small" />
             </ListItemIcon>
             Se désassigner du dossier
+          </MenuItem>
+        )}
+        {!!props.deleteAction && (
+          <MenuItem onClick={props.deleteAction}>
+            <ListItemIcon>
+              <DeleteIcon fontSize="small" />
+            </ListItemIcon>
+            Supprimer ce dossier
           </MenuItem>
         )}
       </Menu>

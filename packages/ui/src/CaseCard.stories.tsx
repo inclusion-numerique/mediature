@@ -37,6 +37,7 @@ NormalStory.args = {
   agent: agents[0],
   assignAction: async () => {},
   unassignAction: async () => {},
+  deleteAction: async () => {},
 };
 NormalStory.play = async ({ canvasElement }) => {
   await playFindElement(canvasElement);
