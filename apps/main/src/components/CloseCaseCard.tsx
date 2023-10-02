@@ -157,7 +157,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Se poursuit au tribunal administratif ?"
+                    label="Poursuite au tribunal administratif ?"
                     defaultValue={control._defaultValues.administrativeCourtNext || ''}
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
