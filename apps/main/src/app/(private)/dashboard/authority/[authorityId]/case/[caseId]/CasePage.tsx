@@ -131,6 +131,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
       email: caseWrapper?.citizen.email,
+      firstname: caseWrapper?.citizen.firstname,
+      lastname: caseWrapper?.citizen.lastname,
       genderIdentity: caseWrapper?.citizen.genderIdentity,
       address: caseWrapper?.citizen.address
         ? {
@@ -218,6 +220,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       close: !!updatedCaseWrapper.case.closedAt,
       status: updatedCaseWrapper.case.status,
       email: updatedCaseWrapper.citizen.email,
+      firstname: updatedCaseWrapper.citizen.firstname,
+      lastname: updatedCaseWrapper.citizen.lastname,
       genderIdentity: updatedCaseWrapper.citizen.genderIdentity,
       address: updatedCaseWrapper.citizen.address
         ? {
@@ -315,7 +319,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
           }}
         >
           <Typography component="b" variant="h4">
-            {citizen.firstname} {citizen.lastname}
+            {watch('firstname')} {watch('lastname')}
           </Typography>
           <Divider orientation="vertical" flexItem sx={{ height: '50%', mx: 2, my: 'auto' }} />
           <Typography component="b" variant="subtitle1">
@@ -345,6 +349,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
                     email: control._defaultValues.email || citizen.email,
+                    firstname: control._defaultValues.firstname || citizen.firstname,
+                    lastname: control._defaultValues.lastname || citizen.lastname,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
                     address: citizen.address
                       ? {
@@ -447,6 +453,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
                     email: control._defaultValues.email || citizen.email,
+                    firstname: control._defaultValues.firstname || citizen.firstname,
+                    lastname: control._defaultValues.lastname || citizen.lastname,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
                     address: control._defaultValues.address
                       ? {
@@ -719,6 +727,24 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           {...register('email')}
                           error={!!errors.email}
                           helperText={errors?.email?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          label="Prénom"
+                          {...register('firstname')}
+                          error={!!errors.firstname}
+                          helperText={errors?.firstname?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          label="Nom de famille"
+                          {...register('lastname')}
+                          error={!!errors.lastname}
+                          helperText={errors?.lastname?.message}
                           fullWidth
                         />
                       </Grid>
@@ -1012,6 +1038,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
                       email: control._formValues.email,
+                      firstname: control._formValues.firstname,
+                      lastname: control._formValues.lastname,
                       genderIdentity: control._formValues.genderIdentity,
                       address: {
                         street: control._formValues.address.street,

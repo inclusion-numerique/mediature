@@ -61,6 +61,8 @@ export const incompleteUpdateCaseSchema = z
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
+    firstname: CitizenSchema.shape.firstname,
+    lastname: CitizenSchema.shape.lastname,
     genderIdentity: CitizenSchema.shape.genderIdentity,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),

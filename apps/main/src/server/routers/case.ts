@@ -402,6 +402,8 @@ export const caseRouter = router({
         citizen: {
           update: {
             email: input.email,
+            firstname: input.firstname,
+            lastname: input.lastname,
             genderIdentity: input.genderIdentity,
             address: {
               delete: deleteCitizenAddress,
