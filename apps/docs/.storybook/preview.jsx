@@ -129,6 +129,11 @@ export const parameters = {
           id: 'scrollable-region-focusable',
           selector: '*:not(.MuiDataGrid-virtualScroller)',
         },
+        {
+          // `react-dsfr` uses the same id for desktop and mobile for their quick access items
+          id: 'duplicate-id-active',
+          selector: '*:not([id^="fr-header-quick-access-item"])',
+        },
       ],
     },
   },
