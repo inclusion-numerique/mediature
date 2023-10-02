@@ -12,6 +12,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import Button from '@mui/lab/LoadingButton';
 import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -320,91 +321,96 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
           <Typography component="b" variant="subtitle1">
             Dossier n°{targetedCase.humanId}
           </Typography>
-          <DatePicker
-            open={reminderPickerOpen}
-            label="Date de la demande"
-            value={watch('termReminderAt') || null}
-            minDate={reminderMinimumDate}
-            onChange={() => {}}
-            onClose={() => {
-              setReminderPickerOpen(false);
-            }}
-            onAccept={async (newDate) => {
-              setValue('termReminderAt', newDate, {
-                shouldDirty: false, // To keeping simple the isDirty for the manual part
-              });
-
-              try {
-                await submitOutsideBaseForm({
-                  termReminderAt: control._formValues.termReminderAt,
-                  status: control._formValues.status,
-                  // Do not update values that need a form submit
-                  initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
-                  caseId: control._defaultValues.caseId || targetedCase.id,
-                  email: control._defaultValues.email || citizen.email,
-                  genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
-                  address: citizen.address
-                    ? {
-                        street: control._defaultValues.address?.street || citizen.address.street,
-                        postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
-                        city: control._defaultValues.address?.city || citizen.address.city,
-                        subdivision: undefined as unknown as string,
-                        countryCode: undefined as unknown as string,
-                      }
-                    : null,
-                  phone: citizen.phone
-                    ? {
-                        phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
-                        callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
-                        countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
-                        number: control._defaultValues.phone?.number || citizen.phone.number,
-                      }
-                    : null,
-                  description: control._defaultValues.description || targetedCase.description,
-                  domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
-                  competent: control._defaultValues.competent || targetedCase.competent,
-                  competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
-                  units: control._defaultValues.units || targetedCase.units,
-                  close: control._defaultValues.close || !!targetedCase.closedAt,
-                  outcome: control._defaultValues.outcome || targetedCase.outcome,
-                  collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
-                  administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
-                  finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
-                  nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+          <Box ref={reminderAnchorRef} sx={{ ml: 'auto' }}>
+            <DatePicker
+              open={reminderPickerOpen}
+              label="Date de la demande"
+              defaultValue={watch('termReminderAt') || null}
+              minDate={reminderMinimumDate}
+              closeOnSelect // Needed to have consistent behavior between desktop and mobile (ref: https://stackoverflow.com/questions/70041109/how-can-i-clear-material-ui-datepicker-input/75213269#75213269)
+              onChange={() => {}}
+              onClose={() => {
+                setReminderPickerOpen(false);
+              }}
+              onAccept={async (newDate) => {
+                setValue('termReminderAt', newDate, {
+                  shouldDirty: false, // To keeping simple the isDirty for the manual part
                 });
-              } catch (err) {
-                setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
-              }
-            }}
-            componentsProps={{
-              actionBar: {
-                actions: ['clear'],
-              },
-            }}
-            PopperProps={{ anchorEl: reminderAnchorRef.current }}
-            renderInput={(params) => {
-              // TODO: aria labels from params?
-              return (
-                <Button
-                  onClick={() => {
-                    setReminderPickerOpen(!reminderPickerOpen);
-                  }}
-                  ref={reminderAnchorRef}
-                  size="large"
-                  variant="text"
-                  color={targetedCase.termReminderAt && isReminderSoon(targetedCase.termReminderAt) ? 'error' : 'primary'}
-                  startIcon={<AccessTimeIcon />}
-                  sx={{ ml: 'auto' }}
-                >
-                  {targetedCase.termReminderAt ? (
-                    <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
-                  ) : (
-                    <span>Définir une échéance</span>
-                  )}
-                </Button>
-              );
-            }}
-          />
+
+                try {
+                  await submitOutsideBaseForm({
+                    termReminderAt: control._formValues.termReminderAt,
+                    status: control._formValues.status,
+                    // Do not update values that need a form submit
+                    initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
+                    caseId: control._defaultValues.caseId || targetedCase.id,
+                    email: control._defaultValues.email || citizen.email,
+                    genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
+                    address: citizen.address
+                      ? {
+                          street: control._defaultValues.address?.street || citizen.address.street,
+                          postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
+                          city: control._defaultValues.address?.city || citizen.address.city,
+                          subdivision: undefined as unknown as string,
+                          countryCode: undefined as unknown as string,
+                        }
+                      : null,
+                    phone: citizen.phone
+                      ? {
+                          phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
+                          callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
+                          countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
+                          number: control._defaultValues.phone?.number || citizen.phone.number,
+                        }
+                      : null,
+                    description: control._defaultValues.description || targetedCase.description,
+                    domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
+                    competent: control._defaultValues.competent || targetedCase.competent,
+                    competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
+                    units: control._defaultValues.units || targetedCase.units,
+                    close: control._defaultValues.close || !!targetedCase.closedAt,
+                    outcome: control._defaultValues.outcome || targetedCase.outcome,
+                    collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
+                    administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
+                    finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
+                    nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+                  });
+                } catch (err) {
+                  setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
+                }
+              }}
+              slots={{
+                field: (params) => {
+                  // TODO: aria labels from params?
+                  return (
+                    <Button
+                      onClick={() => {
+                        setReminderPickerOpen(!reminderPickerOpen);
+                      }}
+                      size="large"
+                      variant="text"
+                      color={targetedCase.termReminderAt && isReminderSoon(targetedCase.termReminderAt) ? 'error' : 'primary'}
+                      startIcon={<AccessTimeIcon />}
+                    >
+                      {targetedCase.termReminderAt ? (
+                        <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
+                      ) : (
+                        <span>Définir une échéance</span>
+                      )}
+                    </Button>
+                  );
+                },
+              }}
+              slotProps={{
+                actionBar: {
+                  actions: ['clear'],
+                },
+                popper: {
+                  anchorEl: reminderAnchorRef.current,
+                },
+              }}
+            />
+          </Box>
         </Grid>
         <Grid
           item
@@ -646,7 +652,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                                   readOnly
                                   value={targetedCase.createdAt}
                                   onChange={(newValue) => {}}
-                                  renderInput={(params) => <TextField {...params} fullWidth />}
+                                  slotProps={{
+                                    textField: {
+                                      fullWidth: true,
+                                    },
+                                  }}
                                 />
                               </div>
                             </Tooltip>

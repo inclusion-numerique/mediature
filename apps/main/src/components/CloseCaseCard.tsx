@@ -97,7 +97,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                           readOnly
                           value={props.case.closedAt}
                           onChange={(newValue) => {}}
-                          renderInput={(params) => <TextField {...params} fullWidth />}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                            },
+                          }}
                         />
                       </div>
                     </Tooltip>
