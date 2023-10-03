@@ -103,14 +103,13 @@ export function CaseCard(props: CaseCardProps) {
               {props.citizen.firstname} {props.citizen.lastname}
             </Link>
             <br />
-            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex' }}>
+            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex', alignItems: 'center' }}>
               Dossier n°{props.case.humanId}
               {!!props.unprocessedMessages && props.unprocessedMessages > 0 && (
                 <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={props.unprocessedMessages} />
               )}
               {!!props.agent && (
-                <Typography component="span" variant="body2">
-                  {' '}
+                <Typography component="span" variant="body2" sx={{ ml: 1 }}>
                   | Assigné à {props.agent.firstname} {props.agent.lastname}
                 </Typography>
               )}
