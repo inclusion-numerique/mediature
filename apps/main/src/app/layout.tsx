@@ -15,6 +15,9 @@ export interface RootLayoutProps {
   workaroundForNextJsPages?: boolean;
 }
 
+// [WORKAROUND] Since `react-dsfr` no longer passes the color scheme through `DsfrProvider` and `DsfrHead` we call this function to avoid an assert error in case of `workaroundForNextJsPages: true` usage
+getHtmlAttributes({ defaultColorScheme });
+
 function MainStructure(props: PropsWithChildren) {
   return (
     <>
