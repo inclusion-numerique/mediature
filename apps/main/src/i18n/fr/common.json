@@ -51,7 +51,7 @@
         },
         "columns": {
           "administrativeCourtNext": "Poursuite au tribunal administratif",
-          "alreadyRequestedInThePast": "Premier recours à l'amiable",
+          "alreadyRequestedInThePast": "1ère réclamation faite",
           "assigned": "Assigné",
           "authorityName": "Collectivité",
           "authorityType": "Type de collectivité",
@@ -62,14 +62,14 @@
           "citizenPostalCode": "Code postal",
           "closedAt": "Date de clôture",
           "collectiveAgreement": "Accord des parties",
-          "createdAt": "Date de création",
-          "gotAnswerFromPreviousRequest": "Réponse pour le premier recours",
-          "humanId": "Dossier",
-          "initiatedFrom": "Origine",
+          "createdAt": "Date de la demande",
+          "gotAnswerFromPreviousRequest": "Réponse à la 1ère réclamation",
+          "humanId": "N° dossier",
+          "initiatedFrom": "Mode de saisine",
           "outcome": "Type de clôture",
           "primaryDomain": "Domaine principal",
           "secondaryDomain": "Domaine secondaire",
-          "status": "Statut",
+          "status": "Avancement du dossier",
           "updatedAt": "Date de dernière mise à jour"
         }
       }
