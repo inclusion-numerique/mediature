@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -143,15 +144,14 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
       </Grid>
       <Grid item xs={12}>
         <FormControl error={!!errors.alreadyRequestedInThePast}>
-          <FormHelperText id="previous-request-helper-text">
-            Pour que nous puissions au mieux traiter votre demande, veuillez répondre à la question suivante. Nous prendrons en compte votre demande
-            peu importe votre réponse.
-          </FormHelperText>
-          <FormLabel id="previous-request-radio-buttons-group-label">Avez-vous effectué un premier recours à l&apos;amiable ?</FormLabel>
+          <FormLabel id="previous-request-radio-buttons-group-label">
+            Avez-vous effectué une première réclamation auprès du service concerné ?
+            <Typography sx={{ fontStyle: 'italic' }}>(cette précision n&apos;est pas obligatoire, vous pouvez ne pas y répondre)</Typography>
+          </FormLabel>
           <RadioGroup
             defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
             onChange={(event) => {
-              const value = event.target.value === 'true';
+              const value = event.target.value === 'null' ? null : event.target.value === 'true';
 
               setValue('alreadyRequestedInThePast', value);
 
@@ -160,32 +160,32 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
               }
             }}
             aria-labelledby="previous-request-radio-buttons-group-label"
-            aria-describedby="previous-request-helper-text"
           >
-            <FormControlLabel value="true" control={<Radio />} label="Oui, j'ai effectué un premier recours à l'amiable" />
-            <FormControlLabel value="false" control={<Radio />} label="Non, je n'ai pas effectué de premier recours à l'amiable" />
+            <FormControlLabel value="true" control={<Radio />} label="Oui" />
+            <FormControlLabel value="false" control={<Radio />} label="Non" />
+            <FormControlLabel value="null" control={<Radio />} label="Je ne sais pas" />
           </RadioGroup>
           <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
         </FormControl>
       </Grid>
-      <Grid item xs={12}>
-        <FormControl disabled={watch('alreadyRequestedInThePast') === false} error={!!errors.gotAnswerFromPreviousRequest}>
-          <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
-            Suite à ce premier recours à l&apos;amiable, avez-vous reçu une réponse de la part de l&apos;organisme à la charge de votre demande ?
-          </FormLabel>
-          <RadioGroup
-            defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
-            onChange={(event) => {
-              setValue('gotAnswerFromPreviousRequest', event.target.value === 'true');
-            }}
-            aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
-          >
-            <FormControlLabel value="true" control={<Radio />} label="Oui, j'ai obtenu une réponse" />
-            <FormControlLabel value="false" control={<Radio />} label="Non, je n'ai pas obtenu de réponse" />
-          </RadioGroup>
-          <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
-        </FormControl>
-      </Grid>
+      {watch('alreadyRequestedInThePast') && (
+        <Grid item xs={12}>
+          <FormControl error={!!errors.gotAnswerFromPreviousRequest}>
+            <FormLabel id="answer-from-previous-request--radio-buttons-group-label">Avez-vous reçu une réponse à cette réclamation ?</FormLabel>
+            <RadioGroup
+              defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
+              onChange={(event) => {
+                setValue('gotAnswerFromPreviousRequest', event.target.value === 'true');
+              }}
+              aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
+            >
+              <FormControlLabel value="true" control={<Radio />} label="Oui" />
+              <FormControlLabel value="false" control={<Radio />} label="Non" />
+            </RadioGroup>
+            <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
+          </FormControl>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <TextField
           label="Motif de la demande :"

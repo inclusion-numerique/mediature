@@ -19,6 +19,14 @@ describe('CaseSchema', () => {
       });
 
       expect(result2.success).toBe(false);
+
+      const result3 = CaseSchema.safeParse({
+        ...cases[0],
+        alreadyRequestedInThePast: null,
+        gotAnswerFromPreviousRequest: false,
+      });
+
+      expect(result3.success).toBe(false);
     });
 
     it('should be a valid combination', async () => {
@@ -45,6 +53,14 @@ describe('CaseSchema', () => {
       });
 
       expect(result3.success).toBe(true);
+
+      const result4 = CaseSchema.safeParse({
+        ...cases[0],
+        alreadyRequestedInThePast: null,
+        gotAnswerFromPreviousRequest: null,
+      });
+
+      expect(result4.success).toBe(true);
     });
   });
 });

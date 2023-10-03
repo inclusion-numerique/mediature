@@ -59,7 +59,7 @@ export const incompleteCaseSchema = z
     citizenId: z.string().uuid(),
     authorityId: z.string().uuid(),
     agentId: z.string().uuid().nullable(),
-    alreadyRequestedInThePast: z.boolean(),
+    alreadyRequestedInThePast: z.boolean().nullable(),
     gotAnswerFromPreviousRequest: z.boolean().nullable(),
     description: z.string().min(1),
     domain: CaseDomainItemSchema.nullable(),
@@ -83,7 +83,7 @@ export const incompleteCaseSchema = z
   .strict();
 export const CaseSchema = incompleteCaseSchema.superRefine((data, ctx) => {
   if (data) {
-    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+    if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `un dossier ne peut pas avoir eu une réponse de l'administration s'il est indiqué qu'aucune requête n'a été faite auparavant.`,

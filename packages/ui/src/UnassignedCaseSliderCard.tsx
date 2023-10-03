@@ -192,14 +192,16 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
           <Grid item xs={12}>
             <Divider variant="fullWidth" sx={{ p: 0 }} />
           </Grid>
-          <Grid item xs={12}>
-            <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-              Premier recours à l&apos;amiable ?
-            </Typography>
-            <br />
-            <Chip label={props.case.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
-          </Grid>
-          {props.case.alreadyRequestedInThePast && (
+          {props.case.alreadyRequestedInThePast !== null && (
+            <Grid item xs={12}>
+              <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                Premier recours à l&apos;amiable ?
+              </Typography>
+              <br />
+              <Chip label={props.case.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
+            </Grid>
+          )}
+          {props.case.alreadyRequestedInThePast && props.case.gotAnswerFromPreviousRequest !== null && (
             <Grid item xs={12}>
               <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                 Réponse de l&apos;organisme ?
