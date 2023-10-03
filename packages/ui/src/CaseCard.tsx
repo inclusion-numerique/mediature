@@ -114,7 +114,11 @@ export function CaseCard(props: CaseCardProps) {
                 </Typography>
               )}
             </Typography>
-            {!props.case.agentId ? <Alert severity="info">Aucun médiateur n&apos;est assigné à ce dossier</Alert> : <br />}
+            {!props.case.agentId && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Aucun médiateur n&apos;est assigné à ce dossier
+              </Alert>
+            )}
             {/* TODO: reminder field */}
             <Typography component="span" variant="subtitle1">
               Avancement du dossier :

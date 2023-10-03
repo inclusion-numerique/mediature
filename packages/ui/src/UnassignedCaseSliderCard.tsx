@@ -4,6 +4,7 @@ import { fr } from '@codegouvfr/react-dsfr';
 import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import addressFormatter from '@fragaria/address-formatter';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Alert from '@mui/material/Alert';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -25,6 +26,7 @@ import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { convertModelToGooglePhoneNumber } from '@mediature/ui/src/utils/phone';
@@ -37,6 +39,7 @@ export interface UnassignedCaseSliderCardProps {
   citizen: CitizenSchemaType;
   attachments: UiAttachmentSchemaType[];
   unprocessedMessages: number;
+  similarCases: CaseSchemaType[];
   assignAction: (caseId: string) => Promise<void>;
 }
 
@@ -121,6 +124,34 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             </Grid>
           </Grid>
           <Grid item xs={12}>
+            {props.similarCases?.length > 0 && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                {t('components.UnassignedCaseSliderCard.case_has_similar', { count: props.similarCases.length })}
+                <ul>
+                  {props.similarCases.map((similarCase) => {
+                    const similarCaseLink = linkRegistry.get('case', {
+                      authorityId: similarCase.authorityId,
+                      caseId: similarCase.id,
+                    });
+
+                    return (
+                      <li key={similarCase.id}>
+                        <Link
+                          component={NextLink}
+                          href={similarCaseLink}
+                          target="_blank"
+                          color="inherit"
+                          underline="none"
+                          style={{ fontWeight: 600 }}
+                        >
+                          Dossier n°{similarCase.humanId}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </Alert>
+            )}
             {/* TODO: reminder field */}
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Avancement du dossier :

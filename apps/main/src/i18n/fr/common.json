@@ -7,6 +7,10 @@
     "BaseForm": {
       "form_contains_errors_one": "Le formulaire soumis contient une erreur. Le champ invalide a été marqué en rouge.",
       "form_contains_errors_other": "Le formulaire soumis contient plusieurs erreurs. Les champs invalides ont été marqués en rouge."
+    },
+    "UnassignedCaseSliderCard": {
+      "case_has_similar_one": "Vérifiez que ce dossier n'est pas un doublon avant de le traiter car un autre dossier a été déposé par un homonyme :",
+      "case_has_similar_other": "Vérifiez que ce dossier n'est pas un doublon avant de le traiter car plusieurs dossiers ont été déposés par un homonyme :"
     }
   },
   "errors": {

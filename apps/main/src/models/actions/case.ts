@@ -256,6 +256,11 @@ export const ListCasesSchema = GetterInputSchema.extend({
     assigned: z.boolean().nullish(),
     mine: z.boolean().nullish(),
   }),
+  include: z
+    .object({
+      similarCases: z.boolean().nullish(),
+    })
+    .nullish(),
 }).strict();
 export type ListCasesSchemaType = z.infer<typeof ListCasesSchema>;
 

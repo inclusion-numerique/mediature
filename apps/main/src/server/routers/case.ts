@@ -35,6 +35,7 @@ import {
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import {
   CasePlatformSchema,
+  CaseSchemaType,
   CaseStatusSchema,
   CaseStatusSchemaType,
   CaseWrapperSchema,
@@ -498,6 +499,7 @@ export const caseRouter = router({
         notes: null,
         attachments: null,
         unprocessedMessages: null,
+        similarCases: null,
       }),
     };
   }),
@@ -952,6 +954,7 @@ export const caseRouter = router({
         notes: targetedCase.Note.map((note: Note) => caseNotePrismaToModel(note)),
         attachments: attachments,
         unprocessedMessages: unprocessedMessagesCount,
+        similarCases: null,
       }),
     };
   }),
@@ -1099,6 +1102,33 @@ export const caseRouter = router({
 
           const unprocessedMessagesCountObject = unprocessedMessagesCountObjects.find((countObject) => countObject.caseId === iterationCase.id);
 
+          // It's a bit resource expensive but I did not find an easier way
+          let similarCases: CaseSchemaType[] | null = null;
+          if (input.include?.similarCases === true) {
+            const prismaSimilarCases = await prisma.case.findMany({
+              where: {
+                id: {
+                  not: iterationCase.id,
+                },
+                citizen: {
+                  firstname: {
+                    search: formatSearchQuery(iterationCase.citizen.firstname),
+                    mode: 'insensitive',
+                  },
+                  lastname: {
+                    search: formatSearchQuery(iterationCase.citizen.lastname),
+                    mode: 'insensitive',
+                  },
+                },
+              },
+              orderBy: {
+                createdAt: 'desc',
+              },
+            });
+
+            similarCases = prismaSimilarCases.map((sc) => casePrismaToModel(sc));
+          }
+
           return {
             case: casePrismaToModel(iterationCase),
             citizen: citizenPrismaToModel(iterationCase.citizen),
@@ -1106,6 +1136,7 @@ export const caseRouter = router({
             notes: null,
             attachments: attachments,
             unprocessedMessages: unprocessedMessagesCountObject ? unprocessedMessagesCountObject._count._all : 0,
+            similarCases: similarCases,
           };
         })
       ),

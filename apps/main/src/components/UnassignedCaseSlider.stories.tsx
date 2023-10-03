@@ -41,7 +41,7 @@ NormalStory.parameters = {
         path: ['listCases'],
         response: {
           casesWrappers: [
-            casesWrappers[0],
+            { ...casesWrappers[0], similarCases: [casesWrappers[1].case, casesWrappers[2].case] },
             casesWrappers[1],
             casesWrappers[2],
             ...[casesWrappers[0], casesWrappers[1], casesWrappers[2]].map((c) => {

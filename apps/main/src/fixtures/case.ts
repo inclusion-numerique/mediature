@@ -278,6 +278,7 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
     unprocessedMessages: 2,
+    similarCases: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[1],
@@ -286,6 +287,7 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
     unprocessedMessages: 5,
+    similarCases: null,
   }),
   CaseWrapperSchema.parse({
     case: cases[2],
@@ -294,6 +296,7 @@ export const casesWrappers: CaseWrapperSchemaType[] = [
     notes: [notes[0], notes[1], notes[2]],
     attachments: null,
     unprocessedMessages: 7,
+    similarCases: null,
   }),
 ];
 
