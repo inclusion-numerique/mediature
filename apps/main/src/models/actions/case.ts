@@ -45,7 +45,7 @@ export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, 
     if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant.`,
+        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant`,
       });
     }
   }
@@ -61,9 +61,13 @@ export const incompleteUpdateCaseSchema = z
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
     caseId: incompleteCaseSchema.shape.id,
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
+    firstname: CitizenSchema.shape.firstname,
+    lastname: CitizenSchema.shape.lastname,
     genderIdentity: CitizenSchema.shape.genderIdentity,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
+    alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
+    gotAnswerFromPreviousRequest: incompleteCaseSchema.shape.gotAnswerFromPreviousRequest,
     description: incompleteCaseSchema.shape.description,
     domainId: z.string().uuid().nullable(),
     competent: incompleteCaseSchema.shape.competent,
@@ -88,10 +92,22 @@ export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ct
       });
     }
 
+    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser qu'il y a eu une réponse de l'administration si vous indiquez qu'il n'y a pas eu une requête auparavant`,
+      });
+    }
+
     if (data.competent === true && data.competentThirdPartyId !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué ne pas être compétent pour traiter le dossier`,
+        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué que la collectivité n'est pas compétente pour traiter le dossier`,
+      });
+    } else if (data.competent === false && data.domainId !== null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `vous ne pouvez pas préciser un domaine pour ce dossier si vous indiquez que la collectivité n'a pas la compétence pour le traiter`,
       });
     }
 
@@ -107,6 +123,16 @@ export type UpdateCaseSchemaType = z.infer<typeof UpdateCaseSchema>;
 
 export const UpdateCasePrefillSchema = incompleteUpdateCaseSchema.deepPartial();
 export type UpdateCasePrefillSchemaType = z.infer<typeof UpdateCasePrefillSchema>;
+
+export const DeleteCaseSchema = z
+  .object({
+    caseId: incompleteCaseSchema.shape.id,
+  })
+  .strict();
+export type DeleteCaseSchemaType = z.infer<typeof DeleteCaseSchema>;
+
+export const DeleteCasePrefillSchema = DeleteCaseSchema.deepPartial();
+export type DeleteCasePrefillSchemaType = z.infer<typeof DeleteCasePrefillSchema>;
 
 export const AssignCaseSchema = z
   .object({

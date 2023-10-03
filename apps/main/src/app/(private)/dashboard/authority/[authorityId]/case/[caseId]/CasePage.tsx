@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import { zodResolver } from '@hookform/resolvers/zod';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -12,6 +12,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import Button from '@mui/lab/LoadingButton';
 import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -130,6 +131,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
       email: caseWrapper?.citizen.email,
+      firstname: caseWrapper?.citizen.firstname,
+      lastname: caseWrapper?.citizen.lastname,
       genderIdentity: caseWrapper?.citizen.genderIdentity,
       address: caseWrapper?.citizen.address
         ? {
@@ -150,6 +153,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             number: caseWrapper?.citizen.phone.number,
           }
         : getDefaultPhoneValue(),
+      alreadyRequestedInThePast: caseWrapper?.case.alreadyRequestedInThePast,
+      gotAnswerFromPreviousRequest: caseWrapper?.case.gotAnswerFromPreviousRequest,
       description: caseWrapper?.case.description,
       domainId: caseWrapper?.case.domain?.id || null,
       competent: caseWrapper?.case.competent,
@@ -164,7 +169,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     });
   }, [caseWrapper, isDirty, reset]);
 
-  const theme = useColors();
   const reminderAnchorRef = useRef<HTMLButtonElement | null>(null);
   const [reminderMinimumDate, setReminderMinimumDate] = useState<Date>(new Date());
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
@@ -218,6 +222,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       close: !!updatedCaseWrapper.case.closedAt,
       status: updatedCaseWrapper.case.status,
       email: updatedCaseWrapper.citizen.email,
+      firstname: updatedCaseWrapper.citizen.firstname,
+      lastname: updatedCaseWrapper.citizen.lastname,
       genderIdentity: updatedCaseWrapper.citizen.genderIdentity,
       address: updatedCaseWrapper.citizen.address
         ? {
@@ -238,6 +244,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             number: updatedCaseWrapper.citizen.phone.number,
           }
         : getDefaultPhoneValue(),
+      alreadyRequestedInThePast: updatedCaseWrapper.case.alreadyRequestedInThePast,
+      gotAnswerFromPreviousRequest: updatedCaseWrapper.case.gotAnswerFromPreviousRequest,
       description: updatedCaseWrapper.case.description,
       domainId: updatedCaseWrapper.case.domain?.id || null,
       competent: updatedCaseWrapper.case.competent,
@@ -315,97 +323,106 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
           }}
         >
           <Typography component="b" variant="h4">
-            {citizen.firstname} {citizen.lastname}
+            {watch('firstname')} {watch('lastname')}
           </Typography>
           <Divider orientation="vertical" flexItem sx={{ height: '50%', mx: 2, my: 'auto' }} />
           <Typography component="b" variant="subtitle1">
             Dossier n°{targetedCase.humanId}
           </Typography>
-          <DatePicker
-            open={reminderPickerOpen}
-            label="Date de la demande"
-            value={watch('termReminderAt') || null}
-            minDate={reminderMinimumDate}
-            onChange={() => {}}
-            onClose={() => {
-              setReminderPickerOpen(false);
-            }}
-            onAccept={async (newDate) => {
-              setValue('termReminderAt', newDate, {
-                shouldDirty: false, // To keeping simple the isDirty for the manual part
-              });
-
-              try {
-                await submitOutsideBaseForm({
-                  termReminderAt: control._formValues.termReminderAt,
-                  status: control._formValues.status,
-                  // Do not update values that need a form submit
-                  initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
-                  caseId: control._defaultValues.caseId || targetedCase.id,
-                  email: control._defaultValues.email || citizen.email,
-                  genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
-                  address: citizen.address
-                    ? {
-                        street: control._defaultValues.address?.street || citizen.address.street,
-                        postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
-                        city: control._defaultValues.address?.city || citizen.address.city,
-                        subdivision: undefined as unknown as string,
-                        countryCode: undefined as unknown as string,
-                      }
-                    : null,
-                  phone: citizen.phone
-                    ? {
-                        phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
-                        callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
-                        countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
-                        number: control._defaultValues.phone?.number || citizen.phone.number,
-                      }
-                    : null,
-                  description: control._defaultValues.description || targetedCase.description,
-                  domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
-                  competent: control._defaultValues.competent || targetedCase.competent,
-                  competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
-                  units: control._defaultValues.units || targetedCase.units,
-                  close: control._defaultValues.close || !!targetedCase.closedAt,
-                  outcome: control._defaultValues.outcome || targetedCase.outcome,
-                  collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
-                  administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
-                  finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
-                  nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+          <Box ref={reminderAnchorRef} sx={{ ml: 'auto' }}>
+            <DatePicker
+              open={reminderPickerOpen}
+              label="Date de la demande"
+              defaultValue={watch('termReminderAt') || null}
+              minDate={reminderMinimumDate}
+              closeOnSelect // Needed to have consistent behavior between desktop and mobile (ref: https://stackoverflow.com/questions/70041109/how-can-i-clear-material-ui-datepicker-input/75213269#75213269)
+              onChange={() => {}}
+              onClose={() => {
+                setReminderPickerOpen(false);
+              }}
+              onAccept={async (newDate) => {
+                setValue('termReminderAt', newDate, {
+                  shouldDirty: false, // To keeping simple the isDirty for the manual part
                 });
-              } catch (err) {
-                setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
-              }
-            }}
-            componentsProps={{
-              actionBar: {
-                actions: ['clear'],
-              },
-            }}
-            PopperProps={{ anchorEl: reminderAnchorRef.current }}
-            renderInput={(params) => {
-              // TODO: aria labels from params?
-              return (
-                <Button
-                  onClick={() => {
-                    setReminderPickerOpen(!reminderPickerOpen);
-                  }}
-                  ref={reminderAnchorRef}
-                  size="large"
-                  variant="text"
-                  color={targetedCase.termReminderAt && isReminderSoon(targetedCase.termReminderAt) ? 'error' : 'primary'}
-                  startIcon={<AccessTimeIcon />}
-                  sx={{ ml: 'auto' }}
-                >
-                  {targetedCase.termReminderAt ? (
-                    <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
-                  ) : (
-                    <span>Définir une échéance</span>
-                  )}
-                </Button>
-              );
-            }}
-          />
+
+                try {
+                  await submitOutsideBaseForm({
+                    termReminderAt: control._formValues.termReminderAt,
+                    status: control._formValues.status,
+                    // Do not update values that need a form submit
+                    initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
+                    caseId: control._defaultValues.caseId || targetedCase.id,
+                    email: control._defaultValues.email || citizen.email,
+                    firstname: control._defaultValues.firstname || citizen.firstname,
+                    lastname: control._defaultValues.lastname || citizen.lastname,
+                    genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
+                    address: citizen.address
+                      ? {
+                          street: control._defaultValues.address?.street || citizen.address.street,
+                          postalCode: control._defaultValues.address?.postalCode || citizen.address.postalCode,
+                          city: control._defaultValues.address?.city || citizen.address.city,
+                          subdivision: undefined as unknown as string,
+                          countryCode: undefined as unknown as string,
+                        }
+                      : null,
+                    phone: citizen.phone
+                      ? {
+                          phoneType: control._defaultValues.phone?.phoneType || citizen.phone.phoneType,
+                          callingCode: control._defaultValues.phone?.callingCode || citizen.phone.callingCode,
+                          countryCode: control._defaultValues.phone?.countryCode || citizen.phone.countryCode,
+                          number: control._defaultValues.phone?.number || citizen.phone.number,
+                        }
+                      : null,
+                    alreadyRequestedInThePast: control._defaultValues.alreadyRequestedInThePast || targetedCase.alreadyRequestedInThePast,
+                    gotAnswerFromPreviousRequest: control._defaultValues.gotAnswerFromPreviousRequest || targetedCase.gotAnswerFromPreviousRequest,
+                    description: control._defaultValues.description || targetedCase.description,
+                    domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
+                    competent: control._defaultValues.competent || targetedCase.competent,
+                    competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
+                    units: control._defaultValues.units || targetedCase.units,
+                    close: control._defaultValues.close || !!targetedCase.closedAt,
+                    outcome: control._defaultValues.outcome || targetedCase.outcome,
+                    collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
+                    administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
+                    finalConclusion: control._defaultValues.finalConclusion || targetedCase.finalConclusion,
+                    nextRequirements: control._defaultValues.nextRequirements || targetedCase.nextRequirements,
+                  });
+                } catch (err) {
+                  setValue('termReminderAt', control._defaultValues.termReminderAt || targetedCase.termReminderAt);
+                }
+              }}
+              slots={{
+                field: (params) => {
+                  // TODO: aria labels from params?
+                  return (
+                    <Button
+                      onClick={() => {
+                        setReminderPickerOpen(!reminderPickerOpen);
+                      }}
+                      size="large"
+                      variant="text"
+                      color={targetedCase.termReminderAt && isReminderSoon(targetedCase.termReminderAt) ? 'error' : 'primary'}
+                      startIcon={<AccessTimeIcon />}
+                    >
+                      {targetedCase.termReminderAt ? (
+                        <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
+                      ) : (
+                        <span>Définir une échéance</span>
+                      )}
+                    </Button>
+                  );
+                },
+              }}
+              slotProps={{
+                actionBar: {
+                  actions: ['clear'],
+                },
+                popper: {
+                  anchorEl: reminderAnchorRef.current,
+                },
+              }}
+            />
+          </Box>
         </Grid>
         <Grid
           item
@@ -442,6 +459,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
                     caseId: control._defaultValues.caseId || targetedCase.id,
                     email: control._defaultValues.email || citizen.email,
+                    firstname: control._defaultValues.firstname || citizen.firstname,
+                    lastname: control._defaultValues.lastname || citizen.lastname,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
                     address: control._defaultValues.address
                       ? {
@@ -475,6 +494,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           number: citizen.phone.number,
                         }
                       : getDefaultPhoneValue(),
+                    alreadyRequestedInThePast: control._defaultValues.alreadyRequestedInThePast || targetedCase.alreadyRequestedInThePast,
+                    gotAnswerFromPreviousRequest: control._defaultValues.gotAnswerFromPreviousRequest || targetedCase.gotAnswerFromPreviousRequest,
                     description: control._defaultValues.description || targetedCase.description,
                     domainId: control._defaultValues.domainId || targetedCase.domain?.id || null,
                     competent: control._defaultValues.competent || targetedCase.competent,
@@ -547,7 +568,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   position: 'sticky',
                   top: 0,
                   zIndex: 450,
-                  background: theme.decisions.background.default.grey.default,
+                  background: fr.colors.decisions.background.default.grey.default,
                   pb: 2,
                 }}
               >
@@ -647,7 +668,11 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                                   readOnly
                                   value={targetedCase.createdAt}
                                   onChange={(newValue) => {}}
-                                  renderInput={(params) => <TextField {...params} fullWidth />}
+                                  slotProps={{
+                                    textField: {
+                                      fullWidth: true,
+                                    },
+                                  }}
                                 />
                               </div>
                             </Tooltip>
@@ -710,6 +735,24 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           {...register('email')}
                           error={!!errors.email}
                           helperText={errors?.email?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          label="Prénom"
+                          {...register('firstname')}
+                          error={!!errors.firstname}
+                          helperText={errors?.firstname?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <TextField
+                          label="Nom de famille"
+                          {...register('lastname')}
+                          error={!!errors.lastname}
+                          helperText={errors?.lastname?.message}
                           fullWidth
                         />
                       </Grid>
@@ -786,19 +829,52 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         />
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                          Premier recours à l&apos;amiable effectué ?
-                        </Typography>
-                        <br />
-                        <Chip label={targetedCase.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
+                        <FormControl error={!!errors.alreadyRequestedInThePast}>
+                          <FormLabel id="previous-request-radio-buttons-group-label">Premier recours à l&apos;amiable effectué ?</FormLabel>
+                          <RadioGroup
+                            defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
+                            onChange={(event) => {
+                              const value = event.target.value === 'true';
+
+                              setValue('alreadyRequestedInThePast', value, {
+                                shouldDirty: true,
+                              });
+
+                              if (!value) {
+                                setValue('gotAnswerFromPreviousRequest', null, {
+                                  shouldDirty: true,
+                                });
+                              }
+                            }}
+                            aria-labelledby="previous-request-radio-buttons-group-label"
+                            aria-describedby="previous-request-helper-text"
+                          >
+                            <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                            <FormControlLabel value="false" control={<Radio />} label="Non" />
+                          </RadioGroup>
+                          <FormHelperText>{errors?.alreadyRequestedInThePast?.message}</FormHelperText>
+                        </FormControl>
                       </Grid>
-                      {targetedCase.alreadyRequestedInThePast && (
+                      {watch('alreadyRequestedInThePast') && (
                         <Grid item xs={12}>
-                          <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                            Suite au premier recours, réponse de l&apos;administration reçue ?
-                          </Typography>
-                          <br />
-                          <Chip label={targetedCase.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')} />
+                          <FormControl error={!!errors.gotAnswerFromPreviousRequest}>
+                            <FormLabel id="answer-from-previous-request--radio-buttons-group-label">
+                              Suite au premier recours, réponse de l&apos;administration reçue ?
+                            </FormLabel>
+                            <RadioGroup
+                              defaultValue={control._defaultValues.gotAnswerFromPreviousRequest?.toString()}
+                              onChange={(event) => {
+                                setValue('gotAnswerFromPreviousRequest', event.target.value === 'true', {
+                                  shouldDirty: true,
+                                });
+                              }}
+                              aria-labelledby="answer-from-previous-request--radio-buttons-group-label"
+                            >
+                              <FormControlLabel value="true" control={<Radio />} label="Oui" />
+                              <FormControlLabel value="false" control={<Radio />} label="Non" />
+                            </RadioGroup>
+                            <FormHelperText>{errors?.gotAnswerFromPreviousRequest?.message}</FormHelperText>
+                          </FormControl>
                         </Grid>
                       )}
                     </Grid>
@@ -818,22 +894,9 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         </Typography>
                       </Grid>
                       <Grid item xs={12}>
-                        <ContextualCaseDomainField
-                          authorityId={targetedCase.authorityId}
-                          value={targetedCase.domain}
-                          onChange={(item) => {
-                            setValue('domainId', item?.id || null, {
-                              // shouldValidate: true,
-                              shouldDirty: true,
-                            });
-                          }}
-                          errorMessage={errors?.domainId?.message}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
                         <FormControl error={!!errors.competent}>
                           <FormLabel id="competent-radio-buttons-group-label">
-                            Est-ce que votre équipe de médiateurs est compétente pour traiter ce dossier ?
+                            Est-ce que cette saisine entre dans le domaine de compétence de votre collectivité ?
                           </FormLabel>
                           <RadioGroup
                             defaultValue={control._defaultValues.competent?.toString()}
@@ -844,6 +907,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
 
                               if (value) {
                                 setValue('competentThirdPartyId', null);
+                              } else {
+                                setValue('domainId', null);
                               }
                             }}
                             aria-labelledby="competent-radio-buttons-group-label"
@@ -854,6 +919,21 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           <FormHelperText>{errors?.competent?.message}</FormHelperText>
                         </FormControl>
                       </Grid>
+                      {watch('competent') === true && (
+                        <Grid item xs={12}>
+                          <ContextualCaseDomainField
+                            authorityId={targetedCase.authorityId}
+                            value={targetedCase.domain}
+                            onChange={(item) => {
+                              setValue('domainId', item?.id || null, {
+                                // shouldValidate: true,
+                                shouldDirty: true,
+                              });
+                            }}
+                            errorMessage={errors?.domainId?.message}
+                          />
+                        </Grid>
+                      )}
                       {watch('competent') === false && (
                         <Grid item xs={12}>
                           <ContextualCaseCompetentThirdPartyField
@@ -999,6 +1079,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       initiatedFrom: control._formValues.initiatedFrom,
                       caseId: control._formValues.caseId,
                       email: control._formValues.email,
+                      firstname: control._formValues.firstname,
+                      lastname: control._formValues.lastname,
                       genderIdentity: control._formValues.genderIdentity,
                       address: {
                         street: control._formValues.address.street,
@@ -1013,6 +1095,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         countryCode: control._formValues.phone.countryCode,
                         number: control._formValues.phone.number,
                       },
+                      alreadyRequestedInThePast: control._formValues.alreadyRequestedInThePast,
+                      gotAnswerFromPreviousRequest: control._formValues.gotAnswerFromPreviousRequest,
                       description: control._formValues.description,
                       domainId: control._formValues.domainId,
                       competent: control._formValues.competent,

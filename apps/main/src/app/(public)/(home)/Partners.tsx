@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid, { GridProps } from '@mui/material/Grid';
@@ -31,14 +31,12 @@ export const imageProps: ImgHTMLAttributes<HTMLImageElement> = {
 };
 
 export function Partners() {
-  const theme = useColors();
-
   return (
     <Container sx={{ pt: 1, pb: { xs: 4, sm: 5, md: 6 } }}>
       <Typography
         component="h2"
         variant="h4"
-        color={theme.decisions.text.title.blueFrance.default}
+        color={fr.colors.decisions.text.title.blueFrance.default}
         sx={{ textAlign: 'center', mt: 1, mb: { xs: 2, sm: 4 } }}
       >
         Nos partenaires

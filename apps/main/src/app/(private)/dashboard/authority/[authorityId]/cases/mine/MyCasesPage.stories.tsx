@@ -29,16 +29,22 @@ const mswListCasesParameters = {
 };
 
 const mswUnassignCaseParameters = {
-  type: 'query' as 'query',
+  type: 'mutation' as 'mutation',
   path: ['unassignCase'] as ['unassignCase'],
   response: {
     case: cases[0],
   },
 };
 
+const mswDeleteCaseParameters = {
+  type: 'mutation' as 'mutation',
+  path: ['deleteCase'] as ['deleteCase'],
+  response: undefined,
+};
+
 const defaultMswParameters = {
   msw: {
-    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters)],
+    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters), getTRPCMock(mswDeleteCaseParameters)],
   },
 };
 
@@ -76,7 +82,7 @@ WithLayoutStory.args = {
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
   msw: {
-    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters)],
+    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters), getTRPCMock(mswDeleteCaseParameters)],
   },
 };
 WithLayoutStory.play = async ({ canvasElement }) => {
@@ -112,6 +118,7 @@ SearchLoadingWithLayoutStory.parameters = {
         },
       }),
       getTRPCMock(mswUnassignCaseParameters),
+      getTRPCMock(mswDeleteCaseParameters),
     ],
   },
 };

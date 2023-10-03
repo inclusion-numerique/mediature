@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import LockIcon from '@mui/icons-material/Lock';
@@ -55,8 +55,6 @@ export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): 
     });
   }, [editor, isEditable]);
 
-  const theme = useColors();
-
   return (
     <Grid container spacing={2} className="actions" sx={{ width: 'auto' }}>
       {SUPPORT_SPEECH_RECOGNITION && (
@@ -71,12 +69,12 @@ export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): 
               aria-label={`${isSpeechToText ? 'Activer' : 'Désactiver'} la reconnaissance vocale`}
               sx={{
                 borderRadius: 0,
-                color: theme.decisions.text.inverted.blueFrance.default,
+                color: fr.colors.decisions.text.inverted.blueFrance.default,
                 backgroundColor: isSpeechToText
-                  ? theme.decisions.background.actionHigh.blueFrance.default
-                  : `${theme.decisions.background.actionHigh.blueFrance.default} !important`,
+                  ? fr.colors.decisions.background.actionHigh.blueFrance.default
+                  : `${fr.colors.decisions.background.actionHigh.blueFrance.default} !important`,
                 '&:hover': {
-                  backgroundColor: theme.decisions.background.actionHigh.blueFrance.default,
+                  backgroundColor: fr.colors.decisions.background.actionHigh.blueFrance.default,
                 },
               }}
               aria-pressed={isSpeechToText}
@@ -95,10 +93,10 @@ export default function ActionsPlugin({ isRichText }: { isRichText: boolean }): 
           aria-label={`${isEditable ? 'Activer' : 'Désactiver'} le mode lecture`}
           sx={{
             borderRadius: 0,
-            color: theme.decisions.text.inverted.blueFrance.default,
-            backgroundColor: `${theme.decisions.background.actionHigh.blueFrance.default} !important`,
+            color: fr.colors.decisions.text.inverted.blueFrance.default,
+            backgroundColor: `${fr.colors.decisions.background.actionHigh.blueFrance.default} !important`,
             '&:hover': {
-              backgroundColor: theme.decisions.background.actionHigh.blueFrance.default,
+              backgroundColor: fr.colors.decisions.background.actionHigh.blueFrance.default,
             },
           }}
           aria-pressed={!isEditable}

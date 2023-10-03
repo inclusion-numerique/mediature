@@ -23,11 +23,11 @@
     "test:e2e:headless": "start-server-and-test start http://localhost:6006 test:e2e:headless:command",
     "test:e2e:headless:command": "TIME_TO_WAIT_AFTER_CHANGING_THEME_MS=750 test-storybook --stories-json",
     "clean": "rm -rf .turbo && rm -rf node_modules",
-    "chromatic": "npx chromatic --build-script-name build --auto-accept-changes --exit-zero-on-changes"
+    "chromatic": "npx chromatic --build-script-name build --auto-accept-changes --exit-zero-on-changes --only-changed --externals \"public/**\""
   },
   "dependencies": {
     "@anatine/zod-mock": "^3.6.0",
-    "@codegouvfr/react-dsfr": "0.40.0",
+    "@codegouvfr/react-dsfr": "0.75.3",
     "@mediature/main": "workspace:main@*",
     "@mediature/ui": "workspace:ui@*",
     "@react-pdf/renderer": "^3.1.6",

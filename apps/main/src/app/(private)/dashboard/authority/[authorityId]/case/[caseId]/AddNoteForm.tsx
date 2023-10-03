@@ -52,7 +52,13 @@ export function AddNoteForm(props: AddNoteFormProps) {
           onChange={(newDate) => {
             setValue('date', newDate || new Date());
           }}
-          renderInput={(params) => <TextField {...params} error={!!errors.date} helperText={errors?.date?.message} fullWidth />}
+          slotProps={{
+            textField: {
+              error: !!errors.date,
+              helperText: errors?.date?.message,
+              fullWidth: true,
+            },
+          }}
         />
       </Grid>
       <Grid item xs={12}>

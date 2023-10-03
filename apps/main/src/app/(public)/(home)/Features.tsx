@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HubIcon from '@mui/icons-material/Hub';
 import MessageIcon from '@mui/icons-material/Message';
@@ -9,14 +9,12 @@ import Typography from '@mui/material/Typography';
 import { Widget } from '@mediature/main/src/app/(public)/(home)/Widget';
 
 export function Features() {
-  const theme = useColors();
-
   return (
     <Container sx={{ py: { xs: 4, md: 8 } }}>
       <Typography
         component="h2"
         variant="h4"
-        color={theme.decisions.text.title.blueFrance.default}
+        color={fr.colors.decisions.text.title.blueFrance.default}
         sx={{ textAlign: 'center', mt: 1, mb: { xs: 2, sm: 4 } }}
       >
         Le service de médiature entre les usagers et les collectivités

@@ -163,6 +163,7 @@ For each build and runtime (since they are shared), you should have set some env
 
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
+- `GITHUB_TOKEN`: [SECRET] \_(limited GitHub fine-grained personal access tokens scoped to this repository, see the `Scalingo` section)
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
 - `MAINTENANCE_API_KEY`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this is needed to perform maintenance through dedicated API endpoints)_
 - `FILE_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this token is just for the short-lived read permission of private attachments)_
@@ -193,6 +194,15 @@ Those are temporary environments, different than `dev` and `prod`. Since they ha
 
 - adjust environment variables
 - seed the database to have some data to test on
+
+### GitHub access
+
+During the build we get some repository information from GitHub to enhance Sentry metadata. It went well for some time but randomly we got the error:
+`API rate limit exceeded for ${IP} (...) But here's the good news: Authenticated requests get a higher rate limit.`
+
+By default the `@octokit/rest` client will fetch data while not being authenticated so we share the quota with others, which may fail. We decided to create a fine-grained personal access token scoped to the current repository with only the scope `Read-Only` on `Contents` to be used as `GITHUB_TOKEN` in Scalingo. The only drawback is we need to specify an expiration with 1 year as maximum (we hope they will change it in the future to allow "no expiration" as for classic tokens).
+
+_Note that the other way is to create a GitHub App, connect it to the repository, manage the token... which is way more complicated! Even with the current 1 year expiration we are fine since builds are done only if people is working on the project :)_
 
 #### Monitoring
 
@@ -382,6 +392,30 @@ On the other site, the public "website ID" will be used as `NEXT_PUBLIC_CRISP_WE
 ### Maintenance
 
 Since everything stateful is inside the PostgreSQL you should be able to do most of the maintenance from `DBeaver`.
+
+#### Retrieve old data from backups
+
+Just download the database backup from the Scalingo interface and run it locally with Docker with no volume (to be sure not keeping sensitive data locally):
+
+- Terminal 1:
+
+```sh
+docker run -it --rm -p 15432:5432 --name tmp_postgres -e POSTGRES_PASSWORD=postgres -v $(pwd)/${BACKUP_FILENAME}.pgsql:/backup.pgsql postgres
+```
+
+- Terminal 2:
+
+```sh
+docker exec -it tmp_postgres bash
+pg_restore -U postgres -d postgres --no-owner -v /backup.pgsql
+psql -U postgres -d postgres
+```
+
+Then debug from SQL inline or use DBeaver to connect to `localhost:15432` with above credentials.
+
+Once done, stop the container and remove the downloaded `.tar.gz / .psql` files.
+
+#### Replay jobs
 
 Except the case of replaying queueing jobs once they fail because they may be archived already. And since it's a bit tricky to move a job directly from SQL while cleaning its right properties, we decided to make an endpoint for this as an helper:
 

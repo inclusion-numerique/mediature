@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import { $createCodeNode, $isCodeNode, CODE_LANGUAGE_FRIENDLY_NAME_MAP, CODE_LANGUAGE_MAP, getLanguageFriendlyName } from '@lexical/code';
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import {
@@ -651,8 +652,7 @@ export default function ToolbarPlugin(): JSX.Element {
     codeLanguageSetAnchorEl(null);
   };
 
-  const theme = useColors();
-  const isDark = theme.isDark;
+  const { isDark } = useIsDark();
 
   return (
     <>
@@ -664,7 +664,7 @@ export default function ToolbarPlugin(): JSX.Element {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          backgroundColor: theme.decisions.background.overlap.grey.default,
+          backgroundColor: fr.colors.decisions.background.overlap.grey.default,
           p: 1,
         }}
       >

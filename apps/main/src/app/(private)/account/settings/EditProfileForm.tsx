@@ -54,14 +54,7 @@ export function EditProfileForm(props: EditProfileFormProps) {
         />
       </Grid>
       <Grid item xs={12}>
-        <TextField
-          type="firstname"
-          label="Prénom"
-          {...register('firstname')}
-          error={!!errors.firstname}
-          helperText={errors?.firstname?.message}
-          fullWidth
-        />
+        <TextField label="Prénom" {...register('firstname')} error={!!errors.firstname} helperText={errors?.firstname?.message} fullWidth />
       </Grid>
       <Grid item xs={12}>
         <TextField type="lastname" label="Nom" {...register('lastname')} error={!!errors.lastname} helperText={errors?.lastname?.message} fullWidth />

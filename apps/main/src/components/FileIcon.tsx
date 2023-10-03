@@ -1,4 +1,5 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import { DefaultExtensionType, FileIcon as ReactFileIcon, defaultStyles } from 'react-file-icon';
 
 import { getExtensionsFromMime } from '@mediature/main/src/utils/attachment';
@@ -9,7 +10,8 @@ export interface FileIconProps {
 }
 
 export function FileIcon({ extension, contentType }: FileIconProps) {
-  const theme = useColors();
+  const { isDark } = useIsDark();
+  const theme = fr.colors.getHex({ isDark });
 
   if (!extension && contentType) {
     const potentialExtensions = getExtensionsFromMime(contentType);

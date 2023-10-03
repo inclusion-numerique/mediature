@@ -1,6 +1,7 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
+import { useIsDark } from '@codegouvfr/react-dsfr/useIsDark';
 import addressFormatter from '@fragaria/address-formatter';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Badge from '@mui/material/Badge';
@@ -44,7 +45,8 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
 
   const reminderSoon: boolean = props.case.termReminderAt ? isReminderSoon(props.case.termReminderAt) : false;
 
-  const theme = useColors();
+  const { isDark } = useIsDark();
+  const theme = fr.colors.getHex({ isDark });
 
   const { showConfirmationDialog } = useSingletonConfirmationDialog();
 

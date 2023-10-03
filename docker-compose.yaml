@@ -1,8 +1,12 @@
 version: '3.5'
 
+#
+# [IMPORTANT] `container_name` properties are prefixed by the project name to avoid conflicting with other project volumes
+#
+
 services:
   postgres:
-    container_name: postgres_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
+    container_name: mediature_postgres_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
     image: postgres:14.6
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -25,7 +29,7 @@ services:
       retries: 5
 
   pgadmin:
-    container_name: pgadmin_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
+    container_name: mediature_pgadmin_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -41,7 +45,7 @@ services:
     restart: unless-stopped
 
   mailcatcher:
-    container_name: mailcatcher_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
+    container_name: mediature_mailcatcher_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
     image: aerzas/mailcatcher:2.0.1
     environment:
       EMAIL_HOST: ${EMAIL_HOST:-127.0.0.1}

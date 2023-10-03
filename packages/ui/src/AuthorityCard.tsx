@@ -49,7 +49,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
     <Card variant="outlined" sx={{ position: 'relative' }}>
       <CardHeader
         action={
-          <Tooltip title="Options du médiateur">
+          <Tooltip title="Options de la collectivité">
             <IconButton
               onClick={handleClick}
               size="small"

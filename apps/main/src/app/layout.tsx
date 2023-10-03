@@ -1,7 +1,7 @@
 import { Display } from '@codegouvfr/react-dsfr/Display';
 import { DsfrHead } from '@codegouvfr/react-dsfr/next-appdir/DsfrHead';
 import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
-import { getColorSchemeHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getColorSchemeHtmlAttributes';
+import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes';
 import { PropsWithChildren } from 'react';
 
 import { MuiDsfrThemeProvider } from '@mediature/main/src/app/MuiDsfrThemeProvider';
@@ -21,10 +21,10 @@ function MainStructure(props: PropsWithChildren) {
       {/* eslint-disable-next-line @next/next/no-head-element */}
       <head>
         <StartDsfr />
-        <DsfrHead defaultColorScheme={defaultColorScheme} />
+        <DsfrHead />
       </head>
       <body>
-        <DsfrProvider defaultColorScheme={defaultColorScheme}>
+        <DsfrProvider>
           <MuiDsfrThemeProvider>
             <Providers>
               <LiveChatProvider>{props.children}</LiveChatProvider>
@@ -46,7 +46,7 @@ export function RootLayout(props: PropsWithChildren<RootLayoutProps>) {
   }
 
   return (
-    <html lang="fr" {...getColorSchemeHtmlAttributes({ defaultColorScheme })}>
+    <html lang="fr" {...getHtmlAttributes({ defaultColorScheme })}>
       <MainStructure {...props} />
     </html>
   );

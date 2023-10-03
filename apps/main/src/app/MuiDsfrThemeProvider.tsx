@@ -6,7 +6,7 @@ import { frFR as dataGridFrFR } from '@mui/x-data-grid/locales/frFR';
 import { frFR as datePickerFrFR } from '@mui/x-date-pickers/locales/frFR';
 
 export const { MuiDsfrThemeProvider } = createMuiDsfrThemeProvider({
-  augmentMuiTheme: ({ nonAugmentedMuiTheme, frColorTheme }) => {
+  augmentMuiTheme: ({ nonAugmentedMuiTheme }) => {
     return {
       ...nonAugmentedMuiTheme,
       components: {

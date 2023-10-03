@@ -13,6 +13,7 @@ import {
   CreateCaseDomainItemSchema,
   DeleteCaseCompetentThirdPartyItemSchema,
   DeleteCaseDomainItemSchema,
+  DeleteCaseSchema,
   EditCaseCompetentThirdPartyItemSchema,
   EditCaseDomainItemSchema,
   GenerateCsvFromCaseAnalyticsSchema,
@@ -371,6 +372,8 @@ export const caseRouter = router({
       },
       data: {
         initiatedFrom: input.initiatedFrom,
+        alreadyRequestedInThePast: input.alreadyRequestedInThePast,
+        gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
         units: input.units,
         termReminderAt: input.termReminderAt,
@@ -401,6 +404,8 @@ export const caseRouter = router({
         citizen: {
           update: {
             email: input.email,
+            firstname: input.firstname,
+            lastname: input.lastname,
             genderIdentity: input.genderIdentity,
             address: {
               delete: deleteCitizenAddress,
@@ -494,6 +499,21 @@ export const caseRouter = router({
         unprocessedMessages: null,
       }),
     };
+  }),
+  deleteCase: privateProcedure.input(DeleteCaseSchema).mutation(async ({ ctx, input }) => {
+    await canUserManageThisCase(ctx.user.id, input.caseId);
+
+    // It will delete all relations thanks to the `onDelete` hook
+    // except for attachments that would require complex manual steps (since they can be linked to multiple entities)
+    //
+    // We let a cron job to properly unused attachments after some time
+    const deletedCase = await prisma.case.delete({
+      where: {
+        id: input.caseId,
+      },
+    });
+
+    return;
   }),
   assignCase: privateProcedure.input(AssignCaseSchema).mutation(async ({ ctx, input }) => {
     const targetedCase = await prisma.case.findFirst({

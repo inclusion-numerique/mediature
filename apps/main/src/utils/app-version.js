@@ -2,7 +2,9 @@ const { Octokit } = require('@octokit/rest');
 const gitRevision = require('git-rev-sync');
 const parseGithubUrl = require('parse-github-url');
 
-const octokit = new Octokit();
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN || undefined, // If not specified it uses public shared quota based on IP
+});
 
 function getRepositoryInformation() {
   return parseGithubUrl(process.env.npm_package_repository_url);

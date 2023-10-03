@@ -50,7 +50,7 @@
           "globalFilename": "Statistiques de la plateforme Médiature"
         },
         "columns": {
-          "administrativeCourtNext": "Se poursuit au tribunal administratif",
+          "administrativeCourtNext": "Poursuite au tribunal administratif",
           "alreadyRequestedInThePast": "Premier recours à l'amiable",
           "assigned": "Assigné",
           "authorityName": "Collectivité",
@@ -105,10 +105,10 @@
         "enum": {
           "CITIZEN_INACTIVITY": "Pas de réponse de l'Usager depuis plus de 3 mois",
           "CITIZEN_WAIVER": "Renonciation de la médiation par l'Usager",
-          "EXTERNAL_FORWARD": "Transmis à une autre institution",
-          "FAVORABLE_TO_ADMINISTRATION": "Maintien de la décision de l'Administration",
-          "FAVORABLE_TO_CITIZEN": "Favorable à l'Usager",
-          "INTERNAL_FORWARD": "Orienté vers un service en interne",
+          "EXTERNAL_FORWARD": "Réorientation vers une autre institution",
+          "FAVORABLE_TO_ADMINISTRATION": "Droit à l'Administration",
+          "FAVORABLE_TO_CITIZEN": "Droit à l'Usager",
+          "INTERNAL_FORWARD": "Orientation vers un service en interne",
           "PARTIAL": "Droit partiel Usager/Administration"
         }
       },

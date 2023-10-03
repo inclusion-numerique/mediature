@@ -1,4 +1,4 @@
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -105,7 +105,6 @@ export interface CaseDomainFieldProps {
 
 export function CaseDomainField(props: CaseDomainFieldProps) {
   const { ContextualCreateCaseDomainItemForm, ContextualEditCaseDomainItemForm } = useContext(CaseDomainFieldContext);
-  const theme = useColors();
   const { onChange } = props;
 
   const { data, error, isLoading, isSuccess, refetch } = trpc.getCaseDomainItems.useQuery({
@@ -266,7 +265,7 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
                   <SubdirectoryArrowRightIcon
                     fontSize="small"
                     sx={{
-                      color: theme.decisions.text.actionHigh.blueFrance.default,
+                      color: fr.colors.decisions.text.actionHigh.blueFrance.default,
                       mx: 1,
                     }}
                   />
@@ -292,9 +291,9 @@ export function CaseDomainField(props: CaseDomainFieldProps) {
                   sx={{
                     position: 'sticky',
                     top: '-8px',
-                    backgroundColor: theme.decisions.background.default.grey.default,
+                    backgroundColor: fr.colors.decisions.background.default.grey.default,
                     '&:hover': {
-                      backgroundColor: theme.decisions.background.default.grey.hover,
+                      backgroundColor: fr.colors.decisions.background.default.grey.hover,
                     },
                     zIndex: 1,
                   }}

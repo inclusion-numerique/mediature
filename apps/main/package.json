@@ -55,7 +55,7 @@
     "seed": "tsx --tsconfig ../../packages/tsconfig/tsx-fallback.json prisma/seed.script.ts"
   },
   "dependencies": {
-    "@codegouvfr/react-dsfr": "0.46.4",
+    "@codegouvfr/react-dsfr": "0.75.3",
     "@hookform/resolvers": "^2.9.10",
     "@jorgeferrero/stream-to-buffer": "^2.0.6",
     "@luma-team/mjml-react": "^0.2.0",
@@ -64,7 +64,7 @@
     "@mui/lab": "5.0.0-alpha.118",
     "@mui/material": "^5.10.16",
     "@mui/x-data-grid": "^5.17.26",
-    "@mui/x-date-pickers": "^5.0.15",
+    "@mui/x-date-pickers": "^6.16.0",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
     "@react-pdf/renderer": "^3.1.6",

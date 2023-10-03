@@ -1,6 +1,6 @@
 'use client';
 
-import { useColors } from '@codegouvfr/react-dsfr/useColors';
+import { fr } from '@codegouvfr/react-dsfr';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -39,13 +39,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
     control,
   } = props.wrapperForm;
 
-  const theme = useColors();
-
   return (
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: theme.decisions.background.alt.yellowMoutarde.default,
+        backgroundColor: fr.colors.decisions.background.alt.yellowMoutarde.default,
       }}
     >
       <CardContent>
@@ -99,7 +97,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                           readOnly
                           value={props.case.closedAt}
                           onChange={(newValue) => {}}
-                          renderInput={(params) => <TextField {...params} fullWidth />}
+                          slotProps={{
+                            textField: {
+                              fullWidth: true,
+                            },
+                          }}
                         />
                       </div>
                     </Tooltip>
@@ -155,7 +157,7 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     select
-                    label="Se poursuit au tribunal administratif ?"
+                    label="Poursuite au tribunal administratif ?"
                     defaultValue={control._defaultValues.administrativeCourtNext || ''}
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {

@@ -24,7 +24,7 @@ export async function setupMailcatcher(): Promise<MailcatcherContainer> {
   const composeFilePath = path.resolve(__dirname, '../../../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'mailcatcher';
-  const containerName = formatContainerNameWithSuffix('mailcatcher_container');
+  const containerName = formatContainerNameWithSuffix('mediature_mailcatcher_container');
 
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
