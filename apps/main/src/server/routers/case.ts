@@ -46,7 +46,7 @@ import { getBossClientInstance } from '@mediature/main/src/server/queueing/clien
 import { createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
-import { formatSafeAttachmentsToProcess, uploadCsvFile, uploadPdfFile } from '@mediature/main/src/server/routers/common/attachment';
+import { formatSafeAttachmentsToProcess, uploadPdfFile, uploadXlsxFile } from '@mediature/main/src/server/routers/common/attachment';
 import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
@@ -64,6 +64,7 @@ import { privateProcedure, publicProcedure, router } from '@mediature/main/src/s
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { caseAnalyticsPrismaToCsv } from '@mediature/main/src/utils/csv';
+import { csvToXlsx } from '@mediature/main/src/utils/excel';
 import { formatSearchQuery } from '@mediature/main/src/utils/prisma';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { CaseSynthesisDocument } from '@mediature/ui/src/documents/templates/CaseSynthesis';
@@ -1199,10 +1200,15 @@ export const caseRouter = router({
 
     const csvString = caseAnalyticsPrismaToCsv(analytics);
 
-    const fileId = await uploadCsvFile({
-      filename: `${filenameBase}.csv`,
+    // Despite CSV working well for most of software (delimiter and UTF8) we faced our agents
+    // having merged columns or encoding issues with Excel versions. Since they have this tool most of the time
+    // we decided to provide a .xlsx instead of a .csv
+    const xlsxBuffer = await csvToXlsx(csvString);
+
+    const fileId = await uploadXlsxFile({
+      filename: `${filenameBase}.xlsx`,
       kind: attachmentKindList[AttachmentKindSchema.Values.CASES_ANALYTICS],
-      fileContent: csvString,
+      file: xlsxBuffer,
     });
 
     const attachmentUi = await attachmentIdPrismaToModel(fileId);

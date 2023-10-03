@@ -248,3 +248,18 @@ export async function uploadCsvFile(options: UploadCsvFileOptions): Promise<stri
     file: fileBuffer,
   });
 }
+
+export interface UploadXlsxFileOptions {
+  filename: string;
+  kind: AttachmentKindRequirementsSchemaType;
+  file: Buffer;
+}
+
+export async function uploadXlsxFile(options: UploadXlsxFileOptions): Promise<string> {
+  return await uploadFile({
+    filename: options.filename,
+    contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    kind: options.kind,
+    file: options.file,
+  });
+}
