@@ -117,7 +117,7 @@ export async function isAgentThisUser(userId: string, agentId: string): Promise<
   return !!agent;
 }
 
-export async function canUserManageThisCase(userId: string, caseId: string): Promise<boolean> {
+export async function assertUserCanManageThisCase(userId: string, caseId: string): Promise<boolean> {
   const targetedCase = await prisma.case.findFirst({
     where: {
       id: caseId,
@@ -502,7 +502,7 @@ export const caseRouter = router({
     };
   }),
   deleteCase: privateProcedure.input(DeleteCaseSchema).mutation(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     // It will delete all relations thanks to the `onDelete` hook
     // except for attachments that would require complex manual steps (since they can be linked to multiple entities)
@@ -1218,7 +1218,7 @@ export const caseRouter = router({
     };
   }),
   addNoteToCase: privateProcedure.input(AddNoteToCaseSchema).mutation(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     const note = await prisma.note.create({
       data: {
@@ -1250,7 +1250,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await canUserManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
 
     const note = await prisma.note.delete({
       where: {
@@ -1276,7 +1276,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await canUserManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
 
     const note = await prisma.note.update({
       where: {
@@ -1291,7 +1291,7 @@ export const caseRouter = router({
     return { note };
   }),
   addAttachmentToCase: privateProcedure.input(AddAttachmentToCaseSchema).mutation(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     const attachmentsOnCase = await prisma.attachmentsOnCases.findMany({
       where: {
@@ -1332,7 +1332,7 @@ export const caseRouter = router({
     return;
   }),
   removeAttachmentFromCase: privateProcedure.input(RemoveAttachmentFromCaseSchema).mutation(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     const attachmentOnCase = await prisma.attachmentsOnCases.findUnique({
       where: {
@@ -1371,7 +1371,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await canUserManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
 
     await prisma.attachmentsOnCases.update({
       where: {

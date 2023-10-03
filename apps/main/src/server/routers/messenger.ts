@@ -13,7 +13,7 @@ import {
 import { ListMessagesSchema, SendMessageSchema } from '@mediature/main/src/models/actions/messenger';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { ContactInputSchemaType, MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { canUserManageThisCase } from '@mediature/main/src/server/routers/case';
+import { assertUserCanManageThisCase } from '@mediature/main/src/server/routers/case';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import { contactInputPrismaToModel, contactPrismaToModel, messagePrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
@@ -24,7 +24,7 @@ const serverJsdom = new JSDOM();
 
 export const messengerRouter = router({
   sendMessage: privateProcedure.input(SendMessageSchema).mutation(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     const senderUser = await prisma.user.findUniqueOrThrow({
       where: {
@@ -258,7 +258,7 @@ export const messengerRouter = router({
       },
     });
 
-    await canUserManageThisCase(ctx.user.id, messageOnCase.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, messageOnCase.caseId);
 
     if (input.markAsProcessed !== undefined) {
       // If `null` it means the message comes from the platform and cannot be toggled as processed or not
@@ -280,7 +280,7 @@ export const messengerRouter = router({
     }
   }),
   getMessageRecipientsSuggestions: privateProcedure.input(GetMessageRecipientsSuggestionsSchema).query(async ({ ctx, input }) => {
-    await canUserManageThisCase(ctx.user.id, input.caseId);
+    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
     const targetedCase = await prisma.case.findUniqueOrThrow({
       where: {
@@ -337,7 +337,7 @@ export const messengerRouter = router({
   }),
   listMessages: privateProcedure.input(ListMessagesSchema).query(async ({ ctx, input }) => {
     const caseId = input.filterBy.caseIds ? input.filterBy.caseIds[0] : ''; // For now, requires exactly 1 case
-    await canUserManageThisCase(ctx.user.id, caseId);
+    await assertUserCanManageThisCase(ctx.user.id, caseId);
 
     const messagesOnCase = await prisma.messagesOnCases.findMany({
       where: {
