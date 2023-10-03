@@ -13,7 +13,7 @@ import {
 import { ListMessagesSchema, SendMessageSchema } from '@mediature/main/src/models/actions/messenger';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { ContactInputSchemaType, MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { assertUserCanManageThisCase } from '@mediature/main/src/server/routers/case';
+import { assertUserCanManageThisCase, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import { contactInputPrismaToModel, contactPrismaToModel, messagePrismaToModel } from '@mediature/main/src/server/routers/mappers';
 import { privateProcedure, router } from '@mediature/main/src/server/trpc';
@@ -337,7 +337,16 @@ export const messengerRouter = router({
   }),
   listMessages: privateProcedure.input(ListMessagesSchema).query(async ({ ctx, input }) => {
     const caseId = input.filterBy.caseIds ? input.filterBy.caseIds[0] : ''; // For now, requires exactly 1 case
-    await assertUserCanManageThisCase(ctx.user.id, caseId);
+
+    const targetedCase = await prisma.case.findUniqueOrThrow({
+      where: {
+        id: caseId,
+      },
+    });
+
+    if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être médiateur de la collectivité ou administrateur pour effectuer cette action`);
+    }
 
     const messagesOnCase = await prisma.messagesOnCases.findMany({
       where: {

@@ -84,6 +84,9 @@ export function PrivateLayout(props: PropsWithChildren) {
     const myCasesLink = linkRegistry.get('myCases', {
       authorityId: currentAuthority.id,
     });
+    const caseListLink = linkRegistry.get('caseList', {
+      authorityId: currentAuthority.id,
+    });
     const unassignedCaseListLink = linkRegistry.get('unassignedCaseList', {
       authorityId: currentAuthority.id,
     });
@@ -128,6 +131,14 @@ export function PrivateLayout(props: PropsWithChildren) {
           },
         },
         {
+          isActive: hasPathnameThisMatch(pathname, caseListLink),
+          text: 'Tous les dossiers',
+          linkProps: {
+            href: caseListLink,
+            target: '_self',
+          },
+        },
+        {
           isActive: hasPathnameThisMatch(pathname, requestToAuthorityLink),
           text: 'Déposer une saisine',
           linkProps: {
@@ -154,9 +165,6 @@ export function PrivateLayout(props: PropsWithChildren) {
       const authorityAgentListLink = linkRegistry.get('authorityAgentList', {
         authorityId: currentAuthority.id,
       });
-      const caseListLink = linkRegistry.get('caseList', {
-        authorityId: currentAuthority.id,
-      });
       const authorityEditLink = linkRegistry.get('authorityEdit', {
         authorityId: currentAuthority.id,
       });
@@ -171,13 +179,6 @@ export function PrivateLayout(props: PropsWithChildren) {
             text: 'Gérer les médiateurs de la collectivité',
             linkProps: {
               href: authorityAgentListLink,
-            },
-          },
-          {
-            isActive: hasPathnameThisMatch(pathname, caseListLink),
-            text: 'Voir tous les dossiers de la collectivité',
-            linkProps: {
-              href: caseListLink,
             },
           },
           {
