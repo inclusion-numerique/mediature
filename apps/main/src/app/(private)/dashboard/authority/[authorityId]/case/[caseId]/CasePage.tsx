@@ -1073,6 +1073,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               <Grid item xs={12}>
                 <CloseCaseCard
                   case={targetedCase}
+                  citizen={citizen}
                   wrapperForm={form}
                   closeAction={async (value: boolean) => {
                     setValue('close', value);

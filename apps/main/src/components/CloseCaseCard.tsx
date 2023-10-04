@@ -21,10 +21,12 @@ import { useTranslation } from 'react-i18next';
 
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseOutcomeSchema, CaseOutcomeSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
   case: CaseSchemaType;
+  citizen: CitizenSchemaType;
   wrapperForm: UseFormReturn<UpdateCaseSchemaType>;
   closeAction: (value: boolean) => Promise<void>;
 }
@@ -212,7 +214,9 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                               <br />
                               <br />
                               <Typography component="span" sx={{ fontStyle: 'italic' }}>
-                                Le requérant sera notifié de la fermeture du dossier.
+                                {!!props.citizen.email
+                                  ? 'Le requérant sera notifié par email de la fermeture du dossier.'
+                                  : `Le requérant n'ayant pas d'adresse email renseignée, veillez à le notifier de la fermeture du dossier.`}
                               </Typography>
                             </>
                           ),
