@@ -6,6 +6,8 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import debounce from 'lodash.debounce';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -17,6 +19,12 @@ import { CaseCard } from '@mediature/ui/src/CaseCard';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
+export enum ListFilter {
+  ALL = 1,
+  OPEN_ONLY,
+  CLOSE_ONLY,
+}
+
 export interface CaseListPageProps {
   params: { authorityId: string };
 }
@@ -25,6 +33,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
+  const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
     orderBy: {},
@@ -37,6 +46,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQueryManipulated(true);
     setSearchQuery(event.target.value);
+    setListFilter(ListFilter.ALL);
   };
 
   const debounedHandleClearQuery = useMemo(() => debounce(handleSearchQueryChange, 500), []);
@@ -47,12 +57,18 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   }, [debounedHandleClearQuery]);
 
   const casesWrappers = data?.casesWrappers || [];
-  const openCasesWrappers = casesWrappers.filter((caseWrapper) => {
-    return !caseWrapper.case.closedAt;
-  });
-  const closeCasesWrappers = casesWrappers.filter((caseWrapper) => {
-    return !!caseWrapper.case.closedAt;
-  });
+  const filteredCasesWrappers = useMemo(() => {
+    return casesWrappers.filter((caseWrapper) => {
+      switch (listFilter) {
+        case ListFilter.CLOSE_ONLY:
+          return !!caseWrapper.case.closedAt;
+        case ListFilter.OPEN_ONLY:
+          return !caseWrapper.case.closedAt;
+        default:
+          return true;
+      }
+    });
+  }, [listFilter, casesWrappers]);
 
   if (error) {
     return (
@@ -66,6 +82,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
 
   const handleClearQuery = () => {
     setSearchQuery(null);
+    setListFilter(ListFilter.ALL);
 
     // We did not bind the TextField to "searchQuery" to allow delaying requests
     if (queryRef.current) {
@@ -109,14 +126,26 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
         </Grid>
         {!isLoading ? (
           <>
-            <Grid item xs={12} sx={{ py: 3 }}>
-              <Typography component="h2" variant="h6">
-                Dossiers ouverts
-              </Typography>
+            <Grid item xs={12} sx={{ py: 1 }}>
+              <ToggleButtonGroup
+                color="primary"
+                value={listFilter}
+                exclusive
+                onChange={(event, newValue) => {
+                  if (newValue !== null) {
+                    setListFilter(newValue);
+                  }
+                }}
+                aria-label="Filtre"
+              >
+                <ToggleButton value={ListFilter.ALL}>Tous</ToggleButton>
+                <ToggleButton value={ListFilter.OPEN_ONLY}>Dossiers ouverts</ToggleButton>
+                <ToggleButton value={ListFilter.CLOSE_ONLY}>Dossiers clôturés</ToggleButton>
+              </ToggleButtonGroup>
             </Grid>
-            {openCasesWrappers.length ? (
+            {filteredCasesWrappers.length ? (
               <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
-                {openCasesWrappers.map((caseWrapper) => (
+                {filteredCasesWrappers.map((caseWrapper) => (
                   <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
                     <CaseCard
                       caseLink={linkRegistry.get('case', {
@@ -132,35 +161,10 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                 ))}
               </Grid>
             ) : (
-              <Grid item xs={12}>
-                <Typography variant="body2">Aucun dossier est en cours de traitement</Typography>
-              </Grid>
-            )}
-            <Grid item xs={12} sx={{ py: 3 }}>
-              <Typography component="h2" variant="h6">
-                Dossiers clôturés
-              </Typography>
-            </Grid>
-            {closeCasesWrappers.length ? (
-              <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
-                {closeCasesWrappers.map((caseWrapper) => (
-                  <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
-                    <CaseCard
-                      caseLink={linkRegistry.get('case', {
-                        authorityId: caseWrapper.case.authorityId,
-                        caseId: caseWrapper.case.id,
-                      })}
-                      case={caseWrapper.case}
-                      citizen={caseWrapper.citizen}
-                      agent={caseWrapper.agent || undefined}
-                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Grid item xs={12}>
-                <Typography variant="body2">Il n&apos;y a pour l&apos;instant aucun dossier clôturé</Typography>
+              <Grid item xs={12} sx={{ py: 2 }}>
+                <Typography variant="body2">
+                  {casesWrappers.length === 0 ? `Aucun dossier n'a été déposé pour le moment` : 'Aucun dossier trouvé avec le filtre choisi'}
+                </Typography>
               </Grid>
             )}
           </>
