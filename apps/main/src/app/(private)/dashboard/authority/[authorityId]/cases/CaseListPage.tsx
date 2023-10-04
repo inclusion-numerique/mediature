@@ -65,7 +65,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
     };
   }, [debounedHandleClearQuery]);
 
-  const casesWrappers = data?.casesWrappers || [];
+  const casesWrappers = useMemo(() => data?.casesWrappers || [], [data]);
   const filteredCasesWrappers = useMemo(() => {
     return casesWrappers.filter((caseWrapper) => {
       switch (listFilter) {

@@ -67,7 +67,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
     };
   }, [debounedHandleClearQuery]);
 
-  const casesWrappers = data?.casesWrappers || [];
+  const casesWrappers = useMemo(() => data?.casesWrappers || [], [data]);
   const filteredCasesWrappers = useMemo(() => {
     return casesWrappers
       .filter((caseWrapper) => {
