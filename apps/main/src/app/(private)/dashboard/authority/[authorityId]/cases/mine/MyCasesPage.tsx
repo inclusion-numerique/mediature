@@ -1,7 +1,9 @@
 'use client';
 
 import ClearIcon from '@mui/icons-material/Clear';
+import GridViewIcon from '@mui/icons-material/GridView';
 import SearchIcon from '@mui/icons-material/Search';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -10,16 +12,14 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import debounce from 'lodash.debounce';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
-import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
-import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { CaseCard } from '@mediature/ui/src/CaseCard';
+import { CaseList } from '@mediature/main/src/components/CaseList';
+import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
+import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export enum ListFilter {
   ALL = 1,
@@ -27,15 +27,22 @@ export enum ListFilter {
   CLOSE_ONLY,
 }
 
+export const MyCasesPageContext = createContext({
+  ContextualCaseList: CaseList,
+});
+
 export interface MyCasesPageProps {
   params: { authorityId: string };
 }
 
 export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
+  const { ContextualCaseList } = useContext(MyCasesPageContext);
+
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
+  const [listDisplay, setListDisplay] = useLocalStorageListDisplay();
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
     orderBy: {},
@@ -78,10 +85,6 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
       });
   }, [listFilter, casesWrappers]);
 
-  const unassignCase = trpc.unassignCase.useMutation();
-  const deleteCase = trpc.deleteCase.useMutation();
-  const { showConfirmationDialog } = useSingletonConfirmationDialog();
-
   if (error) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
@@ -91,38 +94,6 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
   } else if (isInitialLoading && !searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
-
-  const unassignCaseAction = async (caseId: string, agentId: string) => {
-    showConfirmationDialog({
-      description: <>Êtes-vous sûr de vouloir vous désassigner de ce dossier ?</>,
-      onConfirm: async () => {
-        await unassignCase.mutateAsync({
-          caseId: caseId,
-          agentId: agentId,
-        });
-      },
-    });
-  };
-
-  const deleteCaseAction = async (caseToDelete: CaseSchemaType) => {
-    showConfirmationDialog({
-      description: (
-        <>
-          Êtes-vous sûr de vouloir supprimer le dossier n°{caseToDelete.humanId} ?
-          <br />
-          <br />
-          <Typography component="span" sx={{ fontStyle: 'italic' }}>
-            Tous les éléments qu&apos;il contient seront définitivement supprimés.
-          </Typography>
-        </>
-      ),
-      onConfirm: async () => {
-        await deleteCase.mutateAsync({
-          caseId: caseToDelete.id,
-        });
-      },
-    });
-  };
 
   const handleClearQuery = () => {
     setSearchQuery(null);
@@ -172,47 +143,48 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
         {!isLoading ? (
           <>
             <Grid item xs={12} sx={{ py: 1 }}>
-              <ToggleButtonGroup
-                color="primary"
-                value={listFilter}
-                exclusive
-                onChange={(event, newValue) => {
-                  if (newValue !== null) {
-                    setListFilter(newValue);
-                  }
-                }}
-                aria-label="Filtre"
-              >
-                <ToggleButton value={ListFilter.ALL}>Tous</ToggleButton>
-                <ToggleButton value={ListFilter.OPEN_ONLY}>Dossiers ouverts</ToggleButton>
-                <ToggleButton value={ListFilter.CLOSE_ONLY}>Dossiers clôturés</ToggleButton>
-              </ToggleButtonGroup>
+              <Grid container spacing={1} alignContent="flex-start">
+                <Grid item>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={listFilter}
+                    exclusive
+                    onChange={(event, newValue) => {
+                      if (newValue !== null) {
+                        setListFilter(newValue);
+                      }
+                    }}
+                    aria-label="filtre"
+                  >
+                    <ToggleButton value={ListFilter.ALL}>Tous</ToggleButton>
+                    <ToggleButton value={ListFilter.OPEN_ONLY}>Dossiers ouverts</ToggleButton>
+                    <ToggleButton value={ListFilter.CLOSE_ONLY}>Dossiers clôturés</ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+                <Grid item sx={{ ml: 'auto' }}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={listDisplay}
+                    exclusive
+                    onChange={(event, newValue) => {
+                      if (newValue !== null) {
+                        setListDisplay(newValue);
+                      }
+                    }}
+                    aria-label="affichage de la liste"
+                  >
+                    <ToggleButton value={ListDisplay.GRID} aria-label="grille">
+                      <GridViewIcon />
+                    </ToggleButton>
+                    <ToggleButton value={ListDisplay.TABLE} aria-label="tableau">
+                      <TableRowsIcon />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+              </Grid>
             </Grid>
             {filteredCasesWrappers.length ? (
-              <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
-                {filteredCasesWrappers.map((caseWrapper) => (
-                  <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
-                    <CaseCard
-                      caseLink={linkRegistry.get('case', {
-                        authorityId: caseWrapper.case.authorityId,
-                        caseId: caseWrapper.case.id,
-                      })}
-                      case={caseWrapper.case}
-                      citizen={caseWrapper.citizen}
-                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
-                      assignAction={async () => {
-                        // TODO: bind to API
-                      }}
-                      unassignAction={async () => {
-                        await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
-                      }}
-                      deleteAction={async () => {
-                        await deleteCaseAction(caseWrapper.case);
-                      }}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <ContextualCaseList casesWrappers={filteredCasesWrappers} canMutate display={listDisplay} />
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">

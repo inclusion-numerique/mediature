@@ -68,7 +68,7 @@ export function CaseCard(props: CaseCardProps) {
     >
       <CardHeader
         action={
-          !!props.assignAction || !!props.assignAction ? (
+          !!props.assignAction || !!props.unassignAction || !!props.deleteAction ? (
             <Tooltip title="Options du dossier">
               <IconButton
                 onClick={handleClick}

@@ -1,7 +1,9 @@
 'use client';
 
 import ClearIcon from '@mui/icons-material/Clear';
+import GridViewIcon from '@mui/icons-material/GridView';
 import SearchIcon from '@mui/icons-material/Search';
+import TableRowsIcon from '@mui/icons-material/TableRows';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -10,12 +12,12 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 import debounce from 'lodash.debounce';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
-import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
-import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { CaseCard } from '@mediature/ui/src/CaseCard';
+import { CaseList } from '@mediature/main/src/components/CaseList';
+import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
+import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -25,15 +27,22 @@ export enum ListFilter {
   CLOSE_ONLY,
 }
 
+export const CaseListPageContext = createContext({
+  ContextualCaseList: CaseList,
+});
+
 export interface CaseListPageProps {
   params: { authorityId: string };
 }
 
 export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
+  const { ContextualCaseList } = useContext(CaseListPageContext);
+
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
+  const [listDisplay, setListDisplay] = useLocalStorageListDisplay();
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
     orderBy: {},
@@ -95,7 +104,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
       <Grid container {...centeredContainerGridProps} alignContent="flex-start">
         <Grid item xs={12} sx={{ pb: 3 }}>
           <Typography component="h1" variant="h5">
-            Tous les dossiers de la collectivité
+            Dossiers de la collectivité
           </Typography>
         </Grid>
         <Grid item xs={12} sx={{ mb: 3 }}>
@@ -127,39 +136,48 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
         {!isLoading ? (
           <>
             <Grid item xs={12} sx={{ py: 1 }}>
-              <ToggleButtonGroup
-                color="primary"
-                value={listFilter}
-                exclusive
-                onChange={(event, newValue) => {
-                  if (newValue !== null) {
-                    setListFilter(newValue);
-                  }
-                }}
-                aria-label="Filtre"
-              >
-                <ToggleButton value={ListFilter.ALL}>Tous</ToggleButton>
-                <ToggleButton value={ListFilter.OPEN_ONLY}>Dossiers ouverts</ToggleButton>
-                <ToggleButton value={ListFilter.CLOSE_ONLY}>Dossiers clôturés</ToggleButton>
-              </ToggleButtonGroup>
+              <Grid container spacing={1} alignContent="flex-start">
+                <Grid item>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={listFilter}
+                    exclusive
+                    onChange={(event, newValue) => {
+                      if (newValue !== null) {
+                        setListFilter(newValue);
+                      }
+                    }}
+                    aria-label="filtre"
+                  >
+                    <ToggleButton value={ListFilter.ALL}>Tous</ToggleButton>
+                    <ToggleButton value={ListFilter.OPEN_ONLY}>Dossiers ouverts</ToggleButton>
+                    <ToggleButton value={ListFilter.CLOSE_ONLY}>Dossiers clôturés</ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+                <Grid item sx={{ ml: 'auto' }}>
+                  <ToggleButtonGroup
+                    color="primary"
+                    value={listDisplay}
+                    exclusive
+                    onChange={(event, newValue) => {
+                      if (newValue !== null) {
+                        setListDisplay(newValue);
+                      }
+                    }}
+                    aria-label="affichage de la liste"
+                  >
+                    <ToggleButton value={ListDisplay.GRID} aria-label="grille">
+                      <GridViewIcon />
+                    </ToggleButton>
+                    <ToggleButton value={ListDisplay.TABLE} aria-label="tableau">
+                      <TableRowsIcon />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+              </Grid>
             </Grid>
             {filteredCasesWrappers.length ? (
-              <Grid container component="ul" spacing={3} sx={ulComponentResetStyles}>
-                {filteredCasesWrappers.map((caseWrapper) => (
-                  <Grid key={caseWrapper.case.id} item component="li" xs={12} sm={6}>
-                    <CaseCard
-                      caseLink={linkRegistry.get('case', {
-                        authorityId: caseWrapper.case.authorityId,
-                        caseId: caseWrapper.case.id,
-                      })}
-                      case={caseWrapper.case}
-                      citizen={caseWrapper.citizen}
-                      agent={caseWrapper.agent || undefined}
-                      unprocessedMessages={caseWrapper.unprocessedMessages || 0}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+              <ContextualCaseList casesWrappers={filteredCasesWrappers} display={listDisplay} />
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">
