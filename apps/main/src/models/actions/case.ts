@@ -24,6 +24,7 @@ export const incompleteRequestCaseSchema = z
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
+    genderIdentity: CitizenSchema.shape.genderIdentity,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,

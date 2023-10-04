@@ -8,11 +8,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
 import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
@@ -24,6 +26,7 @@ import {
   requestCaseAttachmentsMax,
 } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
@@ -38,6 +41,7 @@ export interface RequestCaseFormProps {
 }
 
 export function RequestCaseForm(props: RequestCaseFormProps) {
+  const { t } = useTranslation('common');
   const { ContextualUploader } = useContext(RequestCaseFormContext);
 
   const requestCase = trpc.requestCase.useMutation();
@@ -69,7 +73,32 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
 
   return (
     <BaseForm handleSubmit={handleSubmit} onSubmit={onSubmit} control={control} ariaLabel="déposer une requête">
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} md={3.5}>
+        <TextField
+          select
+          label="Identité de genre"
+          defaultValue={control._defaultValues.genderIdentity || ''}
+          onChange={(event) => {
+            setValue('genderIdentity', event.target.value === '' ? null : (event.target.value as CitizenGenderIdentitySchemaType), {
+              // shouldValidate: true,
+              shouldDirty: true,
+            });
+          }}
+          error={!!errors.genderIdentity}
+          helperText={errors.genderIdentity?.message}
+          fullWidth
+        >
+          <MenuItem value="">
+            <em>Non spécifié</em>
+          </MenuItem>
+          {Object.values(CitizenGenderIdentitySchema.Values).map((genderIdentity) => (
+            <MenuItem key={genderIdentity} value={genderIdentity}>
+              {t(`model.citizen.genderIdentityPrefix.enum.${genderIdentity}`)}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid item xs={12} sm={4.25}>
         <TextField
           label="Prénom"
           placeholder="ex: Marie"
@@ -79,7 +108,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={4.25}>
         <TextField
           label="Nom"
           placeholder="ex: Dupont"

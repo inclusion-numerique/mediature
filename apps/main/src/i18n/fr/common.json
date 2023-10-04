@@ -145,6 +145,13 @@
           "MALE": "Homme",
           "NON_BINARY": "Non-binaire"
         }
+      },
+      "genderIdentityPrefix": {
+        "enum": {
+          "FEMALE": "Mme.",
+          "MALE": "M.",
+          "NON_BINARY": "Mx."
+        }
       }
     }
   }

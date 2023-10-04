@@ -54,6 +54,12 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
                     {formatListHeader('Email :')} {props.submittedRequestData.email}
                   </li>
                 )}
+                {!!props.submittedRequestData.genderIdentity && (
+                  <li>
+                    {formatListHeader('Identité de genre :')}{' '}
+                    {t(`model.citizen.genderIdentityPrefix.enum.${props.submittedRequestData.genderIdentity}`)}
+                  </li>
+                )}
                 <li>
                   {formatListHeader('Prénom :')} {props.submittedRequestData.firstname}
                 </li>

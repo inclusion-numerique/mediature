@@ -201,7 +201,7 @@ export const caseRouter = router({
             email: input.email,
             firstname: input.firstname,
             lastname: input.lastname,
-            genderIdentity: null, // This can set by the agent
+            genderIdentity: input.genderIdentity,
             address: input.address
               ? {
                   create: {

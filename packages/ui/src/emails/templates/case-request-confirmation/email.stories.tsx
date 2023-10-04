@@ -6,6 +6,7 @@ import { playFindEmailStructure } from '@mediature/docs/.storybook/testing';
 import { addresses } from '@mediature/main/src/fixtures/address';
 import { phoneInputs } from '@mediature/main/src/fixtures/phone';
 import { RequestCaseSchemaType } from '@mediature/main/src/models/actions/case';
+import { CitizenGenderIdentitySchema } from '@mediature/main/src/models/entities/citizen';
 import { commonEmailsParameters } from '@mediature/ui/src/emails/storybook-utils';
 import { CaseRequestConfirmationEmail, formatTitle } from '@mediature/ui/src/emails/templates/case-request-confirmation/email';
 
@@ -42,6 +43,7 @@ NormalStory.args = {
     email: 'jean@france.fr',
     firstname: 'Théodora',
     lastname: 'Aubert',
+    genderIdentity: CitizenGenderIdentitySchema.Values.FEMALE,
     address: {
       ...addresses[0],
     },
