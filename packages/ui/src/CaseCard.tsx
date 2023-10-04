@@ -120,7 +120,7 @@ export function CaseCard(props: CaseCardProps) {
               </Alert>
             )}
             {/* TODO: reminder field */}
-            <Typography component="span" variant="subtitle1">
+            <Typography component="div" variant="subtitle1">
               Avancement du dossier :
               <br />
               <CaseStatusChip status={props.case.status} />

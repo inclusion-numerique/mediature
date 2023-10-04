@@ -153,7 +153,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               </Alert>
             )}
             {/* TODO: reminder field */}
-            <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+            <Typography component="div" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Avancement du dossier :
             </Typography>
             <br />
