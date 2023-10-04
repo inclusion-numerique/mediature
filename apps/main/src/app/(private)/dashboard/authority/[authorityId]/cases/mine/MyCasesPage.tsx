@@ -81,6 +81,15 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
         }
       })
       .sort((a, b) => {
+        if (a.unprocessedMessages !== null && b.unprocessedMessages !== null) {
+          const aSimplifiedUM = a.unprocessedMessages > 0 ? 1 : 0;
+          const bSimplifiedUM = b.unprocessedMessages > 0 ? 1 : 0;
+
+          if (aSimplifiedUM !== bSimplifiedUM) {
+            return bSimplifiedUM - aSimplifiedUM;
+          }
+        }
+
         return +(a.case.termReminderAt || 0) - +(b.case.termReminderAt || 0);
       });
   }, [listFilter, casesWrappers]);
