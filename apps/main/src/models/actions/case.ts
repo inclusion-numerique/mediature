@@ -76,6 +76,7 @@ export const incompleteUpdateCaseSchema = z
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,
     close: z.boolean(),
+    faceToFaceMediation: incompleteCaseSchema.shape.faceToFaceMediation,
     outcome: incompleteCaseSchema.shape.outcome,
     collectiveAgreement: incompleteCaseSchema.shape.collectiveAgreement,
     administrativeCourtNext: incompleteCaseSchema.shape.administrativeCourtNext,

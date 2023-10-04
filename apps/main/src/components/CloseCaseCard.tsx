@@ -4,7 +4,11 @@ import { fr } from '@codegouvfr/react-dsfr';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
 import Collapse from '@mui/material/Collapse';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -107,6 +111,15 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                     </Tooltip>
                   </Grid>
                 )}
+                <Grid item xs={12}>
+                  <FormControl error={!!errors.faceToFaceMediation}>
+                    <FormControlLabel
+                      label="A conduit à une médiation en présentiel"
+                      control={<Checkbox {...register('faceToFaceMediation')} defaultChecked={!!control._defaultValues.faceToFaceMediation} />}
+                    />
+                    <FormHelperText>{errors?.faceToFaceMediation?.message}</FormHelperText>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     select

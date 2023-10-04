@@ -298,6 +298,7 @@ model Case {
   competent                    Boolean?
   competentThirdPartyId        String?             @db.Uuid
   closedAt                     DateTime?
+  faceToFaceMediation          Boolean             @default(false)
   outcome                      CaseOutcome?
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?
@@ -520,6 +521,7 @@ view CaseAnalytics {
   assigned                     Boolean
   alreadyRequestedInThePast    Boolean?
   gotAnswerFromPreviousRequest Boolean?
+  // faceToFaceMediation          Boolean
   outcome                      CaseOutcome?
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?

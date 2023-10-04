@@ -71,6 +71,7 @@ export const incompleteCaseSchema = z
     initiatedFrom: CasePlatformSchema,
     status: CaseStatusSchema,
     closedAt: z.date().nullable(),
+    faceToFaceMediation: z.boolean(),
     outcome: CaseOutcomeSchema.nullable(),
     collectiveAgreement: z.boolean().nullable(),
     administrativeCourtNext: z.boolean().nullable(),
