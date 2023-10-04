@@ -11,7 +11,6 @@ import Grid from '@mui/material/Grid';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -146,7 +145,6 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         <FormControl error={!!errors.alreadyRequestedInThePast}>
           <FormLabel id="previous-request-radio-buttons-group-label">
             Avez-vous effectué une première réclamation auprès du service concerné ?
-            <Typography sx={{ fontStyle: 'italic' }}>(cette précision n&apos;est pas obligatoire, vous pouvez ne pas y répondre)</Typography>
           </FormLabel>
           <RadioGroup
             defaultValue={control._defaultValues.alreadyRequestedInThePast?.toString()}
