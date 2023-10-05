@@ -188,6 +188,7 @@ export const caseRouter = router({
         emailCopyWanted: input.emailCopyWanted,
         termReminderAt: null,
         initiatedFrom: CasePlatformSchema.Values.WEB,
+        initiatedBy: null,
         status: CaseStatusSchema.Values.TO_PROCESS,
         closedAt: null,
         faceToFaceMediation: false,
@@ -202,6 +203,7 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: input.genderIdentity,
+            representation: input.representation,
             address: input.address
               ? {
                   create: {
@@ -375,6 +377,7 @@ export const caseRouter = router({
       },
       data: {
         initiatedFrom: input.initiatedFrom,
+        initiatedBy: input.initiatedBy,
         alreadyRequestedInThePast: input.alreadyRequestedInThePast,
         gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
@@ -411,6 +414,7 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: input.genderIdentity,
+            representation: input.representation,
             address: {
               delete: deleteCitizenAddress,
               upsert: input.address

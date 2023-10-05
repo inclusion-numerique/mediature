@@ -51,8 +51,20 @@ import { Messenger } from '@mediature/main/src/components/messenger/Messenger';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
-import { CaseAttachmentTypeSchema, CasePlatformSchema, CaseStatusSchema, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
-import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
+import {
+  CaseAttachmentTypeSchema,
+  CaseOriginatorSchema,
+  CaseOriginatorSchemaType,
+  CasePlatformSchema,
+  CaseStatusSchema,
+  CaseStatusSchemaType,
+} from '@mediature/main/src/models/entities/case';
+import {
+  CitizenGenderIdentitySchema,
+  CitizenGenderIdentitySchemaType,
+  CitizenRepresentationSchema,
+  CitizenRepresentationSchemaType,
+} from '@mediature/main/src/models/entities/citizen';
 import { PhoneInputSchemaType, PhoneTypeSchema, PhoneTypeSchemaType } from '@mediature/main/src/models/entities/phone';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
@@ -128,12 +140,14 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     reset({
       caseId: caseWrapper?.case.id,
       initiatedFrom: caseWrapper?.case.initiatedFrom,
+      initiatedBy: caseWrapper?.case.initiatedBy,
       close: !!caseWrapper?.case.closedAt,
       status: caseWrapper?.case.status,
       email: caseWrapper?.citizen.email,
       firstname: caseWrapper?.citizen.firstname,
       lastname: caseWrapper?.citizen.lastname,
       genderIdentity: caseWrapper?.citizen.genderIdentity,
+      representation: caseWrapper?.citizen.representation,
       address: caseWrapper?.citizen.address
         ? {
             street: caseWrapper?.citizen.address.street,
@@ -220,12 +234,14 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     reset({
       caseId: updatedCaseWrapper.case.id,
       initiatedFrom: updatedCaseWrapper.case.initiatedFrom,
+      initiatedBy: updatedCaseWrapper.case.initiatedBy,
       close: !!updatedCaseWrapper.case.closedAt,
       status: updatedCaseWrapper.case.status,
       email: updatedCaseWrapper.citizen.email,
       firstname: updatedCaseWrapper.citizen.firstname,
       lastname: updatedCaseWrapper.citizen.lastname,
       genderIdentity: updatedCaseWrapper.citizen.genderIdentity,
+      representation: updatedCaseWrapper.citizen.representation,
       address: updatedCaseWrapper.citizen.address
         ? {
             street: updatedCaseWrapper.citizen.address.street,
@@ -356,11 +372,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     status: control._formValues.status,
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
+                    initiatedBy: control._defaultValues.initiatedBy || targetedCase.initiatedBy,
                     caseId: control._defaultValues.caseId || targetedCase.id,
                     email: control._defaultValues.email || citizen.email,
                     firstname: control._defaultValues.firstname || citizen.firstname,
                     lastname: control._defaultValues.lastname || citizen.lastname,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
+                    representation: control._defaultValues.representation || citizen.representation,
                     address: citizen.address
                       ? {
                           street: control._defaultValues.address?.street || citizen.address.street,
@@ -463,11 +481,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     status: control._formValues.status,
                     // Do not update values that need a form submit
                     initiatedFrom: control._defaultValues.initiatedFrom || targetedCase.initiatedFrom,
+                    initiatedBy: control._defaultValues.initiatedBy || targetedCase.initiatedBy,
                     caseId: control._defaultValues.caseId || targetedCase.id,
                     email: control._defaultValues.email || citizen.email,
                     firstname: control._defaultValues.firstname || citizen.firstname,
                     lastname: control._defaultValues.lastname || citizen.lastname,
                     genderIdentity: control._defaultValues.genderIdentity || citizen.genderIdentity,
+                    representation: control._defaultValues.representation || citizen.representation,
                     address: control._defaultValues.address
                       ? {
                           street: control._defaultValues.address.street || '',
@@ -699,6 +719,60 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                               {Object.values(CasePlatformSchema.Values).map((initiatedFrom) => (
                                 <MenuItem key={initiatedFrom} value={initiatedFrom}>
                                   {t(`model.case.platform.enum.${initiatedFrom}`)}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              select
+                              label="Origine de la demande"
+                              defaultValue={control._defaultValues.initiatedBy || ''}
+                              onChange={(event) => {
+                                setValue('initiatedBy', event.target.value === '' ? null : (event.target.value as CaseOriginatorSchemaType), {
+                                  // shouldValidate: true,
+                                  shouldDirty: true,
+                                });
+                              }}
+                              error={!!errors.initiatedBy}
+                              helperText={errors.initiatedBy?.message}
+                              fullWidth
+                            >
+                              <MenuItem value="">
+                                <em>Non spécifiée</em>
+                              </MenuItem>
+                              {Object.values(CaseOriginatorSchema.Values).map((originator) => (
+                                <MenuItem key={originator} value={originator}>
+                                  {t(`model.case.originator.enum.${originator}`)}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <TextField
+                              select
+                              label="Type de requérant"
+                              defaultValue={control._defaultValues.representation || ''}
+                              onChange={(event) => {
+                                setValue(
+                                  'representation',
+                                  event.target.value === '' ? null : (event.target.value as CitizenRepresentationSchemaType),
+                                  {
+                                    // shouldValidate: true,
+                                    shouldDirty: true,
+                                  }
+                                );
+                              }}
+                              error={!!errors.representation}
+                              helperText={errors.representation?.message}
+                              fullWidth
+                            >
+                              <MenuItem value="">
+                                <em>Non spécifié</em>
+                              </MenuItem>
+                              {Object.values(CitizenRepresentationSchema.Values).map((representation) => (
+                                <MenuItem key={representation} value={representation}>
+                                  {t(`model.citizen.representation.enum.${representation}`)}
                                 </MenuItem>
                               ))}
                             </TextField>
@@ -1085,11 +1159,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       termReminderAt: control._formValues.termReminderAt,
                       status: control._formValues.status,
                       initiatedFrom: control._formValues.initiatedFrom,
+                      initiatedBy: control._formValues.initiatedBy,
                       caseId: control._formValues.caseId,
                       email: control._formValues.email,
                       firstname: control._formValues.firstname,
                       lastname: control._formValues.lastname,
                       genderIdentity: control._formValues.genderIdentity,
+                      representation: control._formValues.representation,
                       address: {
                         street: control._formValues.address.street,
                         postalCode: control._formValues.address.postalCode,

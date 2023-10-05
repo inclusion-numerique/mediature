@@ -125,6 +125,17 @@
           "WEB": "Formulaire internet"
         }
       },
+      "originator": {
+        "enum": {
+          "ADMINISTRATIVE_COURT": "Tribunal administratif",
+          "AGENT": "Auto-saisine du médiateur",
+          "AUTHORITY_REPRESENTATIVE": "Élu de la collectivité",
+          "CITIZEN": "Usager",
+          "INTERNAL_DEPARTMENT": "Service interne",
+          "OTHER": "Autre partenaire",
+          "RIGHTS_DEFENDER": "Défenseur des droits"
+        }
+      },
       "status": {
         "enum": {
           "ABOUT_TO_CLOSE": "Finalisation",
@@ -151,6 +162,16 @@
           "FEMALE": "Mme.",
           "MALE": "M.",
           "NON_BINARY": "Mx."
+        }
+      },
+      "representation": {
+        "enum": {
+          "ASSOCIATION": "Association",
+          "AUTHORITY": "Collectivité territoriale",
+          "BUSINESS": "Entreprise, Professionnel",
+          "INDIVIDUAL": "Particulier",
+          "OTHER": "Autre",
+          "PUBLIC_INSTITUTION": "Établissement public"
         }
       }
     }

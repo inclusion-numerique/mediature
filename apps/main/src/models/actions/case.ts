@@ -60,11 +60,13 @@ export const updateCaseAttachmentsMax = 100;
 export const incompleteUpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
+    initiatedBy: incompleteCaseSchema.shape.initiatedBy,
     caseId: incompleteCaseSchema.shape.id,
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
     genderIdentity: CitizenSchema.shape.genderIdentity,
+    representation: CitizenSchema.shape.representation,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,

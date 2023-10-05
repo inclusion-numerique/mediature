@@ -172,6 +172,7 @@ model Phone {
   Citizen Citizen?
 }
 
+/// @@Gen.model(hide: true)
 enum CitizenGenderIdentity {
   MALE
   FEMALE
@@ -179,10 +180,21 @@ enum CitizenGenderIdentity {
 }
 
 /// @@Gen.model(hide: true)
+enum CitizenRepresentation {
+  INDIVIDUAL
+  BUSINESS
+  PUBLIC_INSTITUTION
+  AUTHORITY
+  ASSOCIATION
+  OTHER
+}
+
+/// @@Gen.model(hide: true)
 model Citizen {
   id             String                 @id @default(uuid()) @db.Uuid
   email          String?
   genderIdentity CitizenGenderIdentity?
+  representation CitizenRepresentation?
   firstname      String
   lastname       String
   addressId      String?                @unique @db.Uuid
@@ -229,6 +241,17 @@ enum CaseInitialPlatform {
   PHONE
   EMAIL
   WEB
+}
+
+/// @@Gen.model(hide: true)
+enum CaseOriginator {
+  CITIZEN
+  ADMINISTRATIVE_COURT
+  INTERNAL_DEPARTMENT
+  AUTHORITY_REPRESENTATIVE
+  RIGHTS_DEFENDER
+  AGENT
+  OTHER
 }
 
 /// @@Gen.model(hide: true)
@@ -293,6 +316,7 @@ model Case {
   emailCopyWanted              Boolean
   termReminderAt               DateTime?
   initiatedFrom                CaseInitialPlatform @default(WEB)
+  initiatedBy                  CaseOriginator?
   status                       CaseStatus
   domainId                     String?             @db.Uuid
   competent                    Boolean?
