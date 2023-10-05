@@ -161,6 +161,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       competentThirdPartyId: caseWrapper?.case.competentThirdParty?.id || null,
       units: caseWrapper?.case.units,
       termReminderAt: caseWrapper?.case.termReminderAt,
+      faceToFaceMediation: caseWrapper?.case.faceToFaceMediation,
       outcome: caseWrapper?.case.outcome,
       collectiveAgreement: caseWrapper?.case.collectiveAgreement,
       administrativeCourtNext: caseWrapper?.case.administrativeCourtNext,
@@ -252,6 +253,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       competentThirdPartyId: updatedCaseWrapper.case.competentThirdParty?.id || null,
       units: updatedCaseWrapper.case.units,
       termReminderAt: updatedCaseWrapper.case.termReminderAt,
+      faceToFaceMediation: updatedCaseWrapper?.case.faceToFaceMediation,
       outcome: updatedCaseWrapper?.case.outcome,
       collectiveAgreement: updatedCaseWrapper?.case.collectiveAgreement,
       administrativeCourtNext: updatedCaseWrapper?.case.administrativeCourtNext,
@@ -300,6 +302,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
 
   const onClick = () => {};
 
+  const watchedGenderIdentity = watch('genderIdentity');
+
   return (
     <>
       <Grid container {...centeredContainerGridProps} spacing={2} ref={mainContainerRef}>
@@ -323,6 +327,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
           }}
         >
           <Typography component="b" variant="h4">
+            {watchedGenderIdentity && <>{t(`model.citizen.genderIdentityPrefix.enum.${watchedGenderIdentity}`)} </>}
             {watch('firstname')} {watch('lastname')}
           </Typography>
           <Divider orientation="vertical" flexItem sx={{ height: '50%', mx: 2, my: 'auto' }} />
@@ -381,6 +386,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
+                    faceToFaceMediation: control._defaultValues.faceToFaceMediation || targetedCase.faceToFaceMediation,
                     outcome: control._defaultValues.outcome || targetedCase.outcome,
                     collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
                     administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
@@ -502,6 +508,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                     competentThirdPartyId: control._defaultValues.competentThirdPartyId || targetedCase.competentThirdParty?.id || null,
                     units: control._defaultValues.units || targetedCase.units,
                     close: control._defaultValues.close || !!targetedCase.closedAt,
+                    faceToFaceMediation: control._defaultValues.faceToFaceMediation || targetedCase.faceToFaceMediation,
                     outcome: control._defaultValues.outcome || targetedCase.outcome,
                     collectiveAgreement: control._defaultValues.collectiveAgreement || targetedCase.collectiveAgreement,
                     administrativeCourtNext: control._defaultValues.administrativeCourtNext || targetedCase.administrativeCourtNext,
@@ -703,7 +710,17 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Coordonnées
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} md={4}>
+                      <Grid item xs={12}>
+                        <TextField
+                          type="email"
+                          label="Email"
+                          {...register('email')}
+                          error={!!errors.email}
+                          helperText={errors?.email?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={3.5}>
                         <TextField
                           select
                           label="Identité de genre"
@@ -728,17 +745,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           ))}
                         </TextField>
                       </Grid>
-                      <Grid item xs={12} md={8}>
-                        <TextField
-                          type="email"
-                          label="Email"
-                          {...register('email')}
-                          error={!!errors.email}
-                          helperText={errors?.email?.message}
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={4.25}>
                         <TextField
                           label="Prénom"
                           {...register('firstname')}
@@ -747,7 +754,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           fullWidth
                         />
                       </Grid>
-                      <Grid item xs={12} md={6}>
+                      <Grid item xs={12} md={4.25}>
                         <TextField
                           label="Nom de famille"
                           {...register('lastname')}
@@ -1069,6 +1076,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
               <Grid item xs={12}>
                 <CloseCaseCard
                   case={targetedCase}
+                  citizen={citizen}
                   wrapperForm={form}
                   closeAction={async (value: boolean) => {
                     setValue('close', value);
@@ -1103,6 +1111,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       competentThirdPartyId: control._formValues.competentThirdPartyId,
                       units: control._formValues.units,
                       close: control._formValues.close,
+                      faceToFaceMediation: control._formValues.faceToFaceMediation,
                       outcome: control._formValues.outcome,
                       collectiveAgreement: control._formValues.collectiveAgreement,
                       administrativeCourtNext: control._formValues.administrativeCourtNext,

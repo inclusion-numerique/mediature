@@ -5,7 +5,8 @@ import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { CaseListPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/CaseListPage';
+import { CaseListPage, CaseListPageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/CaseListPage';
+import { Grid as CaseListGridStory } from '@mediature/main/src/components/CaseList.stories';
 import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
@@ -59,7 +60,14 @@ NormalStory.play = async ({ canvasElement }) => {
   await playFindSearchInput(canvasElement);
 };
 
-export const Normal = prepareStory(NormalStory, {});
+export const Normal = prepareStory(NormalStory, {
+  childrenContext: {
+    context: CaseListPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
+});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
@@ -81,6 +89,12 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutAsMainAgentStory,
+  childrenContext: {
+    context: CaseListPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
 });
 
 const SearchLoadingWithLayoutStory = Template.bind({});
@@ -124,4 +138,10 @@ SearchLoadingWithLayoutStory.play = async ({ canvasElement }) => {
 
 export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory, {
   layoutStory: PrivateLayoutAsMainAgentStory,
+  childrenContext: {
+    context: CaseListPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
 });

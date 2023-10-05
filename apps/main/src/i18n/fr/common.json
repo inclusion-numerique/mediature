@@ -7,6 +7,10 @@
     "BaseForm": {
       "form_contains_errors_one": "Le formulaire soumis contient une erreur. Le champ invalide a été marqué en rouge.",
       "form_contains_errors_other": "Le formulaire soumis contient plusieurs erreurs. Les champs invalides ont été marqués en rouge."
+    },
+    "UnassignedCaseSliderCard": {
+      "case_has_similar_one": "Vérifiez que ce dossier n'est pas un doublon avant de le traiter car un autre dossier a été déposé par un homonyme :",
+      "case_has_similar_other": "Vérifiez que ce dossier n'est pas un doublon avant de le traiter car plusieurs dossiers ont été déposés par un homonyme :"
     }
   },
   "errors": {
@@ -51,7 +55,7 @@
         },
         "columns": {
           "administrativeCourtNext": "Poursuite au tribunal administratif",
-          "alreadyRequestedInThePast": "Premier recours à l'amiable",
+          "alreadyRequestedInThePast": "1ère réclamation faite",
           "assigned": "Assigné",
           "authorityName": "Collectivité",
           "authorityType": "Type de collectivité",
@@ -62,14 +66,14 @@
           "citizenPostalCode": "Code postal",
           "closedAt": "Date de clôture",
           "collectiveAgreement": "Accord des parties",
-          "createdAt": "Date de création",
-          "gotAnswerFromPreviousRequest": "Réponse pour le premier recours",
-          "humanId": "Dossier",
-          "initiatedFrom": "Origine",
+          "createdAt": "Date de la demande",
+          "gotAnswerFromPreviousRequest": "Réponse à la 1ère réclamation",
+          "humanId": "N° dossier",
+          "initiatedFrom": "Mode de saisine",
           "outcome": "Type de clôture",
           "primaryDomain": "Domaine principal",
           "secondaryDomain": "Domaine secondaire",
-          "status": "Statut",
+          "status": "Avancement du dossier",
           "updatedAt": "Date de dernière mise à jour"
         }
       }
@@ -140,6 +144,13 @@
           "FEMALE": "Femme",
           "MALE": "Homme",
           "NON_BINARY": "Non-binaire"
+        }
+      },
+      "genderIdentityPrefix": {
+        "enum": {
+          "FEMALE": "Mme.",
+          "MALE": "M.",
+          "NON_BINARY": "Mx."
         }
       }
     }

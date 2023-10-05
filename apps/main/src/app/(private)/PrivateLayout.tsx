@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
 import {
   authoritySwichQuickAccessItem,
@@ -84,6 +85,9 @@ export function PrivateLayout(props: PropsWithChildren) {
     const myCasesLink = linkRegistry.get('myCases', {
       authorityId: currentAuthority.id,
     });
+    const caseListLink = linkRegistry.get('caseList', {
+      authorityId: currentAuthority.id,
+    });
     const unassignedCaseListLink = linkRegistry.get('unassignedCaseList', {
       authorityId: currentAuthority.id,
     });
@@ -128,6 +132,14 @@ export function PrivateLayout(props: PropsWithChildren) {
           },
         },
         {
+          isActive: hasPathnameThisMatch(pathname, caseListLink),
+          text: 'Tous les dossiers',
+          linkProps: {
+            href: caseListLink,
+            target: '_self',
+          },
+        },
+        {
           isActive: hasPathnameThisMatch(pathname, requestToAuthorityLink),
           text: 'Déposer une saisine',
           linkProps: {
@@ -154,9 +166,6 @@ export function PrivateLayout(props: PropsWithChildren) {
       const authorityAgentListLink = linkRegistry.get('authorityAgentList', {
         authorityId: currentAuthority.id,
       });
-      const caseListLink = linkRegistry.get('caseList', {
-        authorityId: currentAuthority.id,
-      });
       const authorityEditLink = linkRegistry.get('authorityEdit', {
         authorityId: currentAuthority.id,
       });
@@ -171,13 +180,6 @@ export function PrivateLayout(props: PropsWithChildren) {
             text: 'Gérer les médiateurs de la collectivité',
             linkProps: {
               href: authorityAgentListLink,
-            },
-          },
-          {
-            isActive: hasPathnameThisMatch(pathname, caseListLink),
-            text: 'Voir tous les dossiers de la collectivité',
-            linkProps: {
-              href: caseListLink,
             },
           },
           {
@@ -259,6 +261,7 @@ export function PrivateLayout(props: PropsWithChildren) {
   return (
     <>
       <Header {...commonHeaderAttributes} quickAccessItems={quickAccessItems} navigation={navigation} />
+      <FlashMessage appMode={process.env.NEXT_PUBLIC_APP_MODE} nodeEnv={process.env.NODE_ENV} />
       <ContentWrapper>{props.children}</ContentWrapper>
       <Footer {...commonFooterAttributes} />
     </>

@@ -54,6 +54,12 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
                     {formatListHeader('Email :')} {props.submittedRequestData.email}
                   </li>
                 )}
+                {!!props.submittedRequestData.genderIdentity && (
+                  <li>
+                    {formatListHeader('Identité de genre :')}{' '}
+                    {t(`model.citizen.genderIdentityPrefix.enum.${props.submittedRequestData.genderIdentity}`)}
+                  </li>
+                )}
                 <li>
                   {formatListHeader('Prénom :')} {props.submittedRequestData.firstname}
                 </li>
@@ -78,17 +84,19 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
                     {phoneNumberUtil.format(convertInputModelToGooglePhoneNumber(props.submittedRequestData.phone), PhoneNumberFormat.NATIONAL)}
                   </li>
                 )}
-                <li>
-                  <>
-                    {formatListHeader('Premier recours déjà effectué :')}{' '}
-                    {props.submittedRequestData.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')}
-                  </>
-                </li>
-                {props.submittedRequestData.alreadyRequestedInThePast && (
+                {props.submittedRequestData.alreadyRequestedInThePast !== null && (
+                  <li>
+                    <>
+                      {formatListHeader('Premier recours déjà effectué :')}{' '}
+                      {props.submittedRequestData.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')}
+                    </>
+                  </li>
+                )}
+                {props.submittedRequestData.alreadyRequestedInThePast && props.submittedRequestData.gotAnswerFromPreviousRequest !== null && (
                   <li>
                     <>
                       {formatListHeader('Réponse suite au premier recours :')}{' '}
-                      {props.submittedRequestData.gotAnswerFromPreviousRequest === true ? t('boolean.true') : t('boolean.false')}
+                      {props.submittedRequestData.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')}
                     </>
                   </li>
                 )}

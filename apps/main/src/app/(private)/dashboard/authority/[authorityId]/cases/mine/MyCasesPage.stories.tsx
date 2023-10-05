@@ -1,12 +1,12 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { userEvent, within } from '@storybook/testing-library';
 
-import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
-import { MyCasesPage } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/mine/MyCasesPage';
-import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
+import { MyCasesPage, MyCasesPageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/cases/mine/MyCasesPage';
+import { Grid as CaseListGridStory } from '@mediature/main/src/components/CaseList.stories';
+import { casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 type ComponentType = typeof MyCasesPage;
@@ -28,23 +28,9 @@ const mswListCasesParameters = {
   },
 };
 
-const mswUnassignCaseParameters = {
-  type: 'mutation' as 'mutation',
-  path: ['unassignCase'] as ['unassignCase'],
-  response: {
-    case: cases[0],
-  },
-};
-
-const mswDeleteCaseParameters = {
-  type: 'mutation' as 'mutation',
-  path: ['deleteCase'] as ['deleteCase'],
-  response: undefined,
-};
-
 const defaultMswParameters = {
   msw: {
-    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters), getTRPCMock(mswDeleteCaseParameters)],
+    handlers: [getTRPCMock(mswListCasesParameters)],
   },
 };
 
@@ -73,7 +59,14 @@ NormalStory.play = async ({ canvasElement }) => {
   await playFindSearchInput(canvasElement);
 };
 
-export const Normal = prepareStory(NormalStory, {});
+export const Normal = prepareStory(NormalStory, {
+  childrenContext: {
+    context: MyCasesPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
+});
 
 const WithLayoutStory = Template.bind({});
 WithLayoutStory.args = {
@@ -82,7 +75,7 @@ WithLayoutStory.args = {
 WithLayoutStory.parameters = {
   layout: 'fullscreen',
   msw: {
-    handlers: [getTRPCMock(mswListCasesParameters), getTRPCMock(mswUnassignCaseParameters), getTRPCMock(mswDeleteCaseParameters)],
+    handlers: [getTRPCMock(mswListCasesParameters)],
   },
 };
 WithLayoutStory.play = async ({ canvasElement }) => {
@@ -91,6 +84,12 @@ WithLayoutStory.play = async ({ canvasElement }) => {
 
 export const WithLayout = prepareStory(WithLayoutStory, {
   layoutStory: PrivateLayoutAsMainAgentStory,
+  childrenContext: {
+    context: MyCasesPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
 });
 
 const SearchLoadingWithLayoutStory = Template.bind({});
@@ -117,8 +116,6 @@ SearchLoadingWithLayoutStory.parameters = {
           return null;
         },
       }),
-      getTRPCMock(mswUnassignCaseParameters),
-      getTRPCMock(mswDeleteCaseParameters),
     ],
   },
 };
@@ -136,4 +133,10 @@ SearchLoadingWithLayoutStory.play = async ({ canvasElement }) => {
 
 export const SearchLoadingWithLayout = prepareStory(SearchLoadingWithLayoutStory, {
   layoutStory: PrivateLayoutAsMainAgentStory,
+  childrenContext: {
+    context: MyCasesPageContext,
+    value: {
+      ContextualCaseList: CaseListGridStory,
+    },
+  },
 });

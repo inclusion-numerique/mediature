@@ -68,7 +68,7 @@ export function CaseCard(props: CaseCardProps) {
     >
       <CardHeader
         action={
-          !!props.assignAction || !!props.assignAction ? (
+          !!props.assignAction || !!props.unassignAction || !!props.deleteAction ? (
             <Tooltip title="Options du dossier">
               <IconButton
                 onClick={handleClick}
@@ -103,21 +103,24 @@ export function CaseCard(props: CaseCardProps) {
               {props.citizen.firstname} {props.citizen.lastname}
             </Link>
             <br />
-            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex' }}>
+            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex', alignItems: 'center' }}>
               Dossier n°{props.case.humanId}
               {!!props.unprocessedMessages && props.unprocessedMessages > 0 && (
                 <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={props.unprocessedMessages} />
               )}
               {!!props.agent && (
-                <Typography component="span" variant="body2">
-                  {' '}
+                <Typography component="span" variant="body2" sx={{ ml: 1 }}>
                   | Assigné à {props.agent.firstname} {props.agent.lastname}
                 </Typography>
               )}
             </Typography>
-            {!props.case.agentId ? <Alert severity="info">Aucun médiateur n&apos;est assigné à ce dossier</Alert> : <br />}
+            {!props.case.agentId && (
+              <Alert severity="info" sx={{ mb: 2 }}>
+                Aucun médiateur n&apos;est assigné à ce dossier
+              </Alert>
+            )}
             {/* TODO: reminder field */}
-            <Typography component="span" variant="subtitle1">
+            <Typography component="div" variant="subtitle1">
               Avancement du dossier :
               <br />
               <CaseStatusChip status={props.case.status} />

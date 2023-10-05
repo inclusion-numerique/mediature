@@ -8,6 +8,7 @@ import { Normal as UploaderNormalStory } from '@mediature/main/src/components/up
 import { phoneInputs } from '@mediature/main/src/fixtures/phone';
 import { RequestCasePrefillSchema } from '@mediature/main/src/models/actions/case';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
+import { CitizenGenderIdentitySchema } from '@mediature/main/src/models/entities/citizen';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
 type ComponentType = typeof RequestCaseForm;
@@ -65,6 +66,7 @@ FilledStory.args = {
     email: 'jean@france.fr',
     firstname: 'Jean',
     lastname: 'Derrien',
+    genderIdentity: CitizenGenderIdentitySchema.Values.MALE,
     address: {
       street: '3 rue de la Gare',
       city: 'Rennes',

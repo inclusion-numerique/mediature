@@ -1,9 +1,11 @@
 import { MjmlText } from '@luma-team/mjml-react';
 
+import { getServerTranslation } from '@mediature/main/src/i18n';
+import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { StandardLayout } from '@mediature/ui/src/emails/layouts/standard';
 
 export function formatTitle() {
-  return `Nouveau statut pour votre demande de médiation`;
+  return `Clôture de votre dossier`;
 }
 
 export interface CaseClosedEmailProps {
@@ -14,6 +16,8 @@ export interface CaseClosedEmailProps {
 }
 
 export function CaseClosedEmail(props: CaseClosedEmailProps) {
+  const { t } = getServerTranslation('common');
+
   const title = formatTitle();
 
   return (
@@ -23,10 +27,8 @@ export function CaseClosedEmail(props: CaseClosedEmailProps) {
         <p>
           {props.firstname} {props.lastname},
         </p>
-        <p>
-          Nous vous informons que votre demande de médiation n°{props.caseHumanId} avec la collectivité {props.authorityName} est maintenant
-          considérée comme close.
-        </p>
+        <p>La médiation menée suite à votre réclamation est à présent terminée. Votre dossier n°{props.caseHumanId} est clos.</p>
+        <p>Pour toute question sur cette clôture, veuillez adresser un email à {getCaseEmail(t, props.caseHumanId)}</p>
       </MjmlText>
     </StandardLayout>
   );

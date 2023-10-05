@@ -5,6 +5,7 @@ import { Header, HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
+import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -76,6 +77,7 @@ export function PublicLayout(props: PropsWithChildren) {
           },
         ]}
       />
+      <FlashMessage appMode={process.env.NEXT_PUBLIC_APP_MODE} nodeEnv={process.env.NODE_ENV} />
       <ContentWrapper>{props.children}</ContentWrapper>
       <Footer {...commonFooterAttributes} />
     </>

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { ComponentProps, StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { cases } from '@mediature/main/src/fixtures/case';
+import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { UpdateCaseSchema, UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 
 type ComponentType = typeof CloseCaseCard;
@@ -45,6 +46,7 @@ ExpandedStory.args = {
     closedAt: null,
     finalConclusion: null,
   },
+  citizen: citizens[0],
 };
 ExpandedStory.play = async ({ canvasElement }) => {
   const button = await playFindExpandingButton(canvasElement);
@@ -77,6 +79,7 @@ Consequatur consectetur beatae id. Quas optio facere. Et nisi non alias quibusda
 
 Perspiciatis illo quae accusamus consectetur ut beatae nihil harum nesciunt. Velit autem deleniti corporis inventore voluptatem. Nisi aut vel quasi. Perspiciatis ipsa voluptatum unde saepe autem quia rerum amet.`,
   },
+  citizen: citizens[0],
 };
 AlreadyClosedStory.play = async ({ canvasElement }) => {
   await within(canvasElement).findAllByRole('textbox');

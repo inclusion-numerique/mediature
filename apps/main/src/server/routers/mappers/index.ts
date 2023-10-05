@@ -190,6 +190,7 @@ export function casePrismaToModel(
     initiatedFrom: targetedCase.initiatedFrom,
     status: targetedCase.status,
     closedAt: targetedCase.closedAt,
+    faceToFaceMediation: targetedCase.faceToFaceMediation,
     outcome: targetedCase.outcome,
     collectiveAgreement: targetedCase.collectiveAgreement,
     administrativeCourtNext: targetedCase.administrativeCourtNext,

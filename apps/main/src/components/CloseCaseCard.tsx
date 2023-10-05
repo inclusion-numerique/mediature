@@ -4,7 +4,11 @@ import { fr } from '@codegouvfr/react-dsfr';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
 import Collapse from '@mui/material/Collapse';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -17,10 +21,12 @@ import { useTranslation } from 'react-i18next';
 
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseOutcomeSchema, CaseOutcomeSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
+import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
   case: CaseSchemaType;
+  citizen: CitizenSchemaType;
   wrapperForm: UseFormReturn<UpdateCaseSchemaType>;
   closeAction: (value: boolean) => Promise<void>;
 }
@@ -107,6 +113,15 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                     </Tooltip>
                   </Grid>
                 )}
+                <Grid item xs={12}>
+                  <FormControl error={!!errors.faceToFaceMediation}>
+                    <FormControlLabel
+                      label="A conduit à une médiation en présentiel"
+                      control={<Checkbox {...register('faceToFaceMediation')} defaultChecked={!!control._defaultValues.faceToFaceMediation} />}
+                    />
+                    <FormHelperText>{errors?.faceToFaceMediation?.message}</FormHelperText>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     select
@@ -199,7 +214,9 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                               <br />
                               <br />
                               <Typography component="span" sx={{ fontStyle: 'italic' }}>
-                                Le requérant sera notifié de la fermeture du dossier.
+                                {!!props.citizen.email
+                                  ? 'Le requérant sera notifié par email de la fermeture du dossier.'
+                                  : `Le requérant n'ayant pas d'adresse email renseignée, veillez à le notifier de la fermeture du dossier.`}
                               </Typography>
                             </>
                           ),

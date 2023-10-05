@@ -286,7 +286,7 @@ model Case {
   citizenId                    String              @unique @db.Uuid
   authorityId                  String              @db.Uuid
   agentId                      String?             @db.Uuid
-  alreadyRequestedInThePast    Boolean
+  alreadyRequestedInThePast    Boolean?
   gotAnswerFromPreviousRequest Boolean?
   description                  String              @db.Text
   units                        String
@@ -298,6 +298,7 @@ model Case {
   competent                    Boolean?
   competentThirdPartyId        String?             @db.Uuid
   closedAt                     DateTime?
+  faceToFaceMediation          Boolean             @default(false)
   outcome                      CaseOutcome?
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?
@@ -518,8 +519,9 @@ view CaseAnalytics {
   primaryDomain                String?
   secondaryDomain              String?
   assigned                     Boolean
-  alreadyRequestedInThePast    Boolean
+  alreadyRequestedInThePast    Boolean?
   gotAnswerFromPreviousRequest Boolean?
+  // faceToFaceMediation          Boolean
   outcome                      CaseOutcome?
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?

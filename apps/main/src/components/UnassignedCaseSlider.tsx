@@ -33,6 +33,9 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
       authorityIds: [authorityId],
       assigned: false,
     },
+    include: {
+      similarCases: true,
+    },
   });
 
   const casesWrappers = data?.casesWrappers || [];
@@ -110,6 +113,7 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
               citizen={caseWrapper.citizen}
               attachments={caseWrapper.attachments || []}
               unprocessedMessages={caseWrapper.unprocessedMessages || 0}
+              similarCases={caseWrapper.similarCases || []}
               assignAction={assignAction}
             />
           </SwiperSlide>

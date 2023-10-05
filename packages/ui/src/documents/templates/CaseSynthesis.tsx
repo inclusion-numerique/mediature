@@ -53,6 +53,11 @@ export function CaseSynthesisDocument(props: CaseSynthesisDocumentProps) {
       <Text style={styles.h2}>Coordonnées</Text>
       <View style={styles.gridContainer}>
         <View style={styles.gridItem}>
+          <Text style={styles.label}>Identité de genre</Text>
+          <Text>{props.citizen.genderIdentity ? t(`model.citizen.genderIdentity.enum.${props.citizen.genderIdentity}`) : '-'}</Text>
+        </View>
+        <View style={styles.gridItem}></View>
+        <View style={styles.gridItem}>
           <Text style={styles.label}>Prénom</Text>
           <Text>{props.citizen.firstname}</Text>
         </View>

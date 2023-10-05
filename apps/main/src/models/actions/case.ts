@@ -24,6 +24,7 @@ export const incompleteRequestCaseSchema = z
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
+    genderIdentity: CitizenSchema.shape.genderIdentity,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
@@ -42,7 +43,7 @@ export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, 
       });
     }
 
-    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+    if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant`,
@@ -76,6 +77,7 @@ export const incompleteUpdateCaseSchema = z
     termReminderAt: incompleteCaseSchema.shape.termReminderAt,
     status: incompleteCaseSchema.shape.status,
     close: z.boolean(),
+    faceToFaceMediation: incompleteCaseSchema.shape.faceToFaceMediation,
     outcome: incompleteCaseSchema.shape.outcome,
     collectiveAgreement: incompleteCaseSchema.shape.collectiveAgreement,
     administrativeCourtNext: incompleteCaseSchema.shape.administrativeCourtNext,
@@ -92,7 +94,7 @@ export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ct
       });
     }
 
-    if (data.alreadyRequestedInThePast === false && data.gotAnswerFromPreviousRequest !== null) {
+    if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `vous ne pouvez pas préciser qu'il y a eu une réponse de l'administration si vous indiquez qu'il n'y a pas eu une requête auparavant`,
@@ -256,6 +258,11 @@ export const ListCasesSchema = GetterInputSchema.extend({
     assigned: z.boolean().nullish(),
     mine: z.boolean().nullish(),
   }),
+  include: z
+    .object({
+      similarCases: z.boolean().nullish(),
+    })
+    .nullish(),
 }).strict();
 export type ListCasesSchemaType = z.infer<typeof ListCasesSchema>;
 
