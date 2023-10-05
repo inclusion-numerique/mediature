@@ -201,9 +201,6 @@ export function CaseList(props: CaseListProps) {
             '&.MuiDataGrid-root .MuiDataGrid-cell:focus-within': {
               outline: 'none !important', // Remove the outline when focusing any cell
             },
-            '& .MuiDataGrid-row:hover': {
-              cursor: 'pointer', // Add cursor on all rows
-            },
           }}
           aria-label="liste des dossiers"
         />
