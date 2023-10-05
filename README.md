@@ -164,6 +164,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `GITHUB_TOKEN`: [SECRET] \_(limited GitHub fine-grained personal access tokens scoped to this repository, see the `Scalingo` section)
+- `SCALINGO_POSTGRESQL_URL`: [GENERATED] _(you must add as query parameter `sslmode=prefer`. Also, in the development environment since using limited database resources (maximum 10 connections) we want the current runtime, potentially the one being deployed, plus maybe a local database connection to debug, to all be supported (1 runtime has 2 clients due to Prisma and PgBoss), so we chose to set in development the query parameter `connection_limit=1`)_
 - `DATABASE_URL`: `$SCALINGO_POSTGRESQL_URL` _(filled by Scalingo automatically when adding a database)_
 - `MAINTENANCE_API_KEY`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this is needed to perform maintenance through dedicated API endpoints)_
 - `FILE_AUTH_SECRET`: [SECRET] _(random string that can be generated with `openssl rand -base64 32`. Note this token is just for the short-lived read permission of private attachments)_
