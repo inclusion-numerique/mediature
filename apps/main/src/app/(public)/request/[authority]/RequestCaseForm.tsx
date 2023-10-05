@@ -58,6 +58,9 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
   } = useForm<RequestCaseSchemaType>({
     resolver: zodResolver(RequestCaseSchema),
     defaultValues: {
+      genderIdentity: null,
+      alreadyRequestedInThePast: null,
+      gotAnswerFromPreviousRequest: null,
       attachments: [],
       ...props.prefill,
     },
