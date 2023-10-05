@@ -710,16 +710,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Coordonnées
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          type="email"
-                          label="Email"
-                          {...register('email')}
-                          error={!!errors.email}
-                          helperText={errors?.email?.message}
-                          fullWidth
-                        />
-                      </Grid>
                       <Grid item xs={12} md={3.5}>
                         <TextField
                           select
@@ -763,6 +753,30 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           fullWidth
                         />
                       </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <PhoneField
+                          initialPhoneNumber={control._defaultValues.phone ? (control._defaultValues.phone as PhoneInputSchemaType) : undefined}
+                          onGlobalChange={(phoneNumber) => {
+                            setValue('phone', phoneNumber, {
+                              // shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                          error={!!errors.phone}
+                          helperText={errors?.phone?.message}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          type="email"
+                          label="Email"
+                          {...register('email')}
+                          error={!!errors.email}
+                          helperText={errors?.email?.message}
+                          fullWidth
+                        />
+                      </Grid>
                       <Grid item xs={12}>
                         <TextField
                           label="Adresse"
@@ -790,20 +804,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           {...register('address.city')}
                           error={!!errors.address?.city}
                           helperText={errors?.address?.city?.message}
-                          fullWidth
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <PhoneField
-                          initialPhoneNumber={control._defaultValues.phone ? (control._defaultValues.phone as PhoneInputSchemaType) : undefined}
-                          onGlobalChange={(phoneNumber) => {
-                            setValue('phone', phoneNumber, {
-                              // shouldValidate: true,
-                              shouldDirty: true,
-                            });
-                          }}
-                          error={!!errors.phone}
-                          helperText={errors?.phone?.message}
                           fullWidth
                         />
                       </Grid>
