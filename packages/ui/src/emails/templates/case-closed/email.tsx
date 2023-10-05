@@ -27,10 +27,8 @@ export function CaseClosedEmail(props: CaseClosedEmailProps) {
         <p>
           {props.firstname} {props.lastname},
         </p>
-        <p>
-          Votre demande ayant fait l&apos;objet de la médiation n°{props.caseHumanId} par le Médiateur {props.authorityName} est désormais close.
-        </p>
-        <p>Si vous avez des questions sur cette clôture, adressez un email à {getCaseEmail(t, props.caseHumanId)}</p>
+        <p>La médiation menée suite à votre réclamation est à présent terminée. Votre dossier n°{props.caseHumanId} est clos.</p>
+        <p>Pour toute question sur cette clôture, veuillez adresser un email à {getCaseEmail(t, props.caseHumanId)}</p>
       </MjmlText>
     </StandardLayout>
   );
