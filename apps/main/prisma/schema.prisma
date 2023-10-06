@@ -537,20 +537,26 @@ view CaseAnalytics {
   authorityType                AuthorityType
   createdAt                    DateTime
   updatedAt                    DateTime
+  termReminderAt               DateTime?
   closedAt                     DateTime?
   status                       CaseStatus
   initiatedFrom                CaseInitialPlatform
+  initiatedBy                  CaseOriginator?
   primaryDomain                String?
   secondaryDomain              String?
-  assigned                     Boolean
+  competent                    Boolean?
+  primaryCompetentThirdParty   String?
+  secondaryCompetentThirdParty String?
+  assignee                     String?
   alreadyRequestedInThePast    Boolean?
   gotAnswerFromPreviousRequest Boolean?
-  // faceToFaceMediation          Boolean
+  faceToFaceMediation          Boolean
   outcome                      CaseOutcome?
   collectiveAgreement          Boolean?
   administrativeCourtNext      Boolean?
   citizenHasEmail              Boolean
   citizenGenderIdentity        CitizenGenderIdentity?
+  citizenRepresentation        CitizenRepresentation?
   citizenCity                  String?
   citizenPostalCode            String?
   citizenCountryCode           String?

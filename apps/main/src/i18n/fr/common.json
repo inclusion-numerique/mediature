@@ -56,7 +56,7 @@
         "columns": {
           "administrativeCourtNext": "Poursuite au tribunal administratif",
           "alreadyRequestedInThePast": "1ère réclamation faite",
-          "assigned": "Assigné",
+          "assignee": "Assigné",
           "authorityName": "Collectivité",
           "authorityType": "Type de collectivité",
           "citizenCity": "Ville",
@@ -64,16 +64,23 @@
           "citizenGenderIdentity": "Identité de genre",
           "citizenHasEmail": "Email renseigné",
           "citizenPostalCode": "Code postal",
+          "citizenRepresentation": "Type d'usager",
           "closedAt": "Date de clôture",
           "collectiveAgreement": "Accord des parties",
+          "competent": "Collectivité compétente",
           "createdAt": "Date de la demande",
+          "faceToFaceMediation": "Échanges en présentiel",
           "gotAnswerFromPreviousRequest": "Réponse à la 1ère réclamation",
           "humanId": "N° dossier",
+          "initiatedBy": "Origine de la demande",
           "initiatedFrom": "Mode de saisine",
           "outcome": "Type de clôture",
+          "primaryCompetentThirdParty": "Entité compétente principale",
           "primaryDomain": "Domaine principal",
+          "secondaryCompetentThirdParty": "Entité compétente secondaire",
           "secondaryDomain": "Domaine secondaire",
           "status": "Avancement du dossier",
+          "termReminderAt": "Date d'échéance",
           "updatedAt": "Date de dernière mise à jour"
         }
       }
