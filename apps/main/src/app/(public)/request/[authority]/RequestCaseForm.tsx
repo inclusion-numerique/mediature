@@ -8,10 +8,13 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import NextLink from 'next/link';
 import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +32,7 @@ import { AttachmentKindSchema, UiAttachmentSchema, UiAttachmentSchemaType } from
 import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export const RequestCaseFormContext = createContext({
@@ -255,6 +259,15 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           />
           <FormHelperText>{errors?.emailCopyWanted?.message}</FormHelperText>
         </FormControl>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body2">
+          L&apos;envoi de ce formulaire vaut acceptation des{' '}
+          <Link component={NextLink} href={linkRegistry.get('termsOfUse', undefined)} target="_blank" underline="none">
+            conditions générales d&apos;utilisation
+          </Link>{' '}
+          de la plateforme Médiature.
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" disabled={isUploadingAttachments} loading={requestCase.isLoading} size="large" variant="contained" fullWidth>
