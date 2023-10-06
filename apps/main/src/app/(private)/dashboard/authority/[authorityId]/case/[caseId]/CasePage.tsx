@@ -8,8 +8,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import SaveIcon from '@mui/icons-material/Save';
-import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import Button from '@mui/lab/LoadingButton';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -27,6 +29,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -42,6 +46,7 @@ import { useTranslation } from 'react-i18next';
 import { AddNoteForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
 import { CaseCompetentThirdPartyField } from '@mediature/main/src/components/CaseCompetentThirdPartyField';
 import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
@@ -49,6 +54,7 @@ import { FileList } from '@mediature/main/src/components/FileList';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
 import { Messenger } from '@mediature/main/src/components/messenger/Messenger';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
+import { useUserInterfaceAuthority } from '@mediature/main/src/components/user-interface-session/useUserInterfaceSession';
 import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
 import { AttachmentKindSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import {
@@ -71,10 +77,13 @@ import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
+import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
 import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { PhoneField, getDefaultPhoneValue } from '@mediature/ui/src/PhoneField';
+import { useSingletonModal } from '@mediature/ui/src/modal/useModal';
+import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export const CasePageContext = createContext({
   ContextualNoteCard: NoteCard,
@@ -83,6 +92,7 @@ export const CasePageContext = createContext({
   ContextualCaseDomainField: CaseDomainField,
   ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyField,
   ContextualMessenger: Messenger,
+  ContextualCaseAssignmentDialog: CaseAssignmentDialog,
 });
 
 export interface CasePageProps {
@@ -101,13 +111,25 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     ContextualCaseDomainField,
     ContextualCaseCompetentThirdPartyField,
     ContextualMessenger,
+    ContextualCaseAssignmentDialog,
   } = useContext(CasePageContext);
+  const { userInterfaceAuthority } = useUserInterfaceAuthority(authorityId);
 
-  const { data, error, isInitialLoading, isLoading, refetch } = trpc.getCase.useQuery({
+  const getCase = trpc.getCase.useQuery({
     id: caseId,
   });
 
-  const caseWrapper = data?.caseWrapper;
+  const listAssignableAgents = trpc.listAgents.useQuery({
+    orderBy: {},
+    filterBy: {
+      authorityIds: [authorityId],
+    },
+  });
+
+  const aggregatedQueries = new AggregatedQueries(getCase, listAssignableAgents);
+
+  const caseWrapper = getCase.data?.caseWrapper;
+  const assignableAgents = listAssignableAgents.data?.agentsWrappers.map((agentWrapper) => agentWrapper.agent);
 
   const updateCase = trpc.updateCase.useMutation();
   const addAttachmentToCase = trpc.addAttachmentToCase.useMutation();
@@ -184,12 +206,22 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
     });
   }, [caseWrapper, isDirty, reset]);
 
+  const { showModal } = useSingletonModal();
   const reminderAnchorRef = useRef<HTMLButtonElement | null>(null);
   const [reminderMinimumDate, setReminderMinimumDate] = useState<Date>(new Date());
   const [reminderPickerOpen, setReminderPickerOpen] = useState<boolean>(false);
   const mainContainerRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
   const [manualSubmitError, setManualSubmitError] = useState<Error | null>(null);
   const [pdfGenerationError, setPdfGenerationError] = useState<Error | null>(null);
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(menuAnchorEl);
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
 
   const [addNoteModalOpen, setAddNoteModalOpen] = useState<boolean>(false);
   const handeOpenAddNoteModal = () => {
@@ -209,13 +241,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
 
   const assignCase = trpc.assignCase.useMutation();
 
-  if (error) {
+  if (aggregatedQueries.hasError) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
-        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+        <ErrorAlert errors={aggregatedQueries.errors} refetchs={aggregatedQueries.refetchs} />
       </Grid>
     );
-  } else if (isInitialLoading) {
+  } else if (aggregatedQueries.isLoading) {
     return <LoadingArea ariaLabelTarget="page" />;
   } else if (!caseWrapper || caseWrapper.case.authorityId !== authorityId) {
     return notFound();
@@ -315,8 +347,6 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
       throw err;
     }
   };
-
-  const onClick = () => {};
 
   const watchedGenderIdentity = watch('genderIdentity');
 
@@ -599,7 +629,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                   pb: 2,
                 }}
               >
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{ alignItems: 'center' }}>
                   <Grid item xs="auto" minWidth="33%">
                     <Button
                       onClick={() => {
@@ -644,13 +674,8 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           Télécharger le dossier
                         </Button>
                       </Grid>
-                      <Grid item xs>
-                        {targetedCase.agentId ? (
-                          <Button onClick={onClick} size="large" variant="contained" fullWidth startIcon={<TransferWithinAStationIcon />}>
-                            {/* TODO: bind to API */}
-                            Transférer le dossier
-                          </Button>
-                        ) : (
+                      {!targetedCase.agentId && (
+                        <Grid item xs>
                           <Button
                             onClick={async () => {
                               try {
@@ -675,8 +700,82 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                           >
                             S&apos;attribuer le dossier
                           </Button>
-                        )}
-                      </Grid>
+                        </Grid>
+                      )}
+                      {!!targetedCase.agentId && targetedCase.agentId === userInterfaceAuthority?.agentId && (
+                        <Grid item xs>
+                          <Button
+                            onClick={async () => {
+                              try {
+                                await assignCase.mutateAsync({
+                                  caseId: caseId,
+                                  agentId: null,
+                                });
+
+                                setManualSubmitError(null);
+                              } catch (err) {
+                                setManualSubmitError(err as unknown as Error);
+                                mainContainerRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+                                throw err;
+                              }
+                            }}
+                            loading={assignCase.isLoading}
+                            size="large"
+                            variant="contained"
+                            fullWidth
+                            startIcon={<PersonRemoveIcon />}
+                          >
+                            Se désassigner
+                          </Button>
+                        </Grid>
+                      )}
+                      {userInterfaceAuthority?.isMainAgent && (
+                        <Grid item xs="auto">
+                          <Tooltip title="Options du dossier">
+                            <IconButton
+                              onClick={handleMenuClick}
+                              size="small"
+                              aria-label="options"
+                              aria-controls={menuOpen ? 'case-menu' : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={menuOpen ? 'true' : undefined}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Menu
+                            anchorEl={menuAnchorEl}
+                            id="case-menu"
+                            open={menuOpen}
+                            onClose={handleMenuClose}
+                            onClick={handleMenuClose}
+                            PaperProps={{ ...menuPaperProps }}
+                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                          >
+                            <MenuItem
+                              onClick={async () => {
+                                showModal((modalProps) => {
+                                  return (
+                                    <ContextualCaseAssignmentDialog
+                                      {...modalProps}
+                                      case={caseWrapper.case}
+                                      currentAgent={caseWrapper.agent}
+                                      agents={assignableAgents || []}
+                                    />
+                                  );
+                                });
+                              }}
+                            >
+                              <ListItemIcon>
+                                <PersonSearchIcon fontSize="small" />
+                              </ListItemIcon>
+                              {!!caseWrapper.case.agentId ? 'Transférer le dossier' : 'Assigner le dossier'}
+                            </MenuItem>
+                          </Menu>
+                        </Grid>
+                      )}
                     </>
                   )}
                 </Grid>

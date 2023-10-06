@@ -125,6 +125,7 @@ export const userRouter = router({
               logo: await attachmentIdPrismaToModel(agent.authority.logoAttachmentId),
               name: agent.authority.name,
               slug: agent.authority.slug,
+              agentId: agent.id,
               isMainAgent: agent.id === agent.authority.mainAgentId,
               assignedUnprocessedMessages: unprocessedMessagesCountObject ? Number(unprocessedMessagesCountObject.count) : 0,
             };

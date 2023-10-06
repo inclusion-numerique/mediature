@@ -2,7 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { CaseList } from '@mediature/main/src/components/CaseList';
+import { Default as CaseAssignmentDialogDefaultStory } from '@mediature/main/src/components/CaseAssignmentDialog.stories';
+import { CaseList, CaseListContext } from '@mediature/main/src/components/CaseList';
 import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 import { ListDisplay } from '@mediature/main/src/utils/display';
@@ -23,7 +24,7 @@ const defaultMswParameters = {
     handlers: [
       getTRPCMock({
         type: 'mutation',
-        path: ['unassignCase'],
+        path: ['assignCase'],
         response: {
           case: cases[0],
         },
@@ -65,12 +66,21 @@ GridStory.play = async ({ canvasElement }) => {
   await playFindList(canvasElement);
 };
 
-export const Grid = prepareStory(GridStory);
+export const Grid = prepareStory(GridStory, {
+  childrenContext: {
+    context: CaseListContext,
+    value: {
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
+    },
+  },
+});
 
 const GridWithActionsStory = Template.bind({});
 GridWithActionsStory.args = {
   ...GridStory.args,
-  canMutate: true,
+  canTransfer: true,
+  canUnassign: true,
+  canDelete: true,
 };
 GridWithActionsStory.parameters = {
   ...defaultMswParameters,
@@ -79,7 +89,14 @@ GridWithActionsStory.play = async ({ canvasElement }) => {
   await playFindList(canvasElement);
 };
 
-export const GridWithActions = prepareStory(GridWithActionsStory);
+export const GridWithActions = prepareStory(GridWithActionsStory, {
+  childrenContext: {
+    context: CaseListContext,
+    value: {
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
+    },
+  },
+});
 
 const TableStory = Template.bind({});
 TableStory.args = {
@@ -93,12 +110,21 @@ TableStory.play = async ({ canvasElement }) => {
   await playFindGrid(canvasElement);
 };
 
-export const Table = prepareStory(TableStory);
+export const Table = prepareStory(TableStory, {
+  childrenContext: {
+    context: CaseListContext,
+    value: {
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
+    },
+  },
+});
 
 const TableWithActionsStory = Template.bind({});
 TableWithActionsStory.args = {
   ...TableStory.args,
-  canMutate: true,
+  canTransfer: true,
+  canUnassign: true,
+  canDelete: true,
 };
 TableWithActionsStory.parameters = {
   ...defaultMswParameters,
@@ -107,4 +133,11 @@ TableWithActionsStory.play = async ({ canvasElement }) => {
   await playFindGrid(canvasElement);
 };
 
-export const TableWithActions = prepareStory(TableWithActionsStory);
+export const TableWithActions = prepareStory(TableWithActionsStory, {
+  childrenContext: {
+    context: CaseListContext,
+    value: {
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
+    },
+  },
+});

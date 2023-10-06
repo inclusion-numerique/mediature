@@ -50,6 +50,11 @@ import {
   CaseRequestConfirmationEmailProps,
 } from '@mediature/ui/src/emails/templates/case-request-confirmation/email';
 import {
+  CaseUnassignedBySomeoneEmail,
+  formatTitle as CaseUnassignedBySomeoneEmailFormatTitle,
+  CaseUnassignedBySomeoneEmailProps,
+} from '@mediature/ui/src/emails/templates/case-unassigned-by-someone/email';
+import {
   NewPasswordRequestEmail,
   formatTitle as NewPasswordRequestEmailFormatTitle,
   NewPasswordRequestEmailProps,
@@ -268,6 +273,14 @@ export class Mailer {
       recipients: [parameters.recipient],
       subject: CaseAssignedBySomeoneEmailFormatTitle(),
       emailComponent: CaseAssignedBySomeoneEmail(parameters),
+    });
+  }
+
+  public async sendCaseUnassignedBySomeone(parameters: CaseUnassignedBySomeoneEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: CaseUnassignedBySomeoneEmailFormatTitle(),
+      emailComponent: CaseUnassignedBySomeoneEmail(parameters),
     });
   }
 

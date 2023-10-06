@@ -3,6 +3,7 @@ import z from 'zod';
 import { PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 
 export const UserInterfaceAuthoritySchema = PublicFacingAuthoritySchema.extend({
+  agentId: z.string().uuid(),
   isMainAgent: z.boolean(),
   assignedUnprocessedMessages: z.number().nullable(),
 }).strict();

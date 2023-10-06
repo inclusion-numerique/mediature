@@ -150,17 +150,6 @@ export type AssignCaseSchemaType = z.infer<typeof AssignCaseSchema>;
 export const AssignCasePrefillSchema = AssignCaseSchema.deepPartial();
 export type AssignCasePrefillSchemaType = z.infer<typeof AssignCasePrefillSchema>;
 
-export const UnassignCaseSchema = z
-  .object({
-    caseId: incompleteCaseSchema.shape.id,
-    agentId: AgentSchema.shape.id,
-  })
-  .strict();
-export type UnassignCaseSchemaType = z.infer<typeof UnassignCaseSchema>;
-
-export const UnassignCasePrefillSchema = UnassignCaseSchema.deepPartial();
-export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSchema>;
-
 export const GetCaseSchema = z
   .object({
     id: incompleteCaseSchema.shape.id,
