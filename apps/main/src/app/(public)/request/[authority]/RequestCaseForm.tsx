@@ -263,7 +263,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
       <Grid item xs={12}>
         <Typography variant="body2">
           L&apos;envoi de ce formulaire vaut acceptation des{' '}
-          <Link component={NextLink} href={linkRegistry.get('termsOfUse', undefined)} target="_blank" underline="none">
+          <Link component={NextLink} href={linkRegistry.get('termsOfUse', undefined)} target="_blank">
             conditions générales d&apos;utilisation
           </Link>{' '}
           de la plateforme Médiature.
