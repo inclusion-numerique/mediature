@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { CityField } from '@mediature/main/src/components/CityField';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import {
   RequestCasePrefillSchemaType,
@@ -146,13 +147,22 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <TextField
-          label="Ville"
-          placeholder="Paris"
-          {...register('address.city')}
-          error={!!errors.address?.city}
-          helperText={errors?.address?.city?.message}
-          fullWidth
+        <CityField
+          suggestionsPostalCode={watch('address.postalCode')}
+          workaroundSetValue={(newValue) => {
+            setValue('address.city', newValue || '', {
+              // shouldValidate: true,
+              shouldDirty: true,
+            });
+          }}
+          textFieldProps={{
+            label: 'Ville',
+            placeholder: 'Paris',
+            ...register('address.city'),
+            error: !!errors.address?.city,
+            helperText: errors?.address?.city?.message,
+            fullWidth: true,
+          }}
         />
       </Grid>
       <Grid item xs={12}>

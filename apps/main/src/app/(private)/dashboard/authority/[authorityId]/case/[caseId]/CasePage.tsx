@@ -49,6 +49,7 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
 import { CaseCompetentThirdPartyField } from '@mediature/main/src/components/CaseCompetentThirdPartyField';
 import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
+import { CityField } from '@mediature/main/src/components/CityField';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
 import { FileList } from '@mediature/main/src/components/FileList';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
@@ -971,13 +972,22 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField
-                          label="Ville"
-                          placeholder="Paris"
-                          {...register('address.city')}
-                          error={!!errors.address?.city}
-                          helperText={errors?.address?.city?.message}
-                          fullWidth
+                        <CityField
+                          suggestionsPostalCode={watch('address.postalCode')}
+                          workaroundSetValue={(newValue) => {
+                            setValue('address.city', newValue || '', {
+                              // shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          }}
+                          textFieldProps={{
+                            label: 'Ville',
+                            placeholder: 'Paris',
+                            ...register('address.city'),
+                            error: !!errors.address?.city,
+                            helperText: errors?.address?.city?.message,
+                            fullWidth: true,
+                          }}
                         />
                       </Grid>
                     </Grid>
