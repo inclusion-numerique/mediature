@@ -584,7 +584,7 @@ export const caseRouter = router({
         }
 
         agentIdToAssign = input.agentId;
-      } else if (!isMainAgent || targetedCase.agent?.userId !== ctx.user.id) {
+      } else if (!isMainAgent && targetedCase.agent?.userId !== ctx.user.id) {
         throw new Error(`vous devez être assigné à ce dossier ou médiateur principal de la collectivité pour effectuer cette action`);
       }
     }
