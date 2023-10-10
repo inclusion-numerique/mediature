@@ -106,7 +106,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           ))}
         </TextField>
       </Grid>
-      <Grid item xs={12} sm={4.25}>
+      <Grid item xs={12} md={4.25}>
         <TextField
           label="Prénom"
           placeholder="ex: Marie"
@@ -116,7 +116,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12} sm={4.25}>
+      <Grid item xs={12} md={4.25}>
         <TextField
           label="Nom"
           placeholder="ex: Dupont"
