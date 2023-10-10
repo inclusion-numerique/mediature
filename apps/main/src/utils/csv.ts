@@ -6,7 +6,12 @@ import {
 
 import { getServerTranslation } from '@mediature/main/src/i18n';
 import { AuthorityTypeSchemaType } from '@mediature/main/src/models/entities/authority';
-import { CaseOutcomeSchemaType, CasePlatformSchemaType, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
+import {
+  CaseOriginatorSchemaType,
+  CaseOutcomeSchemaType,
+  CasePlatformSchemaType,
+  CaseStatusSchemaType,
+} from '@mediature/main/src/models/entities/case';
 import { CitizenGenderIdentitySchemaType, CitizenRepresentationSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { nameof } from '@mediature/main/src/utils/typescript';
 

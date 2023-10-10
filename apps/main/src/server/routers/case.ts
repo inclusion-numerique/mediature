@@ -202,7 +202,7 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: input.genderIdentity,
-            representation: input.representation,
+            representation: null,
             address: input.address
               ? {
                   create: {

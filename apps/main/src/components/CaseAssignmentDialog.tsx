@@ -57,7 +57,7 @@ export function CaseAssignmentDialog(props: CaseAssignmentDialogProps) {
 
   useEffect(() => {
     setValue('agentId', props.case.agentId);
-  }, [props.case]);
+  }, [props.case, setValue]);
 
   const onSubmit = async (input: AssignCasePrefillSchemaType) => {
     const result = await updateCaseAssignation.mutateAsync({

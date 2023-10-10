@@ -40,7 +40,7 @@ export function CaseRequestConfirmationEmail(props: CaseRequestConfirmationEmail
           Nous vous informons que la demande de médiation que vous venez de déposer a bien été prise en compte sous le numéro de dossier{' '}
           {props.caseHumanId}.
         </p>
-        <p>Un médiateur a été nommé pour l'examiner et vous apporter une réponse.</p>
+        <p>Un médiateur a été nommé pour l&apos;examiner et vous apporter une réponse.</p>
       </MjmlText>
       {props.submittedRequestData.emailCopyWanted && (
         <>

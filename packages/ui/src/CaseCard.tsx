@@ -47,7 +47,6 @@ export interface CaseCardProps {
 export function CaseCard(props: CaseCardProps) {
   const { t } = useTranslation('common');
 
-  const { showModal } = useSingletonModal();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
