@@ -1,7 +1,10 @@
 'use client';
 
+import { fr } from '@codegouvfr/react-dsfr';
+import humanCooperation from '@gouvfr/dsfr/dist/artwork/pictograms/environment/human-cooperation.svg';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { createContext, useContext } from 'react';
 
@@ -79,16 +82,33 @@ export function SignUpPage() {
         container
         direction={'column'}
         sx={{
-          background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
-          color: 'white',
-          px: 3,
-          py: 2,
+          background: fr.colors.decisions.background.alt.blueFrance.default,
+          px: 6,
+          py: 4,
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
-        <Typography variant="body1" align="center">
-          Cet espace est réservé aux médiateurs des collectivités ... TODO
+        <Image
+          src={humanCooperation}
+          alt=""
+          style={{
+            backgroundColor: '#f5f5fe', // [WORKAROUND] Simple hack since DSFR does not provide pictograms in dark mode
+            width: '90%',
+            height: 'auto',
+            maxHeight: 250,
+            objectFit: 'contain',
+          }}
+        />
+        <Typography variant="body1" sx={{ pt: '40px' }}>
+          <Typography sx={{ fontWeight: 'bold' }}>Les raisons de s&apos;inscrire sur la plateforme :</Typography>
+          <ol>
+            <li>Une meilleure collaboration avec vos collègues médiateurs</li>
+            <li>Centraliser la gestion des saisines au sein d&apos;un seul outil</li>
+            <li>Bénéficier d&apos;une messagerie centralisée</li>
+            <li>Ne plus garder les documents sensibles sur votre ordinateur</li>
+            <li>Utiliser un outil commun disponible à toutes les collectivités</li>
+          </ol>
         </Typography>
       </Grid>
     </Grid>
