@@ -23,24 +23,6 @@ export function HomePage() {
       <Introduction />
       <Features />
       <Partners />
-      <Container
-        maxWidth={false}
-        disableGutters
-        sx={{
-          display: 'flex',
-        }}
-      >
-        <Image
-          src={preview}
-          alt=""
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            objectPosition: 'left center',
-          }}
-        />
-      </Container>
       <Contact />
     </Grid>
   );

@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import toReplace from '@mediature/main/public/assets/features/to_replace.png';
+import caseManagement from '@mediature/main/public/assets/features/case_management.svg';
 import { Feature } from '@mediature/main/src/app/(public)/features/Feature';
 
 type ComponentType = typeof Feature;
@@ -21,7 +21,7 @@ const Template: StoryFn<ComponentType> = (args) => {
 
 const NormalStory = Template.bind({});
 NormalStory.args = {
-  image: toReplace,
+  image: caseManagement,
   imageAlt: ``,
   name: `Rerum iste veritatis`,
   description: (
