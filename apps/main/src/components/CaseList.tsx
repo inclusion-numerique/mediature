@@ -2,7 +2,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import TransferWithinAStationIcon from '@mui/icons-material/PersonSearch';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -15,10 +15,12 @@ import Typography from '@mui/material/Typography';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid/DataGrid';
 import NextLink from 'next/link';
-import { useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
+import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { ListDisplay } from '@mediature/main/src/utils/display';
@@ -30,19 +32,28 @@ import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { useSingletonConfirmationDialog, useSingletonModal } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
+export const CaseListContext = createContext({
+  ContextualCaseAssignmentDialog: CaseAssignmentDialog,
+});
+
 export interface CaseListProps {
   casesWrappers: CaseWrapperSchemaType[];
   display: ListDisplay;
-  canMutate?: boolean;
+  assignableAgents: AgentSchemaType[];
+  canTransfer?: boolean;
+  canUnassign?: boolean;
+  canDelete?: boolean;
 }
 
 export function CaseList(props: CaseListProps) {
   const { t } = useTranslation('common');
+  const { ContextualCaseAssignmentDialog } = useContext(CaseListContext);
 
-  const unassignCase = trpc.unassignCase.useMutation();
+  const assignCase = trpc.assignCase.useMutation();
   const deleteCase = trpc.deleteCase.useMutation();
   const { showConfirmationDialog } = useSingletonConfirmationDialog();
 
+  const { showModal } = useSingletonModal();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMenuCase, setSelectedMenuCase] = useState<null | CaseSchemaType>(null);
 
@@ -51,13 +62,13 @@ export function CaseList(props: CaseListProps) {
     setSelectedMenuCase(null);
   };
 
-  const unassignCaseAction = async (caseId: string, agentId: string) => {
+  const unassignCaseAction = async (caseId: string) => {
     showConfirmationDialog({
       description: <>Êtes-vous sûr de vouloir vous désassigner de ce dossier ?</>,
       onConfirm: async () => {
-        await unassignCase.mutateAsync({
+        await assignCase.mutateAsync({
           caseId: caseId,
-          agentId: agentId,
+          agentId: null,
         });
       },
     });
@@ -149,7 +160,7 @@ export function CaseList(props: CaseListProps) {
     },
   ];
 
-  if (props.canMutate) {
+  if (!!props.canTransfer || !!props.canUnassign || !!props.canDelete) {
     columns.push({
       field: 'actions',
       headerName: 'Actions',
@@ -220,21 +231,30 @@ export function CaseList(props: CaseListProps) {
                   agent={caseWrapper.agent || undefined}
                   unprocessedMessages={caseWrapper.unprocessedMessages || 0}
                   assignAction={
-                    props.canMutate
+                    props.canTransfer
                       ? async () => {
-                          // TODO: bind to API
+                          showModal((modalProps) => {
+                            return (
+                              <ContextualCaseAssignmentDialog
+                                {...modalProps}
+                                case={caseWrapper.case}
+                                currentAgent={caseWrapper.agent}
+                                agents={props.assignableAgents}
+                              />
+                            );
+                          });
                         }
                       : undefined
                   }
                   unassignAction={
-                    props.canMutate
+                    props.canUnassign
                       ? async () => {
-                          await unassignCaseAction(caseWrapper.case.id, caseWrapper.case.agentId as string);
+                          await unassignCaseAction(caseWrapper.case.id);
                         }
                       : undefined
                   }
                   deleteAction={
-                    props.canMutate
+                    props.canDelete
                       ? async () => {
                           await deleteCaseAction(caseWrapper.case);
                         }
@@ -258,34 +278,51 @@ export function CaseList(props: CaseListProps) {
       >
         {!!selectedMenuCase && (
           <>
-            {/* TODO: onclick for modal to assign a new one */}
-            {/* TODO: disable if the case is already closed? */}
-            {/* <MenuItem onClick={props.assignAction}>
-            <ListItemIcon>
-              <PersonSearchIcon fontSize="small" />
-            </ListItemIcon>
-            Assigner le dossier à un autre médiateur
-          </MenuItem> */}
-            <MenuItem
-              onClick={async () => {
-                await unassignCaseAction(selectedMenuCase.id, selectedMenuCase.agentId as string);
-              }}
-            >
-              <ListItemIcon>
-                <PersonRemoveIcon fontSize="small" />
-              </ListItemIcon>
-              Se désassigner du dossier
-            </MenuItem>
-            <MenuItem
-              onClick={async () => {
-                await deleteCaseAction(selectedMenuCase);
-              }}
-            >
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" />
-              </ListItemIcon>
-              Supprimer ce dossier
-            </MenuItem>
+            {!!props.canTransfer && (
+              <MenuItem
+                onClick={() => {
+                  showModal((modalProps) => {
+                    return (
+                      <ContextualCaseAssignmentDialog
+                        {...modalProps}
+                        case={selectedMenuCase}
+                        currentAgent={props.assignableAgents.find((agent) => agent.id === selectedMenuCase.agentId) || null}
+                        agents={props.assignableAgents}
+                      />
+                    );
+                  });
+                }}
+              >
+                <ListItemIcon>
+                  <TransferWithinAStationIcon fontSize="small" />
+                </ListItemIcon>
+                {!!selectedMenuCase.agentId ? 'Transférer le dossier' : 'Assigner le dossier'}
+              </MenuItem>
+            )}
+            {!!props.canUnassign && (
+              <MenuItem
+                onClick={async () => {
+                  await unassignCaseAction(selectedMenuCase.id);
+                }}
+              >
+                <ListItemIcon>
+                  <PersonRemoveIcon fontSize="small" />
+                </ListItemIcon>
+                Se désassigner du dossier
+              </MenuItem>
+            )}
+            {!!props.canDelete && (
+              <MenuItem
+                onClick={async () => {
+                  await deleteCaseAction(selectedMenuCase);
+                }}
+              >
+                <ListItemIcon>
+                  <DeleteIcon fontSize="small" />
+                </ListItemIcon>
+                Supprimer ce dossier
+              </MenuItem>
+            )}
           </>
         )}
       </Menu>

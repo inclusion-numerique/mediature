@@ -193,7 +193,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
               </Grid>
             </Grid>
             {filteredCasesWrappers.length ? (
-              <ContextualCaseList casesWrappers={filteredCasesWrappers} canMutate display={listDisplay} />
+              <ContextualCaseList casesWrappers={filteredCasesWrappers} assignableAgents={[]} canUnassign canDelete display={listDisplay} />
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">

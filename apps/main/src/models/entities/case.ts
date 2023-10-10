@@ -8,6 +8,17 @@ import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 export const CasePlatformSchema = z.enum(['OFFICE', 'MAIL', 'PHONE', 'EMAIL', 'WEB']);
 export type CasePlatformSchemaType = z.infer<typeof CasePlatformSchema>;
 
+export const CaseOriginatorSchema = z.enum([
+  'CITIZEN',
+  'ADMINISTRATIVE_COURT',
+  'INTERNAL_DEPARTMENT',
+  'AUTHORITY_REPRESENTATIVE',
+  'RIGHTS_DEFENDER',
+  'AGENT',
+  'OTHER',
+]);
+export type CaseOriginatorSchemaType = z.infer<typeof CaseOriginatorSchema>;
+
 export const CaseStatusSchema = z.enum([
   'TO_PROCESS',
   'CONTACT_REQUESTER',
@@ -69,6 +80,7 @@ export const incompleteCaseSchema = z
     emailCopyWanted: z.boolean(),
     termReminderAt: z.date().nullable(),
     initiatedFrom: CasePlatformSchema,
+    initiatedBy: CaseOriginatorSchema.nullable(),
     status: CaseStatusSchema,
     closedAt: z.date().nullable(),
     faceToFaceMediation: z.boolean(),

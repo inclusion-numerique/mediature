@@ -8,16 +8,20 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import MenuItem from '@mui/material/MenuItem';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import NextLink from 'next/link';
 import React, { createContext, useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { CityField } from '@mediature/main/src/components/CityField';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import {
   RequestCasePrefillSchemaType,
@@ -29,6 +33,7 @@ import { AttachmentKindSchema, UiAttachmentSchema, UiAttachmentSchemaType } from
 import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
+import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export const RequestCaseFormContext = createContext({
@@ -101,7 +106,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           ))}
         </TextField>
       </Grid>
-      <Grid item xs={12} sm={4.25}>
+      <Grid item xs={12} md={4.25}>
         <TextField
           label="Prénom"
           placeholder="ex: Marie"
@@ -111,7 +116,7 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           fullWidth
         />
       </Grid>
-      <Grid item xs={12} sm={4.25}>
+      <Grid item xs={12} md={4.25}>
         <TextField
           label="Nom"
           placeholder="ex: Dupont"
@@ -142,13 +147,22 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
         />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <TextField
-          label="Ville"
-          placeholder="Paris"
-          {...register('address.city')}
-          error={!!errors.address?.city}
-          helperText={errors?.address?.city?.message}
-          fullWidth
+        <CityField
+          suggestionsPostalCode={watch('address.postalCode')}
+          workaroundSetValue={(newValue) => {
+            setValue('address.city', newValue || '', {
+              // shouldValidate: true,
+              shouldDirty: true,
+            });
+          }}
+          textFieldProps={{
+            label: 'Ville',
+            placeholder: 'Paris',
+            ...register('address.city'),
+            error: !!errors.address?.city,
+            helperText: errors?.address?.city?.message,
+            fullWidth: true,
+          }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -255,6 +269,15 @@ export function RequestCaseForm(props: RequestCaseFormProps) {
           />
           <FormHelperText>{errors?.emailCopyWanted?.message}</FormHelperText>
         </FormControl>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body2">
+          L&apos;envoi de ce formulaire vaut acceptation des{' '}
+          <Link component={NextLink} href={linkRegistry.get('termsOfUse', undefined)} target="_blank">
+            conditions générales d&apos;utilisation
+          </Link>{' '}
+          de la plateforme Médiature.
+        </Typography>
       </Grid>
       <Grid item xs={12}>
         <Button type="submit" disabled={isUploadingAttachments} loading={requestCase.isLoading} size="large" variant="contained" fullWidth>

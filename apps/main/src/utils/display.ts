@@ -11,5 +11,5 @@ export function useLocalStorageListDisplay() {
   const muiTheme = useTheme();
   const breakpointUp = useMediaQuery(muiTheme.breakpoints.up('md'));
 
-  return useLocalStorage<ListDisplay>('listDisplay', !breakpointUp ? ListDisplay.GRID : ListDisplay.GRID);
+  return useLocalStorage<ListDisplay>('listDisplay', !breakpointUp ? ListDisplay.TABLE : ListDisplay.GRID);
 }

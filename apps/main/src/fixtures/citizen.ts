@@ -1,6 +1,11 @@
 import { addresses } from '@mediature/main/src/fixtures/address';
 import { phones } from '@mediature/main/src/fixtures/phone';
-import { CitizenGenderIdentitySchema, CitizenSchema, CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
+import {
+  CitizenGenderIdentitySchema,
+  CitizenRepresentationSchema,
+  CitizenSchema,
+  CitizenSchemaType,
+} from '@mediature/main/src/models/entities/citizen';
 
 export const citizens: CitizenSchemaType[] = [
   CitizenSchema.parse({
@@ -9,6 +14,7 @@ export const citizens: CitizenSchemaType[] = [
     firstname: 'Agathon',
     lastname: 'Remy',
     genderIdentity: CitizenGenderIdentitySchema.Values.FEMALE,
+    representation: CitizenRepresentationSchema.Values.INDIVIDUAL,
     address: addresses[0],
     phone: phones[0],
     createdAt: new Date('December 17, 2022 03:24:00 UTC'),
@@ -21,6 +27,7 @@ export const citizens: CitizenSchemaType[] = [
     firstname: 'Amaliane',
     lastname: 'Baron',
     genderIdentity: CitizenGenderIdentitySchema.Values.NON_BINARY,
+    representation: CitizenRepresentationSchema.Values.BUSINESS,
     address: addresses[1],
     phone: phones[1],
     createdAt: new Date('December 17, 2022 03:24:00 UTC'),
@@ -33,6 +40,7 @@ export const citizens: CitizenSchemaType[] = [
     firstname: 'Pénélope',
     lastname: 'Rolland',
     genderIdentity: null,
+    representation: null,
     address: addresses[2],
     phone: phones[2],
     createdAt: new Date('December 17, 2022 03:24:00 UTC'),

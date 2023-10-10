@@ -5,6 +5,7 @@ import { EventEmitter } from 'eventemitter3';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { HeaderAuthoritySwitchItem } from '@mediature/main/src/components/HeaderAuthoritySwitchItem';
+import { agents } from '@mediature/main/src/fixtures/agent';
 import { authorities } from '@mediature/main/src/fixtures/authority';
 import { UserInterfaceAuthoritySchemaType } from '@mediature/main/src/models/entities/ui';
 
@@ -25,6 +26,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     name: authorities[0].name,
     slug: authorities[0].slug,
     logo: authorities[0].logo,
+    agentId: agents[0].id,
     isMainAgent: false,
     assignedUnprocessedMessages: 3,
   },
@@ -33,6 +35,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     name: authorities[1].name,
     slug: authorities[1].slug,
     logo: authorities[1].logo,
+    agentId: agents[1].id,
     isMainAgent: true,
     assignedUnprocessedMessages: 4,
   },
@@ -41,6 +44,7 @@ const uiAuthorities: UserInterfaceAuthoritySchemaType[] = [
     name: authorities[2].name,
     slug: authorities[2].slug,
     logo: authorities[2].logo,
+    agentId: agents[2].id,
     isMainAgent: false,
     assignedUnprocessedMessages: 1,
   },

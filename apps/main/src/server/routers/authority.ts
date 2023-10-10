@@ -11,6 +11,7 @@ import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agen
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
 import { isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
+import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
 import {
   agentPrismaToModel,
@@ -92,8 +93,8 @@ export const authorityRouter = router({
     return newAuthority;
   }),
   updateAuthority: privateProcedure.input(UpdateAuthoritySchema).mutation(async ({ ctx, input }) => {
-    if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+    if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
+      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
     }
 
     await requiresThereIsNoSimilarAuthority(input.name, undefined, input.authorityId);

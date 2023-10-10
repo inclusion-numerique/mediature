@@ -25,7 +25,6 @@ import {
   RemoveAttachmentFromCaseSchema,
   RemoveNoteFromCaseSchema,
   RequestCaseSchema,
-  UnassignCaseSchema,
   UpdateCaseAttachmentLabelSchema,
   UpdateCaseNoteSchema,
   UpdateCaseSchema,
@@ -135,6 +134,14 @@ export async function assertUserCanManageThisCase(userId: string, caseId: string
   return true;
 }
 
+export async function assertUserAnAgentPartOfAuthority(authorityId: string, userId: string): Promise<boolean> {
+  if (!(await isUserAnAgentPartOfAuthority(authorityId, userId))) {
+    throw new Error(`vous devez faire partie de la collectivité pour effectuer cette action`);
+  }
+
+  return true;
+}
+
 export async function assertCaseDomainParentItemIsAllowed(parentItemId: string, expectedAuthorityId?: string): Promise<void> {
   const parentItem = await prisma.caseDomainItem.findUniqueOrThrow({
     where: {
@@ -188,6 +195,7 @@ export const caseRouter = router({
         emailCopyWanted: input.emailCopyWanted,
         termReminderAt: null,
         initiatedFrom: CasePlatformSchema.Values.WEB,
+        initiatedBy: null,
         status: CaseStatusSchema.Values.TO_PROCESS,
         closedAt: null,
         faceToFaceMediation: false,
@@ -202,6 +210,7 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: input.genderIdentity,
+            representation: null,
             address: input.address
               ? {
                   create: {
@@ -375,6 +384,7 @@ export const caseRouter = router({
       },
       data: {
         initiatedFrom: input.initiatedFrom,
+        initiatedBy: input.initiatedBy,
         alreadyRequestedInThePast: input.alreadyRequestedInThePast,
         gotAnswerFromPreviousRequest: input.gotAnswerFromPreviousRequest,
         description: input.description,
@@ -411,6 +421,7 @@ export const caseRouter = router({
             firstname: input.firstname,
             lastname: input.lastname,
             genderIdentity: input.genderIdentity,
+            representation: input.representation,
             address: {
               delete: deleteCitizenAddress,
               upsert: input.address
@@ -525,93 +536,110 @@ export const caseRouter = router({
       where: {
         id: input.caseId,
       },
+      include: {
+        agent: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
     if (!targetedCase) {
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    if (targetedCase.agentId) {
-      throw new Error(`un médiateur est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que assigner une autre personne`);
-    }
+    const originatorUser = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: ctx.user.id,
+      },
+    });
 
-    let agentIdToAssign: string;
+    let agentIdToAssign: string | null = null;
     if (input.myself) {
+      if (targetedCase.agentId) {
+        throw new Error(`un médiateur est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que vous puissiez vous l'assigner`);
+      }
+
       const userAgent = await prisma.agent.findFirstOrThrow({
         where: {
           userId: ctx.user.id,
           authorityId: targetedCase.authorityId,
         },
+        include: {
+          user: true,
+        },
       });
 
       agentIdToAssign = userAgent.id;
     } else {
-      agentIdToAssign = input.agentId || '';
+      const isMainAgent = await isUserMainAgentOfAuthority(targetedCase.authorityId, ctx.user.id);
+
+      if (input.agentId) {
+        if (!isMainAgent) {
+          throw new Error(`vous devez être médiateur principal de la collectivité pour effectuer cette action`);
+        }
+
+        if (!(await isAgentPartOfAuthority(targetedCase.authorityId, input.agentId))) {
+          throw new Error(`impossible d'assigner un médiateur qui ne fait pas partie de la collectivité du dossier`);
+        }
+
+        agentIdToAssign = input.agentId;
+      } else if (!isMainAgent && targetedCase.agent?.userId !== ctx.user.id) {
+        throw new Error(`vous devez être assigné à ce dossier ou médiateur principal de la collectivité pour effectuer cette action`);
+      }
     }
 
-    if (!(await isAgentPartOfAuthority(targetedCase.authorityId, agentIdToAssign))) {
-      throw new Error(`impossible d'assigner un médiateur qui ne fait pas partie de la collectivité du dossier`);
+    // Notify previous agent of being unassigned
+    if (targetedCase.agent && targetedCase.agent?.userId !== ctx.user.id) {
+      await mailer.sendCaseUnassignedBySomeone({
+        recipient: targetedCase.agent.user.email,
+        firstname: targetedCase.agent.user.firstname,
+        originatorFirstname: originatorUser.firstname,
+        originatorLastname: originatorUser.lastname,
+        caseUrl: linkRegistry.get('case', { authorityId: targetedCase.authorityId, caseId: targetedCase.id }, { absolute: true }),
+        caseHumanId: targetedCase.humanId.toString(),
+      });
     }
 
-    if (!(await isAgentThisUser(ctx.user.id, agentIdToAssign))) {
-      throw new Error(`vous ne pouvez assigner que vous-même à un dossier`);
+    // Notify the new agent
+    if (!!agentIdToAssign && !input.myself) {
+      const agentToAssign = await prisma.agent.findUniqueOrThrow({
+        where: {
+          id: agentIdToAssign,
+        },
+        include: {
+          user: true,
+        },
+      });
 
-      // await mailer.sendCaseAssignedBySomeone({
-      //   recipient: assignedUser.email,
-      //   firstname: assignedUser.firstname,
-      //   originatorFirstname: originatorUser.firstname,
-      //   originatorLastname: originatorUser.lastname,
-      //   caseUrl: linkRegistry.get('case', { authorityId: targetedCase.authorityId, caseId: targetedCase.id }, { absolute: true }),
-      //   caseHumanId: targetedCase.humanId.toString(),
-      // });
+      await mailer.sendCaseAssignedBySomeone({
+        recipient: agentToAssign.user.email,
+        firstname: agentToAssign.user.firstname,
+        originatorFirstname: originatorUser.firstname,
+        originatorLastname: originatorUser.lastname,
+        caseUrl: linkRegistry.get('case', { authorityId: targetedCase.authorityId, caseId: targetedCase.id }, { absolute: true }),
+        caseHumanId: targetedCase.humanId.toString(),
+      });
     }
 
-    const assignedCase = await prisma.case.update({
+    // This endpoint works for assignation and unassignment
+    const updatedCase = await prisma.case.update({
       where: {
         id: input.caseId,
       },
       data: {
         agent: {
-          connect: {
-            id: agentIdToAssign,
-          },
+          connect: !!agentIdToAssign
+            ? {
+                id: agentIdToAssign,
+              }
+            : undefined,
+          disconnect: !agentIdToAssign ? true : undefined,
         },
       },
     });
 
-    return { case: casePrismaToModel(assignedCase) };
-  }),
-  unassignCase: privateProcedure.input(UnassignCaseSchema).mutation(async ({ ctx, input }) => {
-    const agentIdToUnassign = input.agentId;
-
-    const targetedCase = await prisma.case.findFirst({
-      where: {
-        id: input.caseId,
-      },
-    });
-    if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
-    }
-
-    if (!targetedCase.agentId) {
-      throw new Error(`aucun médiateur n'est assigné sur ce dossier`);
-    }
-
-    if (!(await isAgentThisUser(ctx.user.id, agentIdToUnassign))) {
-      throw new Error(`vous ne pouvez désassigner que vous-même d'un dossier`);
-    }
-
-    const unassignedCase = await prisma.case.update({
-      where: {
-        id: input.caseId,
-      },
-      data: {
-        agent: {
-          disconnect: true,
-        },
-      },
-    });
-
-    return { case: casePrismaToModel(unassignedCase) };
+    return { case: casePrismaToModel(updatedCase) };
   }),
   getCaseDomainItems: privateProcedure.input(GetCaseDomainItemsSchema).query(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
@@ -1200,7 +1228,7 @@ export const caseRouter = router({
   }),
   generateCsvFromCaseAnalytics: privateProcedure.input(GenerateCsvFromCaseAnalyticsSchema).mutation(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité de ce dossier pour le mettre à jour`);
+      throw new Error(`vous devez faire partie de la collectivité pour effectuer cette action`);
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
       throw new Error(`vous devez être un administrateur pour effectuer cette action`);
     }
@@ -1251,7 +1279,16 @@ export const caseRouter = router({
     };
   }),
   addNoteToCase: privateProcedure.input(AddNoteToCaseSchema).mutation(async ({ ctx, input }) => {
-    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
+    const targetedCase = await prisma.case.findUnique({
+      where: {
+        id: input.caseId,
+      },
+    });
+    if (!targetedCase) {
+      throw new Error(`ce dossier n'existe pas`);
+    }
+
+    await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
 
     const note = await prisma.note.create({
       data: {
@@ -1283,7 +1320,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
 
     const note = await prisma.note.delete({
       where: {
@@ -1309,7 +1346,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
 
     const note = await prisma.note.update({
       where: {
@@ -1324,7 +1361,16 @@ export const caseRouter = router({
     return { note };
   }),
   addAttachmentToCase: privateProcedure.input(AddAttachmentToCaseSchema).mutation(async ({ ctx, input }) => {
-    await assertUserCanManageThisCase(ctx.user.id, input.caseId);
+    const targetedCase = await prisma.case.findUnique({
+      where: {
+        id: input.caseId,
+      },
+    });
+    if (!targetedCase) {
+      throw new Error(`ce dossier n'existe pas`);
+    }
+
+    await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
 
     const attachmentsOnCase = await prisma.attachmentsOnCases.findMany({
       where: {
@@ -1341,7 +1387,7 @@ export const caseRouter = router({
       }
     );
 
-    const targetedCase = await prisma.case.update({
+    const updatedCase = await prisma.case.update({
       where: {
         id: input.caseId,
       },
@@ -1404,7 +1450,7 @@ export const caseRouter = router({
       throw new Error(`ce dossier n'existe pas`);
     }
 
-    await assertUserCanManageThisCase(ctx.user.id, targetedCase.id);
+    await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
 
     await prisma.attachmentsOnCases.update({
       where: {

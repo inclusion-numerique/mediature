@@ -16,8 +16,10 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseList } from '@mediature/main/src/components/CaseList';
+import { useUserInterfaceAuthority } from '@mediature/main/src/components/user-interface-session/useUserInterfaceSession';
 import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
+import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
@@ -37,6 +39,7 @@ export interface CaseListPageProps {
 
 export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const { ContextualCaseList } = useContext(CaseListPageContext);
+  const { userInterfaceAuthority } = useUserInterfaceAuthority(authorityId);
 
   const queryRef = React.createRef<HTMLInputElement>();
   const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
@@ -44,13 +47,22 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
   const [listDisplay, setListDisplay] = useLocalStorageListDisplay();
 
-  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
+  const listCases = trpc.listCases.useQuery({
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
       query: searchQuery,
     },
   });
+
+  const listAssignableAgents = trpc.listAgents.useQuery({
+    orderBy: {},
+    filterBy: {
+      authorityIds: [authorityId],
+    },
+  });
+
+  const aggregatedQueries = new AggregatedQueries(listCases, listAssignableAgents);
 
   const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQueryManipulated(true);
@@ -65,7 +77,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
     };
   }, [debounedHandleClearQuery]);
 
-  const casesWrappers = useMemo(() => data?.casesWrappers || [], [data]);
+  const casesWrappers = useMemo(() => listCases.data?.casesWrappers || [], [listCases.data]);
   const filteredCasesWrappers = useMemo(() => {
     return casesWrappers.filter((caseWrapper) => {
       switch (listFilter) {
@@ -79,15 +91,17 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
     });
   }, [listFilter, casesWrappers]);
 
-  if (error) {
+  if (aggregatedQueries.hasError) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
-        <ErrorAlert errors={[error]} refetchs={[refetch]} />
+        <ErrorAlert errors={aggregatedQueries.errors} refetchs={aggregatedQueries.refetchs} />
       </Grid>
     );
-  } else if (isInitialLoading && !searchQueryManipulated) {
+  } else if (aggregatedQueries.isLoading && !searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
+
+  const assignableAgents = listAssignableAgents.data?.agentsWrappers.map((agentWrapper) => agentWrapper.agent);
 
   const handleClearQuery = () => {
     setSearchQuery(null);
@@ -133,7 +147,7 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
             }}
           />
         </Grid>
-        {!isLoading ? (
+        {!aggregatedQueries.isLoading ? (
           <>
             <Grid item xs={12} sx={{ py: 1 }}>
               <Grid container spacing={1} alignContent="flex-start">
@@ -177,7 +191,12 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
               </Grid>
             </Grid>
             {filteredCasesWrappers.length ? (
-              <ContextualCaseList casesWrappers={filteredCasesWrappers} display={listDisplay} />
+              <ContextualCaseList
+                casesWrappers={filteredCasesWrappers}
+                assignableAgents={assignableAgents || []}
+                canTransfer={userInterfaceAuthority?.isMainAgent}
+                display={listDisplay}
+              />
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">

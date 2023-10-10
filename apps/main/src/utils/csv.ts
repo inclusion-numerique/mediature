@@ -6,8 +6,13 @@ import {
 
 import { getServerTranslation } from '@mediature/main/src/i18n';
 import { AuthorityTypeSchemaType } from '@mediature/main/src/models/entities/authority';
-import { CaseOutcomeSchemaType, CasePlatformSchemaType, CaseStatusSchemaType } from '@mediature/main/src/models/entities/case';
-import { CitizenGenderIdentitySchemaType } from '@mediature/main/src/models/entities/citizen';
+import {
+  CaseOriginatorSchemaType,
+  CaseOutcomeSchemaType,
+  CasePlatformSchemaType,
+  CaseStatusSchemaType,
+} from '@mediature/main/src/models/entities/case';
+import { CitizenGenderIdentitySchemaType, CitizenRepresentationSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { nameof } from '@mediature/main/src/utils/typescript';
 
 const typedNameof = nameof<CaseAnalytics>;
@@ -24,19 +29,26 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
       { key: typedNameof('authorityType'), header: t('document.template.CaseAnalytics.columns.authorityType') },
       { key: typedNameof('createdAt'), header: t('document.template.CaseAnalytics.columns.createdAt') },
       { key: typedNameof('updatedAt'), header: t('document.template.CaseAnalytics.columns.updatedAt') },
+      { key: typedNameof('termReminderAt'), header: t('document.template.CaseAnalytics.columns.termReminderAt') },
       { key: typedNameof('closedAt'), header: t('document.template.CaseAnalytics.columns.closedAt') },
       { key: typedNameof('status'), header: t('document.template.CaseAnalytics.columns.status') },
       { key: typedNameof('initiatedFrom'), header: t('document.template.CaseAnalytics.columns.initiatedFrom') },
+      { key: typedNameof('initiatedBy'), header: t('document.template.CaseAnalytics.columns.initiatedBy') },
+      { key: typedNameof('competent'), header: t('document.template.CaseAnalytics.columns.competent') },
       { key: typedNameof('primaryDomain'), header: t('document.template.CaseAnalytics.columns.primaryDomain') },
       { key: typedNameof('secondaryDomain'), header: t('document.template.CaseAnalytics.columns.secondaryDomain') },
-      { key: typedNameof('assigned'), header: t('document.template.CaseAnalytics.columns.assigned') },
+      { key: typedNameof('primaryCompetentThirdParty'), header: t('document.template.CaseAnalytics.columns.primaryCompetentThirdParty') },
+      { key: typedNameof('secondaryCompetentThirdParty'), header: t('document.template.CaseAnalytics.columns.secondaryCompetentThirdParty') },
+      { key: typedNameof('assignee'), header: t('document.template.CaseAnalytics.columns.assignee') },
       { key: typedNameof('alreadyRequestedInThePast'), header: t('document.template.CaseAnalytics.columns.alreadyRequestedInThePast') },
       { key: typedNameof('gotAnswerFromPreviousRequest'), header: t('document.template.CaseAnalytics.columns.gotAnswerFromPreviousRequest') },
+      { key: typedNameof('faceToFaceMediation'), header: t('document.template.CaseAnalytics.columns.faceToFaceMediation') },
       { key: typedNameof('outcome'), header: t('document.template.CaseAnalytics.columns.outcome') },
       { key: typedNameof('collectiveAgreement'), header: t('document.template.CaseAnalytics.columns.collectiveAgreement') },
       { key: typedNameof('administrativeCourtNext'), header: t('document.template.CaseAnalytics.columns.administrativeCourtNext') },
       { key: typedNameof('citizenHasEmail'), header: t('document.template.CaseAnalytics.columns.citizenHasEmail') },
       { key: typedNameof('citizenGenderIdentity'), header: t('document.template.CaseAnalytics.columns.citizenGenderIdentity') },
+      { key: typedNameof('citizenRepresentation'), header: t('document.template.CaseAnalytics.columns.citizenRepresentation') },
       { key: typedNameof('citizenCity'), header: t('document.template.CaseAnalytics.columns.citizenCity') },
       { key: typedNameof('citizenPostalCode'), header: t('document.template.CaseAnalytics.columns.citizenPostalCode') },
       { key: typedNameof('citizenCountryCode'), header: t('document.template.CaseAnalytics.columns.citizenCountryCode') },
@@ -60,10 +72,14 @@ export function caseAnalyticsPrismaToCsv(analytics: CaseAnalytics[]): string {
           return t(`model.case.status.enum.${value as CaseStatusSchemaType}`);
         } else if (context.column === typedNameof('initiatedFrom')) {
           return t(`model.case.platform.enum.${value as CasePlatformSchemaType}`);
+        } else if (context.column === typedNameof('initiatedBy')) {
+          return t(`model.case.originator.enum.${value as CaseOriginatorSchemaType}`);
         } else if (context.column === typedNameof('outcome')) {
           return t(`model.case.outcome.enum.${value as CaseOutcomeSchemaType}`);
         } else if (context.column === typedNameof('citizenGenderIdentity')) {
           return t(`model.citizen.genderIdentity.enum.${value as CitizenGenderIdentitySchemaType}`);
+        } else if (context.column === typedNameof('citizenRepresentation')) {
+          return t(`model.citizen.representation.enum.${value as CitizenRepresentationSchemaType}`);
         }
 
         return value;

@@ -4,6 +4,9 @@ const fontSrcValues = ["'self'", 'https:', 'data:'];
 const imgSrcValues = ["'self'", 'data:'];
 const styleSrcValues = ["'self'", 'https:', "'unsafe-inline'"];
 
+// data.gouv.fr settings
+connectSrcValues.push('https://api-adresse.data.gouv.fr/');
+
 // Crisp settings
 {
   scriptSrcValues.push('https://client.crisp.chat/');

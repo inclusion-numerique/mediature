@@ -2,7 +2,7 @@ import { DevTool } from '@hookform/devtools';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import { Mutex } from 'locks';
-import { CSSProperties, FormEventHandler, PropsWithChildren, useRef, useState } from 'react';
+import { CSSProperties, FormEventHandler, MutableRefObject, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +16,7 @@ export interface BaseFormProps<FormSchemaType extends FieldValues> {
   ariaLabel: string;
   preventParentFormTrigger?: boolean;
   style?: CSSProperties;
+  innerRef?: MutableRefObject<HTMLFormElement | null>;
 }
 
 // When you want to debug a form, just uncomment the below line (I did not see the value to manage it through environment variable)
@@ -23,8 +24,16 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
   const { t } = useTranslation('common');
   const [validationErrors, setValidationErrors] = useState<Partial<FieldErrorsImpl<any>>>(props.control._formState.errors);
   const [onSubmitError, setOnSubmitError] = useState<Error | null>(null);
-  const formRef = useRef<HTMLDivElement | null>(null); // This is used to scroll to the error messages
+  const formRef = useRef<HTMLFormElement | null>(null); // This is used to scroll to the error messages
   const [mutex] = useState<Mutex>(new Mutex());
+
+  const setMultipleRefs = (element: HTMLFormElement) => {
+    formRef.current = element;
+
+    if (props.innerRef) {
+      props.innerRef.current = element;
+    }
+  };
 
   // Some forms in dialogs need to force stopping submit propagation leakage on parent forms
   const onSubmit: FormEventHandler<HTMLFormElement> = async (...args) => {
@@ -73,8 +82,8 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
     <>
       {/* <DevTool control={props.control} /> */}
 
-      <form onSubmit={onSubmit} aria-label={props.ariaLabel} style={props.style}>
-        <Grid container spacing={2} ref={formRef}>
+      <form onSubmit={onSubmit} aria-label={props.ariaLabel} style={props.style} ref={setMultipleRefs}>
+        <Grid container spacing={2}>
           {!!onSubmitError && (
             <Grid item xs={12} sx={{ py: 2 }}>
               <ErrorAlert errors={[onSubmitError]} />

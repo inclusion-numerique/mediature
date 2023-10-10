@@ -138,16 +138,14 @@ export function CaseCard(props: CaseCardProps) {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {/* TODO: onclick for modal to assign a new one */}
-        {/* TODO: disable if the case is already closed? */}
-        {/* {!!props.assignAction && (
+        {!!props.assignAction && (
           <MenuItem onClick={props.assignAction}>
             <ListItemIcon>
               <PersonSearchIcon fontSize="small" />
             </ListItemIcon>
-            Assigner le dossier à un autre médiateur
+            {!!props.case.agentId ? 'Transférer le dossier' : 'Assigner le dossier'}
           </MenuItem>
-        )} */}
+        )}
         {!!props.unassignAction && (
           <MenuItem onClick={props.unassignAction}>
             <ListItemIcon>

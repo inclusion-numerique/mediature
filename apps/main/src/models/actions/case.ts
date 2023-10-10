@@ -60,11 +60,13 @@ export const updateCaseAttachmentsMax = 100;
 export const incompleteUpdateCaseSchema = z
   .object({
     initiatedFrom: incompleteCaseSchema.shape.initiatedFrom,
+    initiatedBy: incompleteCaseSchema.shape.initiatedBy,
     caseId: incompleteCaseSchema.shape.id,
     email: emptyStringtoNullPreprocessor(CitizenSchema.shape.email),
     firstname: CitizenSchema.shape.firstname,
     lastname: CitizenSchema.shape.lastname,
     genderIdentity: CitizenSchema.shape.genderIdentity,
+    representation: CitizenSchema.shape.representation,
     address: emptyAddresstoNullPreprocessor(AddressInputSchema.nullable()),
     phone: emptyPhonetoNullPreprocessor(PhoneInputSchema.nullable()),
     alreadyRequestedInThePast: incompleteCaseSchema.shape.alreadyRequestedInThePast,
@@ -147,17 +149,6 @@ export type AssignCaseSchemaType = z.infer<typeof AssignCaseSchema>;
 
 export const AssignCasePrefillSchema = AssignCaseSchema.deepPartial();
 export type AssignCasePrefillSchemaType = z.infer<typeof AssignCasePrefillSchema>;
-
-export const UnassignCaseSchema = z
-  .object({
-    caseId: incompleteCaseSchema.shape.id,
-    agentId: AgentSchema.shape.id,
-  })
-  .strict();
-export type UnassignCaseSchemaType = z.infer<typeof UnassignCaseSchema>;
-
-export const UnassignCasePrefillSchema = UnassignCaseSchema.deepPartial();
-export type UnassignCasePrefillSchemaType = z.infer<typeof UnassignCasePrefillSchema>;
 
 export const GetCaseSchema = z
   .object({

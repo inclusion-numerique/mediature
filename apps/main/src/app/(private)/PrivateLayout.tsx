@@ -12,6 +12,7 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
+import { UserInterfaceSessionProvider } from '@mediature/main/src/components/user-interface-session/UserInterfaceSessionProvider';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
 import {
   authoritySwichQuickAccessItem,
@@ -260,10 +261,12 @@ export function PrivateLayout(props: PropsWithChildren) {
 
   return (
     <>
-      <Header {...commonHeaderAttributes} quickAccessItems={quickAccessItems} navigation={navigation} />
-      <FlashMessage appMode={process.env.NEXT_PUBLIC_APP_MODE} nodeEnv={process.env.NODE_ENV} />
-      <ContentWrapper>{props.children}</ContentWrapper>
-      <Footer {...commonFooterAttributes} />
+      <UserInterfaceSessionProvider session={userInterfaceSession}>
+        <Header {...commonHeaderAttributes} quickAccessItems={quickAccessItems} navigation={navigation} />
+        <FlashMessage appMode={process.env.NEXT_PUBLIC_APP_MODE} nodeEnv={process.env.NODE_ENV} />
+        <ContentWrapper>{props.children}</ContentWrapper>
+        <Footer {...commonFooterAttributes} />
+      </UserInterfaceSessionProvider>
     </>
   );
 }

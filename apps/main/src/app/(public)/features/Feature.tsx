@@ -21,7 +21,7 @@ export function Feature(props: FeatureProps) {
       disableGutters
       sx={{
         bgcolor: props.bgcolor,
-        py: { xs: 3, md: 4 },
+        py: { xs: 3, sm: 4, md: 6, lg: 8 },
       }}
     >
       <Container>
@@ -59,7 +59,7 @@ export function Feature(props: FeatureProps) {
               src={props.image}
               alt={props.imageAlt}
               style={{
-                width: '100%',
+                width: '90%',
                 height: 'auto',
                 maxHeight: 400,
                 objectFit: 'contain',

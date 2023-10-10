@@ -3,7 +3,9 @@
 import { fr } from '@codegouvfr/react-dsfr';
 import Grid from '@mui/material/Grid';
 
-import toReplace from '@mediature/main/public/assets/features/to_replace.png';
+import caseManagement from '@mediature/main/public/assets/features/case_management.svg';
+import messenger from '@mediature/main/public/assets/features/messenger.svg';
+import teamManagement from '@mediature/main/public/assets/features/team_management.svg';
 import { Feature } from '@mediature/main/src/app/(public)/features/Feature';
 import { Introduction } from '@mediature/main/src/app/(public)/features/Introduction';
 import { Contact } from '@mediature/ui/src/Contact';
@@ -20,7 +22,7 @@ export function FeaturesPage() {
       <Introduction />
       <Feature
         {...{
-          image: toReplace,
+          image: caseManagement,
           imageAlt: ``,
           name: `Gestion des dossiers et auto-complétion`,
           description: (
@@ -38,7 +40,7 @@ export function FeaturesPage() {
         {...{
           bgcolor: fr.colors.decisions.background.alt.grey.default,
           reverseItems: true,
-          image: toReplace,
+          image: teamManagement,
           imageAlt: ``,
           name: `Gestion d'équipe et collectivité`,
           description: (
@@ -54,7 +56,7 @@ export function FeaturesPage() {
       />
       <Feature
         {...{
-          image: toReplace,
+          image: messenger,
           imageAlt: ``,
           name: `Échanges d'emails intégrés et prises de notes`,
           description: (

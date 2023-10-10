@@ -5,11 +5,13 @@ import { playFindForm, playFindFormInMain } from '@mediature/docs/.storybook/tes
 import { AsMainAgent as PrivateLayoutAsMainAgentStory } from '@mediature/main/src/app/(private)/PrivateLayout.stories';
 import { Empty as AddNoteFormEmptyStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/AddNoteForm.stories';
 import { CasePage, CasePageContext } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/CasePage';
+import { Default as CaseAssignmentDialogDefaultStory } from '@mediature/main/src/components/CaseAssignmentDialog.stories';
 import { Normal as CaseCompetentThirdPartyFieldNormalStory } from '@mediature/main/src/components/CaseCompetentThirdPartyField.stories';
 import { Normal as CaseDomainFieldNormalStory } from '@mediature/main/src/components/CaseDomainField.stories';
 import { Normal as NoteCardNormalStory } from '@mediature/main/src/components/NoteCard.stories';
 import { Normal as MessengerNormalStory } from '@mediature/main/src/components/messenger/Messenger.stories';
 import { Normal as UploaderNormalStory } from '@mediature/main/src/components/uploader/Uploader.stories';
+import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
 import { cases, casesWrappers } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
 
@@ -42,6 +44,13 @@ const defaultMswParameters = {
   msw: {
     handlers: [
       getTRPCMock(mswListCasesParameters),
+      getTRPCMock({
+        type: 'query',
+        path: ['listAgents'],
+        response: {
+          agentsWrappers: [agentsWrappers[0], agentsWrappers[1], agentsWrappers[2]],
+        },
+      }),
       getTRPCMock({
         type: 'mutation',
         path: ['updateCase'],
@@ -91,6 +100,7 @@ export const Normal = prepareStory(NormalStory, {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
       ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
       ContextualMessenger: MessengerNormalStory,
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
     },
   },
 });
@@ -118,6 +128,7 @@ export const WithLayout = prepareStory(WithLayoutStory, {
       ContextualCaseDomainField: CaseDomainFieldNormalStory,
       ContextualCaseCompetentThirdPartyField: CaseCompetentThirdPartyFieldNormalStory,
       ContextualMessenger: MessengerNormalStory,
+      ContextualCaseAssignmentDialog: CaseAssignmentDialogDefaultStory,
     },
   },
 });
