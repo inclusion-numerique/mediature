@@ -1140,6 +1140,7 @@ export const caseRouter = router({
                 id: {
                   not: iterationCase.id,
                 },
+                authorityId: iterationCase.authorityId,
                 citizen: {
                   firstname: {
                     search: formatSearchQuery(iterationCase.citizen.firstname),
