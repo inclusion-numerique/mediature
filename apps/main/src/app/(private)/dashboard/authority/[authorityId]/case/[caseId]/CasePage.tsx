@@ -973,6 +973,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <CityField
+                          initialValue={control._defaultValues.address?.city}
                           suggestionsPostalCode={watch('address.postalCode')}
                           workaroundSetValue={(newValue) => {
                             setValue('address.city', newValue || '', {
