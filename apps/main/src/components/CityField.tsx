@@ -4,11 +4,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import debounce from 'lodash.debounce';
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
-import { UseFormSetValue } from 'react-hook-form';
 
 import { LocationApiProperties, searchCitiesByPostalCode } from '@mediature/main/src/utils/national-address-base';
 
 export interface CityFieldProps {
+  initialValue?: string;
   textFieldProps: TextFieldProps;
   workaroundSetValue?: (newValue: string | null) => void;
   suggestionsPostalCode?: string;
@@ -46,7 +46,7 @@ export function CityField(props: PropsWithChildren<CityFieldProps>) {
 
   return (
     <Autocomplete
-      value={undefined}
+      value={props.initialValue}
       options={searchCityQuerySuggestions.map((suggestion): string => {
         return suggestion.city;
       })}

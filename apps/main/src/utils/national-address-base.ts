@@ -15,6 +15,11 @@ export interface LocationApiSearchCitiesByPostalCodeResponse {
 }
 
 export async function searchCitiesByPostalCode(postalCode: string): Promise<LocationApiProperties[]> {
+  // The API expects 3 characters minimum, avoid throwing an error
+  if (postalCode.length < 3) {
+    return [];
+  }
+
   // Wanted to add `lat` and `lon` as query parameter to return address around this position
   // but after multiple tests it does not seem to work well
   const url = new URL(`${baseUrl}/search/`);
