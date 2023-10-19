@@ -141,6 +141,15 @@ describe('decodeParseApiWebhookPayload()', () => {
     );
   });
 
+  it('should return values despite having an empty subject', async () => {
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-empty-subject.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.subject).toBe('');
+  });
+
   it('should return values with real payload that has only one part being html since different payload structure', async () => {
     const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-one-part-html.json'), 'utf-8');
     const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);

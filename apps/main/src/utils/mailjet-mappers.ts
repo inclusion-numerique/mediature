@@ -70,7 +70,7 @@ export const ParseApiWebhookPayloadSchema = z
   .object({
     From: z.string().min(1),
     Recipient: z.string().min(1), // This is among all To/Cc/Bcc recipients the one that is targetted by this webhook
-    Subject: z.string().min(1),
+    Subject: z.string(),
     Parts: z.array(PartSchema),
     Headers: HeadersSchema,
     ContentRef: ContentRefSchema.optional(),
