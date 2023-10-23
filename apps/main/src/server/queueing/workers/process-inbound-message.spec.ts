@@ -1,6 +1,9 @@
 /**
  * @jest-environment node
  */
+import { promises as fs } from 'fs';
+import path from 'path';
+
 import { prisma } from '@mediature/main/prisma/client';
 import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mailjet';
 import { getServerTranslation } from '@mediature/main/src/i18n';
@@ -30,6 +33,35 @@ describeWhenManual('processInboundMessage() worker', () => {
     deepCopyPayload.Recipient = caseEmail1;
     deepCopyPayload.Headers.To = `Custom name 1 <${caseEmail1}>`;
     deepCopyPayload.Headers.Cc = `Custom name 2 <${caseEmail2}>`;
+
+    // Simulate event publish, should not throw
+    await processInboundMessage({
+      id: '',
+      name: '',
+      data: {
+        emailPayload: deepCopyPayload,
+      },
+    });
+  }, 15000);
+
+  it('send message with unknown file', async () => {
+    const targetedCase = await prisma.case.findFirstOrThrow({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
+    const { t } = getServerTranslation('common');
+    const caseEmail = getCaseEmail(t, targetedCase.humanId.toString());
+
+    const payloadString = await fs.readFile(
+      path.resolve(__dirname, '../../../fixtures/mailjet/mailjet-real-payload-unknown-file-type.json'),
+      'utf-8'
+    );
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    deepCopyPayload.Recipient = caseEmail;
+    deepCopyPayload.Headers.To = `Custom name 1 <${caseEmail}>`;
 
     // Simulate event publish, should not throw
     await processInboundMessage({

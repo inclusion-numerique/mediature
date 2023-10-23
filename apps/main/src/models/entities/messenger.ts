@@ -23,6 +23,9 @@ export type ContactInputSchemaType = z.infer<typeof ContactInputSchema>;
 export const MessageStatusSchema = z.enum(['PENDING', 'TRANSFERRED', 'ERROR']);
 export type MessageStatusSchemaType = z.infer<typeof MessageStatusSchema>;
 
+export const MessageErrorSchema = z.enum(['REJECTED_ATTACHMENTS']);
+export type MessageErrorSchemaType = z.infer<typeof MessageErrorSchema>;
+
 export const MessageSchema = z
   .object({
     id: z.string().uuid(),
@@ -32,6 +35,7 @@ export const MessageSchema = z
     content: EditorStateSchema,
     attachments: z.array(UiAttachmentSchema),
     status: MessageStatusSchema,
+    errors: z.array(MessageErrorSchema),
     consideredAsProcessed: z.boolean().nullable(),
     createdAt: z.date(),
     updatedAt: z.date(),

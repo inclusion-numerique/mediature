@@ -19,6 +19,7 @@ import { FileList } from '@mediature/main/src/components/FileList';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { Avatar } from '@mediature/ui/src/Avatar';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
 import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
 
@@ -184,6 +185,14 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
       </Box>
       <Divider variant="fullWidth" sx={{ p: 0 }} />
       <Box sx={{ py: 2 }}>
+        {message.errors.length > 0 && (
+          <ErrorAlert
+            errors={message.errors.map((error) => {
+              return new Error(t(`file.error.enum.${error}`));
+            })}
+            sx={{ mb: 2 }}
+          />
+        )}
         <LexicalRenderer inlineEditorState={message.content} />
       </Box>
       {message.attachments && message.attachments.length > 0 && (

@@ -376,8 +376,6 @@ model Agent {
   AuthorityWhereMainAgent Authority? @relation("AuthorityWhereMainAgent")
 }
 
-// TODO: Admin model?
-
 enum AttachmentStatus {
   PENDING_UPLOAD
   VALID
@@ -584,13 +582,18 @@ enum MessageStatus {
   ERROR
 }
 
+enum MessageError {
+  REJECTED_ATTACHMENTS
+}
+
 /// @@Gen.model(hide: true)
 model Message {
-  id      String        @id @default(uuid()) @db.Uuid
-  fromId  String        @db.Uuid
+  id      String         @id @default(uuid()) @db.Uuid
+  fromId  String         @db.Uuid
   subject String
-  content String        @db.Text
-  status  MessageStatus @default(PENDING)
+  content String         @db.Text
+  status  MessageStatus  @default(PENDING)
+  errors  MessageError[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt

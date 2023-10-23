@@ -24,6 +24,11 @@
     "allowedExtensions_other": "Formats supportés : {{extensions}}.",
     "attachment_one": "Pièce jointe",
     "attachment_other": "Pièces jointes",
+    "error": {
+      "enum": {
+        "REJECTED_ATTACHMENTS": "Une ou plusieurs pièces jointes n'ont pas pu être réceptionnées"
+      }
+    },
     "size": "{{ size, humanFileSize }}",
     "upToMaxfiles_one": "Un seul fichier autorisé.",
     "upToMaxfiles_other": "Jusqu'à {{count}} fichiers autorisés."
@@ -97,6 +102,10 @@
       "CaseMessageEmail": {
         "attachmentsInThisEmail_one": "Vous trouverez ci-joint à cet email {{count}} document.",
         "attachmentsInThisEmail_other": "Vous trouverez ci-joint à cet email {{count}} documents."
+      },
+      "RejectedMessageFilesWarning": {
+        "cannotPersistFiles_one": "Nous n'avons pas pu transmettre le fichier suivant :",
+        "cannotPersistFiles_other": "Nous n'avons pas pu transmettre les fichiers suivants :"
       }
     }
   },

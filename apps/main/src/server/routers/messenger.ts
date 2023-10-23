@@ -62,6 +62,7 @@ export const messengerRouter = router({
         subject: input.subject,
         content: input.content,
         status: MessageStatus.PENDING,
+        errors: [],
         from: {
           connectOrCreate: {
             where: {
