@@ -41,9 +41,10 @@ import {
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
-import { CreateCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
+import { CreateCaseInboundEmailDataSchema, DeleteCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
 import { createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
+import { deleteCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/delete-case-inbound-email';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess, uploadPdfFile, uploadXlsxFile } from '@mediature/main/src/server/routers/common/attachment';
@@ -528,6 +529,21 @@ export const caseRouter = router({
         id: input.caseId,
       },
     });
+
+    // Delete the virtual email address so people sending emails to it would receive a normal error from the provider
+    // (without it, it would silently end nowhere since no existing case while passing the inbound endpoint)
+    const bossClient = await getBossClientInstance();
+    await bossClient.send(
+      deleteCaseInboundEmailTopic,
+      DeleteCaseInboundEmailDataSchema.parse({
+        caseId: deletedCase.id,
+        caseHumanId: deletedCase.humanId,
+      }),
+      {
+        retryLimit: 50,
+        retryBackoff: true,
+      }
+    );
 
     return;
   }),

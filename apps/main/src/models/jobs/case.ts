@@ -9,6 +9,12 @@ export const CreateCaseInboundEmailDataSchema = MaintenanceWrapperDataSchema.ext
 }).strict();
 export type CreateCaseInboundEmailDataSchemaType = z.infer<typeof CreateCaseInboundEmailDataSchema>;
 
+export const DeleteCaseInboundEmailDataSchema = MaintenanceWrapperDataSchema.extend({
+  caseId: incompleteCaseSchema.shape.id,
+  caseHumanId: incompleteCaseSchema.shape.humanId,
+}).strict();
+export type DeleteCaseInboundEmailDataSchemaType = z.infer<typeof DeleteCaseInboundEmailDataSchema>;
+
 export const ProcessInboundMessageDataSchema = MaintenanceWrapperDataSchema.extend({
   emailPayload: z.any(),
 }).strict();
