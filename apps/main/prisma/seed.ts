@@ -204,7 +204,7 @@ export async function seedDatabase(prismaClient: PrismaClient) {
                   from: {
                     create: {
                       email: `dossier-${iteration}@france.fr`,
-                      name: 'Thomas de Médiature',
+                      name: 'Le médiateur',
                     },
                   },
                   to: {

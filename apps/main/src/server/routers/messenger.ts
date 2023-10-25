@@ -54,7 +54,7 @@ export const messengerRouter = router({
 
     const fromContact: ContactInputSchemaType = {
       email: getCaseEmail(t, targetedCase.humanId.toString()),
-      name: `${senderUser.firstname} de Médiature`, // Only the firstname for privacy reasons
+      name: 'Le médiateur',
     };
 
     const newMessage = await prisma.message.create({

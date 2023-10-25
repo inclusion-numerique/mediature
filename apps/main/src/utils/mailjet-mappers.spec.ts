@@ -82,7 +82,7 @@ describe('decodeParseApiWebhookPayload()', () => {
       to: [
         {
           email: 'dossier-61@mediature.incubateur.net',
-          name: 'John de Médiature',
+          name: 'Le médiateur',
         },
       ],
       subject: `Re: Un médiateur vous a écrit`,
