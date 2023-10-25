@@ -163,7 +163,7 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
             >
               De
             </Typography>
-            <Chip label={message.from.email} size="small" variant="outlined" onClick={() => {}} />
+            <Chip label={message.from.email} size="small" variant="outlined" />
           </Box>
           <Box>
             <Typography
@@ -178,7 +178,7 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
               à
             </Typography>
             {message.to.map((recipient) => {
-              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" onClick={() => {}} sx={{ mr: 1 }} />;
+              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" sx={{ mr: 1 }} />;
             })}
           </Box>
         </Box>
