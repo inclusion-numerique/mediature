@@ -119,6 +119,28 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
           }
         });
 
+        // [WORKAROUND] An agent copy/paste another email but each line was wrapped into a `<li>` whereas it should not.
+        // Since there was no wrapping `<ul>` Lexical failed converting it to JSON throwing `Expected node root to have a parent`.
+        // To solve this we just consider as `<div>` any `<li>` without a `<ul>` parent
+        dom.documentElement.querySelectorAll('li').forEach((liElement) => {
+          const parentNode = liElement.parentNode as HTMLElement;
+          if (parentNode && parentNode.tagName.toLowerCase() !== 'ul') {
+            const liReplacementElement = document.createElement('div');
+
+            // Copy attributes
+            for (var i = 0; i < liElement.attributes.length; i++) {
+              liReplacementElement.setAttribute(liElement.attributes[i].name, liElement.attributes[i].value);
+            }
+
+            // Copy the children
+            while (liElement.firstChild) {
+              liReplacementElement.appendChild(liElement.firstChild);
+            }
+
+            parentNode.replaceChild(liReplacementElement, liElement);
+          }
+        });
+
         nodes = $generateNodesFromDOM(editor, dom);
       } finally {
         if (jsdomInstance) {
