@@ -567,3 +567,7 @@ In this repository you can use `./apps/main/format-legal-documents.sh` to transf
 ## Technical architecture document
 
 It has been written into [TECHNICAL_ARCHITECTURE_DOCUMENT.md](./TECHNICAL_ARCHITECTURE_DOCUMENT.md).
+
+## Reporting security issue
+
+If you identify a security issue or have any security concerns, please inform us immediately by opening an [issue](https://github.com/inclusion-numerique/mediature/issues) as specified into [our security recommandations](https://www.mediateur-public.fr/.well-known/security.txt).
