@@ -67,16 +67,22 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
       removeUpdateListener();
 
       editorState.read(() => {
-        const sanitizedInlineEditorState = JSON.stringify(editorState.toJSON());
+        try {
+          const sanitizedInlineEditorState = JSON.stringify(editorState.toJSON());
 
-        // Prevent being empty because we cannot build a state without nodes on the frontend
-        // No node can be due to an empty input or the `update()` operation has thrown an error
-        const root = $getRoot();
-        if (root.getChildrenSize() === 0) {
-          reject('the editor state must contain at least a node');
+          // Prevent being empty because we cannot build a state without nodes on the frontend
+          // No node can be due to an empty input or the `update()` operation has thrown an error
+          const root = $getRoot();
+          if (root.getChildrenSize() === 0) {
+            reject('the editor state must contain at least a node');
+          }
+
+          return resolve(sanitizedInlineEditorState);
+        } catch (error) {
+          // This explicit try/catch was needed because the `.toJSON()` failed sometimes until we fix the parsing
+          // and made Next.js crashing in production due to being an unhandled exception (since listener callback is called somewhere by Lexical)
+          return reject(error);
         }
-
-        return resolve(sanitizedInlineEditorState);
       });
     });
 
