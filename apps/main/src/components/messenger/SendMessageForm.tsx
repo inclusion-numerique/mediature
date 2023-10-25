@@ -8,8 +8,12 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { State as UppyState } from '@uppy/core';
+import debounce from 'lodash.debounce';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDeepCompareEffect } from 'react-use';
+import { useSessionStorage } from 'usehooks-ts';
 import z from 'zod';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
@@ -28,6 +32,11 @@ import { EditorWrapper } from '@mediature/ui/src/Editor/EditorWrapper';
 
 const emailInputFormatError = `Merci de renseigner une adresse email valide`;
 
+export interface GlobalFormState {
+  formState: SendMessageSchemaType | null;
+  uploaderState: UppyState | null;
+}
+
 export const SendMessageFormContext = createContext({
   ContextualUploader: Uploader,
 });
@@ -43,6 +52,11 @@ export function SendMessageForm(props: SendMessageFormProps) {
 
   const sendMessage = trpc.sendMessage.useMutation();
 
+  const [globalFormState, setGlobalFormState] = useSessionStorage<GlobalFormState>(`case_new_message_${props.prefill?.caseId || 'unknown'}`, {
+    formState: null,
+    uploaderState: null,
+  });
+
   const {
     register,
     handleSubmit,
@@ -55,17 +69,42 @@ export function SendMessageForm(props: SendMessageFormProps) {
     defaultValues: {
       attachments: [],
       ...props.prefill,
+      ...(globalFormState.formState || {}),
     },
   });
 
+  const [lastUploaderState, setLastUploaderState] = useState<UppyState | null>(globalFormState.uploaderState);
+  const watchedFormValues = watch();
+
+  const handleGlobalFormChange = useMemo(() => {
+    return debounce((formState: SendMessageSchemaType | null, uploaderState: UppyState | null) => {
+      setGlobalFormState({
+        formState: formState,
+        uploaderState: uploaderState,
+      });
+    }, 1000);
+  }, [setGlobalFormState]);
+
+  useDeepCompareEffect(() => {
+    handleGlobalFormChange(watchedFormValues, lastUploaderState);
+  }, [watchedFormValues, lastUploaderState]);
+
   const onSubmit = async (input: SendMessageSchemaType) => {
     await sendMessage.mutateAsync(input);
+
+    // Empty for cache for the next opening
+    setGlobalFormState({
+      formState: null,
+      uploaderState: null,
+    });
 
     props.onSuccess && props.onSuccess();
   };
 
   const [selected, setSelected] = useState<string[]>(() => {
-    return props.prefill?.to?.map((recipient) => recipient.email as string) || [];
+    const toList = globalFormState.formState?.to || props.prefill?.to;
+
+    return toList?.map((recipient) => recipient.email as string) || [];
   });
   const [inputValue, setInputValue] = useState<string>('');
   const [emailInputError, setEmailInputError] = useState<string | null>(null);
@@ -183,12 +222,16 @@ export function SendMessageForm(props: SendMessageFormProps) {
         <FormControl error={!!errors.attachments}>
           <ContextualUploader
             attachmentKindRequirements={attachmentKindList[AttachmentKindSchema.Values.MESSAGE_DOCUMENT]}
+            initialState={globalFormState.uploaderState || undefined}
             maxFiles={sendMessageAttachmentsMax}
             onCommittedFilesChanged={async (attachments: UiAttachmentSchemaType[]) => {
               setValue(
                 'attachments',
                 attachments.map((attachment) => attachment.id)
               );
+            }}
+            onStateChanged={async (state: UppyState) => {
+              setLastUploaderState(state);
             }}
             // TODO: enable once https://github.com/transloadit/uppy/issues/4130#issuecomment-1437198535 is fixed
             // isUploadingChanged={setIsUploadingAttachments}
