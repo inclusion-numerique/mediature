@@ -1,8 +1,9 @@
-import { MessageStatus } from '@prisma/client';
+import { MessageError, MessageStatus } from '@prisma/client';
 import PgBoss from 'pg-boss';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma';
+import { mailer } from '@mediature/main/src/emails/mailer';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { ProcessInboundMessageDataSchema, ProcessInboundMessageDataSchemaType } from '@mediature/main/src/models/jobs/case';
 import { formatSafeAttachmentsToProcess, uploadFile } from '@mediature/main/src/server/routers/common/attachment';
@@ -71,6 +72,9 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
     id: string;
     inline: boolean;
   }[] = [];
+  const rejectedFiles: {
+    filename: string;
+  }[] = [];
   for (const attachment of decodedPayload.attachments) {
     try {
       const fileId = await uploadFile({
@@ -90,8 +94,12 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
         decodedPayload.content = decodedPayload.content.replace(`cid:${attachment.inlineId}`, `cid:${fileId}`);
       }
     } catch (error) {
-      console.warn('an email attachment has not been persisted, we skip it to process the rest');
+      console.warn('an email attachment has not been persisted, we skip it to process the rest but we will notify both parts');
       console.error(error);
+
+      rejectedFiles.push({
+        filename: attachment.filename || 'noname',
+      });
     }
   }
 
@@ -113,6 +121,7 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
       subject: decodedPayload.subject,
       content: decodedPayload.content,
       status: MessageStatus.TRANSFERRED,
+      errors: rejectedFiles.length > 0 ? [MessageError.REJECTED_ATTACHMENTS] : [],
       from: {
         connectOrCreate: {
           where: {
@@ -176,6 +185,19 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
   });
 
   await markNewAttachmentsAsUsed();
+
+  // Notify the originator of the missing file(s)
+  if (rejectedFiles.length > 0) {
+    try {
+      await mailer.sendRejectedMessageFilesWarning({
+        recipient: decodedPayload.from.email,
+        rejectedFiles: rejectedFiles.map((file) => file.filename),
+      });
+    } catch (error) {
+      console.warn('cannot notify the originator some of his files are missing, accepting this case to avoid consumption loop');
+      console.error(error);
+    }
+  }
 
   console.log(`an inbound message has been processed, it targets the cases: ${matchingCases.map((targetedCase) => targetedCase.id).join(', ')}`);
 }

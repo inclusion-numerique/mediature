@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import Uppy, { ErrorResponse, FileProgress, FileRemoveReason, SuccessResponse, UploadResult, Uppy as UppyEntity, UppyFile } from '@uppy/core';
+import Uppy, { ErrorResponse, FileProgress, FileRemoveReason, State, SuccessResponse, UploadResult, Uppy as UppyEntity, UppyFile } from '@uppy/core';
 import '@uppy/core/dist/style.min.css';
 import DragDrop from '@uppy/drag-drop';
 import en_US from '@uppy/locales/lib/en_US';
@@ -25,9 +26,11 @@ export const UploaderContext = createContext({
 
 export interface UploaderProps {
   attachmentKindRequirements: AttachmentKindRequirementsSchemaType;
+  initialState?: State;
   minFiles?: number;
   maxFiles: number;
   onCommittedFilesChanged?: (attachments: UiAttachmentSchemaType[]) => Promise<void>;
+  onStateChanged?: (state: State) => Promise<void>;
   postUploadHook?: (internalId: string) => Promise<void>;
   // TODO: onError (useful if the list is not displayed... the parent can use a custom error) ... throw error if one of the two not enabled
   isUploadingChanged?: (value: boolean) => void;
@@ -35,9 +38,11 @@ export interface UploaderProps {
 
 export function Uploader({
   attachmentKindRequirements,
+  initialState,
   minFiles,
   maxFiles,
   onCommittedFilesChanged,
+  onStateChanged,
   postUploadHook,
   isUploadingChanged,
 }: UploaderProps) {
@@ -47,8 +52,8 @@ export function Uploader({
   const dragAndDropRef = useRef<HTMLElement | null>(null); // This is used to scroll to the error message
   const [globalError, setGlobalError] = useState<Error | null>(null);
 
-  const [uppy, setUppy] = useState<UppyEntity>(setupUppy({ attachmentKindRequirements, minFiles, maxFiles }));
-  const [files, setFiles] = useState<UppyFile[]>([]);
+  const [uppy, setUppy] = useState<UppyEntity>(() => setupUppy({ attachmentKindRequirements, initialState, minFiles, maxFiles }));
+  const [files, setFiles] = useState<UppyFile[]>(() => uppy.getFiles());
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -75,7 +80,7 @@ export function Uploader({
 
       const internalId = getFileIdFromUrl(response.uploadURL);
 
-      await reusableUploadSuccessCallback(uppy, file, response, internalId, onCommittedFilesChanged, postUploadHook);
+      await reusableUploadSuccessCallback(uppy, file, response, internalId, onCommittedFilesChanged, onStateChanged, postUploadHook);
 
       updateFiles();
     };
@@ -147,7 +152,7 @@ export function Uploader({
       unregisterListeners();
       uppy.close({ reason: 'unmount' });
     };
-  }, [uppy, onCommittedFilesChanged, postUploadHook]);
+  }, [uppy, onCommittedFilesChanged, onStateChanged, postUploadHook]);
 
   useEffect(() => {
     if (isUploadingChanged) {
@@ -180,6 +185,7 @@ export function Uploader({
           file.response as unknown as SuccessResponse,
           internalId,
           onCommittedFilesChanged,
+          onStateChanged,
           postUploadHook
         );
 
@@ -189,7 +195,7 @@ export function Uploader({
         await uppy.retryUpload(file.id);
       }
     },
-    [uppy, onCommittedFilesChanged, postUploadHook]
+    [uppy, onCommittedFilesChanged, onStateChanged, postUploadHook]
   );
 
   const allowedExtensions = getExtensionsFromFileKinds(attachmentKindRequirements.allowedFileTypes);
@@ -222,8 +228,8 @@ export function Uploader({
   );
 }
 
-function setupUppy(props: Pick<UploaderProps, 'attachmentKindRequirements' | 'minFiles' | 'maxFiles'>): UppyEntity {
-  return new Uppy({
+function setupUppy(props: Pick<UploaderProps, 'attachmentKindRequirements' | 'initialState' | 'minFiles' | 'maxFiles'>): UppyEntity {
+  const instance = new Uppy({
     id: 'uppy',
     autoProceed: true,
     locale: getLocale(),
@@ -238,8 +244,15 @@ function setupUppy(props: Pick<UploaderProps, 'attachmentKindRequirements' | 'mi
       minNumberOfFiles: props.minFiles || 0,
       maxNumberOfFiles: props.maxFiles,
     },
-    // store: null,
   });
+
+  if (props.initialState) {
+    // Instanciating a `DefaultStore` and using its `setState`, then passing it to uppy at init with `store: ...` was not working
+    // so doing it at a different step
+    instance.setState(props.initialState);
+  }
+
+  return instance;
 }
 
 function setupTus(uppy: UppyEntity) {
@@ -292,6 +305,7 @@ async function reusableUploadSuccessCallback(
   response: SuccessResponse,
   internalId: string,
   onCommittedFilesChanged: UploaderProps['onCommittedFilesChanged'],
+  onStateChanged: UploaderProps['onStateChanged'],
   postUploadHook: UploaderProps['postUploadHook']
 ) {
   if (postUploadHook) {
@@ -348,6 +362,7 @@ async function reusableUploadSuccessCallback(
   );
 
   onCommittedFilesChanged && onCommittedFilesChanged(attachments);
+  onStateChanged && onStateChanged(uppy.getState());
 
   if (postUploadHook) {
     // If we succeed the hook, we can safely remove the file since the parent is supposed to manage the UI

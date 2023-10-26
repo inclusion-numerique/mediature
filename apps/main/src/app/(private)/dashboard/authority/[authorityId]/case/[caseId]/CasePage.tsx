@@ -75,6 +75,7 @@ import {
 import { PhoneInputSchemaType, PhoneTypeSchema, PhoneTypeSchemaType } from '@mediature/main/src/models/entities/phone';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
+import { getCaseEmail } from '@mediature/main/src/utils/business/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
@@ -259,6 +260,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
   const notes = caseWrapper.notes;
   const attachments = caseWrapper.attachments;
   const unprocessedMessages = caseWrapper.unprocessedMessages;
+  const caseEmail = getCaseEmail(t, caseWrapper.case.humanId.toString());
 
   const updateCaseAction = async (input: UpdateCaseSchemaType) => {
     const { caseWrapper: updatedCaseWrapper } = await updateCase.mutateAsync(input);
@@ -594,10 +596,13 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
         <Grid item xs={12}>
           <Grid container direction="column">
             <Dialog open={messengerModalOpen} onClose={handleCloseMessengerModal} fullWidth maxWidth={false}>
-              <DialogTitle>
+              <DialogTitle sx={{ pb: 1 }}>
                 <Grid container spacing={2} justifyContent="space-between" alignItems="center">
                   <Grid item xs="auto">
                     Messagerie pour le dossier n°{targetedCase.humanId}
+                    <Typography variant="caption" display="block">
+                      {caseEmail}
+                    </Typography>
                   </Grid>
                   <Grid item xs="auto">
                     <IconButton aria-label="fermer" onClick={handleCloseMessengerModal} size="small">

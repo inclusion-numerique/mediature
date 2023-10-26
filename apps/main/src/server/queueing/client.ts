@@ -2,6 +2,7 @@ import PgBoss from 'pg-boss';
 
 import { cleanPendingUploads, cleanPendingUploadsTopic } from '@mediature/main/src/server/queueing/workers/clean-pending-uploads';
 import { createCaseInboundEmail, createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
+import { deleteCaseInboundEmail, deleteCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/delete-case-inbound-email';
 import { processInboundMessage, processInboundMessageTopic } from '@mediature/main/src/server/queueing/workers/process-inbound-message';
 import { sendAgentsActivitySumUp, sendAgentsActivitySumUpTopic } from '@mediature/main/src/server/queueing/workers/send-agents-activity-sum-up';
 import { gracefulExit } from '@mediature/main/src/server/system';
@@ -48,6 +49,7 @@ export async function getBossClientInstance(): Promise<PgBoss> {
       await bossClient.work(cleanPendingUploadsTopic, cleanPendingUploads);
       await bossClient.work(sendAgentsActivitySumUpTopic, sendAgentsActivitySumUp);
       await bossClient.work(createCaseInboundEmailTopic, createCaseInboundEmail);
+      await bossClient.work(deleteCaseInboundEmailTopic, deleteCaseInboundEmail);
       await bossClient.work(processInboundMessageTopic, processInboundMessage);
     })();
   }

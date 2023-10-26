@@ -70,7 +70,7 @@ export const ParseApiWebhookPayloadSchema = z
   .object({
     From: z.string().min(1),
     Recipient: z.string().min(1), // This is among all To/Cc/Bcc recipients the one that is targetted by this webhook
-    Subject: z.string().min(1),
+    Subject: z.string(),
     Parts: z.array(PartSchema),
     Headers: HeadersSchema,
     ContentRef: ContentRefSchema.optional(),
@@ -247,29 +247,28 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     const contentTypeHeader = partHeaders['Content-Type'];
     const contentDispositionHeader = partHeaders['Content-Disposition'];
 
-    if (
-      part.ContentRef &&
-      contentTypeHeader &&
-      contentDispositionHeader &&
-      partHeaders['Content-Transfer-Encoding'] === 'base64' &&
-      typeof decodedPayload[part.ContentRef] === 'string'
-    ) {
-      const contentTypeObject = contentType.parse(contentTypeHeader);
+    if (part.ContentRef && contentTypeHeader && contentDispositionHeader && typeof decodedPayload[part.ContentRef] === 'string') {
       const contentDispositionObject = contentDisposition.parse(contentDispositionHeader);
 
-      const filename = contentDispositionObject.parameters.filename || undefined;
+      // [IMPORTANT] Mailjet says attachments are base64 encoded so we should have relied on `partHeaders['Content-Transfer-Encoding'] === 'base64'`
+      // but it appears the value can be `7bit` while being encoded into base64. So we consider if content disposition detected (`attachment` or `inline`)
+      if (partHeaders['Content-Transfer-Encoding'] === 'base64' || ['attachment', 'inline'].includes(contentDispositionObject.type)) {
+        const contentTypeObject = contentType.parse(contentTypeHeader);
 
-      // Remove chevrons to ease post-process since it's formatted `<XXX>`
-      const contentIdHeader = partHeaders['Content-Id'];
-      const cleanedContentId: string | undefined = contentIdHeader ? contentIdHeader.replace(/<|>/g, '') : undefined;
+        const filename = contentDispositionObject.parameters.filename || undefined;
 
-      attachments.push({
-        contentType: contentTypeObject.type,
-        filename: filename,
-        content: Buffer.from(decodedPayload[part.ContentRef] as string, 'base64'),
-        inline: contentDispositionObject.type === 'inline' && !!cleanedContentId,
-        inlineId: cleanedContentId,
-      });
+        // Remove chevrons to ease post-process since it's formatted `<XXX>`
+        const contentIdHeader = partHeaders['Content-Id'];
+        const cleanedContentId: string | undefined = contentIdHeader ? contentIdHeader.replace(/<|>/g, '') : undefined;
+
+        attachments.push({
+          contentType: contentTypeObject.type,
+          filename: filename,
+          content: Buffer.from(decodedPayload[part.ContentRef] as string, 'base64'),
+          inline: contentDispositionObject.type === 'inline' && !!cleanedContentId,
+          inlineId: cleanedContentId,
+        });
+      }
     }
   }
 

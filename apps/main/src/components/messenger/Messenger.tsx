@@ -82,10 +82,14 @@ export function Messenger(props: MessengerProps) {
       )}
       <Root
         sx={{
-          ...(drawerOpen && {
-            height: '100vh',
-            overflow: 'hidden',
-          }),
+          ...(drawerOpen
+            ? {
+                height: '100vh',
+                overflow: 'hidden',
+              }
+            : {
+                height: '100%',
+              }),
         }}
       >
         <SidePanel>
@@ -113,7 +117,16 @@ export function Messenger(props: MessengerProps) {
           >
             Ouvrir le menu
           </Button>
-          {!!selectedMessage && <ContextualMessengerViewer caseId={props.caseId} message={selectedMessage} />}
+          {!!selectedMessage && (
+            <ContextualMessengerViewer
+              caseId={props.caseId}
+              message={selectedMessage}
+              sx={{
+                height: '100%',
+                overflow: 'auto',
+              }}
+            />
+          )}
         </Main>
       </Root>
     </>

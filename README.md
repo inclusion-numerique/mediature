@@ -174,6 +174,7 @@ For each build and runtime (since they are shared), you should have set some env
 - `NEXT_PUBLIC_CRISP_WEBSITE_ID`: [TO_DEFINE] _(this ID is defined in your Crisp account and depends on the development or production environment)_
 - `NEXT_PUBLIC_SENTRY_DSN`: [SECRET] _(format `https://xxx.yyy.zzz/nn`)_
 - `MAILER_DEFAULT_DOMAIN`: [TO_DEFINE] _(format `xxx.yyy.zzz` depending on the environment application URL)_
+- `NEXT_PUBLIC_MAILER_DEFAULT_DOMAIN`: `$MAILER_DEFAULT_DOMAIN` _(value needed for some frontend displays)_
 - `MAILER_DOMAINS_TO_CATCH`: `domain.demo` _(this should only be set in the development environment)_
 - `MAILER_SMTP_HOST`: [SECRET]
 - `MAILER_SMTP_PORT`: [SECRET]
@@ -567,3 +568,7 @@ In this repository you can use `./apps/main/format-legal-documents.sh` to transf
 ## Technical architecture document
 
 It has been written into [TECHNICAL_ARCHITECTURE_DOCUMENT.md](./TECHNICAL_ARCHITECTURE_DOCUMENT.md).
+
+## Reporting security issue
+
+If you identify a security issue or have any security concerns, please inform us immediately by opening an [issue](https://github.com/inclusion-numerique/mediature/issues) as specified into [our security recommandations](https://www.mediateur-public.fr/.well-known/security.txt).

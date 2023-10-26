@@ -8,7 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
+import Paper, { PaperProps } from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { EventEmitter } from 'eventemitter3';
 import { createContext, useContext, useState } from 'react';
@@ -19,6 +19,7 @@ import { FileList } from '@mediature/main/src/components/FileList';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { Avatar } from '@mediature/ui/src/Avatar';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
 import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
 
@@ -29,9 +30,10 @@ export const MessengerViewerContext = createContext({
 export interface MessengerViewerProps {
   caseId: string;
   message: MessageSchemaType;
+  sx?: PaperProps['sx'];
 }
 
-export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
+export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
   const { ContextualMessengerSender } = useContext(MessengerViewerContext);
   const { t } = useTranslation('common');
   const { showErrorDialog } = useSingletonErrorDialog();
@@ -44,11 +46,8 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
     <Paper
       variant="outlined"
       sx={{
-        minHeight: 500,
-        borderRadius: 'sm',
         p: 2,
-        mb: 3,
-        bgcolor: 'background.componentBg',
+        ...(sx || {}),
       }}
     >
       <Box
@@ -162,7 +161,7 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
             >
               De
             </Typography>
-            <Chip label={message.from.email} size="small" variant="outlined" onClick={() => {}} />
+            <Chip label={message.from.email} size="small" variant="outlined" />
           </Box>
           <Box>
             <Typography
@@ -177,13 +176,21 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
               à
             </Typography>
             {message.to.map((recipient) => {
-              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" onClick={() => {}} sx={{ mr: 1 }} />;
+              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" sx={{ mr: 1 }} />;
             })}
           </Box>
         </Box>
       </Box>
       <Divider variant="fullWidth" sx={{ p: 0 }} />
       <Box sx={{ py: 2 }}>
+        {message.errors.length > 0 && (
+          <ErrorAlert
+            errors={message.errors.map((error) => {
+              return new Error(t(`file.error.enum.${error}`));
+            })}
+            sx={{ mb: 2 }}
+          />
+        )}
         <LexicalRenderer inlineEditorState={message.content} />
       </Box>
       {message.attachments && message.attachments.length > 0 && (

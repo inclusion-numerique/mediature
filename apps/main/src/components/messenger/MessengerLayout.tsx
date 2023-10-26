@@ -10,14 +10,13 @@ export const Root = (props: BoxProps) => (
     {...props}
     sx={[
       {
-        bgcolor: 'background.bodyEmail',
         display: 'grid',
         gridTemplateColumns: {
           xs: '1fr',
           sm: '1fr',
           md: 'minmax(300px, 500px) minmax(600px, 1fr)',
         },
-        gridTemplateRows: '64px 1fr',
+        gridTemplateRows: '1fr',
       },
       ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
     ]}
@@ -31,20 +30,21 @@ export const SidePanel = (props: BoxProps) => (
     {...props}
     sx={[
       {
-        // position: 'sticky',
-        // top: '1rem',
-        bgcolor: 'background.componentBg',
         display: {
           xs: 'none',
           md: 'initial',
         },
+        height: '100%',
+        overflow: 'auto',
       },
       ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
     ]}
   />
 );
 
-export const Main = (props: BoxProps) => <Box {...props} sx={[{ pl: 2 }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]} />;
+export const Main = (props: BoxProps) => (
+  <Box {...props} sx={[{ pl: 2, overflow: 'hidden' }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]} />
+);
 
 export const SideDrawer = ({ onClose, ...props }: BoxProps & { onClose: React.MouseEventHandler<HTMLDivElement> }) => {
   const { isDark } = useIsDark();
@@ -80,9 +80,8 @@ export const SideDrawer = ({ onClose, ...props }: BoxProps & { onClose: React.Mo
           width: 'max-content',
           maxWidth: '80vw',
           height: '100%',
+          overflow: 'auto',
           p: 2,
-          boxShadow: 'lg',
-          bgcolor: 'background.componentBg',
         }}
       >
         {props.children}

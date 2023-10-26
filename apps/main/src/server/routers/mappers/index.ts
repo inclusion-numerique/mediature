@@ -312,6 +312,7 @@ export async function messagePrismaToModel(
     subject: message.subject,
     content: message.content,
     status: message.status,
+    errors: message.errors,
     consideredAsProcessed: message.consideredAsProcessed,
     from: contactPrismaToModel(message.from),
     to: message.to.map((toContact) => contactPrismaToModel(toContact)),

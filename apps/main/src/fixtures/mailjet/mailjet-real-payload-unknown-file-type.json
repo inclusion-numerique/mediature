@@ -1,0 +1,29 @@
+{
+  "Date": "20231023T151443",
+  "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+  "Parts": [
+    { "Headers": { "Content-Type": ["text/plain;\tcharset=us-ascii"], "Content-Transfer-Encoding": ["7bit"] }, "ContentRef": "Text-part" },
+    {
+      "Headers": {
+        "Content-Type": ["application/octet-stream;\tx-unix-mode=0644;\tname=\"test_unknown_file_type.xyz\""],
+        "Content-Disposition": ["attachment;\tfilename=test_unknown_file_type.xyz"],
+        "Content-Transfer-Encoding": ["7bit"]
+      },
+      "ContentRef": "Attachment1"
+    }
+  ],
+  "Sender": "thomas.rame@beta.gouv.fr",
+  "Headers": {
+    "To": "dossier-85@mediature.incubateur.net",
+    "Date": "Mon, 23 Oct 2023 17:14:43 +0200",
+    "From": "Thomas Ramé <thomas.rame@beta.gouv.fr>",
+    "Subject": "Test",
+    "Return-Path": ["<thomas.rame@beta.gouv.fr>"],
+    "Content-Type": ["multipart/mixed;\tboundary=\"Apple-Mail=_49144FD9-1271-451D-8573-2BE69ECC9700\""]
+  },
+  "Subject": "Test",
+  "Recipient": "dossier-85@mediature.incubateur.net",
+  "Text-part": "Test\n\n\n",
+  "Attachment1": "c2hvdWxkIGZhaWwgcGFyc2luZyB0aGlzIGZpbGUK",
+  "SpamAssassinScore": "0.000"
+}

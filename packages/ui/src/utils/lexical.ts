@@ -67,16 +67,22 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
       removeUpdateListener();
 
       editorState.read(() => {
-        const sanitizedInlineEditorState = JSON.stringify(editorState.toJSON());
+        try {
+          const sanitizedInlineEditorState = JSON.stringify(editorState.toJSON());
 
-        // Prevent being empty because we cannot build a state without nodes on the frontend
-        // No node can be due to an empty input or the `update()` operation has thrown an error
-        const root = $getRoot();
-        if (root.getChildrenSize() === 0) {
-          reject('the editor state must contain at least a node');
+          // Prevent being empty because we cannot build a state without nodes on the frontend
+          // No node can be due to an empty input or the `update()` operation has thrown an error
+          const root = $getRoot();
+          if (root.getChildrenSize() === 0) {
+            reject('the editor state must contain at least a node');
+          }
+
+          return resolve(sanitizedInlineEditorState);
+        } catch (error) {
+          // This explicit try/catch was needed because the `.toJSON()` failed sometimes until we fix the parsing
+          // and made Next.js crashing in production due to being an unhandled exception (since listener callback is called somewhere by Lexical)
+          return reject(error);
         }
-
-        return resolve(sanitizedInlineEditorState);
       });
     });
 
@@ -110,6 +116,28 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
           if (divElement && (divElement as HTMLDivElement).textContent?.replace('\n', '').trim() === '') {
             const newBrElement = dom.createElement('br');
             divElement.parentNode?.replaceChild(newBrElement, divElement);
+          }
+        });
+
+        // [WORKAROUND] An agent copy/paste another email but each line was wrapped into a `<li>` whereas it should not.
+        // Since there was no wrapping `<ul>` Lexical failed converting it to JSON throwing `Expected node root to have a parent`.
+        // To solve this we just consider as `<div>` any `<li>` without a `<ul>` parent
+        dom.documentElement.querySelectorAll('li').forEach((liElement) => {
+          const parentNode = liElement.parentNode as HTMLElement;
+          if (parentNode && parentNode.tagName.toLowerCase() !== 'ul') {
+            const liReplacementElement = document.createElement('div');
+
+            // Copy attributes
+            for (var i = 0; i < liElement.attributes.length; i++) {
+              liReplacementElement.setAttribute(liElement.attributes[i].name, liElement.attributes[i].value);
+            }
+
+            // Copy the children
+            while (liElement.firstChild) {
+              liReplacementElement.appendChild(liElement.firstChild);
+            }
+
+            parentNode.replaceChild(liReplacementElement, liElement);
           }
         });
 

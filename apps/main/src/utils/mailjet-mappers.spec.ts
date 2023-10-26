@@ -82,7 +82,7 @@ describe('decodeParseApiWebhookPayload()', () => {
       to: [
         {
           email: 'dossier-61@mediature.incubateur.net',
-          name: 'John de Médiature',
+          name: 'Le médiateur',
         },
       ],
       subject: `Re: Un médiateur vous a écrit`,
@@ -139,6 +139,15 @@ describe('decodeParseApiWebhookPayload()', () => {
     expect(decodedPayload.content).toStrictEqual(
       `{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hola\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Cool red one.\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Now PDF\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Lalalalaa\",\"type\":\"text\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1}],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}`
     );
+  });
+
+  it('should return values despite having an empty subject', async () => {
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload-empty-subject.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(decodedPayload.subject).toBe('');
   });
 
   it('should return values with real payload that has only one part being html since different payload structure', async () => {

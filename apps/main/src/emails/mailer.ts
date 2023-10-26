@@ -70,6 +70,11 @@ import {
   PasswordResetEmailProps,
 } from '@mediature/ui/src/emails/templates/password-reset/email';
 import {
+  RejectedMessageFilesWarningEmail,
+  formatTitle as RejectedMessageFilesWarningEmailFormatTitle,
+  RejectedMessageFilesWarningEmailProps,
+} from '@mediature/ui/src/emails/templates/rejected-message-files-warning/email';
+import {
   SignUpConfirmationEmail,
   formatTitle as SignUpConfirmationEmailFormatTitle,
   SignUpConfirmationEmailProps,
@@ -310,6 +315,14 @@ export class Mailer {
       subject: CaseMessageEmailFormatTitle(),
       emailComponent: CaseMessageEmail(parameters),
       attachments: parameters.attachments,
+    });
+  }
+
+  public async sendRejectedMessageFilesWarning(parameters: RejectedMessageFilesWarningEmailProps & { recipient: string }) {
+    await this.send({
+      recipients: [parameters.recipient],
+      subject: RejectedMessageFilesWarningEmailFormatTitle(),
+      emailComponent: RejectedMessageFilesWarningEmail(parameters),
     });
   }
 
