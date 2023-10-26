@@ -38,7 +38,9 @@ const Template: StoryFn<ComponentType> = (args) => {
 };
 
 const NormalStory = Template.bind({});
-NormalStory.args = {};
+NormalStory.args = {
+  caseId: 'b79cb3ba-745e-5d9a-8903-4a02327a7e01',
+};
 NormalStory.parameters = {
   ...defaultMswParameters,
 };
