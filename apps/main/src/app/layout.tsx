@@ -5,6 +5,7 @@ import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAtt
 import { PropsWithChildren } from 'react';
 
 import { MuiDsfrThemeProvider } from '@mediature/main/src/app/MuiDsfrThemeProvider';
+import { SentryClientProvider } from '@mediature/main/src/app/SentryClientProvider';
 import { StartDsfr } from '@mediature/main/src/app/StartDsfr';
 import '@mediature/main/src/app/layout.scss';
 import { Providers } from '@mediature/main/src/app/providers';
@@ -30,7 +31,9 @@ function MainStructure(props: PropsWithChildren) {
         <DsfrProvider>
           <MuiDsfrThemeProvider>
             <Providers>
-              <LiveChatProvider>{props.children}</LiveChatProvider>
+              <SentryClientProvider>
+                <LiveChatProvider>{props.children}</LiveChatProvider>
+              </SentryClientProvider>
             </Providers>
           </MuiDsfrThemeProvider>
           <Display />

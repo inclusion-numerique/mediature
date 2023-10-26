@@ -326,7 +326,7 @@ On the other side if you are looking for investigating a built image, Scalingo p
 
 #### Sentry
 
-TODO: to write once it's compatible with Next.js 13 a new time
+<!-- TODO -->
 
 ### Emails
 
