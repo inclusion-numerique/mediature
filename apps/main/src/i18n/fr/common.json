@@ -14,6 +14,15 @@
     }
   },
   "errors": {
+    "authCredentialsRequired": "vous devez fournir vos informations de connexion pour poursuivre",
+    "authFatal": "une erreur inattendue est survenue, merci de contacter le support",
+    "authNoCredentialsMatch": "les informations de connexion fournies sont incorrectes",
+    "authRetriable": "une erreur est survenue, veuillez retenter",
+    "internalServerError": "une erreur interne est survenue, veuillez retenter",
+    "fileAccessLinkHasExpired": "le lien pour accéder au fichier a expiré, veuillez retourner sur la plateforme pour y accéder",
+    "fileAccessNotAuthorized": "vous n'êtes pas autorisé à lire ce fichier",
+    "fileIdMalformated": "l'identifiant du fichier est malformé",
+    "fileNotFound": "aucun fichier n'a été trouvé",
     "passwordRequiresANumeric": "le mot de passe doit contenir au moins un chiffre",
     "passwordRequiresHeightCharacters": "le mot de passe doit contenir au moins 8 caractères",
     "passwordRequiresLowerAndUpperCharacters": "le mot de passe doit contenir au moins une majuscule et une minuscule",

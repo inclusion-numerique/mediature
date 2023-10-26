@@ -2,8 +2,9 @@ import { createNextApiHandler } from '@trpc/server/adapters/next';
 
 import { appRouter } from '@mediature/main/src/server/app-router';
 import { createContext } from '@mediature/main/src/server/context';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 
-export default createNextApiHandler({
+export const handler = createNextApiHandler({
   router: appRouter,
   createContext(opts) {
     return createContext({
@@ -21,3 +22,5 @@ export default createNextApiHandler({
     enabled: true,
   },
 });
+
+export default apiHandlerWrapper(handler);

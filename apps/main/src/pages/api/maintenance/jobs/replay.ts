@@ -1,9 +1,12 @@
+import createHttpError from 'http-errors';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JobWithMetadata } from 'pg-boss';
 import { z } from 'zod';
 
+import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { MaintenanceDataSchemaType, MaintenanceWrapperDataSchema } from '@mediature/main/src/models/jobs/maintenance';
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 
 const maintenanceApiKey = process.env.MAINTENANCE_API_KEY;
 
@@ -26,72 +29,60 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (!isAuthenticated((req.headers as any)['x-api-key'])) {
     console.log('someone is trying to trigger a job replay without being authenticated');
 
-    res.status(401).json({ error: true, message: `invalid api key` });
-    res.end();
-    return;
+    throw new createHttpError.Unauthorized(`invalid api key`);
   }
 
-  try {
-    const body = HandlerBodySchema.parse(req.body);
+  const body = HandlerBodySchema.parse(req.body);
 
-    const bossClient = await getBossClientInstance();
-    const job = await bossClient.getJobById(body.jobId);
+  const bossClient = await getBossClientInstance();
+  const job = await bossClient.getJobById(body.jobId);
 
-    if (!job) {
-      throw new Error(`no job found with this id`);
-    } else if (!replayableJobStates.includes(job.state)) {
-      throw new Error(`the job must be in a final state to be replayed`);
-    }
+  if (!job) {
+    throw new BusinessError('jobNotFoundWithId', 'no job found with this id');
+  } else if (!replayableJobStates.includes(job.state)) {
+    throw new BusinessError('jobCannotBeReplayed', 'the job must be in a final state to be replayed');
+  }
 
-    const previousMaintenanceWrapperParse = MaintenanceWrapperDataSchema.parse(job.data);
+  const previousMaintenanceWrapperParse = MaintenanceWrapperDataSchema.parse(job.data);
 
-    let currentMaintenance: MaintenanceDataSchemaType;
+  let currentMaintenance: MaintenanceDataSchemaType;
 
-    if (previousMaintenanceWrapperParse.__maintenance__) {
-      currentMaintenance = {
-        requestedAt: new Date(),
-        originalJobId: previousMaintenanceWrapperParse.__maintenance__.originalJobId,
-        replayedMaintenanceJobId: job.id,
-      };
-    } else {
-      currentMaintenance = {
-        requestedAt: new Date(),
-        originalJobId: job.id,
-      };
-    }
-
-    const dataWithMaintenanceMetadata = {
-      ...job.data,
-      ...MaintenanceWrapperDataSchema.parse({
-        __maintenance__: currentMaintenance,
-      }),
+  if (previousMaintenanceWrapperParse.__maintenance__) {
+    currentMaintenance = {
+      requestedAt: new Date(),
+      originalJobId: previousMaintenanceWrapperParse.__maintenance__.originalJobId,
+      replayedMaintenanceJobId: job.id,
     };
-
-    const newJobId = await bossClient.send(job.name, dataWithMaintenanceMetadata, {
-      // The options are not formatted the same way when getting from the database
-      // and as input. So we map manually, but only those that make sense, not the absolute dates...
-      expireInMinutes: job.expirein.minutes,
-      // Even if the following was undefined when passed, it was triggering the error like `configuration assert: expireInHours must be at least every hour`
-      // so only keeping `expireInMinutes` for now
-      // ---
-      // expireInSeconds: job.expirein.seconds,
-      // expireInHours: job.expirein.hours,
-      retryLimit: job.retrylimit,
-      retryDelay: job.retrydelay,
-      retryBackoff: job.retrybackoff,
-      onComplete: job.oncomplete !== undefined ? job.oncomplete : (job as any).on_complete, // It seems there is a difference between the type and the real property into the job from the database
-    });
-
-    res.send(`The job has been replayed with the id "${newJobId}"`);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ error: true, message: error.message });
-      res.end();
-    } else {
-      res.status(500).json({ error: true, message: 'erreur interne' });
-      res.end();
-    }
+  } else {
+    currentMaintenance = {
+      requestedAt: new Date(),
+      originalJobId: job.id,
+    };
   }
+
+  const dataWithMaintenanceMetadata = {
+    ...job.data,
+    ...MaintenanceWrapperDataSchema.parse({
+      __maintenance__: currentMaintenance,
+    }),
+  };
+
+  const newJobId = await bossClient.send(job.name, dataWithMaintenanceMetadata, {
+    // The options are not formatted the same way when getting from the database
+    // and as input. So we map manually, but only those that make sense, not the absolute dates...
+    expireInMinutes: job.expirein.minutes,
+    // Even if the following was undefined when passed, it was triggering the error like `configuration assert: expireInHours must be at least every hour`
+    // so only keeping `expireInMinutes` for now
+    // ---
+    // expireInSeconds: job.expirein.seconds,
+    // expireInHours: job.expirein.hours,
+    retryLimit: job.retrylimit,
+    retryDelay: job.retrydelay,
+    retryBackoff: job.retrybackoff,
+    onComplete: job.oncomplete !== undefined ? job.oncomplete : (job as any).on_complete, // It seems there is a difference between the type and the real property into the job from the database
+  });
+
+  res.send(`The job has been replayed with the id "${newJobId}"`);
 }
 
-export default handler;
+export default apiHandlerWrapper(handler);

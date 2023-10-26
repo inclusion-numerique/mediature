@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { scheduleCronTasks } from '@mediature/main/src/server/queueing/schedule';
 import { gracefulExit } from '@mediature/main/src/server/system';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 
 let init = false;
 
@@ -37,4 +38,4 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.send('Initialized');
 }
 
-export default handler;
+export default apiHandlerWrapper(handler);

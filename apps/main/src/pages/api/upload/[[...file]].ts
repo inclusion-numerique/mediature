@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '@mediature/main/prisma/client';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { nextAuthOptions } from '@mediature/main/src/pages/api/auth/[...nextauth]';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 
 // export const uploadSuccessHeaders = {
@@ -168,6 +169,8 @@ const tusServer = new Server({
   },
 });
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export function handler(req: NextApiRequest, res: NextApiResponse) {
   return tusServer.handle(req, res);
 }
+
+export default apiHandlerWrapper(handler);
