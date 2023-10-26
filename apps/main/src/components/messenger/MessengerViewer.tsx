@@ -8,7 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
+import Paper, { PaperProps } from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { EventEmitter } from 'eventemitter3';
 import { createContext, useContext, useState } from 'react';
@@ -30,9 +30,10 @@ export const MessengerViewerContext = createContext({
 export interface MessengerViewerProps {
   caseId: string;
   message: MessageSchemaType;
+  sx?: PaperProps['sx'];
 }
 
-export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
+export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
   const { ContextualMessengerSender } = useContext(MessengerViewerContext);
   const { t } = useTranslation('common');
   const { showErrorDialog } = useSingletonErrorDialog();
@@ -45,11 +46,8 @@ export function MessengerViewer({ caseId, message }: MessengerViewerProps) {
     <Paper
       variant="outlined"
       sx={{
-        minHeight: 500,
-        borderRadius: 'sm',
         p: 2,
-        mb: 3,
-        bgcolor: 'background.componentBg',
+        ...(sx || {}),
       }}
     >
       <Box
