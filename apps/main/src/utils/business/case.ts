@@ -44,7 +44,7 @@ export function extractCaseHumanIdFromEmailFactory(domain: string) {
   };
 }
 
-const mailerDefaultDomain = process.env.MAILER_DEFAULT_DOMAIN || '';
+const mailerDefaultDomain = process.env.MAILER_DEFAULT_DOMAIN || process.env.NEXT_PUBLIC_MAILER_DEFAULT_DOMAIN || '';
 
 export const getCaseEmail = getCaseEmailFactory(mailerDefaultDomain);
 export const extractCaseHumanIdFromEmail = extractCaseHumanIdFromEmailFactory(mailerDefaultDomain);

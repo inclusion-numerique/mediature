@@ -57,6 +57,7 @@ module.exports = {
     STORYBOOK_ENVIRONMENT: 'true',
     TRPC_SERVER_MOCK: 'true',
     MAILER_DEFAULT_DOMAIN: 'test.domain.fr',
+    NEXT_PUBLIC_MAILER_DEFAULT_DOMAIN: 'test.domain.fr',
   }),
   async webpackFinal(config, { configType }) {
     // When building Storybook from scratch assets are copied into the `outputDir` before `CopyWebpackPlugin` builds the `/public/` folder
