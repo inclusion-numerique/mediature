@@ -125,7 +125,7 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
         dom.documentElement.querySelectorAll('li').forEach((liElement) => {
           const parentNode = liElement.parentNode as HTMLElement;
           if (parentNode && parentNode.tagName.toLowerCase() !== 'ul') {
-            const liReplacementElement = document.createElement('div');
+            const liReplacementElement = dom.createElement('div');
 
             // Copy attributes
             for (var i = 0; i < liElement.attributes.length; i++) {
