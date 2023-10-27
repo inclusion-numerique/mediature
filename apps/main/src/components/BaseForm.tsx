@@ -64,6 +64,9 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
           }
         },
         (errors) => {
+          // Reset previous error from business code
+          setOnSubmitError(null);
+
           // Only triggered on inputs validation errors
           setValidationErrors(errors);
 
