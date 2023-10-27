@@ -32,7 +32,7 @@ export async function errorHandler(error: unknown, req: NextApiRequest, res: Nex
   console.error(error);
 
   if (error instanceof BusinessError) {
-    res.status(error.httpCode || 400).json({ error: error });
+    res.status(error.httpCode || 400).json({ error: error.json() });
   } else if (createHttpError.isHttpError(error) && error.expose) {
     // Handle errors thrown with http-errors module
     // (meaning the one throwing wants specific HTTP response, it's kind of a business error but with no translation at the end)
@@ -48,7 +48,7 @@ export async function errorHandler(error: unknown, req: NextApiRequest, res: Nex
     });
 
     res.status(500).json({
-      error: internalServerErrorError,
+      error: internalServerErrorError.json(),
     });
   }
 }

@@ -6,6 +6,13 @@ export class UnexpectedError extends CustomError {
   public constructor(public readonly code: string, message: string = '') {
     super(message);
   }
+
+  public json(): object {
+    return {
+      code: this.code,
+      message: this.message,
+    };
+  }
 }
 
 export class BusinessError extends CustomError {
@@ -15,6 +22,13 @@ export class BusinessError extends CustomError {
 
   public cloneWithHttpCode(httpCode: number): BusinessError {
     return new BusinessError(this.code, this.message, httpCode);
+  }
+
+  public json(): object {
+    return {
+      code: this.code,
+      message: this.message,
+    };
   }
 }
 
