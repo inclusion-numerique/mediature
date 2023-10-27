@@ -1,13 +1,22 @@
 import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
+import { ZodError } from 'zod';
 
 import { TokenUserSchema } from '@mediature/main/src/models/entities/user';
 import { Context } from '@mediature/main/src/server/context';
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
-  errorFormatter({ shape }) {
-    return shape;
+  errorFormatter(opts) {
+    const { shape, error } = opts;
+
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError: error.cause instanceof ZodError ? error.cause.issues : undefined,
+      },
+    };
   },
 });
 

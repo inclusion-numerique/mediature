@@ -1,6 +1,11 @@
 import ReplayIcon from '@mui/icons-material/Replay';
 import Alert, { AlertProps } from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import z from 'zod';
+
+import { formatMessageFromIssue } from '@mediature/main/src/i18n';
 
 // import { QueryObserverResult, RefetchOptions } from '@tansack/query-core';
 
@@ -12,6 +17,8 @@ export interface ErrorAlertProps extends Pick<AlertProps, 'sx'> {
 }
 
 export function ErrorAlert(props: ErrorAlertProps) {
+  const { t } = useTranslation('common');
+
   if (props.errors.length === 0) {
     return <></>;
   }
@@ -28,16 +35,32 @@ export function ErrorAlert(props: ErrorAlertProps) {
       })(props.refetchs)
     : null;
 
-  // TODO: if an error has a 5xx HTTP code we allow retrying
-  const containsServerError: boolean = true;
+  let containsServerError: boolean = true;
 
-  let errors: string[] = props.errors.map((error) => {
-    // TODO: if there is a code error, try to translate
-    return error.toString();
-  });
+  const errors = useMemo(() => {
+    let errs: string[] = [];
+    for (const error of props.errors) {
+      if (error.data?.zodError) {
+        // Format to benefit from all the typings
+        const zodError = new z.ZodError(error.data?.zodError);
 
-  // Remove duplicates since it has no value
-  errors = [...new Set(errors)];
+        for (const issue of zodError.issues) {
+          // As fallback display the error message from the server, should be good enough but can be in another language
+          errs.push(formatMessageFromIssue(issue) || issue.message);
+        }
+      } else if (error.data?.businessError) {
+        // TODO:
+      } else {
+        // If not a validation error (`ZodError`), nor a business error (`BusinessError`), consider it as a server error that can be retried
+        containsServerError = true;
+
+        errs.push(error.message || 'unknown error');
+      }
+    }
+
+    // Remove duplicates since it has no value
+    return [...new Set(errs)];
+  }, [props.errors]);
 
   return (
     <Alert

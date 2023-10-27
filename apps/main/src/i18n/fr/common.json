@@ -26,7 +26,12 @@
     "passwordRequiresANumeric": "le mot de passe doit contenir au moins un chiffre",
     "passwordRequiresHeightCharacters": "le mot de passe doit contenir au moins 8 caractères",
     "passwordRequiresLowerAndUpperCharacters": "le mot de passe doit contenir au moins une majuscule et une minuscule",
-    "passwordRequiresASpecialCharacters": "le mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
+    "passwordRequiresASpecialCharacters": "le mot de passe doit contenir au moins un caractère spécial (@,!,?...)",
+    "validation": {
+      "currentPassword": {
+        "too_small_one": "le mot de passe actuel est requis"
+      }
+    }
   },
   "file": {
     "allowedExtensions_one": "Format supporté : {{extensions}}.",

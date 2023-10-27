@@ -8,6 +8,7 @@ import frDateLocale from 'date-fns/locale/fr';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import prettyBytes from 'pretty-bytes';
+import { z } from 'zod';
 
 import frCommonTranslations from '@mediature/main/src/i18n/fr/common.json';
 
@@ -137,3 +138,54 @@ export const getServerTranslation = (ns?: string, options?: UseServerTranslation
 
 // This alias to mimic the hook naming logic (but some backend files need the `getServerTranslation` to avoid a complain from the ESLint rule `react-hooks/rules-of-hooks`)
 export const useServerTranslation = getServerTranslation;
+
+//
+// Bind zod validation errors to i18next to reuse translations (on frontend and backend)
+//
+
+export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage, subpath: string, parameters: any): string | null => {
+  const fullI18nPath = `errors.validation.${subpath}.${issue.code}`;
+  const translation = i18n.t(fullI18nPath, parameters);
+
+  return translation !== fullI18nPath ? translation : null;
+};
+
+export const formatMessageFromIssue = (issue: z.ZodIssueOptionalMessage): string | null => {
+  const { code, path, message, ...potentialParameters } = issue;
+
+  if (path.length > 0) {
+    // Since there is no issue code for "required/nonempty" and we have to use `min(1)`
+    // We need to distinguish them during translation: `0..1` for a required field, `2+` for the minimum rule
+    // Note: we could have kept just one and managing it by keeping in mind for a specific field...
+    if (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') {
+      (potentialParameters as any).count = issue.minimum;
+    }
+
+    const valuablePathParts = path.filter((v) => typeof v === 'string') as string[];
+    const formattedI18nSubpath = valuablePathParts.join('.'); // Skip number since arrays have no sense for i18n paths
+    let translation = getIssueTranslationWithSubpath(issue, formattedI18nSubpath, potentialParameters);
+
+    // If not found try without path first parts
+    if (!translation) {
+      translation = getIssueTranslationWithSubpath(issue, valuablePathParts[valuablePathParts.length - 1], potentialParameters);
+    }
+
+    // Also check it's not an object if not end i18n translation
+    if (!!translation && typeof translation !== 'object') {
+      return translation;
+    }
+  }
+
+  return null;
+};
+
+const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+  const retrievedTranslation = formatMessageFromIssue(issue);
+
+  return {
+    // If no translation found with use the one from zod as fallback
+    message: retrievedTranslation || ctx.defaultError,
+  };
+};
+
+z.setErrorMap(customErrorMap);
