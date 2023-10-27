@@ -144,7 +144,15 @@ export const useServerTranslation = getServerTranslation;
 //
 
 export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage, subpath: string, parameters: any): string | null => {
-  const fullI18nPath = `errors.validation.${subpath}.${issue.code}`;
+  // For custom error the usual zod code is similar to the "error ID" (or error type)
+  let code: z.ZodIssueOptionalMessage['code'];
+  if (issue.code === z.ZodIssueCode.custom) {
+    code = issue.params?.type || 'unknown';
+  } else {
+    code = issue.code;
+  }
+
+  const fullI18nPath = `errors.validation.${subpath}.${code}`;
   const translation = i18n.t(fullI18nPath, parameters);
 
   return translation !== fullI18nPath ? translation : null;

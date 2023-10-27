@@ -23,13 +23,15 @@
     "fileAccessNotAuthorized": "vous n'êtes pas autorisé à lire ce fichier",
     "fileIdMalformated": "l'identifiant du fichier est malformé",
     "fileNotFound": "aucun fichier n'a été trouvé",
-    "passwordRequiresANumeric": "le mot de passe doit contenir au moins un chiffre",
-    "passwordRequiresHeightCharacters": "le mot de passe doit contenir au moins 8 caractères",
-    "passwordRequiresLowerAndUpperCharacters": "le mot de passe doit contenir au moins une majuscule et une minuscule",
-    "passwordRequiresASpecialCharacters": "le mot de passe doit contenir au moins un caractère spécial (@,!,?...)",
     "validation": {
       "currentPassword": {
         "too_small_one": "le mot de passe actuel est requis"
+      },
+      "newPassword": {
+        "passwordRequiresANumeric": "le nouveau mot de passe doit contenir au moins un chiffre",
+        "passwordRequiresHeightCharacters": "le nouveau mot de passe doit contenir au moins 8 caractères",
+        "passwordRequiresLowerAndUpperCharacters": "le nouveau mot de passe doit contenir au moins une majuscule et une minuscule",
+        "passwordRequiresASpecialCharacters": "le nouveau mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
       }
     }
   },

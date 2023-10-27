@@ -48,18 +48,21 @@ export const internalServerErrorError = new UnexpectedError('internalServerError
 // Validations
 //
 
-export const passwordRequiresANumericError = new BusinessError('passwordRequiresANumeric', t('errors.passwordRequiresANumeric'));
+export const passwordRequiresANumericError = new BusinessError(
+  'passwordRequiresANumeric',
+  t('errors.validation.newPassword.passwordRequiresANumeric')
+);
 export const passwordRequiresHeightCharactersError = new BusinessError(
   'passwordRequiresHeightCharacters',
-  t('errors.passwordRequiresHeightCharacters')
+  t('errors.validation.newPassword.passwordRequiresHeightCharacters')
 );
 export const passwordRequiresLowerAndUpperCharactersError = new BusinessError(
   'passwordRequiresLowerAndUpperCharacters',
-  t('errors.passwordRequiresLowerAndUpperCharacters')
+  t('errors.validation.newPassword.passwordRequiresLowerAndUpperCharacters')
 );
 export const passwordRequiresASpecialCharactersError = new BusinessError(
   'passwordRequiresASpecialCharacters',
-  t('errors.passwordRequiresASpecialCharacters')
+  t('errors.validation.newPassword.passwordRequiresASpecialCharacters')
 );
 
 //
