@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { formatMessageFromIssue } from '@mediature/main/src/i18n';
-import { BusinessError, internalServerErrorError, unexpectedErrorError } from '@mediature/main/src/models/entities/errors';
+import { CustomError, internalServerErrorError, unexpectedErrorError } from '@mediature/main/src/models/entities/errors';
+import { formatMessageFromCustomError } from '@mediature/main/src/models/entities/errors/helpers';
 import { AppRouter } from '@mediature/main/src/server/app-router';
 
 // import { QueryObserverResult, RefetchOptions } from '@tansack/query-core';
@@ -54,22 +55,26 @@ export function ErrorAlert(props: ErrorAlertProps) {
             // As fallback display the error message from the server, should be good enough but can be in another language
             errs.push(formatMessageFromIssue(issue) || issue.message);
           }
-        } else if ((trpcError.data as any)?.businessError) {
-          // TODO:
+        } else if (trpcError.data?.customError) {
+          const customErrorPayload = trpcError.data.customError as CustomError;
+          const customError = new CustomError(customErrorPayload.code, customErrorPayload.message);
+
+          errs.push(formatMessageFromCustomError(customError) || customError.message);
         } else {
           // If not a validation error (`ZodError`), nor a business error (`BusinessError`), consider it as a server error that can be retried
           containsServerError = true;
 
           // The API is supposed to hide details so show internal server error translation
-          errs.push(t(`errors.${internalServerErrorError.code as 'internalServerError'}`));
+          errs.push(t(`errors.custom.${internalServerErrorError.code as 'internalServerError'}`));
         }
-      } else if (error instanceof BusinessError) {
-        // TODO:
+      } else if (error instanceof CustomError) {
+        // Custom error can also occur from frontend directly
+        errs.push(formatMessageFromCustomError(error) || error.message);
       } else {
         console.error(error);
 
         // The error is not formatted to be displayed so using a generic message
-        errs.push(t(`errors.${unexpectedErrorError.code as 'unexpectedError'}`));
+        errs.push(t(`errors.custom.${unexpectedErrorError.code as 'unexpectedError'}`));
       }
     }
 

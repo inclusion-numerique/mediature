@@ -14,15 +14,27 @@
     }
   },
   "errors": {
-    "authCredentialsRequired": "vous devez fournir vos informations de connexion pour poursuivre",
-    "authFatal": "une erreur inattendue est survenue, merci de contacter le support",
-    "authNoCredentialsMatch": "les informations de connexion fournies sont incorrectes",
-    "authRetriable": "une erreur est survenue, veuillez retenter",
-    "internalServerError": "une erreur interne est survenue, veuillez retenter",
-    "fileAccessLinkHasExpired": "le lien pour accéder au fichier a expiré, veuillez retourner sur la plateforme pour y accéder",
-    "fileAccessNotAuthorized": "vous n'êtes pas autorisé à lire ce fichier",
-    "fileIdMalformated": "l'identifiant du fichier est malformé",
-    "fileNotFound": "aucun fichier n'a été trouvé",
+    "custom": {
+      "accountAlreadyWithThisEmail": "un compte est déjà enregistré avec cet email",
+      "alreadyUsedInvitation": "l'invitation avec laquelle vous essayez de vous inscrire a déjà été utilisée",
+      "authCredentialsRequired": "vous devez fournir vos informations de connexion pour poursuivre",
+      "authFatal": "une erreur inattendue est survenue, merci de contacter le support",
+      "authNoCredentialsMatch": "les informations de connexion fournies sont incorrectes",
+      "authRetriable": "une erreur est survenue, veuillez retenter",
+      "canceledInvitation": "l'invitation avec laquelle vous essayez de vous inscrire a été annulée",
+      "expiredVerificationToken": "vous avez dépassé le temps imparti, merci de renouveler votre demande",
+      "internalServerError": "une erreur interne est survenue, veuillez retenter",
+      "invalidCurrentPassword": "le mot de passe actuel que vous venez de rentrer est invalide",
+      "invalidInvitation": "l'invitation pour vous inscrire est invalide, merci de retenter en cliquant sur le lien envoyé par email",
+      "invalidVerificationToken": "l'opération que vous essayez de réaliser a été refusée",
+      "fileAccessLinkHasExpired": "le lien pour accéder au fichier a expiré, veuillez retourner sur la plateforme pour y accéder",
+      "fileAccessNotAuthorized": "vous n'êtes pas autorisé à lire ce fichier",
+      "fileIdMalformated": "l'identifiant du fichier est malformé",
+      "fileNotFound": "aucun fichier n'a été trouvé",
+      "missingInvitation": "vous devez être invité(e) pour créer un compte",
+      "noAccountWithThisEmail": "aucun compte n'existe avec cette adresse email",
+      "unexpectedError": "une erreur inattendue est survenue, veuillez retenter"
+    },
     "validation": {
       "currentPassword": {
         "too_small_one": "le mot de passe actuel est requis"
@@ -33,8 +45,7 @@
         "passwordRequiresLowerAndUpperCharacters": "le nouveau mot de passe doit contenir au moins une majuscule et une minuscule",
         "passwordRequiresASpecialCharacters": "le nouveau mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
       }
-    },
-    "unexpectedError": "une erreur inattendue est survenue, veuillez retenter"
+    }
   },
   "file": {
     "allowedExtensions_one": "Format supporté : {{extensions}}.",

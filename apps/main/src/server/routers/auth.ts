@@ -6,6 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
 import { ChangePasswordSchema, RequestNewPasswordSchema, ResetPasswordSchema, SignUpSchema } from '@mediature/main/src/models/actions/auth';
+import {
+  accountAlreadyWithThisEmailError,
+  alreadyUsedInvitationError,
+  canceledInvitationError,
+  expiredVerificationTokenError,
+  invalidCurrentPasswordError,
+  invalidInvitationError,
+  invalidVerificationTokenError,
+  missingInvitationError,
+  noAccountWithThisEmailError,
+} from '@mediature/main/src/models/entities/errors';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserStatusSchema, VerificationTokenActionSchema } from '@mediature/main/src/models/entities/user';
 import { userPrismaToModel } from '@mediature/main/src/server/routers/mappers';
@@ -26,12 +37,12 @@ export const authRouter = router({
     });
 
     if (existingUser) {
-      throw new Error(`un compte est déjà enregistré avec cet email`);
+      throw accountAlreadyWithThisEmailError;
     }
 
     // Only accept users that have been invited
     if (!input.invitationToken) {
-      throw new Error(`vous devez être invité(e) pour créer un compte`);
+      throw missingInvitationError;
     }
 
     const invitation = await prisma.invitation.findFirst({
@@ -42,11 +53,11 @@ export const authRouter = router({
     });
 
     if (!invitation) {
-      throw new Error(`l'invitation pour vous inscrire est invalide, merci de retenter en cliquant sur le lien envoyé par email`);
+      throw invalidInvitationError;
     } else if (invitation.status === InvitationStatusSchema.Values.ACCEPTED) {
-      throw new Error(`l'invitation avec laquelle vous essayez de vous inscrire a déjà été utilisée`);
+      throw alreadyUsedInvitationError;
     } else if (invitation.status === InvitationStatusSchema.Values.CANCELED) {
-      throw new Error(`l'invitation avec laquelle vous essayez de vous inscrire a été annulée`);
+      throw canceledInvitationError;
     }
 
     const passwordHash = await hashPassword(input.password);
@@ -163,7 +174,7 @@ export const authRouter = router({
     });
 
     if (!user) {
-      throw new Error(`aucun compte n'existe avec cette adresse email`);
+      throw noAccountWithThisEmailError;
     }
 
     const durationMinutesToValidateTheToken = 60;
@@ -203,9 +214,9 @@ export const authRouter = router({
     const currentTime = new Date();
 
     if (!verificationToken) {
-      throw new Error(`l'opération que vous essayez de réaliser a été refusée`);
+      throw invalidVerificationTokenError;
     } else if (verificationToken.expires < currentTime) {
-      throw new Error(`vous avez dépassé le temps imparti, merci de renouveler votre demande`);
+      throw expiredVerificationTokenError;
     }
 
     const hashedPassword = await hashPassword(input.password);
@@ -256,7 +267,7 @@ export const authRouter = router({
 
     const matchPassword = await bcrypt.compare(input.currentPassword, user.Secrets?.passwordHash || '');
     if (!matchPassword) {
-      throw new Error(`le mot de passe actuel que vous venez de rentrer est invalide`);
+      throw invalidCurrentPasswordError;
     }
 
     const newHashedPassword = await hashPassword(input.newPassword);
