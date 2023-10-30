@@ -911,6 +911,9 @@ importers:
       '@react-pdf/renderer':
         specifier: ^3.1.6
         version: 3.1.6(react@18.2.0)
+      '@trpc/client':
+        specifier: ^10.4.2
+        version: 10.4.3
       country-data:
         specifier: ^0.0.31
         version: 0.0.31
@@ -9790,6 +9793,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@trpc/client@10.4.3:
+    resolution: {integrity: sha512-VMdyLHr6PG2FlMxnbPt/6jniDBxv3Ys1hFhk0AriFDD9h4Lg9fznwGn5RI1eV5RCOAoCQ/+ZwPMSKOMBhiycTw==}
+    peerDependencies:
+      '@trpc/server': 10.4.3
+    dev: false
 
   /@trpc/client@10.4.3(@trpc/server@10.4.3):
     resolution: {integrity: sha512-VMdyLHr6PG2FlMxnbPt/6jniDBxv3Ys1hFhk0AriFDD9h4Lg9fznwGn5RI1eV5RCOAoCQ/+ZwPMSKOMBhiycTw==}

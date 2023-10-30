@@ -43,6 +43,7 @@ const { t } = getServerTranslation('common', {
 //
 
 export const internalServerErrorError = new UnexpectedError('internalServerError', t('errors.internalServerError'));
+export const unexpectedErrorError = new UnexpectedError('unexpectedError', t('errors.unexpectedError'));
 
 //
 // Validations

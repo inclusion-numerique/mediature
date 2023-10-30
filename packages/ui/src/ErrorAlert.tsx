@@ -1,16 +1,19 @@
 import ReplayIcon from '@mui/icons-material/Replay';
 import Alert, { AlertProps } from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import { TRPCClientErrorLike } from '@trpc/client';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import z from 'zod';
 
 import { formatMessageFromIssue } from '@mediature/main/src/i18n';
+import { BusinessError, internalServerErrorError, unexpectedErrorError } from '@mediature/main/src/models/entities/errors';
+import { AppRouter } from '@mediature/main/src/server/app-router';
 
 // import { QueryObserverResult, RefetchOptions } from '@tansack/query-core';
 
 export interface ErrorAlertProps extends Pick<AlertProps, 'sx'> {
-  errors: (Error | any)[];
+  errors: (TRPCClientErrorLike<AppRouter> | Error)[]; // Errors can be from the network (tRPC most of the time) or local
   // TODO: impossible to import types... why?
   // refetchs: (options?: RefetchOptions) => Promise<QueryObserverResult<unknown, unknown>>[];
   refetchs?: ((options?: any) => Promise<any>)[];
@@ -40,21 +43,33 @@ export function ErrorAlert(props: ErrorAlertProps) {
   const errors = useMemo(() => {
     let errs: string[] = [];
     for (const error of props.errors) {
-      if (error.data?.zodError) {
-        // Format to benefit from all the typings
-        const zodError = new z.ZodError(error.data?.zodError);
+      if (error instanceof Error && error.name === 'TRPCClientError') {
+        const trpcError = error as unknown as TRPCClientErrorLike<AppRouter>;
 
-        for (const issue of zodError.issues) {
-          // As fallback display the error message from the server, should be good enough but can be in another language
-          errs.push(formatMessageFromIssue(issue) || issue.message);
+        if (trpcError.data?.zodError) {
+          // Format to benefit from all the typings
+          const zodError = new z.ZodError(trpcError.data?.zodError);
+
+          for (const issue of zodError.issues) {
+            // As fallback display the error message from the server, should be good enough but can be in another language
+            errs.push(formatMessageFromIssue(issue) || issue.message);
+          }
+        } else if ((trpcError.data as any)?.businessError) {
+          // TODO:
+        } else {
+          // If not a validation error (`ZodError`), nor a business error (`BusinessError`), consider it as a server error that can be retried
+          containsServerError = true;
+
+          // The API is supposed to hide details so show internal server error translation
+          errs.push(t(`errors.${internalServerErrorError.code as 'internalServerError'}`));
         }
-      } else if (error.data?.businessError) {
+      } else if (error instanceof BusinessError) {
         // TODO:
       } else {
-        // If not a validation error (`ZodError`), nor a business error (`BusinessError`), consider it as a server error that can be retried
-        containsServerError = true;
+        console.error(error);
 
-        errs.push(error.message || 'unknown error');
+        // The error is not formatted to be displayed so using a generic message
+        errs.push(t(`errors.${unexpectedErrorError.code as 'unexpectedError'}`));
       }
     }
 

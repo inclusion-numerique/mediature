@@ -36,8 +36,6 @@ export function PrivateLayout(props: PropsWithChildren) {
 
   const { data, error, isLoading, refetch } = trpc.getInterfaceSession.useQuery({});
 
-  const userInterfaceSession = data?.session;
-
   useEffect(() => {
     if (sessionWrapper.status === 'unauthenticated' && !logoutCommitted) {
       signIn();
@@ -46,13 +44,15 @@ export function PrivateLayout(props: PropsWithChildren) {
 
   if (isLoading || sessionWrapper.status !== 'authenticated') {
     return <LoadingArea ariaLabelTarget="contenu" />;
-  } else if (error || !userInterfaceSession) {
+  } else if (error) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
         <ErrorAlert errors={[error]} refetchs={[refetch]} />
       </Grid>
     );
   }
+
+  const userInterfaceSession = data?.session;
 
   const currentAuthority = userInterfaceSession.agentOf.find((authority) => {
     const authorityPageBaseUrl = linkRegistry.get('authority', {

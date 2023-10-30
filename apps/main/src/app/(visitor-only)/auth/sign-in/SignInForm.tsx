@@ -33,6 +33,7 @@ import {
 } from '@mediature/main/src/models/entities/errors';
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
+import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 function errorCodeToError(errorCode: string): BusinessError | null {
   let error: BusinessError | null;
@@ -142,7 +143,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
     <BaseForm handleSubmit={enhancedHandleSubmit} onSubmit={onSubmit} control={control} ariaLabel="se connecter">
       {(!!error || showSessionEndBlock || showRegisteredBlock) && (
         <Grid item xs={12}>
-          {!!error && <Alert severity="error">{t(`errors.${error.code}`)}</Alert>}
+          {!!error && <ErrorAlert errors={[error]} />}
           {showSessionEndBlock && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
           {showRegisteredBlock && (
             <Alert severity="success">

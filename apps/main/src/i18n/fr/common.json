@@ -33,7 +33,8 @@
         "passwordRequiresLowerAndUpperCharacters": "le nouveau mot de passe doit contenir au moins une majuscule et une minuscule",
         "passwordRequiresASpecialCharacters": "le nouveau mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
       }
-    }
+    },
+    "unexpectedError": "une erreur inattendue est survenue, veuillez retenter"
   },
   "file": {
     "allowedExtensions_one": "Format supporté : {{extensions}}.",
