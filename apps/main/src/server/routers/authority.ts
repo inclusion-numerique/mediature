@@ -10,6 +10,15 @@ import {
 import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { AuthorityWrapperSchemaType, PublicFacingAuthoritySchema } from '@mediature/main/src/models/entities/authority';
+import {
+  adminOrAuthorityAgentRoleRequiredError,
+  adminOrAuthorityMainAgentRoleRequiredError,
+  adminRoleRequiredError,
+  anotherAuthorityAlreadyHasThisNameError,
+  anotherAuthorityAlreadyHasThisSlugError,
+  authorityNotFoundError,
+  cannotDeleteAuthorityStillHavingAgentsError,
+} from '@mediature/main/src/models/entities/errors';
 import { isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
@@ -52,9 +61,9 @@ export async function requiresThereIsNoSimilarAuthority(
 
   if (existingAuthority && existingAuthority.id !== excludeAuthorityId) {
     if (existingAuthority.name === authorityName) {
-      throw new Error(`une collectivité existe déjà avec ce nom`);
+      throw anotherAuthorityAlreadyHasThisNameError;
     } else {
-      throw new Error(`une collectivité existe déjà avec cet identifiant technique (slug)`);
+      throw anotherAuthorityAlreadyHasThisSlugError;
     }
   }
 }
@@ -62,7 +71,7 @@ export async function requiresThereIsNoSimilarAuthority(
 export const authorityRouter = router({
   createAuthority: privateProcedure.input(CreateAuthoritySchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     await requiresThereIsNoSimilarAuthority(input.name, input.slug);
@@ -94,7 +103,7 @@ export const authorityRouter = router({
   }),
   updateAuthority: privateProcedure.input(UpdateAuthoritySchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityMainAgentRoleRequiredError;
     }
 
     await requiresThereIsNoSimilarAuthority(input.name, undefined, input.authorityId);
@@ -135,7 +144,7 @@ export const authorityRouter = router({
   }),
   deleteAuthority: privateProcedure.input(DeleteAuthoritySchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     // To avoid mistake we require there is no agent inside the authority
@@ -150,7 +159,7 @@ export const authorityRouter = router({
     });
 
     if (authorityAgentsCount > 0) {
-      throw new Error(`vous ne pouvez pas supprimer une collectivité qui contient des agents`);
+      throw cannotDeleteAuthorityStillHavingAgentsError;
     }
 
     await prisma.authority.delete({
@@ -165,7 +174,7 @@ export const authorityRouter = router({
     const authorityId = input.id;
 
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthority(authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityAgentRoleRequiredError;
     }
 
     const authority = await prisma.authority.findUnique({
@@ -175,7 +184,7 @@ export const authorityRouter = router({
     });
 
     if (!authority) {
-      throw new Error(`aucune collectivité trouvée`);
+      throw authorityNotFoundError;
     }
 
     return {
@@ -190,7 +199,7 @@ export const authorityRouter = router({
     });
 
     if (!authority) {
-      throw new Error(`aucune collectivité trouvée`);
+      throw authorityNotFoundError;
     }
 
     return {
@@ -202,7 +211,7 @@ export const authorityRouter = router({
   }),
   listAuthorities: privateProcedure.input(ListAuthoritiesSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     let formattedSearchQuery: string | undefined;

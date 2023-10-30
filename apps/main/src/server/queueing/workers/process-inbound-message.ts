@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '@mediature/main/prisma';
 import { mailer } from '@mediature/main/src/emails/mailer';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
+import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { ProcessInboundMessageDataSchema, ProcessInboundMessageDataSchemaType } from '@mediature/main/src/models/jobs/case';
 import { formatSafeAttachmentsToProcess, uploadFile } from '@mediature/main/src/server/routers/common/attachment';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
@@ -38,11 +39,11 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
   });
 
   if (matchingCases.length === 0) {
-    throw new Error(`only emails about cases are allowed`);
+    throw new BusinessError('caseRecipientRequired', `only emails about cases are allowed`);
   } else if (matchingCases.length > 5) {
     // It may happen an email targets multiple cases (probably cases of the same citizen)
     // But over 5 we consider it as spam since case emails are guessable and could be flooded
-    throw new Error(`the incoming email targets too many cases, which is not allowed`);
+    throw new BusinessError('tooManyCaseRecipients', `the incoming email targets too many cases, which is not allowed`);
   } else if (matchingCases.length > 1) {
     // For multiple cases as recipients, our Mailjet partner will receive multiple times the same email content on different inboxes.
     // So it will trigger multiple times the webhook and to keep things simple we want to only consider one.

@@ -40,6 +40,44 @@ import {
   CaseWrapperSchema,
   CaseWrapperSchemaType,
 } from '@mediature/main/src/models/entities/case';
+import {
+  adminRoleRequiredError,
+  agentCanOnlyAccessItsAuthorityCasesError,
+  agentCanOnlySeeAuthorityCasesError,
+  assignedToCaseOrAuthorityMainAgentRoleRequiredError,
+  authorityAgentRoleRequiredError,
+  authorityMainAgentRoleRequiredError,
+  cannotAssignAgentFromAnotherAuthorityError,
+  cannotAssignYourselfIfAlreadyAssignedError,
+  caseNotFoundError,
+  competentThirdPartyCreationMustBeLowLevelError,
+  competentThirdPartyMustBeScopedCorrectlyError,
+  competentThirdPartyNotFoundError,
+  competentThirdPartyToBindNotFoundError,
+  documentNotFoundError,
+  domainCreationMustBeLowLevelError,
+  domainMustBeScopedCorrectlyError,
+  domainNotFoundError,
+  domainToBindNotFoundError,
+  globalCompetentThirdPartyMustBeScopedCorrectlyError,
+  globalDomainMustBeScopedCorrectlyError,
+  mustBeAssignedToThisCaseError,
+  mustBePartOfAuthorityToCreateCaseCompetentThirdPartyError,
+  mustBePartOfAuthorityToCreateCaseDomainError,
+  mustBePartOfAuthorityToDeleteCaseCompetentThirdPartyError,
+  mustBePartOfAuthorityToDeleteCaseDomainError,
+  mustBePartOfAuthorityToListCaseCompetentThirdPartiesError,
+  mustBePartOfAuthorityToListCaseDomainsError,
+  mustBePartOfAuthorityToUpdateCaseCompetentThirdPartyError,
+  mustBePartOfAuthorityToUpdateCaseDomainError,
+  mustBePartOfAuthorityToUpdateCaseError,
+  mustBindCaseCompetentThirdPartyWithRightScopeError,
+  mustBindCaseDomainWithRightScopeError,
+  noBoundCaseToDeleteCaseCompetentThirdPartyError,
+  noBoundCaseToDeleteCaseDomainError,
+  noBoundChildCaseCompetentThirdPartyToDeleteCaseCompetentThirdPartyError,
+  noBoundChildCaseDomainToDeleteCaseDomainError,
+} from '@mediature/main/src/models/entities/errors';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
 import { CreateCaseInboundEmailDataSchema, DeleteCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
@@ -125,11 +163,11 @@ export async function assertUserCanManageThisCase(userId: string, caseId: string
     },
   });
   if (!targetedCase) {
-    throw new Error(`ce dossier n'existe pas`);
+    throw caseNotFoundError;
   }
 
   if (!targetedCase.agentId || !(await isAgentThisUser(userId, targetedCase.agentId))) {
-    throw new Error(`vous devez être assigné au dossier pour effectuer cette opération`);
+    throw mustBeAssignedToThisCaseError;
   }
 
   return true;
@@ -137,7 +175,7 @@ export async function assertUserCanManageThisCase(userId: string, caseId: string
 
 export async function assertUserAnAgentPartOfAuthority(authorityId: string, userId: string): Promise<boolean> {
   if (!(await isUserAnAgentPartOfAuthority(authorityId, userId))) {
-    throw new Error(`vous devez faire partie de la collectivité pour effectuer cette action`);
+    throw authorityAgentRoleRequiredError;
   }
 
   return true;
@@ -151,11 +189,11 @@ export async function assertCaseDomainParentItemIsAllowed(parentItemId: string, 
   });
 
   if (!!parentItem.parentItemId) {
-    throw new Error(`vous ne pouvez que créer des domaines de niveau 1 ou 2`);
+    throw domainCreationMustBeLowLevelError;
   } else if (!!expectedAuthorityId && parentItem.authorityId !== null && expectedAuthorityId !== parentItem.authorityId) {
-    throw new Error(`vous ne pouvez rattacher votre domaine qu'à un domaine de la plateforme ou de votre propre collectivité`);
+    throw domainMustBeScopedCorrectlyError;
   } else if (!expectedAuthorityId && parentItem.authorityId !== null) {
-    throw new Error(`vous ne pouvez rattacher votre domaine de plateforme qu'à un autre domaine de plateforme`);
+    throw globalDomainMustBeScopedCorrectlyError;
   }
 }
 
@@ -167,11 +205,11 @@ export async function assertCaseCompetentThirdPartyParentItemIsAllowed(parentIte
   });
 
   if (!!parentItem.parentItemId) {
-    throw new Error(`vous ne pouvez que créer des entités tierces de niveau 1 ou 2`);
+    throw competentThirdPartyCreationMustBeLowLevelError;
   } else if (!!expectedAuthorityId && parentItem.authorityId !== null && expectedAuthorityId !== parentItem.authorityId) {
-    throw new Error(`vous ne pouvez rattacher votre entité tierce qu'à une entité de la plateforme ou de votre propre collectivité`);
+    throw competentThirdPartyMustBeScopedCorrectlyError;
   } else if (!expectedAuthorityId && parentItem.authorityId !== null) {
-    throw new Error(`vous ne pouvez rattacher votre entité tierce de plateforme qu'à un autre entité de plateforme`);
+    throw globalCompetentThirdPartyMustBeScopedCorrectlyError;
   }
 }
 
@@ -320,11 +358,11 @@ export const caseRouter = router({
     });
 
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité de ce dossier pour le mettre à jour`);
+      throw mustBePartOfAuthorityToUpdateCaseError;
     }
 
     if (!!input.domainId) {
@@ -335,9 +373,9 @@ export const caseRouter = router({
       });
 
       if (!domain) {
-        throw new Error(`le domaine que vous essayez de lier n'existe pas`);
+        throw domainToBindNotFoundError;
       } else if (domain.authorityId !== null && domain.authorityId !== targetedCase.authorityId) {
-        throw new Error(`vous ne pouvez lier qu'un domaine de la plateforme ou un appartenant à votre collectivité`);
+        throw mustBindCaseDomainWithRightScopeError;
       }
     }
 
@@ -349,9 +387,9 @@ export const caseRouter = router({
       });
 
       if (!competentThirdParty) {
-        throw new Error(`l'entité tierce que vous essayez de lier n'existe pas`);
+        throw competentThirdPartyToBindNotFoundError;
       } else if (competentThirdParty.authorityId !== null && competentThirdParty.authorityId !== targetedCase.authorityId) {
-        throw new Error(`vous ne pouvez lier qu'une entité tierce de la plateforme ou un appartenant à votre collectivité`);
+        throw mustBindCaseCompetentThirdPartyWithRightScopeError;
       }
     }
 
@@ -561,7 +599,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     const originatorUser = await prisma.user.findUniqueOrThrow({
@@ -573,7 +611,7 @@ export const caseRouter = router({
     let agentIdToAssign: string | null = null;
     if (input.myself) {
       if (targetedCase.agentId) {
-        throw new Error(`un médiateur est déjà assigné sur ce dossier, il doit d'abord s'enlever pour que vous puissiez vous l'assigner`);
+        throw cannotAssignYourselfIfAlreadyAssignedError;
       }
 
       const userAgent = await prisma.agent.findFirstOrThrow({
@@ -592,16 +630,16 @@ export const caseRouter = router({
 
       if (input.agentId) {
         if (!isMainAgent) {
-          throw new Error(`vous devez être médiateur principal de la collectivité pour effectuer cette action`);
+          throw authorityMainAgentRoleRequiredError;
         }
 
         if (!(await isAgentPartOfAuthority(targetedCase.authorityId, input.agentId))) {
-          throw new Error(`impossible d'assigner un médiateur qui ne fait pas partie de la collectivité du dossier`);
+          throw cannotAssignAgentFromAnotherAuthorityError;
         }
 
         agentIdToAssign = input.agentId;
       } else if (!isMainAgent && targetedCase.agent?.userId !== ctx.user.id) {
-        throw new Error(`vous devez être assigné à ce dossier ou médiateur principal de la collectivité pour effectuer cette action`);
+        assignedToCaseOrAuthorityMainAgentRoleRequiredError;
       }
     }
 
@@ -659,9 +697,9 @@ export const caseRouter = router({
   }),
   getCaseDomainItems: privateProcedure.input(GetCaseDomainItemsSchema).query(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour récupérer ses domaines`);
+      throw mustBePartOfAuthorityToListCaseDomainsError;
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const items = await prisma.caseDomainItem.findMany({
@@ -683,9 +721,9 @@ export const caseRouter = router({
   }),
   createCaseDomainItem: privateProcedure.input(CreateCaseDomainItemSchema).mutation(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui créer un domaine`);
+      throw mustBePartOfAuthorityToCreateCaseDomainError;
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     if (!!input.parentId) {
@@ -725,11 +763,11 @@ export const caseRouter = router({
     });
 
     if (!item) {
-      throw new Error(`ce domaine n'existe pas`);
+      throw domainNotFoundError;
     } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour modifier l'un de ses domaines`);
+      throw mustBePartOfAuthorityToUpdateCaseDomainError;
     }
 
     if (!!input.parentId) {
@@ -773,15 +811,15 @@ export const caseRouter = router({
       },
     });
     if (!item) {
-      throw new Error(`ce domaine n'existe pas`);
+      throw domainNotFoundError;
     } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer un domaine`);
+      throw mustBePartOfAuthorityToDeleteCaseDomainError;
     } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     } else if (item._count.Case > 0) {
-      throw new Error(`aucun dossier ne doit être lié à ce domaine pour pouvoir être supprimé`);
+      throw noBoundCaseToDeleteCaseDomainError;
     } else if (item._count.childrenItems > 0) {
-      throw new Error(`aucun "domaine enfant" ne doit être lié à ce domaine pour pouvoir être supprimé`);
+      throw noBoundChildCaseDomainToDeleteCaseDomainError;
     }
 
     const deletedItem = await prisma.caseDomainItem.delete({
@@ -794,9 +832,9 @@ export const caseRouter = router({
   }),
   getCaseCompetentThirdPartyItems: privateProcedure.input(GetCaseCompetentThirdPartyItemsSchema).query(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour récupérer ses entités tierces`);
+      throw mustBePartOfAuthorityToListCaseCompetentThirdPartiesError;
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const items = await prisma.caseCompetentThirdPartyItem.findMany({
@@ -818,9 +856,9 @@ export const caseRouter = router({
   }),
   createCaseCompetentThirdPartyItem: privateProcedure.input(CreateCaseCompetentThirdPartyItemSchema).mutation(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui créer une entité tierce`);
+      throw mustBePartOfAuthorityToCreateCaseCompetentThirdPartyError;
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     if (!!input.parentId) {
@@ -860,11 +898,11 @@ export const caseRouter = router({
     });
 
     if (!item) {
-      throw new Error(`cette entité tierce n'existe pas`);
+      throw competentThirdPartyNotFoundError;
     } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour modifier l'une de ses entités tierces`);
+      throw mustBePartOfAuthorityToUpdateCaseCompetentThirdPartyError;
     }
 
     if (!!input.parentId) {
@@ -908,15 +946,15 @@ export const caseRouter = router({
       },
     });
     if (!item) {
-      throw new Error(`cette entité tierce n'existe pas`);
+      throw competentThirdPartyNotFoundError;
     } else if (!!item.authorityId && !(await isUserMainAgentOfAuthority(item.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour lui supprimer une entité tierce`);
+      throw mustBePartOfAuthorityToDeleteCaseCompetentThirdPartyError;
     } else if (!item.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     } else if (item._count.Case > 0) {
-      throw new Error(`aucun dossier ne doit être lié à cette entité tierce pour pouvoir être supprimée`);
+      throw noBoundCaseToDeleteCaseCompetentThirdPartyError;
     } else if (item._count.childrenItems > 0) {
-      throw new Error(`aucune "entité tierce enfant" ne doit être liée à cette entité pour pouvoir être supprimée`);
+      throw noBoundChildCaseCompetentThirdPartyToDeleteCaseCompetentThirdPartyError;
     }
 
     const deletedItem = await prisma.caseCompetentThirdPartyItem.delete({
@@ -974,9 +1012,9 @@ export const caseRouter = router({
     });
 
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+      throw agentCanOnlyAccessItsAuthorityCasesError;
     }
 
     const unprocessedMessagesCount = await prisma.messagesOnCases.count({
@@ -1013,7 +1051,7 @@ export const caseRouter = router({
         input.filterBy.authorityIds.length !== 1 ||
         !(await isUserAnAgentPartOfAuthorities(input.filterBy.authorityIds, ctx.user.id))
       ) {
-        throw new Error(`en tant que médiateur vous ne pouvez que rechercher les dossiers concernant votre collectivité`);
+        throw agentCanOnlySeeAuthorityCasesError;
       }
     }
 
@@ -1216,9 +1254,9 @@ export const caseRouter = router({
     });
 
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     } else if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`en tant que médiateur vous ne pouvez qu'accéder aux dossiers concernant votre collectivité`);
+      throw agentCanOnlyAccessItsAuthorityCasesError;
     }
 
     const fileStream = await renderToStream(
@@ -1245,9 +1283,9 @@ export const caseRouter = router({
   }),
   generateCsvFromCaseAnalytics: privateProcedure.input(GenerateCsvFromCaseAnalyticsSchema).mutation(async ({ ctx, input }) => {
     if (!!input.authorityId && !(await isUserAnAgentPartOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez faire partie de la collectivité pour effectuer cette action`);
+      throw authorityAgentRoleRequiredError;
     } else if (!input.authorityId && !(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const { t } = useServerTranslation('common');
@@ -1302,7 +1340,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
@@ -1334,7 +1372,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
@@ -1360,7 +1398,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
@@ -1384,7 +1422,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);
@@ -1439,7 +1477,7 @@ export const caseRouter = router({
       },
     });
     if (!attachmentOnCase) {
-      throw new Error(`le document pour ce dossier n'existe pas`);
+      throw documentNotFoundError;
     }
 
     // Delete cascaded to `attachmentOnCase`
@@ -1464,7 +1502,7 @@ export const caseRouter = router({
       },
     });
     if (!targetedCase) {
-      throw new Error(`ce dossier n'existe pas`);
+      throw caseNotFoundError;
     }
 
     await assertUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id);

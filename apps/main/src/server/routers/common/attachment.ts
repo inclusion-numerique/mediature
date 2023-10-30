@@ -9,6 +9,7 @@ import * as tus from 'tus-js-client';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { AttachmentKindRequirementsSchemaType, AttachmentKindSchemaType } from '@mediature/main/src/models/entities/attachment';
+import { fileUploadError, tooManyUploadedFilesError } from '@mediature/main/src/models/entities/errors';
 import { getFileIdFromUrl } from '@mediature/main/src/utils/attachment';
 import { bitsFor } from '@mediature/main/src/utils/bits';
 import { getListeningPort } from '@mediature/main/src/utils/url';
@@ -114,7 +115,7 @@ export async function formatSafeAttachmentsToProcess(
 
   if (options) {
     if (options.maxAttachmentsTotal !== undefined && inputAttachmentsIds.length + existingAttachmentsIds.length > options.maxAttachmentsTotal) {
-      throw new Error(`vous ne pouvez pas transmettre plus de fichiers que le nombre autorisé`);
+      throw tooManyUploadedFilesError;
     }
   }
 
@@ -135,7 +136,7 @@ export async function formatSafeAttachmentsToProcess(
     // - the user tries to bind a different kind of document (maybe to bypass upload restrictions)
     // - the user tries to bind a document already bound, it could be an attempt to "steal" another document by making it visible on the hacker's account
     if (existingAttachments.length !== inputAttachmentsIds.length) {
-      throw new Error(`une erreur a été détecté concernant la transmission de documents`);
+      throw fileUploadError;
     }
   }
 

@@ -2,7 +2,7 @@ import { TRPCError, initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 
-import { CustomError, internalServerErrorError } from '@mediature/main/src/models/entities/errors';
+import { CustomError, internalServerErrorError, unauthorizedError } from '@mediature/main/src/models/entities/errors';
 import { TokenUserSchema } from '@mediature/main/src/models/entities/user';
 import { Context } from '@mediature/main/src/server/context';
 
@@ -45,7 +45,8 @@ export const isAuthed = t.middleware(({ next, ctx }) => {
   if (!ctx.user || !TokenUserSchema.parse(ctx.user)) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
-      message: 'vous devez être connecté pour effectuer cette action',
+      message: unauthorizedError.message,
+      cause: unauthorizedError,
     });
   }
 

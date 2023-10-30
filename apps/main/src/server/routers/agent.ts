@@ -11,6 +11,14 @@ import {
   RemoveAgentSchema,
 } from '@mediature/main/src/models/actions/agent';
 import { AgentWrapperSchemaType } from '@mediature/main/src/models/entities/agent';
+import {
+  adminOrAuthorityMainAgentRoleRequiredError,
+  agentInvitationAlreadySentError,
+  agentNotFoundError,
+  agentNotPartOfThisAuthorityError,
+  authorityAgentRoleRequiredError,
+  missingRightsToSearchThroughAuthoritiesError,
+} from '@mediature/main/src/models/entities/errors';
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserAnAgentPartOfAuthorities, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
@@ -23,7 +31,7 @@ import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 export const agentRouter = router({
   addAgent: privateProcedure.input(AddAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityMainAgentRoleRequiredError;
     }
 
     return await addAgent({
@@ -35,7 +43,7 @@ export const agentRouter = router({
   }),
   grantMainAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityMainAgentRoleRequiredError;
     }
 
     const agent = await prisma.agent.findUnique({
@@ -48,9 +56,9 @@ export const agentRouter = router({
     });
 
     if (!agent) {
-      throw new Error(`ce médiateur n'existe pas`);
+      throw agentNotFoundError;
     } else if (agent.authorityId !== input.authorityId) {
-      throw new Error(`ce médiateur ne fait pas partie de la collectivité`);
+      throw agentNotPartOfThisAuthorityError;
     }
 
     await prisma.authority.update({
@@ -68,7 +76,7 @@ export const agentRouter = router({
   }),
   removeAgent: privateProcedure.input(RemoveAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityMainAgentRoleRequiredError;
     }
 
     // We unassign the agent from all cases where he was
@@ -113,12 +121,12 @@ export const agentRouter = router({
     });
 
     if (!agent) {
-      throw new Error(`ce médiateur n'existe pas`);
+      throw agentNotFoundError;
     }
 
     // Before returning, make sure the caller has rights on this authority ;)
     if (!(await isUserAnAgentPartOfAuthority(agent.authorityId, ctx.user.id))) {
-      throw new Error(`vous n'avez pas les droits pour effectuer une action sur cette collectivité`);
+      throw authorityAgentRoleRequiredError;
     }
 
     return;
@@ -127,7 +135,7 @@ export const agentRouter = router({
     const authorityIds = input.filterBy.authorityIds;
 
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
-      throw new Error(`vous n'avez pas les droits pour effectuer une recherche sur toutes les collectivités précisées`);
+      throw missingRightsToSearchThroughAuthoritiesError;
     }
 
     const agents = await prisma.agent.findMany({
@@ -167,7 +175,7 @@ export const agentRouter = router({
   }),
   inviteAgent: privateProcedure.input(InviteAgentSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(input.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityMainAgentRoleRequiredError;
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -197,7 +205,7 @@ export const agentRouter = router({
     });
 
     if (existingAgentInvitation) {
-      throw new Error(`une invitation pour devenir médiateur de cette collectivité a déjà été envoyée à cette personne`);
+      throw agentInvitationAlreadySentError;
     }
 
     const originatorUser = await prisma.user.findUniqueOrThrow({
@@ -247,7 +255,7 @@ export const agentRouter = router({
     const authorityIds = input.filterBy.authorityIds;
 
     if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserAnAgentPartOfAuthorities(authorityIds, ctx.user.id))) {
-      throw new Error(`vous n'avez pas les droits pour effectuer une recherche sur toutes les collectivités précisées`);
+      throw missingRightsToSearchThroughAuthoritiesError;
     }
 
     const agentInvitations = await prisma.agentInvitation.findMany({
