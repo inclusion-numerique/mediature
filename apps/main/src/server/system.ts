@@ -5,6 +5,8 @@ import { stopBossClientInstance } from '@mediature/main/src/server/queueing/clie
 export async function gracefulExit(error?: Error) {
   if (error) {
     console.error(error);
+
+    Sentry.captureException(error);
   }
 
   console.log('Exiting the application gracefully...');

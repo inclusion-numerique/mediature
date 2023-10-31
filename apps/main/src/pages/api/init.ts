@@ -26,12 +26,11 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
       await scheduleCronTasks();
 
       console.log('All services have been initialized');
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       res.status(500).send('Failed to initialize some services');
 
       // Kill the process to be sure the host is aware of a critical failure that needs to be handled
-      process.exit(1);
+      await gracefulExit(error as unknown as Error);
     }
   }
 
