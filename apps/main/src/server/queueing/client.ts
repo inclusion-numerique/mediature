@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/nextjs';
 import PgBoss from 'pg-boss';
 
+import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { cleanPendingUploads, cleanPendingUploadsTopic } from '@mediature/main/src/server/queueing/workers/clean-pending-uploads';
 import { createCaseInboundEmail, createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
 import { deleteCaseInboundEmail, deleteCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/delete-case-inbound-email';
@@ -32,8 +34,11 @@ const bossClient = new PgBoss({
 });
 
 bossClient.on('error', (error) => {
-  // Warning: this listener does not seem to work when a worker fails processing a job
+  // This error catcher is just for internal operations on pb-boss (fetching, maintenance...)
+  // `onComplete` is the proper way to watch job errors
   console.error(error);
+
+  Sentry.captureException(error);
 });
 
 let initPromise: Promise<void> | null = null;
@@ -46,11 +51,11 @@ export async function getBossClientInstance(): Promise<PgBoss> {
       await bossClient.start();
 
       // Bind listeners
-      await bossClient.work(cleanPendingUploadsTopic, cleanPendingUploads);
-      await bossClient.work(sendAgentsActivitySumUpTopic, sendAgentsActivitySumUp);
-      await bossClient.work(createCaseInboundEmailTopic, createCaseInboundEmail);
-      await bossClient.work(deleteCaseInboundEmailTopic, deleteCaseInboundEmail);
-      await bossClient.work(processInboundMessageTopic, processInboundMessage);
+      await bossClient.work(cleanPendingUploadsTopic, handlerWrapper(cleanPendingUploads));
+      await bossClient.work(sendAgentsActivitySumUpTopic, handlerWrapper(sendAgentsActivitySumUp));
+      await bossClient.work(createCaseInboundEmailTopic, handlerWrapper(createCaseInboundEmail));
+      await bossClient.work(deleteCaseInboundEmailTopic, handlerWrapper(deleteCaseInboundEmail));
+      await bossClient.work(processInboundMessageTopic, handlerWrapper(processInboundMessage));
     })();
   }
 
@@ -68,4 +73,28 @@ export async function stopBossClientInstance(): Promise<void> {
   if (initPromise) {
     await bossClient.stop();
   }
+}
+
+export function handlerWrapper<ReqData>(handler: PgBoss.WorkHandler<ReqData>): PgBoss.WorkHandler<ReqData> {
+  return async (job: PgBoss.Job<ReqData>) => {
+    try {
+      await handler(job);
+    } catch (error) {
+      console.error(error);
+
+      // Wrapping to report error is required since there is no working way to watch job changes easily with `work()` method
+      // Ref: https://github.com/timgit/pg-boss/issues/273#issuecomment-1788162895
+      if (!(error instanceof BusinessError)) {
+        Sentry.withScope(function (scope) {
+          // Gather retry errors for the same event at the same place in Sentry
+          scope.setFingerprint(['pgboss', job.id]);
+
+          Sentry.captureException(error);
+        });
+      }
+
+      // Forward the error so pg-boss handles the error correctly
+      throw error;
+    }
+  };
 }
