@@ -6,6 +6,7 @@ import { CSSProperties, FormEventHandler, MutableRefObject, PropsWithChildren, u
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { capitalizeFirstLetter } from '@mediature/main/src/models/entities/errors/helpers';
 import { stopSubmitPropagation } from '@mediature/main/src/utils/form';
 import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
@@ -97,7 +98,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
             <Grid item xs={12} sx={{ py: 2 }}>
               <Alert severity="error">
                 {validationErrors[''] !== undefined
-                  ? (validationErrors['']?.message as string)
+                  ? capitalizeFirstLetter(validationErrors['']?.message as string) // Uppercase first letter since our errors are lowercase by default for flexibility
                   : t('components.BaseForm.form_contains_errors', { count: Object.keys(validationErrors).length })}
               </Alert>
             </Grid>

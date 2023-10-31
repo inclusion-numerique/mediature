@@ -11,6 +11,7 @@ import prettyBytes from 'pretty-bytes';
 import { z } from 'zod';
 
 import frCommonTranslations from '@mediature/main/src/i18n/fr/common.json';
+import { capitalizeFirstLetter } from '@mediature/main/src/models/entities/errors/helpers';
 
 export const defaultNamespace = 'common';
 
@@ -190,7 +191,10 @@ const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
 
   return {
     // If no translation found with use the one from zod as fallback
-    message: retrievedTranslation || ctx.defaultError,
+    // ---
+    // Our errors are lowercase to combine them as we want
+    // In this case, for field highligh we want the sentence to be uppercase on the first letter
+    message: retrievedTranslation ? capitalizeFirstLetter(retrievedTranslation) : ctx.defaultError,
   };
 };
 

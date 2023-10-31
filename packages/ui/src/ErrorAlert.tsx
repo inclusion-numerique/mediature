@@ -8,7 +8,7 @@ import z from 'zod';
 
 import { formatMessageFromIssue } from '@mediature/main/src/i18n';
 import { CustomError, internalServerErrorError, unexpectedErrorError } from '@mediature/main/src/models/entities/errors';
-import { formatMessageFromCustomError } from '@mediature/main/src/models/entities/errors/helpers';
+import { capitalizeFirstLetter, formatMessageFromCustomError } from '@mediature/main/src/models/entities/errors/helpers';
 import { AppRouter } from '@mediature/main/src/server/app-router';
 
 // import { QueryObserverResult, RefetchOptions } from '@tansack/query-core';
@@ -79,7 +79,8 @@ export function ErrorAlert(props: ErrorAlertProps) {
     }
 
     // Remove duplicates since it has no value
-    return [...new Set(errs)];
+    // and uppercase the first letter of each since our errors are lowercase by default to combine them as we want
+    return [...new Set(errs)].map((err) => capitalizeFirstLetter(err));
   }, [props.errors]);
 
   return (

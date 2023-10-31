@@ -36,3 +36,7 @@ export const formatMessageFromCustomError = (error: CustomError): string | null 
 
   return null;
 };
+
+export function capitalizeFirstLetter(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
