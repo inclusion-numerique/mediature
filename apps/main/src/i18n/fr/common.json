@@ -94,14 +94,110 @@
       "unexpectedError": "une erreur inattendue est survenue, veuillez retenter"
     },
     "validation": {
+      "address": {
+        "city": {
+          "too_big": "la ville doit faire {{maximum}} caractères maximum",
+          "too_small_one": "la ville est requise"
+        },
+        "countryCode": {
+          "countryInvalid": "le pays saisi est invalide"
+        },
+        "postalCode": {
+          "too_big": "le code postal doit faire {{maximum}} caractères maximum",
+          "too_small_one": "le code postal est requis"
+        },
+        "street": {
+          "too_big": "le numéro et la voie doivent faire {{maximum}} caractères maximum",
+          "too_small_one": "le numéro et la voie sont requis"
+        }
+      },
+      "cannotCloseCaseWithoutOutcome": "vous devez spécifier un type de clôture lorsque vous clôturer le dossier",
+      "cannotHadPreviousRequestAnswerIfNoDeclaredRequest": "vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant",
+      "cannotHaveCompetentThirdPartyIfMarkedAsCompetent": "vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué que la collectivité n'est pas compétente pour traiter le dossier",
+      "cannotSetCaseDomainIfNotMarkedAsCompetent": "vous ne pouvez pas préciser un domaine pour ce dossier si vous indiquez que la collectivité n'a pas la compétence pour le traiter",
+      "caseCannotHadPreviousRequestAnswerIfNoDeclaredRequest": "un dossier ne peut pas avoir eu une réponse de l'administration s'il est indiqué qu'aucune requête n'a été faite auparavant",
+      "caseCannotHaveCompetentThirdPartyIfMarkedAsCompetent": "une entité tierce compétente ne peut être définie que si le dossier est marqué avec \"non-compétence\"",
+      "caseMustHaveOutcomeWhenClosed": "un type de clôture doit être spécifié quand le dossier est clôturé",
+      "content": {
+        "invalid_type": "ce champ ne peut pas être vide",
+        "lexicalFieldInvalidFormat": "ce champ texte a un mauvais formattage",
+        "lexicalFieldRequired": "ce champ ne peut pas être vide"
+      },
       "currentPassword": {
         "too_small_one": "le mot de passe actuel est requis"
       },
+      "description": {
+        "too_small_one": "la description est requise"
+      },
+      "email": {
+        "invalid_string": "l'email n'est pas valide",
+        "too_small_one": "l'email est requis"
+      },
+      "firstname": {
+        "too_small_one": "le prénom est requis"
+      },
+      "initiatedFrom": {
+        "invalid_enum_value": "le mode de saisine est requis"
+      },
+      "invitationToken": {
+        "too_small_one": "le jeton d'invitation est requis"
+      },
+      "inviteeEmail": {
+        "invalid_string": "l'email n'est pas valide",
+        "too_small_one": "l'email est requis"
+      },
+      "lastname": {
+        "too_small_one": "le nom de famille est requis"
+      },
+      "mustProvideAtLeastOneInformationToBeReached": "vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone",
+      "name": {
+        "too_small_one": "le nom est requis"
+      },
       "newPassword": {
         "passwordRequiresANumeric": "le nouveau mot de passe doit contenir au moins un chiffre",
+        "passwordRequiresASpecialCharacters": "le nouveau mot de passe doit contenir au moins un caractère spécial (@,!,?...)",
         "passwordRequiresHeightCharacters": "le nouveau mot de passe doit contenir au moins 8 caractères",
         "passwordRequiresLowerAndUpperCharacters": "le nouveau mot de passe doit contenir au moins une majuscule et une minuscule",
-        "passwordRequiresASpecialCharacters": "le nouveau mot de passe doit contenir au moins un caractère spécial (@,!,?...)"
+        "too_small_one": "le nouveau mot de passe est requis"
+      },
+      "password": {
+        "passwordRequiresANumeric": "le mot de passe doit contenir au moins un chiffre",
+        "passwordRequiresASpecialCharacters": "le mot de passe doit contenir au moins un caractère spécial (@,!,?...)",
+        "passwordRequiresHeightCharacters": "le mot de passe doit contenir au moins 8 caractères",
+        "passwordRequiresLowerAndUpperCharacters": "le mot de passe doit contenir au moins une majuscule et une minuscule",
+        "too_small_one": "le mot de passe est requis"
+      },
+      "phone": {
+        "countryCode": {
+          "countryInvalid": "le pays saisi est invalide"
+        },
+        "number": {
+          "too_big": "le numéro de téléphone doit faire {{maximum}} caractères maximum",
+          "too_small_one": "le numéro de téléphone est requis"
+        },
+        "phoneCombinationInvalid": "le numéro de téléphone doit avoir une combinaison valide",
+        "phoneCombinationInvalidWithLeadingZeroWarning": "le numéro de téléphone doit avoir une combinaison valide, peut-être un zéro en trop devant",
+        "phoneInvalid": "le numéro de téléphone doit être valide"
+      },
+      "slug": {
+        "invalid_string": "l'identifiant technique peut seulement contenir des tirets (-) et des lettres minuscules",
+        "too_big": "l'identifiant technique doit faire {{maximum}} caractères maximum",
+        "too_small_one": "l'identifiant technique est requis"
+      },
+      "subject": {
+        "too_small_one": "le sujet est requis"
+      },
+      "termsAccepted": {
+        "invalid_literal": "les conditions générales d'utilisation doivent être acceptées"
+      },
+      "to": {
+        "too_small": "au moins un destinaire est requis"
+      },
+      "token": {
+        "too_small_one": "le jeton est requis"
+      },
+      "type": {
+        "invalid_enum_value": "le type est requis"
       }
     }
   },

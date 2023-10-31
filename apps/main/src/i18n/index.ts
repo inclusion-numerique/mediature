@@ -143,7 +143,7 @@ export const useServerTranslation = getServerTranslation;
 // Bind zod validation errors to i18next to reuse translations (on frontend and backend)
 //
 
-export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage, subpath: string, parameters: any): string | null => {
+export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage, subpath: string | null, parameters: any): string | null => {
   // For custom error the usual zod code is similar to the "error ID" (or error type)
   let code: z.ZodIssueOptionalMessage['code'];
   if (issue.code === z.ZodIssueCode.custom) {
@@ -152,7 +152,7 @@ export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage,
     code = issue.code;
   }
 
-  const fullI18nPath = `errors.validation.${subpath}.${code}`;
+  const fullI18nPath = !!subpath ? `errors.validation.${subpath}.${code}` : `errors.validation.${code}`;
   const translation = i18n.t(fullI18nPath, parameters);
 
   return translation !== fullI18nPath ? translation : null;
@@ -161,27 +161,25 @@ export const getIssueTranslationWithSubpath = (issue: z.ZodIssueOptionalMessage,
 export const formatMessageFromIssue = (issue: z.ZodIssueOptionalMessage): string | null => {
   const { code, path, message, ...potentialParameters } = issue;
 
-  if (path.length > 0) {
-    // Since there is no issue code for "required/nonempty" and we have to use `min(1)`
-    // We need to distinguish them during translation: `0..1` for a required field, `2+` for the minimum rule
-    // Note: we could have kept just one and managing it by keeping in mind for a specific field...
-    if (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') {
-      (potentialParameters as any).count = issue.minimum;
-    }
+  // Since there is no issue code for "required/nonempty" and we have to use `min(1)`
+  // We need to distinguish them during translation: `0..1` for a required field, `2+` for the minimum rule
+  // Note: we could have kept just one and managing it by keeping in mind for a specific field...
+  if (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') {
+    (potentialParameters as any).count = issue.minimum;
+  }
 
-    const valuablePathParts = path.filter((v) => typeof v === 'string') as string[];
-    const formattedI18nSubpath = valuablePathParts.join('.'); // Skip number since arrays have no sense for i18n paths
-    let translation = getIssueTranslationWithSubpath(issue, formattedI18nSubpath, potentialParameters);
+  const valuablePathParts = path.filter((v) => typeof v === 'string') as string[];
+  const formattedI18nSubpath = valuablePathParts.length > 0 ? valuablePathParts.join('.') : null; // Skip number since arrays have no sense for i18n paths
+  let translation = getIssueTranslationWithSubpath(issue, formattedI18nSubpath, potentialParameters);
 
-    // If not found try without path first parts
-    if (!translation) {
-      translation = getIssueTranslationWithSubpath(issue, valuablePathParts[valuablePathParts.length - 1], potentialParameters);
-    }
+  // If not found try without path first parts
+  if (!translation) {
+    translation = getIssueTranslationWithSubpath(issue, valuablePathParts[valuablePathParts.length - 1], potentialParameters);
+  }
 
-    // Also check it's not an object if not end i18n translation
-    if (!!translation && typeof translation !== 'object') {
-      return translation;
-    }
+  // Also check it's not an object if not end i18n translation
+  if (!!translation && typeof translation !== 'object') {
+    return translation;
   }
 
   return null;

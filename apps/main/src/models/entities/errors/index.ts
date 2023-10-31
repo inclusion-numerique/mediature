@@ -59,6 +59,55 @@ export const passwordRequiresASpecialCharactersError = new BusinessError(
   t('errors.validation.newPassword.passwordRequiresASpecialCharacters')
 );
 
+export const phoneCombinationInvalidError = new BusinessError('phoneCombinationInvalid', t('errors.validation.phone.phoneCombinationInvalid'));
+export const phoneCombinationInvalidWithLeadingZeroWarningError = new BusinessError(
+  'phoneCombinationInvalidWithLeadingZeroWarning',
+  t('errors.validation.phone.phoneCombinationInvalidWithLeadingZeroWarning')
+);
+export const phoneInvalidError = new BusinessError('phoneInvalid', t('errors.validation.phone.phoneInvalid'));
+
+export const lexicalFieldRequiredError = new BusinessError('lexicalFieldRequired', t('errors.validation.content.lexicalFieldRequired'));
+export const lexicalFieldInvalidFormatError = new BusinessError(
+  'lexicalFieldInvalidFormat',
+  t('errors.validation.content.lexicalFieldInvalidFormat')
+);
+
+export const caseCannotHadPreviousRequestAnswerIfNoDeclaredRequestError = new BusinessError(
+  'caseCannotHadPreviousRequestAnswerIfNoDeclaredRequest',
+  t('errors.validation.caseCannotHadPreviousRequestAnswerIfNoDeclaredRequest')
+);
+export const caseCannotHaveCompetentThirdPartyIfMarkedAsCompetentError = new BusinessError(
+  'caseCannotHadPreviousRequestAnswerIfNoDeclaredRequest',
+  t('errors.validation.caseCannotHadPreviousRequestAnswerIfNoDeclaredRequest')
+);
+export const caseMustHaveOutcomeWhenClosedError = new BusinessError(
+  'caseMustHaveOutcomeWhenClosed',
+  t('errors.validation.caseMustHaveOutcomeWhenClosed')
+);
+
+export const mustProvideAtLeastOneInformationToBeReachedError = new BusinessError(
+  'mustProvideAtLeastOneInformationToBeReached',
+  t('errors.validation.mustProvideAtLeastOneInformationToBeReached')
+);
+export const cannotHadPreviousRequestAnswerIfNoDeclaredRequestError = new BusinessError(
+  'cannotHadPreviousRequestAnswerIfNoDeclaredRequest',
+  t('errors.validation.cannotHadPreviousRequestAnswerIfNoDeclaredRequest')
+);
+export const cannotHaveCompetentThirdPartyIfMarkedAsCompetentError = new BusinessError(
+  'cannotHaveCompetentThirdPartyIfMarkedAsCompetent',
+  t('errors.validation.cannotHaveCompetentThirdPartyIfMarkedAsCompetent')
+);
+export const cannotSetCaseDomainIfNotMarkedAsCompetentError = new BusinessError(
+  'cannotSetCaseDomainIfNotMarkedAsCompetent',
+  t('errors.validation.cannotSetCaseDomainIfNotMarkedAsCompetent')
+);
+export const cannotCloseCaseWithoutOutcomeError = new BusinessError(
+  'cannotCloseCaseWithoutOutcome',
+  t('errors.validation.cannotCloseCaseWithoutOutcome')
+);
+
+export const countryInvalidError = new BusinessError('countryInvalid', t('errors.validation.address.countryCode.countryInvalid'));
+
 // File upload
 export const fileIdMalformatedError = new BusinessError('fileIdMalformated', t('errors.custom.fileIdMalformated'));
 export const fileNotFoundError = new BusinessError('fileNotFound', t('errors.custom.fileNotFound'));

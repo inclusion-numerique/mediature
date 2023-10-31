@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { lexicalFieldInvalidFormatError, lexicalFieldRequiredError } from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
 import { createHeadlessEditorFromInlineState, editorStateToText, validateEditorStateFromEditor } from '@mediature/ui/src/utils/lexical';
 
 // We differenciate `EditorState` from getters and mutations because as Lexical evolves it has schema changes (more or less properties even if empty)
@@ -19,16 +21,10 @@ export const EditorStateInputSchema = EditorStateSchema.superRefine((val, ctx) =
     const textContent = editorStateToText(editor);
 
     if (textContent === '') {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `ce champ ne peut pas être vide`,
-      });
+      ctx.addIssue(customErrorToZodIssue(lexicalFieldRequiredError));
     }
   } catch (err) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `ce champ texte a un mauvais formattage`,
-    });
+    ctx.addIssue(customErrorToZodIssue(lexicalFieldInvalidFormatError));
   }
 });
 export type EditorStateInputSchemaType = z.infer<typeof EditorStateInputSchema>;

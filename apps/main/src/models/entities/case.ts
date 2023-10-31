@@ -3,6 +3,12 @@ import z from 'zod';
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentSchema, UiAttachmentSchema } from '@mediature/main/src/models/entities/attachment';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
+import {
+  caseCannotHadPreviousRequestAnswerIfNoDeclaredRequestError,
+  caseCannotHaveCompetentThirdPartyIfMarkedAsCompetentError,
+  caseMustHaveOutcomeWhenClosedError,
+} from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
 import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 
 export const CasePlatformSchema = z.enum(['OFFICE', 'MAIL', 'PHONE', 'EMAIL', 'WEB']);
@@ -97,24 +103,15 @@ export const incompleteCaseSchema = z
 export const CaseSchema = incompleteCaseSchema.superRefine((data, ctx) => {
   if (data) {
     if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `un dossier ne peut pas avoir eu une réponse de l'administration s'il est indiqué qu'aucune requête n'a été faite auparavant.`,
-      });
+      ctx.addIssue(customErrorToZodIssue(caseCannotHadPreviousRequestAnswerIfNoDeclaredRequestError));
     }
 
     if (data.competent === true && data.competentThirdParty !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `une entité tierce compétente ne peut être définie que si le dossier est marqué avec "non-compétence"`,
-      });
+      ctx.addIssue(customErrorToZodIssue(caseCannotHaveCompetentThirdPartyIfMarkedAsCompetentError));
     }
 
     if (data.closedAt && data.outcome === null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `un type de clôture doit être spécifié quand le dossier est clôturé`,
-      });
+      ctx.addIssue(customErrorToZodIssue(caseMustHaveOutcomeWhenClosedError));
     }
   }
 });

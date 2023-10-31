@@ -2,6 +2,12 @@ import { PhoneNumberFormat, PhoneNumberUtil } from 'google-libphonenumber';
 import z from 'zod';
 
 import { CountryCodeSchema } from '@mediature/main/src/models/entities/country';
+import {
+  phoneCombinationInvalidError,
+  phoneCombinationInvalidWithLeadingZeroWarningError,
+  phoneInvalidError,
+} from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
 
 const phoneNumberUtil = PhoneNumberUtil.getInstance();
 
@@ -43,25 +49,16 @@ export const PhoneInputSchema = z
         // but in addition we want for consistency to always store numbers with full facultative parts like the region that can be omitted for US states for exampel
         // `isValidNumber` does the job for this check!
         if (!phoneNumberUtil.isValidNumber(parsedPhone)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `le numéro de téléphone doit avoir une combinaison valide`,
-          });
+          ctx.addIssue(customErrorToZodIssue(phoneCombinationInvalidError));
         }
 
         // Just in case compare potential and computed ones since to avoid leading zeros on national number to be stored
         const e164PhoneNumber = phoneNumberUtil.format(parsedPhone, PhoneNumberFormat.E164);
         if (potentialE164PhoneNumber !== e164PhoneNumber) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `le numéro de téléphone doit avoir une combinaison valide, peut-être un zéro en trop devant`,
-          });
+          ctx.addIssue(customErrorToZodIssue(phoneCombinationInvalidWithLeadingZeroWarningError));
         }
       } catch (err) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `le numéro de téléphone doit être valide`,
-        });
+        ctx.addIssue(customErrorToZodIssue(phoneInvalidError));
       }
     }
   });
