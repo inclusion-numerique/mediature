@@ -1,6 +1,7 @@
 import { createHeadlessEditor } from '@lexical/headless';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import { $isMarkNode, $unwrapMarkNode } from '@lexical/mark';
+import * as Sentry from '@sentry/nextjs';
 import type { JSDOM } from 'jsdom';
 import { $createParagraphNode, $getRoot, $isElementNode, LexicalEditor, LexicalNode, ParagraphNode } from 'lexical';
 
@@ -11,6 +12,9 @@ export function createPlaygroundHeadlessEditor(): LexicalEditor {
     nodes: PlaygroundNodes,
     onError: (err) => {
       console.error(err);
+
+      // This report does not provide metadata about the user but can be guessed logs around this above one
+      Sentry.captureException(err);
     },
   });
 }

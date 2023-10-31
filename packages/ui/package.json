@@ -38,6 +38,7 @@
     "@lexical/utils": "0.11.2",
     "@luma-team/mjml-react": "^0.2.0",
     "@react-pdf/renderer": "^3.1.6",
+    "@sentry/nextjs": "^7.75.1",
     "@trpc/client": "^10.4.2",
     "country-data": "^0.0.31",
     "date-fns": "^2.29.3",

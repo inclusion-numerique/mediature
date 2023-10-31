@@ -10,6 +10,7 @@ overrides:
   '@mui/lab': 5.0.0-alpha.118
   '@mui/material': ^5.10.16
   '@react-pdf/renderer': ^3.1.6
+  '@sentry/nextjs': ^7.75.1
   '@storybook/instrumenter': 7.0.0-beta.41
   '@storybook/react': 7.0.0-beta.41
   '@storybook/testing-library': 0.0.14-next.1
@@ -911,6 +912,9 @@ importers:
       '@react-pdf/renderer':
         specifier: ^3.1.6
         version: 3.1.6(react@18.2.0)
+      '@sentry/nextjs':
+        specifier: ^7.75.1
+        version: 7.75.1(next@13.1.6)(react@18.2.0)
       '@trpc/client':
         specifier: ^10.4.2
         version: 10.4.3
@@ -8563,8 +8567,8 @@ packages:
       '@storybook/global': 5.0.0
     dev: true
 
-  /@storybook/client-logger@7.6.0-alpha.2:
-    resolution: {integrity: sha512-HhoeGMc1SYLwR/bGoMjhUUAqxqTw3C9Z8G3+FiNI6J2Ape0AGKdSFhJ5sRx4j1K9iVaBFqsFh70Ba01JezGSIQ==}
+  /@storybook/client-logger@7.6.0-alpha.3:
+    resolution: {integrity: sha512-QWLLAuwaTgwdbQ9hJc6sHVjFIH+dh7E6C63MwxWaAN39+nxKYln25xcZaf3bpNvtwHWU8H5ULyE9Q2vGdURMuw==}
     dependencies:
       '@storybook/global': 5.0.0
 
@@ -9564,7 +9568,7 @@ packages:
   /@storybook/testing-library@0.0.14-next.1:
     resolution: {integrity: sha512-1CAl40IKIhcPaCC4pYCG0b9IiYNymktfV/jTrX7ctquRY3akaN7f4A1SippVHosksft0M+rQTFE0ccfWW581fw==}
     dependencies:
-      '@storybook/client-logger': 7.6.0-alpha.2
+      '@storybook/client-logger': 7.6.0-alpha.3
       '@storybook/instrumenter': 7.0.0-beta.41
       '@testing-library/dom': 8.19.0
       '@testing-library/user-event': 13.5.0(@testing-library/dom@8.19.0)
