@@ -13,6 +13,6 @@
   position: relative;
   tab-size: 1;
   outline: 0;
-  padding: 8px 28px;
+  padding: 8px 28px 56px; /* Since at the bottom we have vocal and lock buttons we add some padding so text at the bottom will never be hidden when fully scrolled down (8px + 40px(button height) + 8px) */
   min-height: calc(100% - 16px);
 }
