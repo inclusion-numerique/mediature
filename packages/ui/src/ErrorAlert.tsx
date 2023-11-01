@@ -23,25 +23,8 @@ export interface ErrorAlertProps extends Pick<AlertProps, 'sx'> {
 export function ErrorAlert(props: ErrorAlertProps) {
   const { t } = useTranslation('common');
 
-  if (props.errors.length === 0) {
-    return <></>;
-  }
-
-  const retry = props.refetchs
-    ? ((refetchs: ((options?: any) => Promise<any>)[]) => {
-        return async () => {
-          await Promise.all(
-            refetchs.map((refetch) => {
-              return refetch();
-            })
-          );
-        };
-      })(props.refetchs)
-    : null;
-
-  let containsServerError: boolean = true;
-
-  const errors = useMemo(() => {
+  const { errors, containsServerError } = useMemo(() => {
+    let containsServerError: boolean = false;
     let errs: string[] = [];
     for (const error of props.errors) {
       if (error instanceof Error && error.name === 'TRPCClientError') {
@@ -78,10 +61,29 @@ export function ErrorAlert(props: ErrorAlertProps) {
       }
     }
 
-    // Remove duplicates since it has no value
-    // and uppercase the first letter of each since our errors are lowercase by default to combine them as we want
-    return [...new Set(errs)].map((err) => capitalizeFirstLetter(err));
-  }, [props.errors]);
+    return {
+      containsServerError,
+      // Remove duplicates since it has no value
+      // and uppercase the first letter of each since our errors are lowercase by default to combine them as we want
+      errors: [...new Set(errs)].map((err) => capitalizeFirstLetter(err)),
+    };
+  }, [props.errors, t]);
+
+  if (props.errors.length === 0) {
+    return <></>;
+  }
+
+  const retry = props.refetchs
+    ? ((refetchs: ((options?: any) => Promise<any>)[]) => {
+        return async () => {
+          await Promise.all(
+            refetchs.map((refetch) => {
+              return refetch();
+            })
+          );
+        };
+      })(props.refetchs)
+    : null;
 
   return (
     <Alert
