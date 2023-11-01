@@ -151,7 +151,9 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   <TextField
                     select
                     label="Accord des parties ?"
-                    defaultValue={control._defaultValues.collectiveAgreement || ''}
+                    defaultValue={
+                      typeof control._defaultValues.collectiveAgreement === 'boolean' ? control._defaultValues.collectiveAgreement.toString() : ''
+                    }
                     onChange={(event) => {
                       setValue('collectiveAgreement', event.target.value === '' ? null : event.target.value === 'true', {
                         // shouldValidate: true,
@@ -173,7 +175,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   <TextField
                     select
                     label="Poursuite au tribunal administratif ?"
-                    defaultValue={control._defaultValues.administrativeCourtNext || ''}
+                    defaultValue={
+                      typeof control._defaultValues.administrativeCourtNext === 'boolean'
+                        ? control._defaultValues.administrativeCourtNext.toString()
+                        : ''
+                    }
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
                         // shouldValidate: true,
