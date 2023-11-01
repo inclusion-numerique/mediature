@@ -62,8 +62,11 @@ export function SignUpPage() {
             Inscription
           </Typography>
           <Typography component="p" variant="subtitle1" sx={{ mb: 3 }}>
-            Vous avez été invité à rejoindre la plateforme par {invitation.issuer.firstname} {invitation.issuer.lastname}. Vous pouvez modifier les
-            informations ci-dessous qui ont été pré-renseignées.
+            Vous avez été invité à rejoindre la plateforme par{' '}
+            <span data-sentry-mask>
+              {invitation.issuer.firstname} {invitation.issuer.lastname}
+            </span>
+            . Vous pouvez modifier les informations ci-dessous qui ont été pré-renseignées.
           </Typography>
           <ContextualSignUpForm
             prefill={SignUpPrefillSchema.parse({

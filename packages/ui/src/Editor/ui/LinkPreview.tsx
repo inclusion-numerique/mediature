@@ -62,7 +62,7 @@ function LinkPreviewContent({
       {preview.img && (
         <div className="LinkPreview__imageWrapper">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={preview.img} alt={preview.title} className="LinkPreview__image" />
+          <img src={preview.img} alt={preview.title} className="LinkPreview__image" data-sentry-block />
         </div>
       )}
       {preview.domain && <div className="LinkPreview__domain">{preview.domain}</div>}

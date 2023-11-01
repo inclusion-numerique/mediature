@@ -56,6 +56,7 @@ export function AuthorityPage({ params: { authorityId } }: AuthorityPageProps) {
             objectFit: 'contain',
             margin: '0 auto 20px',
           }}
+          data-sentry-block
         />
       )}
       <Typography component="h1" variant="h4" sx={{ textAlign: 'center', mt: 1, mb: { xs: 2, sm: 4 } }}>

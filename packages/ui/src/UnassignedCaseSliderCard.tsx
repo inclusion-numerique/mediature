@@ -58,7 +58,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
       description: (
         <>
           Voulez-vous vous attribuer le dossier de{' '}
-          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+          <Typography component="span" sx={{ fontWeight: 'bold' }} data-sentry-mask>
             {props.citizen.firstname} {props.citizen.lastname}
           </Typography>{' '}
           ?
@@ -101,13 +101,13 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
               <Typography component="div" color={isReminderSoon(props.case.termReminderAt) ? 'error' : 'primary'}>
                 <Grid container direction="row" alignItems="center">
                   <AccessTimeIcon sx={{ mr: '5px' }} />
-                  <span>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
+                  <span data-sentry-mask>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
                 </Grid>
               </Typography>
             </Grid>
           )}
           <Grid item xs={12}>
-            <Grid container spacing={2} sx={{ justifyContent: 'space-between' }}>
+            <Grid container spacing={2} sx={{ justifyContent: 'space-between' }} data-sentry-mask>
               <Grid item xs="auto" sx={{ display: 'flex', alignItems: 'center' }}>
                 <Link component={NextLink} href={props.caseLink} variant="h5" color="inherit" underline="none" style={{ fontWeight: 600 }}>
                   {props.citizen.firstname} {props.citizen.lastname}
@@ -143,6 +143,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
                           color="inherit"
                           underline="none"
                           style={{ fontWeight: 600 }}
+                          data-sentry-mask
                         >
                           Dossier n°{similarCase.humanId}
                         </Link>
@@ -163,7 +164,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Adresse :
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" data-sentry-mask>
               {props.citizen.address
                 ? addressFormatter.format({
                     street: props.citizen.address.street,
@@ -179,7 +180,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Téléphone :
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" data-sentry-mask>
               {props.citizen.phone ? phoneNumberUtil.format(convertModelToGooglePhoneNumber(props.citizen.phone), PhoneNumberFormat.NATIONAL) : '-'}
             </Typography>
           </Grid>
@@ -187,7 +188,9 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
             <Typography component="span" variant="subtitle1" sx={{ fontWeight: 'bold' }}>
               Email :
             </Typography>
-            <Typography variant="body1">{props.citizen.email || '-'}</Typography>
+            <Typography variant="body1" data-sentry-mask>
+              {props.citizen.email || '-'}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Divider variant="fullWidth" sx={{ p: 0 }} />
@@ -198,7 +201,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
                 Premier recours à l&apos;amiable ?
               </Typography>
               <br />
-              <Chip label={props.case.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} />
+              <Chip label={props.case.alreadyRequestedInThePast ? t('boolean.true') : t('boolean.false')} data-sentry-mask />
             </Grid>
           )}
           {props.case.alreadyRequestedInThePast && props.case.gotAnswerFromPreviousRequest !== null && (
@@ -207,7 +210,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
                 Réponse de l&apos;organisme ?
               </Typography>
               <br />
-              <Chip label={props.case.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')} />
+              <Chip label={props.case.gotAnswerFromPreviousRequest ? t('boolean.true') : t('boolean.false')} data-sentry-mask />
             </Grid>
           )}
           <Grid item xs={12}>
@@ -222,6 +225,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
                 wordBreak: 'break-word', // Needed in case of word/sentence bigger than parent width
                 // fontFamily: 'auto', // TODO: it does not render properly on Storybook at first render probably since fonts are not loaded fully when rendering. Need to check into Next.js and see if a workaround is needed or not. "auto" is for example becasue it sets a basic font but it works directly
               }}
+              data-sentry-mask
             >
               <ShowMoreText lines={4} more="Voir plus" less="Voir moins">
                 {props.case.description}
@@ -237,7 +241,7 @@ export function UnassignedCaseSliderCard(props: UnassignedCaseSliderCardProps) {
                 {props.attachments.map((attachment) => {
                   return (
                     <Grid key={attachment.id} item component="li">
-                      <Chip label={attachment.name as string} />
+                      <Chip label={attachment.name as string} data-sentry-mask />
                     </Grid>
                   );
                 })}

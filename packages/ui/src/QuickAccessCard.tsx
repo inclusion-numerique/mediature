@@ -47,6 +47,7 @@ export function QuickAccessCard(props: QuickAccessCardProps) {
             style={{
               objectFit: 'contain',
             }}
+            data-sentry-block
           />
         </Box>
       ) : (
@@ -60,7 +61,7 @@ export function QuickAccessCard(props: QuickAccessCardProps) {
           }}
         />
       )}
-      <Button component={NextLink} href={props.link} size="large" variant="contained" fullWidth sx={{ mt: 1 }}>
+      <Button component={NextLink} href={props.link} size="large" variant="contained" fullWidth sx={{ mt: 1 }} data-sentry-mask>
         {props.text}
       </Button>
     </Card>

@@ -23,6 +23,7 @@ const getElement = (): HTMLElement => {
     element.style.background = 'rgba(240, 240, 240, 0.4)';
     element.style.borderRadius = '20px';
     element.style.zIndex = '1500';
+    element.setAttribute('data-sentry-mask', '');
 
     if (document.body) {
       document.body.appendChild(element);

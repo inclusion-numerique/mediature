@@ -54,7 +54,9 @@ export function HeaderAuthoritySwitchItem(props: PropsWithChildren<HeaderAuthori
             {/* <Grid item>
               <Avatar fullName={`${props.currentAuthority.name}`} />
             </Grid> */}
-            <Grid item>{props.currentAuthority.name}</Grid>
+            <Grid item data-sentry-mask>
+              {props.currentAuthority.name}
+            </Grid>
           </>
         ) : (
           <Grid item>Sélectionner une collectivité</Grid>
@@ -82,6 +84,7 @@ export function HeaderAuthoritySwitchItem(props: PropsWithChildren<HeaderAuthori
                   authorityId: authority.id,
                 })}
                 selected={authority.id === props.currentAuthority?.id}
+                data-sentry-mask
               >
                 {authority.name}
               </MenuItem>

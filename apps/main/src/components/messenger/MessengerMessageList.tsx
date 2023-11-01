@@ -48,6 +48,7 @@ export function MessengerMessageList({ messages, selectedMessage, onMessageClick
                   px: 2,
                   py: 3,
                 }}
+                data-sentry-mask
               >
                 <ListItemAvatar sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Avatar fullName={message.from.name || message.from.email} size={40} />

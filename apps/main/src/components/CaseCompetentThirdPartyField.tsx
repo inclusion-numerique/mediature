@@ -37,7 +37,11 @@ function ItemActions(props: ItemActionsProps) {
 
   const deleteCaseCompetentThirdPartyItemAction = async () => {
     showConfirmationDialog({
-      description: <>Êtes-vous sûr de vouloir supprimer l&apos;entité tierce &quot;{props.item.name}&quot; ?</>,
+      description: (
+        <>
+          Êtes-vous sûr de vouloir supprimer l&apos;entité tierce &quot;<span data-sentry-mask>{props.item.name}</span>&quot; ?
+        </>
+      ),
       onConfirm: async () => {
         await deleteCaseCompetentThirdPartyItem.mutateAsync({
           authorityId: props.authorityId,

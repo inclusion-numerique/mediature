@@ -115,6 +115,7 @@ export function CaseList(props: CaseListProps) {
                 href={linkRegistry.get('case', { authorityId: params.row.case.authorityId, caseId: params.row.case.id })}
                 color="inherit"
                 underline="none"
+                data-sentry-mask
               >
                 {params.row.citizen.firstname} {params.row.citizen.lastname}
               </Link>
@@ -123,7 +124,7 @@ export function CaseList(props: CaseListProps) {
               )}
             </Typography>
             {!!params.row.agent && (
-              <Typography component="div" variant="body2">
+              <Typography component="div" variant="body2" data-sentry-mask>
                 Assigné à {params.row.agent.firstname} {params.row.agent.lastname}
               </Typography>
             )}
@@ -152,7 +153,7 @@ export function CaseList(props: CaseListProps) {
           <Typography component="div" color={isReminderSoon(params.row.case.termReminderAt) ? 'error' : 'primary'}>
             <Grid container direction="row" alignItems="center">
               <AccessTimeIcon sx={{ mr: '5px' }} />
-              <span>{t('date.short', { date: params.row.case.termReminderAt })}</span>
+              <span data-sentry-mask>{t('date.short', { date: params.row.case.termReminderAt })}</span>
             </Grid>
           </Typography>
         );
@@ -214,6 +215,7 @@ export function CaseList(props: CaseListProps) {
             },
           }}
           aria-label="liste des dossiers"
+          data-sentry-mask
         />
       ) : (
         <>

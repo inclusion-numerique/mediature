@@ -22,7 +22,11 @@ export function AdminList({ admins }: AdminListProps) {
     showConfirmationDialog({
       description: (
         <>
-          Êtes-vous sûr de vouloir enlever les droits d&apos;administrateur de {admin.firstname} {admin.lastname} ?
+          Êtes-vous sûr de vouloir enlever les droits d&apos;administrateur de{' '}
+          <span data-sentry-mask>
+            {admin.firstname} {admin.lastname}
+          </span>{' '}
+          ?
         </>
       ),
       onConfirm: async () => {
@@ -87,6 +91,7 @@ export function AdminList({ admins }: AdminListProps) {
         disableSelectionOnClick
         // loading={false}
         aria-label="liste des administrateurs"
+        data-sentry-mask
       />
     </>
   );

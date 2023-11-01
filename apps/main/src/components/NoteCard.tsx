@@ -86,6 +86,7 @@ export function NoteCard(props: NoteCardProps) {
                   sx={{
                     textColor: 'text.tertiary',
                   }}
+                  data-sentry-mask
                 >
                   {t('date.short', { date: props.note.date })}
                 </Typography>
@@ -99,6 +100,7 @@ export function NoteCard(props: NoteCardProps) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
+                  data-sentry-mask
                 >
                   {inlineEditorStateToText(props.note.content) || 'Note'}
                 </Typography>

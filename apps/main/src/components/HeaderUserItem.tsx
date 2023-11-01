@@ -59,7 +59,7 @@ export function HeaderUserItem(props: PropsWithChildren<HeaderUserItemProps>) {
         <Grid item>
           <Avatar fullName={`${props.user.firstname} ${props.user.lastname}`} />
         </Grid>
-        <Grid item>
+        <Grid item data-sentry-mask>
           {props.user.firstname} {props.user.lastname}
         </Grid>
       </Grid>

@@ -375,12 +375,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             pb: 1,
           }}
         >
-          <Typography component="b" variant="h4">
+          <Typography component="b" variant="h4" data-sentry-mask>
             {watchedGenderIdentity && <>{t(`model.citizen.genderIdentityPrefix.enum.${watchedGenderIdentity}`)} </>}
             {watch('firstname')} {watch('lastname')}
           </Typography>
           <Divider orientation="vertical" flexItem sx={{ height: '50%', mx: 2, my: 'auto' }} />
-          <Typography component="b" variant="subtitle1">
+          <Typography component="b" variant="subtitle1" data-sentry-mask>
             Dossier n°{targetedCase.humanId}
           </Typography>
           <Box ref={reminderAnchorRef} sx={{ ml: 'auto' }}>
@@ -462,7 +462,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       startIcon={<AccessTimeIcon />}
                     >
                       {targetedCase.termReminderAt ? (
-                        <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
+                        <span data-sentry-mask>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
                       ) : (
                         <span>Définir une échéance</span>
                       )}
@@ -598,7 +598,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             <Dialog open={messengerModalOpen} onClose={handleCloseMessengerModal} fullWidth maxWidth={false}>
               <DialogTitle sx={{ pb: 1 }}>
                 <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-                  <Grid item xs="auto">
+                  <Grid item xs="auto" data-sentry-mask>
                     Messagerie pour le dossier n°{targetedCase.humanId}
                     <Typography variant="caption" display="block">
                       {caseEmail}

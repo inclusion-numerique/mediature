@@ -22,7 +22,11 @@ export function InvitationList({ invitations }: InvitationListProps) {
     showConfirmationDialog({
       description: (
         <>
-          Êtes-vous sûr de vouloir annuler l&apos;invitation de {invitation.inviteeFirstname} {invitation.inviteeLastname} ?
+          Êtes-vous sûr de vouloir annuler l&apos;invitation de{' '}
+          <span data-sentry-mask>
+            {invitation.inviteeFirstname} {invitation.inviteeLastname}
+          </span>{' '}
+          ?
         </>
       ),
       onConfirm: async () => {
@@ -87,6 +91,7 @@ export function InvitationList({ invitations }: InvitationListProps) {
         disableSelectionOnClick
         // loading={false}
         aria-label="liste des invitations en cours"
+        data-sentry-mask
       />
     </>
   );

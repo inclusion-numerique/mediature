@@ -56,6 +56,7 @@ export function EditorWrapper(props: EditorWrapperProps): JSX.Element {
                 backgroundColor: fr.colors.decisions.background.overlap.grey.default,
                 borderColor: !!props.error ? muiTheme.palette.error.main : undefined,
               }}
+              data-sentry-mask
             >
               <Editor />
             </Card>

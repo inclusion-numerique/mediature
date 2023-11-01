@@ -37,7 +37,11 @@ function ItemActions(props: ItemActionsProps) {
 
   const deleteCaseDomainItemAction = async () => {
     showConfirmationDialog({
-      description: <>Êtes-vous sûr de vouloir supprimer le domaine &quot;{props.item.name}&quot; ?</>,
+      description: (
+        <>
+          Êtes-vous sûr de vouloir supprimer le domaine &quot;;<span data-sentry-mask>{props.item.name}</span>&quot; ?
+        </>
+      ),
       onConfirm: async () => {
         await deleteCaseDomainItem.mutateAsync({
           authorityId: props.authorityId,

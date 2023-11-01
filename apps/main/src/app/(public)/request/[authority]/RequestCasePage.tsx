@@ -64,6 +64,7 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
                 objectFit: 'contain',
                 margin: '0 auto 20px',
               }}
+              data-sentry-block
             />
           ) : (
             <Typography component="h2" variant="h6" align="center">

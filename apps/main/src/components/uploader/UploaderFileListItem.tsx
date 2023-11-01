@@ -95,6 +95,7 @@ export function UploaderFileListItem(props: UploaderFileListItemProps) {
           sx={{
             flexShrink: 0, // Like that if there is an error the block won't compress the filename
           }}
+          data-sentry-mask
         />
         {error && (
           <ErrorAlert
