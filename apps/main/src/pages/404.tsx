@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 
-import { ErrorPage, error404Props } from '@mediature/ui/src/ErrorPage';
+import { ErrorPage, error404Props } from '@mediature/main/src/components/ErrorPage';
 
 // This is needed because `pages` are designed for server-side only, and it fails compiling some sub-dependencies that are "modules"
 const PublicLayout = dynamic(import('@mediature/main/src/app/(public)/layout'), { ssr: false }); // Async API cannot be server-side rendered

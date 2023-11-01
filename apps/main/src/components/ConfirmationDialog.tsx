@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
 import React, { useRef, useState } from 'react';
 
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 
 export interface ConfirmationDialogProps {
   open: boolean;

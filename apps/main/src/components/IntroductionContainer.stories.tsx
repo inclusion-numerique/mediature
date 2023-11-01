@@ -5,7 +5,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import Image from 'next/image';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { IntroductionContainer } from '@mediature/ui/src/IntroductionContainer';
+import { IntroductionContainer } from '@mediature/main/src/components/IntroductionContainer';
 
 type ComponentType = typeof IntroductionContainer;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

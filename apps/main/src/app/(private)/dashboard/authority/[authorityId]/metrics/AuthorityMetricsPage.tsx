@@ -7,8 +7,8 @@ import Typography from '@mui/material/Typography';
 import { useRef, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { centeredContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface AuthorityMetricsPageProps {
   params: { authorityId: string };

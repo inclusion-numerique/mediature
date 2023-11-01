@@ -8,7 +8,7 @@ import messenger from '@mediature/main/public/assets/features/messenger.svg';
 import teamManagement from '@mediature/main/public/assets/features/team_management.svg';
 import { Feature } from '@mediature/main/src/app/(public)/features/Feature';
 import { Introduction } from '@mediature/main/src/app/(public)/features/Introduction';
-import { Contact } from '@mediature/ui/src/Contact';
+import { Contact } from '@mediature/main/src/components/Contact';
 
 export function FeaturesPage() {
   return (

@@ -15,13 +15,13 @@ import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { Avatar } from '@mediature/main/src/components/Avatar';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FileList } from '@mediature/main/src/components/FileList';
+import { LexicalRenderer } from '@mediature/main/src/components/LexicalRenderer';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
+import { useSingletonErrorDialog } from '@mediature/main/src/components/modal/useModal';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { Avatar } from '@mediature/ui/src/Avatar';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
-import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
 
 export const MessengerViewerContext = createContext({
   ContextualMessengerSender: MessengerSender,

@@ -16,12 +16,12 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseList } from '@mediature/main/src/components/CaseList';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { useUserInterfaceAuthority } from '@mediature/main/src/components/user-interface-session/useUserInterfaceSession';
 import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export enum ListFilter {
   ALL = 1,

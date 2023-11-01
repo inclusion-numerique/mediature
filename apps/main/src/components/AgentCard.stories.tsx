@@ -2,9 +2,9 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { AgentCard } from '@mediature/main/src/components/AgentCard';
 import { agentsWrappers } from '@mediature/main/src/fixtures/agent';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
-import { AgentCard } from '@mediature/ui/src/AgentCard';
 
 type ComponentType = typeof AgentCard;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

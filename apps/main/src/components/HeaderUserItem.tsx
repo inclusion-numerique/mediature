@@ -14,11 +14,11 @@ import { EventEmitter } from 'eventemitter3';
 import NextLink from 'next/link';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
+import { Avatar } from '@mediature/main/src/components/Avatar';
 import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
 import { logout } from '@mediature/main/src/utils/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { Avatar } from '@mediature/ui/src/Avatar';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface HeaderUserItemProps {

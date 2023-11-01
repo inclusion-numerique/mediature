@@ -6,11 +6,11 @@ import { createContext, useContext } from 'react';
 
 import { InviteAgentForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/agent/add/InviteAgentForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const AddAgentPageContext = createContext({
   ContextualInviteAgentForm: InviteAgentForm,

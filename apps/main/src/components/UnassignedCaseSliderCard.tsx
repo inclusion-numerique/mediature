@@ -20,6 +20,8 @@ import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
 import ShowMoreText from 'react-show-more-text';
 
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
@@ -27,8 +29,6 @@ import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { convertModelToGooglePhoneNumber } from '@mediature/ui/src/utils/phone';
 
 const phoneNumberUtil = PhoneNumberUtil.getInstance();

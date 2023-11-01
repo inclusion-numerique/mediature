@@ -11,7 +11,7 @@ import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import { FileIcon } from '@mediature/main/src/components/FileIcon';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 
 import { UiAttachmentSchemaType } from '../models/entities/attachment';
 

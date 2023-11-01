@@ -11,7 +11,9 @@ import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { UserInterfaceSessionProvider } from '@mediature/main/src/components/user-interface-session/UserInterfaceSessionProvider';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
 import {
@@ -24,8 +26,6 @@ import {
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { hasPathnameThisMatch, hasPathnameThisRoot } from '@mediature/main/src/utils/url';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export function PrivateLayout(props: PropsWithChildren) {

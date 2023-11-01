@@ -18,8 +18,8 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useState } from 'react';
 
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface AgentCardProps {

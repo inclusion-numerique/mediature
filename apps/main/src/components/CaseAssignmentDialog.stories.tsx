@@ -4,10 +4,10 @@ import { screen, userEvent, within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
+import { useSingletonModal } from '@mediature/main/src/components/modal/useModal';
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { getTRPCMock } from '@mediature/main/src/server/mock/trpc';
-import { useSingletonModal } from '@mediature/ui/src/modal/useModal';
 
 type ComponentType = typeof CaseAssignmentDialog;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

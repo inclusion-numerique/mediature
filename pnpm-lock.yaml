@@ -310,6 +310,9 @@ importers:
       '@codegouvfr/react-dsfr':
         specifier: 0.75.3
         version: 0.75.3
+      '@fragaria/address-formatter':
+        specifier: ^5.0.1
+        version: 5.0.1
       '@hookform/resolvers':
         specifier: ^2.9.10
         version: 2.9.10(react-hook-form@7.40.0)
@@ -544,6 +547,12 @@ importers:
       react-i18next:
         specifier: ^12.1.1
         version: 12.1.1(i18next@22.4.9)(react-dom@18.2.0)(react@18.2.0)
+      react-imask:
+        specifier: ^6.4.3
+        version: 6.4.3(react@18.2.0)
+      react-show-more-text:
+        specifier: ^1.6.2
+        version: 1.6.2(react@18.2.0)
       react-use:
         specifier: ^17.4.0
         version: 17.4.0(react-dom@18.2.0)(react@18.2.0)
@@ -674,6 +683,9 @@ importers:
       '@types/react-file-icon':
         specifier: ^1.0.1
         version: 1.0.1
+      '@types/react-show-more-text':
+        specifier: ^1.4.2
+        version: 1.4.2
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.12
@@ -915,9 +927,6 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.75.1
         version: 7.75.1(next@13.1.6)(react@18.2.0)
-      '@trpc/client':
-        specifier: ^10.4.2
-        version: 10.4.3
       country-data:
         specifier: ^0.0.31
         version: 0.0.31
@@ -960,18 +969,9 @@ importers:
       react-i18next:
         specifier: ^12.1.1
         version: 12.1.1(i18next@22.4.9)(react-dom@18.2.0)(react@18.2.0)
-      react-imask:
-        specifier: ^6.4.3
-        version: 6.4.3(react@18.2.0)
-      react-show-more-text:
-        specifier: ^1.6.2
-        version: 1.6.2(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
-      zod:
-        specifier: ^3.21.4
-        version: 3.21.4
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.20.2
@@ -1039,9 +1039,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.7
         version: 18.0.9
-      '@types/react-show-more-text':
-        specifier: ^1.4.2
-        version: 1.4.2
       eslint:
         specifier: ^7.32.0
         version: 7.32.0
@@ -4180,6 +4177,7 @@ packages:
 
   /@babel/polyfill@7.12.1:
     resolution: {integrity: sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==}
+    deprecated: 🚨 This package has been deprecated in favor of separate inclusion of a polyfill and regenerator-runtime (when needed). See the @babel/polyfill docs (https://babeljs.io/docs/en/babel-polyfill) for more information.
     dependencies:
       core-js: 2.6.12
       regenerator-runtime: 0.13.11
@@ -9797,12 +9795,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@trpc/client@10.4.3:
-    resolution: {integrity: sha512-VMdyLHr6PG2FlMxnbPt/6jniDBxv3Ys1hFhk0AriFDD9h4Lg9fznwGn5RI1eV5RCOAoCQ/+ZwPMSKOMBhiycTw==}
-    peerDependencies:
-      '@trpc/server': 10.4.3
-    dev: false
 
   /@trpc/client@10.4.3(@trpc/server@10.4.3):
     resolution: {integrity: sha512-VMdyLHr6PG2FlMxnbPt/6jniDBxv3Ys1hFhk0AriFDD9h4Lg9fznwGn5RI1eV5RCOAoCQ/+ZwPMSKOMBhiycTw==}

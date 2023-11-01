@@ -9,11 +9,11 @@ import agent1 from '@mediature/main/public/assets/dashboard/quick-access/agent_1
 import agent2 from '@mediature/main/public/assets/dashboard/quick-access/agent_2.png';
 import agent3 from '@mediature/main/public/assets/dashboard/quick-access/agent_3.png';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
+import { QuickAccessCard } from '@mediature/main/src/components/QuickAccessCard';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { QuickAccessCard } from '@mediature/ui/src/QuickAccessCard';
 
 export interface AuthorityPageProps {
   params: { authorityId: string };

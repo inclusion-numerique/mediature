@@ -9,12 +9,12 @@ import admin1 from '@mediature/main/public/assets/dashboard/quick-access/admin_1
 import admin2 from '@mediature/main/public/assets/dashboard/quick-access/admin_2.png';
 import agent1 from '@mediature/main/public/assets/dashboard/quick-access/agent_1.png';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
+import { QuickAccessCard } from '@mediature/main/src/components/QuickAccessCard';
 import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { QuickAccessCard } from '@mediature/ui/src/QuickAccessCard';
 
 export interface DashboardPageProps {}
 

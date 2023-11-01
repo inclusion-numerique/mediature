@@ -20,6 +20,9 @@ import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
+import { CaseCard } from '@mediature/main/src/components/CaseCard';
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
+import { useSingletonConfirmationDialog, useSingletonModal } from '@mediature/main/src/components/modal/useModal';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
@@ -27,9 +30,6 @@ import { ListDisplay } from '@mediature/main/src/utils/display';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { CaseCard } from '@mediature/ui/src/CaseCard';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
-import { useSingletonConfirmationDialog, useSingletonModal } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export const CaseListContext = createContext({

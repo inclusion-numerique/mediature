@@ -25,12 +25,12 @@ import NextLink from 'next/link';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface CaseCardProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
-import { ErrorPage, error404Props } from '@mediature/ui/src/ErrorPage';
+import { ErrorPage, error404Props } from '@mediature/main/src/components/ErrorPage';
 
 export function Error404({ error, reset }: { error: Error; reset: () => void }) {
   return (

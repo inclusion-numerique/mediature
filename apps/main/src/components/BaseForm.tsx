@@ -7,10 +7,10 @@ import { CSSProperties, FormEventHandler, MutableRefObject, PropsWithChildren, u
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { capitalizeFirstLetter } from '@mediature/main/src/models/entities/errors/helpers';
 import { stopSubmitPropagation } from '@mediature/main/src/utils/form';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface BaseFormProps<FormSchemaType extends FieldValues> {
   handleSubmit: UseFormHandleSubmit<FormSchemaType>;

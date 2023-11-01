@@ -1,7 +1,7 @@
 import { notFound as real_notFound } from 'next/navigation';
 
+import { ErrorPage, error404Props } from '@mediature/main/src/components/ErrorPage';
 import { areMocksGloballyEnabled } from '@mediature/main/src/utils/environment';
-import { ErrorPage, error404Props } from '@mediature/ui/src/ErrorPage';
 
 // The real `notFound` returns never but it prevents us from displaying an error page
 type NotFound = () => never | JSX.Element;

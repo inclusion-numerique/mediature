@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 
-import { ConfirmationDialog, ConfirmationDialogProps } from '@mediature/ui/src/ConfirmationDialog';
-import { ErrorDialog, ErrorDialogProps } from '@mediature/ui/src/ErrorDialog';
-import { ModalContext } from '@mediature/ui/src/modal/ModalContext';
+import { ConfirmationDialog, ConfirmationDialogProps } from '@mediature/main/src/components/ConfirmationDialog';
+import { ErrorDialog, ErrorDialogProps } from '@mediature/main/src/components/ErrorDialog';
+import { ModalContext } from '@mediature/main/src/components/modal/ModalContext';
 
 export const useSingletonModal = () => {
   return useContext(ModalContext);

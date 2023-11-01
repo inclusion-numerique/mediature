@@ -7,9 +7,9 @@ import { createContext, useContext } from 'react';
 import { I18nextProvider } from 'react-i18next';
 
 import { ClientProvider } from '@mediature/main/src/client/trpcClient';
+import { ModalProvider } from '@mediature/main/src/components/modal/ModalProvider';
 import { dateFnsLocales, i18n } from '@mediature/main/src/i18n';
 import { SessionProvider } from '@mediature/main/src/proxies/next-auth/react';
-import { ModalProvider } from '@mediature/ui/src/modal/ModalProvider';
 
 export const ProvidersContext = createContext({
   ContextualSessionProvider: SessionProvider,

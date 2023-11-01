@@ -22,6 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CityField } from '@mediature/main/src/components/CityField';
+import { PhoneField } from '@mediature/main/src/components/PhoneField';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import {
   RequestCasePrefillSchemaType,
@@ -34,7 +35,6 @@ import { CitizenGenderIdentitySchema, CitizenGenderIdentitySchemaType } from '@m
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 import { reactHookFormBooleanRadioGroupRegisterOptions } from '@mediature/main/src/utils/form';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 export const RequestCaseFormContext = createContext({
   ContextualUploader: Uploader,

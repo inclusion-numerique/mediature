@@ -3,8 +3,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { screen, userEvent, within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { ErrorDialog } from '@mediature/ui/src/ErrorDialog';
-import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
+import { ErrorDialog } from '@mediature/main/src/components/ErrorDialog';
+import { useSingletonErrorDialog } from '@mediature/main/src/components/modal/useModal';
 
 type ComponentType = typeof ErrorDialog;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

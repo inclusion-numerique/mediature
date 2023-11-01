@@ -9,13 +9,13 @@ import 'swiper/css/scrollbar';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import styles from '@mediature/main/src/components/UnassignedCaseSlider.module.scss';
+import { UnassignedCaseSliderCard } from '@mediature/main/src/components/UnassignedCaseSliderCard';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { wideContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
 
 export interface UnassignedCaseSliderProps {
   authorityId: string;

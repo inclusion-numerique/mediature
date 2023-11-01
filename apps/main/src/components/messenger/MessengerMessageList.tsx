@@ -8,8 +8,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
+import { Avatar } from '@mediature/main/src/components/Avatar';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { Avatar } from '@mediature/ui/src/Avatar';
 import { inlineEditorStateToText } from '@mediature/ui/src/utils/lexical';
 
 export interface MessengerMessageListProps {

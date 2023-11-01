@@ -10,11 +10,11 @@ import { createContext, useContext } from 'react';
 
 import { SignUpForm } from '@mediature/main/src/app/(visitor-only)/auth/sign-up/SignUpForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { SignUpPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const SignUpPageContext = createContext({
   ContextualSignUpForm: SignUpForm,

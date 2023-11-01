@@ -18,9 +18,9 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CreateCaseDomainItemForm } from '@mediature/main/src/components/CreateCaseDomainItemForm';
 import { EditCaseDomainItemForm } from '@mediature/main/src/components/EditCaseDomainItemForm';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { EditCaseDomainItemPrefillSchema } from '@mediature/main/src/models/actions/case';
 import { CaseDomainItemSchemaType } from '@mediature/main/src/models/entities/case';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 const filter = createFilterOptions<CaseDomainItemSchemaType>();
 

@@ -19,10 +19,10 @@ import { PropsWithChildren, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseOutcomeSchema, CaseOutcomeSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
   case: CaseSchemaType;

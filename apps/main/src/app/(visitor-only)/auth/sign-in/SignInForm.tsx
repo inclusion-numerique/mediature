@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/src/models/actions/auth';
 import {
   BusinessError,
@@ -33,7 +34,6 @@ import {
 } from '@mediature/main/src/models/entities/errors';
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 function errorCodeToError(errorCode: string): BusinessError | null {
   let error: BusinessError | null;

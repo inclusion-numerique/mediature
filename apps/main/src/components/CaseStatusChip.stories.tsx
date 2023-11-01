@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
 import { CaseStatusSchema } from '@mediature/main/src/models/entities/case';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 
 type ComponentType = typeof CaseStatusChip;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

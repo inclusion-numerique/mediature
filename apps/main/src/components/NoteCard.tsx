@@ -20,8 +20,8 @@ import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { CaseNoteSchemaType } from '@mediature/main/src/models/entities/case';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { inlineEditorStateToText } from '@mediature/ui/src/utils/lexical';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 

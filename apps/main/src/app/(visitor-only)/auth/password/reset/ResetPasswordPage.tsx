@@ -6,10 +6,10 @@ import { useSearchParams } from 'next/navigation';
 import { createContext, useContext } from 'react';
 
 import { ResetPasswordForm } from '@mediature/main/src/app/(visitor-only)/auth/password/reset/ResetPasswordForm';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { ResetPasswordPrefillSchema } from '@mediature/main/src/models/actions/auth';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export const ResetPasswordPageContext = createContext({
   ContextualResetPasswordForm: ResetPasswordForm,

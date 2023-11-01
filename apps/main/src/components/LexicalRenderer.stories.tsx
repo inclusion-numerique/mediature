@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { LexicalRenderer } from '@mediature/main/src/components/LexicalRenderer';
 import sampleAllElement from '@mediature/ui/src/Editor/sample-all-elements.lexical';
-import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
 import { inlineEditorStateFromHtml } from '@mediature/ui/src/utils/lexical';
 
 type ComponentType = typeof LexicalRenderer;

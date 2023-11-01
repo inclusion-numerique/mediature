@@ -10,8 +10,8 @@ import { UppyFile } from '@uppy/core';
 import { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FileIcon } from '@mediature/main/src/components/FileIcon';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface UploaderFileListItemProps {
   file: UppyFile;

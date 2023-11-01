@@ -4,9 +4,9 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid/DataGrid';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { InvitationSchemaType } from '@mediature/main/src/models/entities/invitation';
 import { nameof } from '@mediature/main/src/utils/typescript';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 const typedNameof = nameof<InvitationSchemaType>;
 
