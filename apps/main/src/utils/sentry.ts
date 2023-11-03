@@ -4,4 +4,6 @@ export const dsn = process.env.NODE_ENV === 'production' ? process.env.SENTRY_DS
 
 export const environment = process.env.NEXT_PUBLIC_APP_MODE;
 
-export const release = process.env.NEXT_PUBLIC_SENTRY_RELEASE;
+// During runtime this must match the value from the build so there is a connection to uploaded source maps
+// The following will be overriden by an hardcoded value as wanted thanks to Next.js `env` property
+export const release = process.env.SENTRY_RELEASE_TAG;

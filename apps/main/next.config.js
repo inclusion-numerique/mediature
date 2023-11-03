@@ -32,15 +32,20 @@ const baseUrl = new URL(getBaseUrl());
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
+  const appHumanVersion = await getHumanVersion();
+
   let standardModuleExports = {
     reactStrictMode: true,
     swcMinify: true,
     output: 'standalone', // To debug locally the `next start` it's easier to comment this line (it will avoid using `prepare-standalone.sh` + `node`)
-    env: {},
+    env: {
+      // Those will replace `process.env.*` with hardcoded values (useful when the value is calculated during the build time)
+      SENTRY_RELEASE_TAG: appHumanVersion,
+    },
     serverRuntimeConfig: {},
     publicRuntimeConfig: {
       appMode: mode,
-      appVersion: await getHumanVersion(),
+      appVersion: appHumanVersion,
     },
     i18n: i18n,
     eslint: {
@@ -185,17 +190,11 @@ const moduleExports = async () => {
 
   const uploadToSentry = process.env.SENTRY_RELEASE_UPLOAD === 'true' && process.env.NODE_ENV === 'production';
 
-  if (uploadToSentry) {
-    // Define here the environment variable we want to embed in the build (easier than managing it inside `chainWebpack()`)
-    // Ref: https://stackoverflow.com/questions/53094975/vue-js-defining-computed-environment-variables-in-vue-config-js-vue-cli-3
-    process.env.SENTRY_RELEASE_TAG = await getHumanVersion();
-  }
-
   const sentryWebpackPluginOptions = {
     dryRun: !uploadToSentry,
     debug: false,
     silent: false,
-    release: process.env.SENTRY_RELEASE_TAG,
+    release: appHumanVersion,
     setCommits: {
       // TODO: get error: caused by: sentry reported an error: You do not have permission to perform this action. (http status: 403)
       // Possible ref: https://github.com/getsentry/sentry-cli/issues/1388#issuecomment-1306137835
