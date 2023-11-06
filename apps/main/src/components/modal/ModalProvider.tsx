@@ -1,6 +1,6 @@
 import React, { Fragment, PropsWithChildren, useCallback, useState } from 'react';
 
-import { ModalContext, ShowModalFactory } from '@mediature/ui/src/modal/ModalContext';
+import { ModalContext, ShowModalFactory } from '@mediature/main/src/components/modal/ModalContext';
 
 export const ModalProvider = ({ children }: PropsWithChildren) => {
   const [render, setRender] = useState<ShowModalFactory | null>(null);

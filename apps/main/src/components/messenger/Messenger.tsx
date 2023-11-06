@@ -3,13 +3,13 @@ import Grid from '@mui/material/Grid';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { Main, Root, SideDrawer, SidePanel } from '@mediature/main/src/components/messenger/MessengerLayout';
 import { MessengerSidePanel } from '@mediature/main/src/components/messenger/MessengerSidePanel';
 import { MessengerViewer } from '@mediature/main/src/components/messenger/MessengerViewer';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const MessengerContext = createContext({
   ContextualMessengerSidePanel: MessengerSidePanel,

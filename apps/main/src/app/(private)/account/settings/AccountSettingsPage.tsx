@@ -7,11 +7,11 @@ import { createContext, useContext } from 'react';
 import { ChangePasswordForm } from '@mediature/main/src/app/(private)/account/settings/ChangePasswordForm';
 import { EditProfileForm } from '@mediature/main/src/app/(private)/account/settings/EditProfileForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { UpdateProfilePrefillSchema } from '@mediature/main/src/models/actions/user';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const AccountSettingsPageContext = createContext({
   ContextualEditProfileForm: EditProfileForm,

@@ -12,6 +12,13 @@ import {
   RevokeAdminSchema,
 } from '@mediature/main/src/models/actions/admin';
 import { AdminSchemaType } from '@mediature/main/src/models/entities/admin';
+import {
+  adminInvitationAlreadySentError,
+  adminRoleRequiredError,
+  cannotDeleteUserStillAgentError,
+  cannotRevokeOwnAdminRoleError,
+  userNotFoundError,
+} from '@mediature/main/src/models/entities/errors';
 import { InvitationSchemaType, InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { grantAdmin } from '@mediature/main/src/server/routers/common/admin';
@@ -23,14 +30,14 @@ import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 export const adminRouter = router({
   grantAdmin: privateProcedure.input(GrantAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     return await grantAdmin(input.userId, ctx.user.id);
   }),
   revokeAdmin: privateProcedure.input(RevokeAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const originatorUser = await prisma.user.findUniqueOrThrow({
@@ -46,9 +53,9 @@ export const adminRouter = router({
     });
 
     if (!revokedUser) {
-      throw new Error(`l'utilisateur que vous avez renseigné n'existe pas`);
+      throw userNotFoundError;
     } else if (revokedUser.id === originatorUser.id) {
-      throw new Error(`vous ne pouvez pas vous enlever vous-même vos droits d'administrateur`);
+      throw cannotRevokeOwnAdminRoleError;
     }
 
     await prisma.admin.deleteMany({
@@ -68,7 +75,7 @@ export const adminRouter = router({
   }),
   listAdmins: privateProcedure.input(ListAdminsSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const admins = await prisma.admin.findMany({
@@ -85,7 +92,7 @@ export const adminRouter = router({
   }),
   inviteAdmin: privateProcedure.input(InviteAdminSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const existingUser = await prisma.user.findFirst({
@@ -109,7 +116,7 @@ export const adminRouter = router({
     });
 
     if (existingAdminInvitation) {
-      throw new Error(`une invitation pour devenir administrateur a déjà été envoyée à cette personne`);
+      throw adminInvitationAlreadySentError;
     }
 
     const originatorUser = await prisma.user.findUniqueOrThrow({
@@ -149,7 +156,7 @@ export const adminRouter = router({
   }),
   listAdminInvitations: privateProcedure.input(ListAdminInvitationsSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     const adminInvitations = await prisma.adminInvitation.findMany({
@@ -190,7 +197,7 @@ export const adminRouter = router({
   }),
   deleteUser: privateProcedure.input(DeleteUserSchema).mutation(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     // To avoid mistake we require the user is not an agent somewhere
@@ -204,7 +211,7 @@ export const adminRouter = router({
     });
 
     if (userAgentsCount > 0) {
-      throw new Error(`vous ne pouvez pas supprimer une collectivité qui contient des agents`);
+      throw cannotDeleteUserStillAgentError;
     }
 
     const deletedUser = await prisma.user.delete({
@@ -222,7 +229,7 @@ export const adminRouter = router({
   }),
   listUsersAndRoles: privateProcedure.input(ListUsersAndRolesSchema).query(async ({ ctx, input }) => {
     if (!(await isUserAnAdmin(ctx.user.id))) {
-      throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+      throw adminRoleRequiredError;
     }
 
     let formattedSearchQuery: string | undefined;

@@ -14,11 +14,11 @@ import NextLink from 'next/link';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { AuthorityCard } from '@mediature/main/src/components/AuthorityCard';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export function AuthorityListPage() {
   const queryRef = React.createRef<HTMLInputElement>();

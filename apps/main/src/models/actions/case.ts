@@ -14,6 +14,14 @@ import {
 } from '@mediature/main/src/models/entities/case';
 import { CitizenSchema } from '@mediature/main/src/models/entities/citizen';
 import { emptyStringtoNullPreprocessor } from '@mediature/main/src/models/entities/common';
+import {
+  cannotCloseCaseWithoutOutcomeError,
+  cannotHadPreviousRequestAnswerIfNoDeclaredRequestError,
+  cannotHaveCompetentThirdPartyIfMarkedAsCompetentError,
+  cannotSetCaseDomainIfNotMarkedAsCompetentError,
+  mustProvideAtLeastOneInformationToBeReachedError,
+} from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
 import { EditorStateInputSchema } from '@mediature/main/src/models/entities/lexical';
 import { PhoneInputSchema, emptyPhonetoNullPreprocessor } from '@mediature/main/src/models/entities/phone';
 
@@ -37,17 +45,11 @@ export const incompleteRequestCaseSchema = z
 export const RequestCaseSchema = incompleteRequestCaseSchema.superRefine((data, ctx) => {
   if (data) {
     if (data.email === null && data.address === null && data.phone === null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone`,
-      });
+      ctx.addIssue(customErrorToZodIssue(mustProvideAtLeastOneInformationToBeReachedError));
     }
 
     if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser avoir eu une réponse de l'administration si vous indiquez ne pas avoir fait une requête auparavant`,
-      });
+      ctx.addIssue(customErrorToZodIssue(cannotHadPreviousRequestAnswerIfNoDeclaredRequestError));
     }
   }
 });
@@ -90,36 +92,21 @@ export const incompleteUpdateCaseSchema = z
 export const UpdateCaseSchema = incompleteUpdateCaseSchema.superRefine((data, ctx) => {
   if (data) {
     if (data.email === null && data.address === null && data.phone === null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous devez fournir au minimum l'email, l'adresse ou le numéro de téléphone`,
-      });
+      ctx.addIssue(customErrorToZodIssue(mustProvideAtLeastOneInformationToBeReachedError));
     }
 
     if (data.alreadyRequestedInThePast !== true && data.gotAnswerFromPreviousRequest !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser qu'il y a eu une réponse de l'administration si vous indiquez qu'il n'y a pas eu une requête auparavant`,
-      });
+      ctx.addIssue(customErrorToZodIssue(cannotHadPreviousRequestAnswerIfNoDeclaredRequestError));
     }
 
     if (data.competent === true && data.competentThirdPartyId !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser une entité tierce compétente sans avoir marqué que la collectivité n'est pas compétente pour traiter le dossier`,
-      });
+      ctx.addIssue(customErrorToZodIssue(cannotHaveCompetentThirdPartyIfMarkedAsCompetentError));
     } else if (data.competent === false && data.domainId !== null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous ne pouvez pas préciser un domaine pour ce dossier si vous indiquez que la collectivité n'a pas la compétence pour le traiter`,
-      });
+      ctx.addIssue(customErrorToZodIssue(cannotSetCaseDomainIfNotMarkedAsCompetentError));
     }
 
     if (data.close === true && data.outcome === null) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `vous devez spécifier un type de clôture lorsque vous clôturer le dossier`,
-      });
+      ctx.addIssue(customErrorToZodIssue(cannotCloseCaseWithoutOutcomeError));
     }
   }
 });

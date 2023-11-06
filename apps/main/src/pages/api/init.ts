@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { scheduleCronTasks } from '@mediature/main/src/server/queueing/schedule';
 import { gracefulExit } from '@mediature/main/src/server/system';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 
 let init = false;
 
@@ -25,16 +26,15 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
       await scheduleCronTasks();
 
       console.log('All services have been initialized');
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
       res.status(500).send('Failed to initialize some services');
 
       // Kill the process to be sure the host is aware of a critical failure that needs to be handled
-      process.exit(1);
+      await gracefulExit(error as unknown as Error);
     }
   }
 
   res.send('Initialized');
 }
 
-export default handler;
+export default apiHandlerWrapper(handler);

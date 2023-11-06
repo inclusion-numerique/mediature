@@ -6,7 +6,7 @@ import { EditorStateSchema } from '@mediature/main/src/models/entities/lexical';
 export const ContactSchema = z
   .object({
     id: z.string().uuid(),
-    email: z.string().email(),
+    email: z.string().min(1).email(),
     name: z.string().min(1).nullable(),
   })
   .strict();

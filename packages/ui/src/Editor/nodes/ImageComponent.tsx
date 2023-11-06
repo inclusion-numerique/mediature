@@ -89,6 +89,7 @@ function LazyImage({
           width,
         }}
         draggable="false"
+        data-sentry-block
       />
     </>
   );

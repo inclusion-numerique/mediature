@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect } from 'react';
 
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export function VisitorOnlyLayout(props: PropsWithChildren) {
   const sessionWrapper = useSession();

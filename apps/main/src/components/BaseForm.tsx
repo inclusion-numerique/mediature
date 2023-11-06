@@ -1,13 +1,16 @@
 import { DevTool } from '@hookform/devtools';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
+import * as Sentry from '@sentry/nextjs';
 import { Mutex } from 'locks';
 import { CSSProperties, FormEventHandler, MutableRefObject, PropsWithChildren, useRef, useState } from 'react';
 import { Control, FieldErrorsImpl, FieldValues, UseFormHandleSubmit } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { BusinessError } from '@mediature/main/src/models/entities/errors';
+import { capitalizeFirstLetter } from '@mediature/main/src/models/entities/errors/helpers';
 import { stopSubmitPropagation } from '@mediature/main/src/utils/form';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export interface BaseFormProps<FormSchemaType extends FieldValues> {
   handleSubmit: UseFormHandleSubmit<FormSchemaType>;
@@ -60,10 +63,18 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
               setOnSubmitError(err as any); // The default case is good enough for now
             }
 
+            // If not from the server it means in case of a none business error it has not been reported (and will not be due to this catch), so doing it
+            if (!(err instanceof Error && err.name === 'TRPCClientError') && !(err instanceof BusinessError)) {
+              Sentry.captureException(err);
+            }
+
             formRef.current?.scrollIntoView({ behavior: 'smooth' });
           }
         },
         (errors) => {
+          // Reset previous error from business code
+          setOnSubmitError(null);
+
           // Only triggered on inputs validation errors
           setValidationErrors(errors);
 
@@ -94,7 +105,7 @@ export function BaseForm<FormSchemaType extends FieldValues>(props: PropsWithChi
             <Grid item xs={12} sx={{ py: 2 }}>
               <Alert severity="error">
                 {validationErrors[''] !== undefined
-                  ? (validationErrors['']?.message as string)
+                  ? capitalizeFirstLetter(validationErrors['']?.message as string) // Uppercase first letter since our errors are lowercase by default for flexibility
                   : t('components.BaseForm.form_contains_errors', { count: Object.keys(validationErrors).length })}
               </Alert>
             </Grid>

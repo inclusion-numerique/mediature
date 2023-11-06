@@ -48,6 +48,8 @@ export interface UserQuickAccessItemOptions {
 export const userQuickAccessItem = (user: TokenUserSchemaType, options?: UserQuickAccessItemOptions): HeaderProps.QuickAccessItem => {
   const eventEmitter = new EventEmitter();
 
+  // INFORMATION: this won't work on 5xx and 4xx error pages since there is an hydratation error due to Next.js (maybe fixed in the future)
+  // `Warning: validateDOMNesting(...): <body> cannot appear as a child of <div>.`
   return {
     iconId: undefined as any,
     buttonProps: {

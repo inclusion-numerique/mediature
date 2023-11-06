@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
 import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { useSession } from '@mediature/main/src/proxies/next-auth/react';
 import { commonFooterAttributes, commonHeaderAttributes, userQuickAccessItem } from '@mediature/main/src/utils/dsfr';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { hasPathnameThisMatch } from '@mediature/main/src/utils/url';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export function PublicLayout(props: PropsWithChildren) {

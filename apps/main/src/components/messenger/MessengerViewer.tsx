@@ -15,13 +15,13 @@ import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { Avatar } from '@mediature/main/src/components/Avatar';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FileList } from '@mediature/main/src/components/FileList';
+import { LexicalRenderer } from '@mediature/main/src/components/LexicalRenderer';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
+import { useSingletonErrorDialog } from '@mediature/main/src/components/modal/useModal';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { Avatar } from '@mediature/ui/src/Avatar';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LexicalRenderer } from '@mediature/ui/src/LexicalRenderer';
-import { useSingletonErrorDialog } from '@mediature/ui/src/modal/useModal';
 
 export const MessengerViewerContext = createContext({
   ContextualMessengerSender: MessengerSender,
@@ -59,7 +59,7 @@ export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
           gap: 2,
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} data-sentry-mask>
           <Avatar fullName={message.from.name || message.from.email} size={40} />
           <Box
             sx={{
@@ -137,6 +137,7 @@ export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
           sx={{
             textColor: 'text.primary',
           }}
+          data-sentry-mask
         >
           {message.subject}
         </Typography>
@@ -161,7 +162,7 @@ export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
             >
               De
             </Typography>
-            <Chip label={message.from.email} size="small" variant="outlined" />
+            <Chip label={message.from.email} size="small" variant="outlined" data-sentry-mask />
           </Box>
           <Box>
             <Typography
@@ -176,13 +177,13 @@ export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
               à
             </Typography>
             {message.to.map((recipient) => {
-              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" sx={{ mr: 1 }} />;
+              return <Chip key={recipient.id} label={recipient.email} size="small" variant="outlined" sx={{ mr: 1 }} data-sentry-mask />;
             })}
           </Box>
         </Box>
       </Box>
       <Divider variant="fullWidth" sx={{ p: 0 }} />
-      <Box sx={{ py: 2 }}>
+      <Box sx={{ py: 2 }} data-sentry-mask>
         {message.errors.length > 0 && (
           <ErrorAlert
             errors={message.errors.map((error) => {

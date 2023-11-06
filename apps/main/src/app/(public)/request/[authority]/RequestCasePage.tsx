@@ -8,10 +8,10 @@ import { createContext, useContext, useState } from 'react';
 
 import { RequestCaseForm } from '@mediature/main/src/app/(public)/request/[authority]/RequestCaseForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { notFound } from '@mediature/main/src/proxies/next/navigation';
 import { centeredAlertContainerGridProps, mdCenteredFormContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const RequestCasePageContext = createContext({
   ContextualRequestCaseForm: RequestCaseForm,
@@ -64,6 +64,7 @@ export function RequestCasePage({ params: { authority: authoritySlug } }: Reques
                 objectFit: 'contain',
                 margin: '0 auto 20px',
               }}
+              data-sentry-block
             />
           ) : (
             <Typography component="h2" variant="h6" align="center">

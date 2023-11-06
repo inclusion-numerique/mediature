@@ -18,8 +18,8 @@ import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { useState } from 'react';
 
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface AgentCardProps {
@@ -47,7 +47,7 @@ export function AgentCard(props: AgentCardProps) {
       description: (
         <>
           Êtes-vous sûr de vouloir supprimer{' '}
-          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+          <Typography component="span" sx={{ fontWeight: 'bold' }} data-sentry-mask>
             {props.agent.firstname} {props.agent.lastname}
           </Typography>{' '}
           de la collectivité ?
@@ -64,7 +64,7 @@ export function AgentCard(props: AgentCardProps) {
       description: (
         <>
           Le fait de nommer{' '}
-          <Typography component="span" sx={{ fontWeight: 'bold' }}>
+          <Typography component="span" sx={{ fontWeight: 'bold' }} data-sentry-mask>
             {props.agent.firstname} {props.agent.lastname}
           </Typography>{' '}
           médiateur principal enlèvera les droits au précédent médiateur principal.
@@ -103,10 +103,10 @@ export function AgentCard(props: AgentCardProps) {
               {!!props.agent.profilePicture && (
                 <Grid item>
                   {/* TODO: use avatar if no picture */}
-                  <Image src={props.agent.profilePicture} alt="" width={30} height={30} style={{ objectFit: 'contain' }} />
+                  <Image src={props.agent.profilePicture} alt="" width={30} height={30} style={{ objectFit: 'contain' }} data-sentry-block />
                 </Grid>
               )}
-              <Grid item>
+              <Grid item data-sentry-mask>
                 <Grid container alignItems="center" spacing={2}>
                   <Grid item>
                     <Typography component="b" variant="h4">
@@ -137,7 +137,7 @@ export function AgentCard(props: AgentCardProps) {
                 },
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} data-sentry-mask>
                 <Grid item xs={12} sm={6}>
                   Dossiers en cours : {props.openCases}
                 </Grid>

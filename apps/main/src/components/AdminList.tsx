@@ -4,9 +4,9 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid/DataGrid';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { AdminSchemaType } from '@mediature/main/src/models/entities/admin';
 import { nameof } from '@mediature/main/src/utils/typescript';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 const typedNameof = nameof<AdminSchemaType>;
 
@@ -22,7 +22,11 @@ export function AdminList({ admins }: AdminListProps) {
     showConfirmationDialog({
       description: (
         <>
-          Êtes-vous sûr de vouloir enlever les droits d&apos;administrateur de {admin.firstname} {admin.lastname} ?
+          Êtes-vous sûr de vouloir enlever les droits d&apos;administrateur de{' '}
+          <span data-sentry-mask>
+            {admin.firstname} {admin.lastname}
+          </span>{' '}
+          ?
         </>
       ),
       onConfirm: async () => {
@@ -87,6 +91,7 @@ export function AdminList({ admins }: AdminListProps) {
         disableSelectionOnClick
         // loading={false}
         aria-label="liste des administrateurs"
+        data-sentry-mask
       />
     </>
   );

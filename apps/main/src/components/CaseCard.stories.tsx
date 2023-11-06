@@ -4,11 +4,11 @@ import addHours from 'date-fns/addHours';
 import { mockDateDecorator } from 'storybook-mock-date-decorator';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { CaseCard } from '@mediature/main/src/components/CaseCard';
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
-import { CaseCard } from '@mediature/ui/src/CaseCard';
 
 type ComponentType = typeof CaseCard;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

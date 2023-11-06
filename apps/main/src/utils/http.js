@@ -17,14 +17,11 @@ connectSrcValues.push('https://api-adresse.data.gouv.fr/');
 }
 
 // Sentry settings
-if (process.env.SENTRY_URL) {
-  const sentryUrl = new URL(process.env.SENTRY_URL);
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+  const sentryDsn = new URL(process.env.NEXT_PUBLIC_SENTRY_DSN);
+  const inferedSentryUrl = `${sentryDsn.protocol}//${sentryDsn.host}/`;
 
-  connectSrcValues.push(sentryUrl.toString());
-
-  // Also allow subdomains for this URL
-  sentryUrl.host = `*.${sentryUrl.host}`;
-  connectSrcValues.push(decodeURIComponent(sentryUrl.toString()));
+  connectSrcValues.push(inferedSentryUrl);
 }
 
 // Due to Next.js hot reload in development we need to allow `eval()`

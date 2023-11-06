@@ -12,6 +12,7 @@ import {
 } from '@mediature/main/src/models/actions/messenger';
 import { ListMessagesSchema, SendMessageSchema } from '@mediature/main/src/models/actions/messenger';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
+import { adminOrAuthorityAgentRoleRequiredError, cannotMarkAsProcessedReceivedMessagesError } from '@mediature/main/src/models/entities/errors';
 import { ContactInputSchemaType, MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { assertUserCanManageThisCase, isUserAnAgentPartOfAuthority } from '@mediature/main/src/server/routers/case';
 import { formatSafeAttachmentsToProcess } from '@mediature/main/src/server/routers/common/attachment';
@@ -264,7 +265,7 @@ export const messengerRouter = router({
     if (input.markAsProcessed !== undefined) {
       // If `null` it means the message comes from the platform and cannot be toggled as processed or not
       if (messageOnCase.markedAsProcessed === null) {
-        throw new Error('vous ne pouvez que considérer comme traité ou non des messages reçus');
+        throw cannotMarkAsProcessedReceivedMessagesError;
       }
 
       await prisma.messagesOnCases.update({
@@ -346,7 +347,7 @@ export const messengerRouter = router({
     });
 
     if (!(await isUserAnAgentPartOfAuthority(targetedCase.authorityId, ctx.user.id))) {
-      throw new Error(`vous devez être médiateur de la collectivité ou administrateur pour effectuer cette action`);
+      throw adminOrAuthorityAgentRoleRequiredError;
     }
 
     const messagesOnCase = await prisma.messagesOnCases.findMany({

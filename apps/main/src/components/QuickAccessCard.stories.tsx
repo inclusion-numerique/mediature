@@ -3,7 +3,7 @@ import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import agent1 from '@mediature/main/public/assets/dashboard/quick-access/agent_1.png';
-import { QuickAccessCard } from '@mediature/ui/src/QuickAccessCard';
+import { QuickAccessCard } from '@mediature/main/src/components/QuickAccessCard';
 
 type ComponentType = typeof QuickAccessCard;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

@@ -49,11 +49,16 @@ import { BaseForm } from '@mediature/main/src/components/BaseForm';
 import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
 import { CaseCompetentThirdPartyField } from '@mediature/main/src/components/CaseCompetentThirdPartyField';
 import { CaseDomainField } from '@mediature/main/src/components/CaseDomainField';
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
 import { CityField } from '@mediature/main/src/components/CityField';
 import { CloseCaseCard } from '@mediature/main/src/components/CloseCaseCard';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FileList } from '@mediature/main/src/components/FileList';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { NoteCard } from '@mediature/main/src/components/NoteCard';
+import { PhoneField, getDefaultPhoneValue } from '@mediature/main/src/components/PhoneField';
 import { Messenger } from '@mediature/main/src/components/messenger/Messenger';
+import { useSingletonModal } from '@mediature/main/src/components/modal/useModal';
 import { Uploader } from '@mediature/main/src/components/uploader/Uploader';
 import { useUserInterfaceAuthority } from '@mediature/main/src/components/user-interface-session/useUserInterfaceSession';
 import { UpdateCaseSchema, UpdateCaseSchemaType, updateCaseAttachmentsMax } from '@mediature/main/src/models/actions/case';
@@ -80,11 +85,6 @@ import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
-import { PhoneField, getDefaultPhoneValue } from '@mediature/ui/src/PhoneField';
-import { useSingletonModal } from '@mediature/ui/src/modal/useModal';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export const CasePageContext = createContext({
@@ -375,12 +375,12 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             pb: 1,
           }}
         >
-          <Typography component="b" variant="h4">
+          <Typography component="b" variant="h4" data-sentry-mask>
             {watchedGenderIdentity && <>{t(`model.citizen.genderIdentityPrefix.enum.${watchedGenderIdentity}`)} </>}
             {watch('firstname')} {watch('lastname')}
           </Typography>
           <Divider orientation="vertical" flexItem sx={{ height: '50%', mx: 2, my: 'auto' }} />
-          <Typography component="b" variant="subtitle1">
+          <Typography component="b" variant="subtitle1" data-sentry-mask>
             Dossier n°{targetedCase.humanId}
           </Typography>
           <Box ref={reminderAnchorRef} sx={{ ml: 'auto' }}>
@@ -462,7 +462,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
                       startIcon={<AccessTimeIcon />}
                     >
                       {targetedCase.termReminderAt ? (
-                        <span>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
+                        <span data-sentry-mask>Échéance : {t('date.short', { date: targetedCase.termReminderAt })}</span>
                       ) : (
                         <span>Définir une échéance</span>
                       )}
@@ -598,7 +598,7 @@ export function CasePage({ params: { authorityId, caseId } }: CasePageProps) {
             <Dialog open={messengerModalOpen} onClose={handleCloseMessengerModal} fullWidth maxWidth={false}>
               <DialogTitle sx={{ pb: 1 }}>
                 <Grid container spacing={2} justifyContent="space-between" alignItems="center">
-                  <Grid item xs="auto">
+                  <Grid item xs="auto" data-sentry-mask>
                     Messagerie pour le dossier n°{targetedCase.humanId}
                     <Typography variant="caption" display="block">
                       {caseEmail}

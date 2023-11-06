@@ -39,7 +39,7 @@ export const UserSchema = z
     id: z.string().uuid(),
     firstname: z.string().min(1),
     lastname: z.string().min(1),
-    email: z.string().email(),
+    email: z.string().min(1).email(),
     status: UserStatusSchema,
     profilePicture: z.string().url().nullable(),
     lastActivityAt: z.date().nullable(),

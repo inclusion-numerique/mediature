@@ -20,8 +20,8 @@ import { createContext, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { CaseNoteSchemaType } from '@mediature/main/src/models/entities/case';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 import { inlineEditorStateToText } from '@mediature/ui/src/utils/lexical';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
@@ -86,6 +86,7 @@ export function NoteCard(props: NoteCardProps) {
                   sx={{
                     textColor: 'text.tertiary',
                   }}
+                  data-sentry-mask
                 >
                   {t('date.short', { date: props.note.date })}
                 </Typography>
@@ -99,6 +100,7 @@ export function NoteCard(props: NoteCardProps) {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
+                  data-sentry-mask
                 >
                   {inlineEditorStateToText(props.note.content) || 'Note'}
                 </Typography>

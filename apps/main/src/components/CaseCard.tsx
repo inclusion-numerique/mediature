@@ -25,12 +25,12 @@ import NextLink from 'next/link';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { isReminderSoon } from '@mediature/main/src/utils/business/reminder';
 import { unprocessedMessagesBadgeAttributes } from '@mediature/main/src/utils/dsfr';
-import { CaseStatusChip } from '@mediature/ui/src/CaseStatusChip';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface CaseCardProps {
@@ -93,17 +93,25 @@ export function CaseCard(props: CaseCardProps) {
               <Typography component="div" color={isReminderSoon(props.case.termReminderAt) ? 'error' : 'primary'}>
                 <Grid container direction="row" alignItems="center">
                   <AccessTimeIcon sx={{ mr: '5px' }} />
-                  <span>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
+                  <span data-sentry-mask>Échéance : {t('date.short', { date: props.case.termReminderAt })}</span>
                 </Grid>
               </Typography>
             </Grid>
           )}
           <Grid item xs={12}>
-            <Link component={NextLink} href={props.caseLink} variant="h5" color="inherit" underline="none" style={{ fontWeight: 600 }}>
+            <Link
+              component={NextLink}
+              href={props.caseLink}
+              variant="h5"
+              color="inherit"
+              underline="none"
+              style={{ fontWeight: 600 }}
+              data-sentry-mask
+            >
               {props.citizen.firstname} {props.citizen.lastname}
             </Link>
             <br />
-            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex', alignItems: 'center' }}>
+            <Typography component="b" variant="subtitle1" sx={{ display: 'inline-flex', alignItems: 'center' }} data-sentry-mask>
               Dossier n°{props.case.humanId}
               {!!props.unprocessedMessages && props.unprocessedMessages > 0 && (
                 <Badge {...unprocessedMessagesBadgeAttributes} badgeContent={props.unprocessedMessages} />

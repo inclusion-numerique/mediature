@@ -182,7 +182,7 @@ export function SendMessageForm(props: SendMessageFormProps) {
           renderOption={(props, option) => {
             // Redeclare to avoid "spread JSX" error (ref: https://stackoverflow.com/a/75968316/3608410)
             return (
-              <li {...props} key={option}>
+              <li {...props} key={option} data-sentry-mask>
                 {option}
               </li>
             );
@@ -190,7 +190,9 @@ export function SendMessageForm(props: SendMessageFormProps) {
           freeSolo
           renderTags={(value: readonly string[], getTagProps) =>
             value.map((option: string, index: number) => {
-              return <Chip {...getTagProps({ index })} key={option} variant="outlined" label={option} onDelete={() => onDelete(option)} />;
+              return (
+                <Chip {...getTagProps({ index })} key={option} variant="outlined" label={option} onDelete={() => onDelete(option)} data-sentry-mask />
+              );
             })
           }
           renderInput={(params) => (

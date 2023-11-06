@@ -3,7 +3,7 @@ import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindAlert } from '@mediature/docs/.storybook/testing';
-import { ErrorPage, error404Props, error500Props, error503Props } from '@mediature/ui/src/ErrorPage';
+import { ErrorPage, error404Props, error500Props, error503Props } from '@mediature/main/src/components/ErrorPage';
 
 type ComponentType = typeof ErrorPage;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

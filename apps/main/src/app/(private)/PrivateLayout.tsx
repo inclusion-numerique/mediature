@@ -11,7 +11,9 @@ import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { UserInterfaceSessionProvider } from '@mediature/main/src/components/user-interface-session/UserInterfaceSessionProvider';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
 import {
@@ -24,8 +26,6 @@ import {
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { hasPathnameThisMatch, hasPathnameThisRoot } from '@mediature/main/src/utils/url';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 import { ContentWrapper } from '@mediature/ui/src/layouts/ContentWrapper';
 
 export function PrivateLayout(props: PropsWithChildren) {
@@ -36,8 +36,6 @@ export function PrivateLayout(props: PropsWithChildren) {
 
   const { data, error, isLoading, refetch } = trpc.getInterfaceSession.useQuery({});
 
-  const userInterfaceSession = data?.session;
-
   useEffect(() => {
     if (sessionWrapper.status === 'unauthenticated' && !logoutCommitted) {
       signIn();
@@ -46,13 +44,15 @@ export function PrivateLayout(props: PropsWithChildren) {
 
   if (isLoading || sessionWrapper.status !== 'authenticated') {
     return <LoadingArea ariaLabelTarget="contenu" />;
-  } else if (error || !userInterfaceSession) {
+  } else if (error) {
     return (
       <Grid container {...centeredAlertContainerGridProps}>
         <ErrorAlert errors={[error]} refetchs={[refetch]} />
       </Grid>
     );
   }
+
+  const userInterfaceSession = data?.session;
 
   const currentAuthority = userInterfaceSession.agentOf.find((authority) => {
     const authorityPageBaseUrl = linkRegistry.get('authority', {

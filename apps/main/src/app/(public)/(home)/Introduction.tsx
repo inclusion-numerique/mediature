@@ -5,8 +5,8 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import hero from '@mediature/main/public/assets/home/hero.png';
+import { IntroductionContainer } from '@mediature/main/src/components/IntroductionContainer';
 import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
-import { IntroductionContainer } from '@mediature/ui/src/IntroductionContainer';
 
 export function Introduction() {
   const { showLiveChat, isLiveChatLoading } = useLiveChat();

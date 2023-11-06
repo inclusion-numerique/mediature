@@ -156,6 +156,7 @@ export function CreateAuthorityForm(props: CreateAuthorityFormProps) {
                 height: '100%',
                 maxHeight: '200px',
               }}
+              data-sentry-block
             />
             <IconButton
               aria-label="supprimer le logo"

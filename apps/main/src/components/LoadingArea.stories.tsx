@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindProgressBar } from '@mediature/docs/.storybook/testing';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 
 type ComponentType = typeof LoadingArea;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

@@ -5,7 +5,7 @@ import { userSessionContext, visitorSessionContext } from '@mediature/docs/.stor
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { playFindMain, playFindProgressBar } from '@mediature/docs/.storybook/testing';
 import { PublicLayout } from '@mediature/main/src/app/(public)/PublicLayout';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 
 type ComponentType = typeof PublicLayout;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

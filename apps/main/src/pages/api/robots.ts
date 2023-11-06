@@ -3,6 +3,7 @@ import getConfig from 'next/config';
 
 import devRobotsFile from '@mediature/main/src/pages/assets/public/dev/robots.txt';
 import prodRobotsFile from '@mediature/main/src/pages/assets/public/prod/robots.txt';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -15,4 +16,4 @@ export function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default handler;
+export default apiHandlerWrapper(handler);

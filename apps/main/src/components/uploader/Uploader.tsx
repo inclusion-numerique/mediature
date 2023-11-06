@@ -11,6 +11,7 @@ import { FileKind, mimeData } from 'human-filetypes';
 import { MutableRefObject, createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { UploaderFileList } from '@mediature/main/src/components/uploader/UploaderFileList';
 import '@mediature/main/src/components/uploader/drag-drop.scss';
 import { AttachmentKindRequirementsSchemaType, UiAttachmentSchema, UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
@@ -18,7 +19,6 @@ import { mockBaseUrl, shouldTargetMock } from '@mediature/main/src/server/mock/e
 import { getExtensionsFromFileKinds, getFileIdFromUrl, getFileKindFromMime, getMimesFromFileKinds } from '@mediature/main/src/utils/attachment';
 import { bitsFor } from '@mediature/main/src/utils/bits';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
 
 export const UploaderContext = createContext({
   ContextualUploaderFileList: UploaderFileList,

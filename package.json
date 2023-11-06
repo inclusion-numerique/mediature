@@ -41,6 +41,7 @@
       "@mui/lab": "5.0.0-alpha.118",
       "@mui/material": "^5.10.16",
       "@react-pdf/renderer": "^3.1.6",
+      "@sentry/nextjs": "^7.75.1",
       "@storybook/instrumenter": "7.0.0-beta.41",
       "@storybook/react": "7.0.0-beta.41",
       "@storybook/testing-library": "0.0.14-next.1",

@@ -8,8 +8,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 
+import { Avatar } from '@mediature/main/src/components/Avatar';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
-import { Avatar } from '@mediature/ui/src/Avatar';
 import { inlineEditorStateToText } from '@mediature/ui/src/utils/lexical';
 
 export interface MessengerMessageListProps {
@@ -48,6 +48,7 @@ export function MessengerMessageList({ messages, selectedMessage, onMessageClick
                   px: 2,
                   py: 3,
                 }}
+                data-sentry-mask
               >
                 <ListItemAvatar sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Avatar fullName={message.from.name || message.from.email} size={40} />

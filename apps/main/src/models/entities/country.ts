@@ -1,12 +1,12 @@
 import { countries } from 'country-data';
 import z from 'zod';
 
-export const CountryCodeSchema = z.string().refine(
-  (countryCode) => {
-    return !!countries[countryCode];
-  },
-  {
-    message: 'le pays saisi est invalide',
+import { countryInvalidError } from '@mediature/main/src/models/entities/errors';
+import { customErrorToZodIssue } from '@mediature/main/src/models/entities/errors/helpers';
+
+export const CountryCodeSchema = z.string().superRefine((countryCode, ctx) => {
+  if (!countries[countryCode]) {
+    ctx.addIssue(customErrorToZodIssue(countryInvalidError));
   }
-);
+});
 export type CountryCodeSchemaType = z.infer<typeof CountryCodeSchema>;

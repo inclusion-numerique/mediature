@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { Contact } from '@mediature/ui/src/Contact';
+import { Contact } from '@mediature/main/src/components/Contact';
 
 type ComponentType = typeof Contact;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

@@ -1,5 +1,6 @@
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import { agentAlreadyInAuthorityError } from '@mediature/main/src/models/entities/errors';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
 export async function isUserMainAgentOfAuthorities(authorityIds: string[], userId: string): Promise<boolean> {
@@ -42,7 +43,7 @@ export async function addAgent(options: AddAgentOptions) {
   });
 
   if (existingAgent) {
-    throw new Error(`ce médiateur fait déjà partie de la collectivité`);
+    throw agentAlreadyInAuthorityError;
   }
 
   const originatorUser = await prisma.user.findUniqueOrThrow({

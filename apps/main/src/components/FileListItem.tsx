@@ -11,7 +11,7 @@ import NextLink from 'next/link';
 import { useTranslation } from 'react-i18next';
 
 import { FileIcon } from '@mediature/main/src/components/FileIcon';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 
 import { UiAttachmentSchemaType } from '../models/entities/attachment';
 
@@ -97,7 +97,7 @@ export function FileListItem(props: FileListItemProps) {
                         {props.file.name ? (
                           <>
                             Êtes-vous sûr de vouloir supprimer le fichier{' '}
-                            <Typography component="span" sx={{ fontWeight: 'bold' }}>
+                            <Typography component="span" sx={{ fontWeight: 'bold' }} data-sentry-mask>
                               {props.file.name}
                             </Typography>{' '}
                             ?
@@ -133,6 +133,7 @@ export function FileListItem(props: FileListItemProps) {
           sx={{
             flexShrink: 0, // Like that if there is an error the block won't compress the filename
           }}
+          data-sentry-mask
         />
       </ListItem>
     </>

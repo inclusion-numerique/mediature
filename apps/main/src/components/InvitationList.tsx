@@ -4,9 +4,9 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid/DataGrid';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { InvitationSchemaType } from '@mediature/main/src/models/entities/invitation';
 import { nameof } from '@mediature/main/src/utils/typescript';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 const typedNameof = nameof<InvitationSchemaType>;
 
@@ -22,7 +22,11 @@ export function InvitationList({ invitations }: InvitationListProps) {
     showConfirmationDialog({
       description: (
         <>
-          Êtes-vous sûr de vouloir annuler l&apos;invitation de {invitation.inviteeFirstname} {invitation.inviteeLastname} ?
+          Êtes-vous sûr de vouloir annuler l&apos;invitation de{' '}
+          <span data-sentry-mask>
+            {invitation.inviteeFirstname} {invitation.inviteeLastname}
+          </span>{' '}
+          ?
         </>
       ),
       onConfirm: async () => {
@@ -87,6 +91,7 @@ export function InvitationList({ invitations }: InvitationListProps) {
         disableSelectionOnClick
         // loading={false}
         aria-label="liste des invitations en cours"
+        data-sentry-mask
       />
     </>
   );

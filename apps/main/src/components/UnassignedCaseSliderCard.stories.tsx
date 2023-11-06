@@ -4,11 +4,11 @@ import addHours from 'date-fns/addHours';
 import { mockDateDecorator } from 'storybook-mock-date-decorator';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { UnassignedCaseSliderCard } from '@mediature/main/src/components/UnassignedCaseSliderCard';
 import { uiAttachments } from '@mediature/main/src/fixtures/attachment';
 import { cases } from '@mediature/main/src/fixtures/case';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
 import { CaseSchema } from '@mediature/main/src/models/entities/case';
-import { UnassignedCaseSliderCard } from '@mediature/ui/src/UnassignedCaseSliderCard';
 
 type ComponentType = typeof UnassignedCaseSliderCard;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

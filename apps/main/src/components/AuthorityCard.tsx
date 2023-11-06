@@ -71,7 +71,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
             <Grid container alignItems="center" spacing={2}>
               {!!props.authority.logo && (
                 <Grid item>
-                  <Image src={props.authority.logo.url} alt="" width={50} height={30} style={{ objectFit: 'contain' }} />
+                  <Image src={props.authority.logo.url} alt="" width={50} height={30} style={{ objectFit: 'contain' }} data-sentry-block />
                 </Grid>
               )}
               <Grid item>
@@ -82,6 +82,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
                   color="inherit"
                   underline="none"
                   style={{ fontWeight: 600 }}
+                  data-sentry-mask
                 >
                   {props.authority.name}
                 </Link>
@@ -100,7 +101,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
                 },
               }}
             >
-              <Grid container spacing={2}>
+              <Grid container spacing={2} data-sentry-mask>
                 <Grid item xs={12} sm={6}>
                   Dossiers en cours : {props.openCases}
                 </Grid>
@@ -110,7 +111,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
               </Grid>
             </Alert>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} data-sentry-mask>
             {!!props.mainAgent ? (
               <>
                 <Typography sx={{ fontWeight: 'bold' }}>Médiateur principal :</Typography> {props.mainAgent.firstname} {props.mainAgent.lastname}
@@ -125,7 +126,7 @@ export function AuthorityCard(props: AuthorityCardProps) {
                 <Typography sx={{ fontWeight: 'bold' }}>Liste des médiateurs :</Typography>
                 <Grid container component="ul" spacing={1} sx={ulComponentResetStyles}>
                   {agentsExceptMainOne.map((agent) => (
-                    <Grid key={agent.id} item component="li" xs={12} sm={6}>
+                    <Grid key={agent.id} item component="li" xs={12} sm={6} data-sentry-mask>
                       {agent.firstname} {agent.lastname}
                     </Grid>
                   ))}

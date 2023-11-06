@@ -9,10 +9,10 @@ import { EventEmitter } from 'eventemitter3';
 import NextLink from 'next/link';
 import { PropsWithChildren, useEffect, useState } from 'react';
 
+import { Avatar } from '@mediature/main/src/components/Avatar';
 import { UserInterfaceAuthoritySchemaType } from '@mediature/main/src/models/entities/ui';
 import { logout } from '@mediature/main/src/utils/auth';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
-import { Avatar } from '@mediature/ui/src/Avatar';
 import { menuPaperProps } from '@mediature/ui/src/utils/menu';
 
 export interface HeaderAuthoritySwitchItemProps {
@@ -54,7 +54,9 @@ export function HeaderAuthoritySwitchItem(props: PropsWithChildren<HeaderAuthori
             {/* <Grid item>
               <Avatar fullName={`${props.currentAuthority.name}`} />
             </Grid> */}
-            <Grid item>{props.currentAuthority.name}</Grid>
+            <Grid item data-sentry-mask>
+              {props.currentAuthority.name}
+            </Grid>
           </>
         ) : (
           <Grid item>Sélectionner une collectivité</Grid>
@@ -82,6 +84,7 @@ export function HeaderAuthoritySwitchItem(props: PropsWithChildren<HeaderAuthori
                   authorityId: authority.id,
                 })}
                 selected={authority.id === props.currentAuthority?.id}
+                data-sentry-mask
               >
                 {authority.name}
               </MenuItem>

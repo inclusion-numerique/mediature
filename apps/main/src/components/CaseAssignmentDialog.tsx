@@ -102,7 +102,13 @@ export function CaseAssignmentDialog(props: CaseAssignmentDialogProps) {
                     >
                       {props.agents.map((agent) => {
                         return (
-                          <FormControlLabel key={agent.id} value={agent.id} control={<Radio />} label={`${agent.firstname} ${agent.lastname}`} />
+                          <FormControlLabel
+                            key={agent.id}
+                            value={agent.id}
+                            control={<Radio />}
+                            label={`${agent.firstname} ${agent.lastname}`}
+                            data-sentry-mask
+                          />
                         );
                       })}
                     </RadioGroup>
@@ -136,6 +142,7 @@ export function CaseAssignmentDialog(props: CaseAssignmentDialogProps) {
             }}
             loading={updateCaseAssignation.isLoading}
             variant="contained"
+            data-sentry-mask
           >
             Désassigner {props.currentAgent.firstname} {props.currentAgent.lastname}
           </Button>

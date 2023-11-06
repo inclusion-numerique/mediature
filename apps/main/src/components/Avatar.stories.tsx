@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
-import { Avatar } from '@mediature/ui/src/Avatar';
+import { Avatar } from '@mediature/main/src/components/Avatar';
 
 type ComponentType = typeof Avatar;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

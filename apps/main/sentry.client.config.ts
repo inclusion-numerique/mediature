@@ -2,30 +2,34 @@ import { Offline as OfflineIntegration } from '@sentry/integrations';
 import * as Sentry from '@sentry/nextjs';
 import SentryRRWeb from '@sentry/rrweb';
 
-const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
+import { dsn, environment, release } from '@mediature/main/src/utils/sentry';
 
-if (process.env.NODE_ENV === 'production') {
-  const hasReplays = true;
-  const integrations: any[] = [new OfflineIntegration({})];
+const hasReplays = true;
+const integrations: any[] = [new OfflineIntegration({})];
 
-  if (hasReplays) {
-    integrations.push(
-      new SentryRRWeb({
-        blockSelector: '[data-sentry-element-mask]',
-        maskTextSelector: '[data-sentry-text-mask]',
-      })
-    );
-  }
-
-  Sentry.init({
-    dsn: SENTRY_DSN,
-    environment: process.env.NEXT_PUBLIC_APP_MODE,
-    debug: false,
-    release: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
-    autoSessionTracking: true,
-    integrations,
-  });
-
-  // Help to distinguish in the UI an extension resource is available
-  Sentry.setTag('rrweb.active', hasReplays ? 'yes' : 'no');
+if (hasReplays) {
+  integrations.push(
+    new SentryRRWeb({
+      // Browse the app and force a manual error to be able to check the rrweb record.
+      // You may find some elements not hidden and need to use `data-sentry-block` or `data-sentry-mask`
+      maskAllInputs: true,
+      blockSelector: '[data-sentry-block]',
+      maskTextSelector: '[data-sentry-mask]',
+      // We rely only on attribute values to block elements because class is the only way for us to target Crisp client to keep conversations private
+      blockClass: 'crisp-client',
+      maskTextClass: 'crisp-client',
+    })
+  );
 }
+
+Sentry.init({
+  dsn: dsn,
+  environment: environment,
+  debug: false,
+  release: release,
+  autoSessionTracking: true,
+  integrations,
+});
+
+// Help to distinguish in the UI an extension resource is available
+Sentry.setTag('rrweb.active', hasReplays ? 'yes' : 'no');

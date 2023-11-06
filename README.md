@@ -100,6 +100,16 @@ The default branch is `dev`.
 
 ### Sentry
 
+#### Helpful to monitor
+
+We use Sentry to monitor errors that happen on frontend and backend. It has been added everywhere it was needed to catch unexpected errors no matter the tool used (Next.js, Lexical, `pg-boss`...).
+
+To keep safe sensitive information we just forward `userId` to help debugging issues, and we prevent sensitive elements from being recorded by `rrweb` (useful to replay the session up to the issue).
+
+_Note: `BusinessError` errors are not tracked because they are intented to describe a possible error in the user flow (validation error, entity deleted by someone and no longer existing...)_
+
+Since Sentry gets only error details from the built application, we provide source maps during the CI/CD so debugging is easier by seeing original source code. For this we set `SENTRY_RELEASE_UPLOAD = true` into the `ci.yaml` file.
+
 #### Upload sourcemaps
 
 To upload sourcemaps to Sentry you need a specific "auth token", it must have these scopes:
@@ -323,10 +333,6 @@ ENV BUILD_APP_NAME=main
 ```
 
 On the other side if you are looking for investigating a built image, Scalingo provides a paid addon to access the registry of images that passed their pipeline with success (those are Docker images). It helped us in the past to optimize excessive size of remaining dependencies for example.
-
-#### Sentry
-
-TODO: to write once it's compatible with Next.js 13 a new time
 
 ### Emails
 

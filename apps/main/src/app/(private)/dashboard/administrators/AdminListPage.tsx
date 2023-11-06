@@ -8,13 +8,13 @@ import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { AdminList } from '@mediature/main/src/components/AdminList';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { InvitationList } from '@mediature/main/src/components/InvitationList';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export interface AdminListPageProps {
   params: {};

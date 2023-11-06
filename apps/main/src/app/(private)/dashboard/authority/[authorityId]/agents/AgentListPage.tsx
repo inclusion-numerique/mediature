@@ -7,14 +7,14 @@ import Typography from '@mui/material/Typography';
 import NextLink from 'next/link';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { AgentCard } from '@mediature/main/src/components/AgentCard';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { InvitationList } from '@mediature/main/src/components/InvitationList';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { InvitationStatusSchema } from '@mediature/main/src/models/entities/invitation';
 import { centeredAlertContainerGridProps, centeredContainerGridProps, ulComponentResetStyles } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
-import { AgentCard } from '@mediature/ui/src/AgentCard';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export interface AgentListPageProps {
   params: { authorityId: string };

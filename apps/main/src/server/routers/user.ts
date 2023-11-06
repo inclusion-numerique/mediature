@@ -10,6 +10,15 @@ import {
   GetPublicFacingInvitationSchema,
   UpdateProfileSchema,
 } from '@mediature/main/src/models/actions/user';
+import {
+  adminOrAuthorityMainAgentRoleRequiredError,
+  adminRoleRequiredError,
+  invalidInvitationError,
+  invitationCannotBeCanceledError,
+  invitationNoLongerUsableError,
+  invitationNotFoundError,
+  userNotFoundError,
+} from '@mediature/main/src/models/entities/errors';
 import { InvitationStatusSchema, PublicFacingInvitationSchema } from '@mediature/main/src/models/entities/invitation';
 import { UserInterfaceSessionSchema } from '@mediature/main/src/models/entities/ui';
 import { LiveChatSettingsSchema, LiveChatSettingsSchemaType } from '@mediature/main/src/models/entities/user';
@@ -31,9 +40,9 @@ export const userRouter = router({
     });
 
     if (!invitation) {
-      throw new Error(`le jeton d'invitation fournit n'est pas valide`);
+      throw invalidInvitationError;
     } else if (invitation.status !== InvitationStatusSchema.Values.PENDING) {
-      throw new Error(`le jeton d'invitation n'est plus utilisable`);
+      throw invitationNoLongerUsableError;
     }
 
     return {
@@ -74,7 +83,7 @@ export const userRouter = router({
     });
 
     if (!user) {
-      throw new Error(`cet utilisateur n'existe pas`);
+      throw userNotFoundError;
     }
 
     // TODO: exclude hashed password
@@ -147,7 +156,7 @@ export const userRouter = router({
 
     let settings: LiveChatSettings;
     if (!user) {
-      throw new Error(`cet utilisateur n'existe pas`);
+      throw userNotFoundError;
     } else if (!user.LiveChatSettings) {
       // It has never been initialized, so we do it
       settings = await prisma.liveChatSettings.create({
@@ -187,20 +196,20 @@ export const userRouter = router({
     });
 
     if (!invitation) {
-      throw new Error(`l'invitation spécifiée n'existe pas`);
+      throw invitationNotFoundError;
     }
 
     if (invitation.status !== InvitationStatusSchema.Values.PENDING) {
-      throw new Error(`l'invitation spécifiée ne peut pas être annulée`);
+      throw invitationCannotBeCanceledError;
     }
 
     if (invitation.AgentInvitation) {
       if (!(await isUserAnAdmin(ctx.user.id)) && !(await isUserMainAgentOfAuthority(invitation.AgentInvitation.authorityId, ctx.user.id))) {
-        throw new Error(`vous devez être médiateur principal de la collectivité ou administrateur pour effectuer cette action`);
+        throw adminOrAuthorityMainAgentRoleRequiredError;
       }
     } else {
       if (!(await isUserAnAdmin(ctx.user.id))) {
-        throw new Error(`vous devez être un administrateur pour effectuer cette action`);
+        throw adminRoleRequiredError;
       }
     }
 

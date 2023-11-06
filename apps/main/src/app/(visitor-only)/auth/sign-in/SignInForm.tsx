@@ -20,27 +20,36 @@ import NextLink from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { BaseForm } from '@mediature/main/src/components/BaseForm';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/src/models/actions/auth';
+import {
+  BusinessError,
+  authCredentialsRequiredError,
+  authFatalError,
+  authNoCredentialsMatchError,
+  authRetriableError,
+} from '@mediature/main/src/models/entities/errors';
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-function errorCodeToError(errorCode: string): string | null {
-  let error: string | null;
+function errorCodeToError(errorCode: string): BusinessError | null {
+  let error: BusinessError | null;
 
   switch (errorCode) {
-    case 'credentials_required':
-      error = 'Vous devez fournir vos informations de connexion pour poursuivre';
+    case authCredentialsRequiredError.code:
+      error = authCredentialsRequiredError;
       break;
-    case 'no_credentials_match':
-      error = 'Les informations de connexion fournies sont incorrectes';
+    case authNoCredentialsMatchError.code:
+      error = authNoCredentialsMatchError;
       break;
     case 'undefined':
       error = null;
       break;
     default:
-      error = 'Une erreur est survenue, veuillez retenter';
+      error = authRetriableError;
       break;
   }
 
@@ -48,6 +57,7 @@ function errorCodeToError(errorCode: string): string | null {
 }
 
 export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
+  const { t } = useTranslation('common');
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -60,7 +70,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const [showSessionEndBlock, setShowSessionEndBlock] = useState<boolean>(sessionEnd);
   const [showRegisteredBlock, setShowRegisteredBlock] = useState<boolean>(registered);
 
-  const [error, setError] = useState<string | null>(() => {
+  const [error, setError] = useState<BusinessError | null>(() => {
     return attemptErrorCode ? errorCodeToError(attemptErrorCode) : null;
   });
   const [mutex] = useState<Mutex>(new Mutex());
@@ -117,7 +127,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
 
         router.push(linkRegistry.get('dashboard', undefined));
       } else {
-        setError('une erreur inattendue est survenue, merci de contacter le support');
+        setError(authFatalError);
       }
     } finally {
       // Unlock to allow a new submit
@@ -133,7 +143,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
     <BaseForm handleSubmit={enhancedHandleSubmit} onSubmit={onSubmit} control={control} ariaLabel="se connecter">
       {(!!error || showSessionEndBlock || showRegisteredBlock) && (
         <Grid item xs={12}>
-          {!!error && <Alert severity="error">{error}</Alert>}
+          {!!error && <ErrorAlert errors={[error]} />}
           {showSessionEndBlock && <Alert severity="success">Vous avez bien été déconnecté</Alert>}
           {showRegisteredBlock && (
             <Alert severity="success">

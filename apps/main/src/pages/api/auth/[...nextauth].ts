@@ -5,7 +5,9 @@ import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { authCredentialsRequiredError, authFatalError, authNoCredentialsMatchError } from '@mediature/main/src/models/entities/errors';
 import { TokenUserSchema, TokenUserSchemaType } from '@mediature/main/src/models/entities/user';
+import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 
 // It requires an environment variable always equal to the base URL
@@ -32,7 +34,7 @@ export const nextAuthOptions: NextAuthOptions = {
       async authorize(credentials: any): Promise<TokenUserSchemaType> {
         // TODO: parse with zod SignInSchema
         if (!credentials.email || !credentials.password) {
-          throw new Error('credentials_required');
+          throw authCredentialsRequiredError.code;
         }
 
         const user = await prisma.user.findUnique({
@@ -49,12 +51,12 @@ export const nextAuthOptions: NextAuthOptions = {
         });
 
         if (!user || !user.Secrets) {
-          throw new Error('no_credentials_match');
+          throw authNoCredentialsMatchError.code;
         }
 
         const matchPassword = await bcrypt.compare(credentials.password, user.Secrets.passwordHash);
         if (!matchPassword) {
-          throw new Error('no_credentials_match');
+          throw authNoCredentialsMatchError.code;
         }
 
         const tokenUserParse = TokenUserSchema.safeParse({
@@ -66,7 +68,7 @@ export const nextAuthOptions: NextAuthOptions = {
         });
 
         if (!tokenUserParse.success) {
-          throw new Error('cannot_format_token_user');
+          throw authFatalError.code;
         }
 
         return tokenUserParse.data;
@@ -138,4 +140,6 @@ export const nextAuthOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(nextAuthOptions);
+export const handler = NextAuth(nextAuthOptions);
+
+export default apiHandlerWrapper(handler);

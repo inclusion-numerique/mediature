@@ -6,11 +6,11 @@ import { createContext, useContext } from 'react';
 
 import { EditAuthorityForm } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/edit/EditAuthorityForm';
 import { trpc } from '@mediature/main/src/client/trpcClient';
+import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { UpdateAuthorityPrefillSchema } from '@mediature/main/src/models/actions/authority';
 import { formTitleProps } from '@mediature/main/src/utils/form';
 import { centeredAlertContainerGridProps, centeredFormContainerGridProps } from '@mediature/main/src/utils/grid';
-import { ErrorAlert } from '@mediature/ui/src/ErrorAlert';
-import { LoadingArea } from '@mediature/ui/src/LoadingArea';
 
 export const AuthorityEditPageContext = createContext({
   ContextualEditAuthorityForm: EditAuthorityForm,

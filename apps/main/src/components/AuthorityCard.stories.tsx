@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { AuthorityCard } from '@mediature/main/src/components/AuthorityCard';
 import { authoritiesWrappers } from '@mediature/main/src/fixtures/authority';
-import { AuthorityCard } from '@mediature/ui/src/AuthorityCard';
 
 type ComponentType = typeof AuthorityCard;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();

@@ -19,10 +19,10 @@ import { PropsWithChildren, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { useSingletonConfirmationDialog } from '@mediature/main/src/components/modal/useModal';
 import { UpdateCaseSchemaType } from '@mediature/main/src/models/actions/case';
 import { CaseOutcomeSchema, CaseOutcomeSchemaType, CaseSchemaType } from '@mediature/main/src/models/entities/case';
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
-import { useSingletonConfirmationDialog } from '@mediature/ui/src/modal/useModal';
 
 export interface CloseCaseCardProps {
   case: CaseSchemaType;
@@ -151,7 +151,9 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   <TextField
                     select
                     label="Accord des parties ?"
-                    defaultValue={control._defaultValues.collectiveAgreement || ''}
+                    defaultValue={
+                      typeof control._defaultValues.collectiveAgreement === 'boolean' ? control._defaultValues.collectiveAgreement.toString() : ''
+                    }
                     onChange={(event) => {
                       setValue('collectiveAgreement', event.target.value === '' ? null : event.target.value === 'true', {
                         // shouldValidate: true,
@@ -173,7 +175,11 @@ export function CloseCaseCard(props: PropsWithChildren<CloseCaseCardProps>) {
                   <TextField
                     select
                     label="Poursuite au tribunal administratif ?"
-                    defaultValue={control._defaultValues.administrativeCourtNext || ''}
+                    defaultValue={
+                      typeof control._defaultValues.administrativeCourtNext === 'boolean'
+                        ? control._defaultValues.administrativeCourtNext.toString()
+                        : ''
+                    }
                     onChange={(event) => {
                       setValue('administrativeCourtNext', event.target.value === '' ? null : event.target.value === 'true', {
                         // shouldValidate: true,

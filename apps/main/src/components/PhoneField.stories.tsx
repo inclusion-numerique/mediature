@@ -2,8 +2,8 @@ import { Meta, StoryFn } from '@storybook/react';
 import { within } from '@storybook/testing-library';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
+import { PhoneField } from '@mediature/main/src/components/PhoneField';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
-import { PhoneField } from '@mediature/ui/src/PhoneField';
 
 type ComponentType = typeof PhoneField;
 const { generateMetaDefault, prepareStory } = StoryHelperFactory<ComponentType>();
