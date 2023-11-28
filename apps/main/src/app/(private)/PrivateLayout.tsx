@@ -2,6 +2,7 @@
 
 import { Footer } from '@codegouvfr/react-dsfr/Footer';
 import { Header } from '@codegouvfr/react-dsfr/Header';
+import { HeaderProps } from '@codegouvfr/react-dsfr/Header';
 import { MainNavigationProps } from '@codegouvfr/react-dsfr/MainNavigation';
 import { MenuProps } from '@codegouvfr/react-dsfr/MainNavigation/Menu';
 import Badge from '@mui/material/Badge';
@@ -14,6 +15,7 @@ import { trpc } from '@mediature/main/src/client/trpcClient';
 import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { FlashMessage } from '@mediature/main/src/components/FlashMessage';
 import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
+import { useLiveChat } from '@mediature/main/src/components/live-chat/useLiveChat';
 import { UserInterfaceSessionProvider } from '@mediature/main/src/components/user-interface-session/UserInterfaceSessionProvider';
 import { signIn, useSession } from '@mediature/main/src/proxies/next-auth/react';
 import {
@@ -41,6 +43,8 @@ export function PrivateLayout(props: PropsWithChildren) {
       signIn();
     }
   }, [logoutCommitted, router, sessionWrapper.status]);
+
+  const { showLiveChat } = useLiveChat();
 
   if (isLoading || sessionWrapper.status !== 'authenticated') {
     return <LoadingArea ariaLabelTarget="contenu" />;
@@ -248,7 +252,18 @@ export function PrivateLayout(props: PropsWithChildren) {
     });
   }
 
-  const quickAccessItems = [userQuickAccessItem(sessionWrapper.data?.user)];
+  const quickAccessItems: HeaderProps.QuickAccessItem[] = [
+    {
+      iconId: 'fr-icon-questionnaire-line',
+      buttonProps: {
+        onClick: (event) => {
+          showLiveChat();
+        },
+      },
+      text: 'Support',
+    },
+    userQuickAccessItem(sessionWrapper.data?.user),
+  ];
 
   if (userInterfaceSession.agentOf.length) {
     quickAccessItems.unshift(
