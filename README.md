@@ -566,7 +566,7 @@ _(If you are on MacOS also set in this file `export TESTCONTAINERS_RYUK_DISABLED
 
 Legal documents are mainly written out of technical scope in a basic text editor, and they may be updated quite often. Either you host them on a Markdown website or you embed them as HTML in your website. For both you have to maintain some transformations and you probably don't want to scan in detail for each modification, ideally you just want to redo all at once to be sure there will be no missing patch.
 
-In this repository you can use `./apps/main/format-legal-documents.sh` to transform the initial `.docx` files `.html` files:
+In this repository you can use `./apps/main/format-legal-documents.sh` to transform the initial `.docx` files into `.html` files:
 
 - No matter the name of the file it will convert it (though 1 per folder)
 - It allows to collaborate on Word-like software (mainly used by legal people)

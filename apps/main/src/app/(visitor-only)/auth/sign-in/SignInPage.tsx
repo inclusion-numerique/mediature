@@ -57,12 +57,8 @@ export function SignInPage() {
           <Typography sx={{ fontWeight: 'bold', textAlign: 'center' }}>D&apos;autres collectivités utilisent la plateforme !</Typography>
           <br />
           <p>
-            Donc si vous rencontrez des difficultés ou avez des idées d&apos;évolution, n&apos;hésitez pas à le partager avec le support en
-            choisissant dans le menu de votre compte{' '}
-            <Typography component="span" sx={{ fontStyle: 'italic' }}>
-              &quot;Obtenir de l&apos;aide&quot;
-            </Typography>
-            . Cela permettra à l&apos;ensemble des collectivités d&apos;en bénéficier.
+            Donc si vous rencontrez des difficultés ou avez des idées d&apos;évolution, n&apos;hésitez pas à les partager avec le support disponible
+            depuis le menu de votre compte. Cela permettra à l&apos;ensemble des collectivités d&apos;en bénéficier.
           </p>
         </Typography>
       </Grid>
