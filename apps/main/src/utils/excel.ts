@@ -14,6 +14,7 @@ export async function csvToXlsx(content: string): Promise<Buffer> {
       content,
       {
         delimiter: ',',
+        cast: true,
         cast_date: true,
         skip_empty_lines: true,
       },
@@ -23,7 +24,7 @@ export async function csvToXlsx(content: string): Promise<Buffer> {
         }
 
         // Add each row from the parsed CSV to the Excel worksheet
-        records.forEach((row: string) => {
+        records.forEach((row: any) => {
           worksheet.addRow(row);
         });
 
