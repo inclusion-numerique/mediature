@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import mailjet, { Client } from 'node-mailjet';
 
 export interface MailjetOptions {
@@ -40,7 +41,15 @@ export class Mailjet {
   }
 
   public async deleteInboundEmail(email: string): Promise<void> {
-    const result = await this.client.delete('parseroute').id(email).request();
+    try {
+      const result = await this.client.delete('parseroute').id(email).request();
+    } catch (error) {
+      if (error instanceof AxiosError && error.response?.status === 404) {
+        console.warn(`the email address "${email}" cannot be deleted from the Mailjet side since not existing`);
+      } else {
+        throw error;
+      }
+    }
   }
 }
 
