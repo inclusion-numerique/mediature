@@ -5,15 +5,17 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Grid from '@mui/material/Grid';
+import { TRPCClientErrorLike } from '@trpc/client';
 import { useRef } from 'react';
 
 import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { AppRouter } from '@mediature/main/src/server/app-router';
 
 export interface ErrorDialogProps {
   open: boolean;
   title?: string;
   description?: string | JSX.Element;
-  error: Error;
+  error: TRPCClientErrorLike<AppRouter> | Error; // Error can be from the network (tRPC most of the time) or local
   onClose: () => void;
 }
 
