@@ -26,7 +26,8 @@ import {
 import { CitizenSchemaType } from '@mediature/main/src/models/entities/citizen';
 import { ContactInputSchemaType, ContactSchemaType, MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 import { UserSchemaType } from '@mediature/main/src/models/entities/user';
-import { fileAuthSecret, generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+import { generateSignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+import { fileAuthSecret } from '@mediature/main/src/server/routers/common/attachment.server';
 
 export function userPrismaToModel(user: User): UserSchemaType {
   return {

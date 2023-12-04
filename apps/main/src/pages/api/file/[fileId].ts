@@ -11,7 +11,8 @@ import {
   fileIdMalformatedError,
   fileNotFoundError,
 } from '@mediature/main/src/models/entities/errors';
-import { fileAuthSecret, verifySignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+import { verifySignedAttachmentLink } from '@mediature/main/src/server/routers/common/attachment';
+import { fileAuthSecret } from '@mediature/main/src/server/routers/common/attachment.server';
 import { apiHandlerWrapper } from '@mediature/main/src/utils/api';
 import { attachmentKindList } from '@mediature/main/src/utils/attachment';
 

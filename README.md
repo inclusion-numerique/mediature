@@ -119,6 +119,16 @@ To upload sourcemaps to Sentry you need a specific "auth token", it must have th
 
 You can create this token at https://${SENTRY_URL}/settings/account/api/auth-tokens/ ;)
 
+#### Silent odd errors
+
+Since the application watches all kinds of errors, it happens we collect some that are not reproductible and without any impact for the user experience.
+
+To avoid being notified of those we chose to silent them from the Sentry interface. Just go to your Sentry project interface, then `Processing > Inbound Filters > Custom Filters > Error Message` and enter the following silent patterns:
+
+```
+*ResizeObserver loop completed with undelivered notifications*
+```
+
 ### Scalingo
 
 #### Global

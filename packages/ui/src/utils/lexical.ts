@@ -145,6 +145,20 @@ export async function inlineEditorStateFromHtml(htmlContent: string, jsdomInstan
           }
         });
 
+        // [WORKAROUND] `<table>` with no content cannot be parsed (including those having an empty `<tbody>`, `<thead>` or `<tfoot>`)
+        // So we make the decision to check for at least a `<tr>` or a `<td>` since it passes the Lexical parsing
+        dom.documentElement.querySelectorAll('table').forEach((tableElement) => {
+          const requiredElements = tableElement.querySelectorAll('tr, td');
+          if (requiredElements.length === 0) {
+            // We cannot only `tableElement.remove()` in case there is no node leaf
+            // so we replace it by an empty paragraph that Lexical lets pass
+            const parentNode = tableElement.parentNode as HTMLElement;
+            if (parentNode) {
+              parentNode.replaceChild(dom.createElement('p'), tableElement);
+            }
+          }
+        });
+
         nodes = $generateNodesFromDOM(editor, dom);
       } finally {
         if (jsdomInstance) {

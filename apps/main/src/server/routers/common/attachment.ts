@@ -15,8 +15,6 @@ import { bitsFor } from '@mediature/main/src/utils/bits';
 import { getListeningPort } from '@mediature/main/src/utils/url';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 
-export const fileAuthSecret = new TextEncoder().encode(process.env.FILE_AUTH_SECRET);
-
 // We use a symetric key since the encode/decode is done in the same program
 const algorithm = 'HS256';
 

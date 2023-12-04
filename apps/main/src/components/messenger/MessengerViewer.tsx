@@ -21,6 +21,7 @@ import { FileList } from '@mediature/main/src/components/FileList';
 import { LexicalRenderer } from '@mediature/main/src/components/LexicalRenderer';
 import { MessengerSender } from '@mediature/main/src/components/messenger/MessengerSender';
 import { useSingletonErrorDialog } from '@mediature/main/src/components/modal/useModal';
+import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { MessageSchemaType } from '@mediature/main/src/models/entities/messenger';
 
 export const MessengerViewerContext = createContext({
@@ -95,13 +96,16 @@ export function MessengerViewer({ caseId, message, sx }: MessengerViewerProps) {
                     messageId: message.id,
                     markAsProcessed: !message.consideredAsProcessed,
                   });
-                } catch (err) {
+                } catch (error) {
                   showErrorDialog({
                     description: <>Une erreur est survenue au moment de changer le statut du message.</>,
-                    error: err as unknown as Error,
+                    error: error as unknown as Error,
                   });
 
-                  throw err;
+                  // If not a `BusinessError` nor an error coming from the server (that should have been already reported from there), forward it as unexpected
+                  if (!(error instanceof BusinessError) && !(error instanceof Error && error.name === 'TRPCClientError')) {
+                    throw error;
+                  }
                 }
               }}
               variant="outlined"
