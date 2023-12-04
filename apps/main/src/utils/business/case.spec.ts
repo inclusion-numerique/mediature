@@ -34,4 +34,10 @@ describe('extractCaseHumanIdFromEmail()', () => {
 
     expect(generatedEmail).toBe(originalEmail);
   });
+
+  it('should not be case-sensitive', async () => {
+    const caseHumanId = extractCaseHumanIdFromEmail('DOSSIER-41@MEDIATURE.LOCAL.FR');
+
+    expect(caseHumanId).not.toBeNull();
+  });
 });

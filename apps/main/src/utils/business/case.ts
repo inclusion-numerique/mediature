@@ -19,6 +19,9 @@ export function extractCaseHumanIdFromEmailFactory(domain: string) {
   const scopedGetCaseEmail = getCaseEmailFactory(domain);
 
   return function (email: string): string | null {
+    // We make sure to compare input and model as lowercase to avoid typing mistakes
+    const lowerCaseEmail = email.toLowerCase();
+
     // Test possibilities in all languages
     for (const lng of supportedLanguages) {
       const { t } = getServerTranslation('common', {
@@ -26,15 +29,15 @@ export function extractCaseHumanIdFromEmailFactory(domain: string) {
       });
 
       // Format a pattern to analyze
-      const emailPattern = scopedGetCaseEmail(t, '([0-9]*)');
+      const emailPattern = scopedGetCaseEmail(t, '([0-9]*)').toLowerCase();
       const regexp = new RegExp(emailPattern, 'i');
-      const matches = email.match(regexp);
+      const matches = lowerCaseEmail.match(regexp);
       if (matches && matches.length === 2) {
         // The first at index 0 is the whole matching regex
         const potentialHumanId = matches[1];
 
         // Just to be sure the parsing is right, try to rebuild it
-        if (email === scopedGetCaseEmail(t, potentialHumanId)) {
+        if (lowerCaseEmail === scopedGetCaseEmail(t, potentialHumanId)) {
           return potentialHumanId;
         }
       }
