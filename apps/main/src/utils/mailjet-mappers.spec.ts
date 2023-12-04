@@ -1,6 +1,7 @@
 /**
  * @jest-environment node
  */
+import contentDisposition from 'content-disposition';
 import { promises as fs } from 'fs';
 import { JSDOM } from 'jsdom';
 import path from 'path';
@@ -12,6 +13,8 @@ import {
   decodeParseApiWebhookPayload,
   deprecated_getUtf8PartContent,
   getUtf8PartContent,
+  parseContentDispositionHeaderWithFallback,
+  parseContentTypeHeaderWithFallback,
   removeQuotedReplyFromHtmlEmail,
 } from '@mediature/main/src/utils/mailjet-mappers';
 
@@ -229,6 +232,46 @@ describe('removeQuotedReplyFromHtmlEmail()', () => {
 
     expect(cleanEmailString).not.toContain('<blockquote');
     expect(cleanEmailString).not.toContain('wrote');
+  });
+});
+
+describe('parseContentDispositionHeaderWithFallback()', () => {
+  it('should use the fallback to wrap filename value and pass the parsing', async () => {
+    const contentDispositionObject = parseContentDispositionHeaderWithFallback('attachment; size=100; filename=aaa - bbb - ccc.pdf');
+
+    expect(contentDispositionObject).toEqual({
+      type: 'attachment',
+      parameters: { size: '100', filename: 'aaa - bbb - ccc.pdf' },
+    });
+  });
+
+  it('should use the fallback to wrap filename value and pass the parsing while escaping quotes', async () => {
+    const contentDispositionObject = parseContentDispositionHeaderWithFallback('attachment; filename=aaa - bb""b - c""cc.pdf; size=100');
+
+    expect(contentDispositionObject).toEqual({
+      type: 'attachment',
+      parameters: { size: '100', filename: 'aaa - bb""b - c""cc.pdf' },
+    });
+  });
+});
+
+describe('parseContentTypeHeaderWithFallback()', () => {
+  it('should use the fallback to wrap filename value and pass the parsing', async () => {
+    const contentDispositionObject = parseContentTypeHeaderWithFallback('application/pdf; name=aaa - bbb - ccc.pdf');
+
+    expect(contentDispositionObject).toEqual({
+      type: 'application/pdf',
+      parameters: { name: 'aaa - bbb - ccc.pdf' },
+    });
+  });
+
+  it('should use the fallback to wrap filename value and pass the parsing while escaping quotes', async () => {
+    const contentDispositionObject = parseContentTypeHeaderWithFallback('application/pdf; name=aaa - bb""b - c""cc.pdf');
+
+    expect(contentDispositionObject).toEqual({
+      type: 'application/pdf',
+      parameters: { name: 'aaa - bb""b - c""cc.pdf' },
+    });
   });
 });
 

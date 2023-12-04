@@ -66,6 +66,42 @@ export function refineHeadersAndContentRef(ctx: RefinementCtx, payload: ParseApi
   }
 }
 
+export function parseContentDispositionHeaderWithFallback(header: string): contentDisposition.ContentDisposition {
+  try {
+    return contentDisposition.parse(header);
+  } catch {
+    // [Fallback]
+    // We had a sender not respecting the standard and not wrapping the filename with quotes despite having spaces...
+    // Breaking the parser, so we work around this with manual hack
+    const fallbackHeader = header.replace(/filename=([^;\n]+)/, (match, filename) => {
+      // Add quotes and escape ones if any
+      const escapedAndQuotedFilename = '"' + filename.replace(/"/g, '\\"') + '"';
+
+      return 'filename=' + escapedAndQuotedFilename;
+    });
+
+    return contentDisposition.parse(fallbackHeader);
+  }
+}
+
+export function parseContentTypeHeaderWithFallback(header: string): contentType.ParsedMediaType {
+  try {
+    return contentType.parse(header);
+  } catch {
+    // [Fallback]
+    // We had a sender not respecting the standard and not wrapping the name with quotes despite having spaces...
+    // Breaking the parser, so we work around this with manual hack
+    const fallbackHeader = header.replace(/name=([^;\n]+)/, (match, filename) => {
+      // Add quotes and escape ones if any
+      const escapedAndQuotedFilename = '"' + filename.replace(/"/g, '\\"') + '"';
+
+      return 'name=' + escapedAndQuotedFilename;
+    });
+
+    return contentType.parse(fallbackHeader);
+  }
+}
+
 export const ParseApiWebhookPayloadSchema = z
   .object({
     From: z.string().min(1),
@@ -248,12 +284,12 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     const contentDispositionHeader = partHeaders['Content-Disposition'];
 
     if (part.ContentRef && contentTypeHeader && contentDispositionHeader && typeof decodedPayload[part.ContentRef] === 'string') {
-      const contentDispositionObject = contentDisposition.parse(contentDispositionHeader);
+      const contentDispositionObject = parseContentDispositionHeaderWithFallback(contentDispositionHeader);
 
       // [IMPORTANT] Mailjet says attachments are base64 encoded so we should have relied on `partHeaders['Content-Transfer-Encoding'] === 'base64'`
       // but it appears the value can be `7bit` while being encoded into base64. So we consider if content disposition detected (`attachment` or `inline`)
       if (partHeaders['Content-Transfer-Encoding'] === 'base64' || ['attachment', 'inline'].includes(contentDispositionObject.type)) {
-        const contentTypeObject = contentType.parse(contentTypeHeader);
+        const contentTypeObject = parseContentTypeHeaderWithFallback(contentTypeHeader);
 
         const filename = contentDispositionObject.parameters.filename || undefined;
 
