@@ -163,7 +163,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
             .parse((result as any).address);
 
           const contact = ContactInputSchema.parse({
-            email: email,
+            email: email.toLowerCase(),
             name: result.name,
           });
 
@@ -197,7 +197,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
     .parse((fromResult as any).address);
 
   const fromContact: ContactInputSchemaType = {
-    email: fromEmail,
+    email: fromEmail.toLowerCase(),
     name: fromResult?.name,
   };
 
@@ -309,7 +309,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   }
 
   return {
-    webhookTargetEmail: decodedPayload.Recipient,
+    webhookTargetEmail: decodedPayload.Recipient.toLowerCase(),
     from: fromContact,
     to: toContacts,
     subject: decodedPayload.Subject,
