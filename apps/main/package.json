@@ -7,7 +7,7 @@
     "url": "git+https://github.com/inclusion-numerique/mediature.git",
     "directory": "apps/main"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "scripts": {
     "dev": "only-include-used-icons && dotenv-run-script .env.test -- dev:unsecure",
     "dev:unsecure": "next dev",

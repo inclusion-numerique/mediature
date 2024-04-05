@@ -7,7 +7,7 @@
     "url": "git+https://github.com/inclusion-numerique/mediature.git",
     "directory": "packages/eslint-config-custom"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "main": "index.js",
   "dependencies": {
     "eslint-config-next": "^12.0.8",

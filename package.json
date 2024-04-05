@@ -4,7 +4,7 @@
     "type": "git",
     "url": "git+https://github.com/inclusion-numerique/mediature.git"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "scripts": {
     "build": "turbo run build",
     "clean": "turbo run clean",
