@@ -7,7 +7,7 @@
     "url": "git+https://github.com/inclusion-numerique/mediature.git",
     "directory": "packages/trpc-next-layout"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },

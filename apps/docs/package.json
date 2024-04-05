@@ -7,7 +7,7 @@
     "url": "git+https://github.com/inclusion-numerique/mediature.git",
     "directory": "apps/docs"
   },
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "scripts": {
     "dev": "only-include-used-icons && storybook dev -p 6006 --no-open",
     "build": "only-include-used-icons && storybook build",
