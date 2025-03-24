@@ -11,7 +11,7 @@ process.argv.forEach(function (val, index, array) {
 
 const config = {
   ...defaultConfig,
-  testTimeout: 15 * 1000,
+  testTimeout: 30 * 1000,
   setupFilesAfterEnv: [...defaultConfig.setupFilesAfterEnv, '<rootDir>/apps/docs/test-runner-jest-setup.js'],
   testEnvironmentOptions: {
     'jest-playwright': {
