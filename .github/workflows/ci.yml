@@ -187,18 +187,11 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: ${{ env.STORE_PATH }}/${{ env.PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX }}
         run: pnpm install
 
-      - uses: chromaui/action@v1
+      - name: Publish to Chromatic
+        if: ${{ !github.event.act }}
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        with:
-          # Note: since we use `buildScriptName` we have to specify some of those parameters into the underlying `package.json` script named `chromatic`
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: apps/docs
-          buildScriptName: build
-          autoAcceptChanges: true
-          onlyChanged: true
-          externals: public/**
-          exitZeroOnChanges: true
+        run: pnpm run chromatic
 
   #
   # Note: since we use Scalingo we dropped the usage of Docker images. Commenting this section for now
