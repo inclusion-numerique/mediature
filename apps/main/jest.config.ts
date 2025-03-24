@@ -57,6 +57,14 @@ const defaultExport = async () => {
     customJestConfig.transformIgnorePatterns ?? []
   );
 
+  // Since the command `test:unit` is nested multiple times (turbo, makefile...) it's impossible
+  // to pass the `--max-workers` parameter from the CI/CD pipeline. So hacking a bit by defining a custom environment variable
+  // since Jest has none (https://jestjs.io/docs/environment-variables)
+  // Note: it cannot be set to undefined directly into the config object because Jest would take it due to the object key existing, so using a separate condition
+  if (typeof process.env.JEST_MAX_WORKERS === 'string') {
+    (config as any).maxWorkers = parseInt(process.env.JEST_MAX_WORKERS, 10);
+  }
+
   return config;
 };
 

@@ -11,6 +11,7 @@ env:
   NODE_OPTIONS: --max_old_space_size=4096
   NODE_VERSION: 16.15.0
   PNPM_VERSION: 7.27.1
+  JEST_CACHE_FOLDER_SUFFIX: .cache/jest
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
   PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX: .cache/ms-playwright
 jobs:
@@ -97,7 +98,14 @@ jobs:
         if: ${{ env.ACT }}
         run: sudo apt-get update && sudo apt-get install -y xvfb && npx playwright install-deps
 
+      - name: Get number of CPU cores for the following test step
+        uses: SimenB/github-actions-cpu-cores@v2
+        id: cpu-cores
+
       - name: Test unit
+        env:
+          JEST_CACHE_PATH: ${{ env.STORE_PATH }}/${{ env.JEST_CACHE_FOLDER_SUFFIX }}
+          JEST_MAX_WORKERS: ${{ steps.cpu-cores.outputs.count }}
         run: make test-unit
 
       - name: Build
@@ -113,6 +121,7 @@ jobs:
         env:
           CYPRESS_CACHE_FOLDER: ${{ env.STORE_PATH }}/${{ env.CYPRESS_CACHE_FOLDER_SUFFIX }}
           PLAYWRIGHT_BROWSERS_PATH: ${{ env.STORE_PATH }}/${{ env.PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX }}
+          JEST_MAX_WORKERS: ${{ steps.cpu-cores.outputs.count }}
         run: make test-e2e
 
       # TODO: enable again once Next 13 with "appDir: true" is compatible with `next export`
