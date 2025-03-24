@@ -56,7 +56,6 @@ const moduleExports = async () => {
     },
     transpilePackages: commonPackages,
     experimental: {
-      appDir: true,
       outputFileTracingRoot: path.join(__dirname, '../../'),
       swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
     },

@@ -9,6 +9,11 @@
     "incremental": true,
     "jsx": "preserve",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "module": "esnext",
     "noEmit": true,
     "strict": true,
