@@ -5,7 +5,8 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import debounce from 'lodash.debounce';
 import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react';
 
-import { LocationApiProperties, searchCitiesByPostalCode } from '@mediature/main/src/utils/national-address-base';
+import { searchCitiesByPostalCode } from '@mediature/main/src/proxies/national-address-base';
+import { LocationApiProperties } from '@mediature/main/src/utils/national-address-base';
 
 export interface CityFieldProps {
   initialValue?: string;
