@@ -1,6 +1,6 @@
 import { MjmlButton, MjmlText } from '@luma-team/mjml-react';
 import { Meta, StoryFn } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 
 import { withEmailRenderer } from '@mediature/docs/.storybook/email';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';

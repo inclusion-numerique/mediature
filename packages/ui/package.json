@@ -64,7 +64,7 @@
     "@mui/lab": "5.0.0-alpha.118",
     "@mui/material": "^5.10.16",
     "@storybook/react": "7.6.15",
-    "@storybook/testing-library": "0.0.14-next.1",
+    "@storybook/test": "7.6.15",
     "@tanstack/query-core": "^4.19.1",
     "@types/country-data": "^0.0.2",
     "@types/google-libphonenumber": "^7.4.23",

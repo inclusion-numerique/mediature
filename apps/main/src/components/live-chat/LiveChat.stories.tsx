@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { screen } from '@storybook/testing-library';
+import { screen } from '@storybook/test';
 import { useEffect } from 'react';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';

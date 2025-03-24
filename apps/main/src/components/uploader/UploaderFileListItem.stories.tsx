@@ -1,6 +1,6 @@
 import List from '@mui/material/List';
 import { Meta, StoryFn } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 import { useState } from 'react';
 import { useInterval } from 'usehooks-ts';
 

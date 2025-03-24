@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { userEvent, within } from '@storybook/testing-library';
+import { userEvent, within } from '@storybook/test';
 
 import { userSessionContext } from '@mediature/docs/.storybook/auth';
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';

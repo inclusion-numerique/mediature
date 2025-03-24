@@ -3,7 +3,7 @@ import { DsfrProvider } from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider';
 import { getHtmlAttributes } from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes';
 import { withLinks } from '@storybook/addon-links';
 import addons from '@storybook/addons';
-import { configure as testingConfigure } from '@storybook/testing-library';
+import { configure as testingConfigure } from '@storybook/test';
 import { themes } from '@storybook/theming';
 import { withMockAuth } from '@tomfreudenberg/next-auth-mock/storybook';
 import { initialize, mswDecorator } from 'msw-storybook-addon';
