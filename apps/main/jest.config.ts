@@ -33,14 +33,14 @@ const customJestConfig = {
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   transformIgnorePatterns: [],
   transform: {
-    '\\.[jt]sx?$': [
+    '\\.tsx?$': [
       'ts-jest',
       {
         tsconfig: {
           jsx: 'react',
         },
       },
-    ],
+    ] as any, // Casting is needed because `createJestConfig()` expects a string, and the alternative of setting the parameter as `globals` is deprecated
     '\\.lexical$': '@glen/jest-raw-loader',
   },
 };

@@ -61,11 +61,11 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
-  const attemptErrorCode = searchParams.get('error');
-  const loginHint = searchParams.get('login_hint');
-  const sessionEnd = searchParams.has('session_end');
-  const registered = searchParams.has('registered');
+  const callbackUrl = searchParams!.get('callbackUrl');
+  const attemptErrorCode = searchParams!.get('error');
+  const loginHint = searchParams!.get('login_hint');
+  const sessionEnd = searchParams!.has('session_end');
+  const registered = searchParams!.has('registered');
 
   const [showSessionEndBlock, setShowSessionEndBlock] = useState<boolean>(sessionEnd);
   const [showRegisteredBlock, setShowRegisteredBlock] = useState<boolean>(registered);

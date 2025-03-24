@@ -18,7 +18,7 @@ const customJestConfig = {
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   transform: {
-    '\\.[jt]sx?$': [
+    '\\.tsx?$': [
       'ts-jest',
       {
         tsconfig: {
