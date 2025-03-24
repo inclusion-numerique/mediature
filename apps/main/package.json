@@ -47,6 +47,7 @@
     "db:migration:deploy:unsecure": "prisma migrate deploy",
     "db:studio": "dotenv-run-script .env.test -- db:studio:unsecure",
     "db:studio:unsecure": "prisma studio",
+    "jest": "jest",
     "heroku-postbuild": "pnpm run build && ./prepare-standalone.sh",
     "heroku-start:test": "dotenv-run-script .env.test -- heroku-start",
     "heroku-start": "./start-and-wait-to-init.sh"
