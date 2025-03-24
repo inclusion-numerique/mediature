@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "only-include-used-icons && storybook dev -p 6006 --no-open",
-    "build": "only-include-used-icons && storybook build",
+    "build": "only-include-used-icons && storybook build --test",
     "start": "serve -l 6006 storybook-static",
     "lint": "pnpm run lint:es && pnpm run lint:ts",
     "lint:es": "TIMING=1 eslint --ext .js,.jsx,.ts,.tsx,.mdx .",
