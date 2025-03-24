@@ -19,6 +19,7 @@
     "test:e2e:headless": "turbo run test:e2e:headless",
     "heroku-postbuild": "turbo run heroku-postbuild --filter=\"${BUILD_APP_NAME}\"...",
     "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run heroku-start",
+    "chromatic": "turbo run chromatic",
     "accessibility": "turbo run accessibility",
     "accessibility:open": "turbo run accessibility:open"
   },

@@ -68,6 +68,9 @@ format:
 format-check:
 	pnpm run format:check
 
+chromatic:
+	pnpm run chromatic
+
 simulate-cicd-with-push:
 # Install `act` through a package manager to make it working
 #
