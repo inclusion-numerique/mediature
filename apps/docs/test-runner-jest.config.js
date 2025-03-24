@@ -12,7 +12,7 @@ process.argv.forEach(function (val, index, array) {
 module.exports = {
   ...defaultConfig,
   testTimeout: 15 * 1000,
-  setupFilesAfterEnv: [...defaultConfig.setupFilesAfterEnv, '<rootDir>/test-runner-jest-setup.js'],
+  setupFilesAfterEnv: [...defaultConfig.setupFilesAfterEnv, '<rootDir>/apps/docs/test-runner-jest-setup.js'],
   testEnvironmentOptions: {
     'jest-playwright': {
       ...defaultConfig['jest-playwright'],
