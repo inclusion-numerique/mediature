@@ -24,7 +24,7 @@ export function SignUpPage() {
   const { ContextualSignUpForm } = useContext(SignUpPageContext);
 
   const searchParams = useSearchParams();
-  const invitationToken = searchParams.get('token');
+  const invitationToken = searchParams!.get('token');
 
   if (!invitationToken) {
     const error = new Error(

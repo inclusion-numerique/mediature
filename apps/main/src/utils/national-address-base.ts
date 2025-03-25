@@ -25,7 +25,7 @@ export async function searchCitiesByPostalCode(postalCode: string): Promise<Loca
   const url = new URL(`${baseUrl}/search/`);
   url.searchParams.append('q', postalCode);
   url.searchParams.append('type', 'municipality'); // Ask for cities
-  url.searchParams.append('limit', '100'); // Do not limit to the default 5 results
+  url.searchParams.append('limit', '40'); // Do not limit to the default 5 results
 
   const response = await window.fetch(url);
 

@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 // Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` and `lint:prepare` steps
 import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';

@@ -19,7 +19,7 @@ export function ResetPasswordPage() {
   const { ContextualResetPasswordForm } = useContext(ResetPasswordPageContext);
 
   const searchParams = useSearchParams();
-  const resetToken = searchParams.get('token');
+  const resetToken = searchParams!.get('token');
 
   if (!resetToken) {
     const error = new Error(`Le jeton de réinitialisation de mot de passe n'est pas détecté, merci de bien copier le lien depuis l'email.`);

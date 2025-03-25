@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { Normal as UpdateNoteFormNormalStory } from '@mediature/main/src/app/(private)/dashboard/authority/[authorityId]/case/[caseId]/UpdateNoteForm.stories';

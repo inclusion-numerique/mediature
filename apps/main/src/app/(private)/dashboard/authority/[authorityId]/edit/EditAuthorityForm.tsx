@@ -89,7 +89,7 @@ export function EditAuthorityForm(props: EditAuthorityFormProps) {
           inputProps={{
             readOnly: true,
           }}
-          type="slug"
+          type="text"
           label="Identifiant technique (slug)"
           value={props.slug}
           aria-describedby="slug-helper-text"

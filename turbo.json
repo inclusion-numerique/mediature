@@ -47,6 +47,9 @@
     },
     "format:check": {
       "cache": false
+    },
+    "chromatic": {
+      "cache": false
     }
   },
   "globalEnv": [
@@ -60,6 +63,7 @@
     "ENABLE_MOCKS",
     "FILE_AUTH_SECRET",
     "GITHUB_TOKEN",
+    "JEST_MAX_WORKERS",
     "JEST_WORKER_ID",
     "MAINTENANCE_API_KEY",
     "NEXT_AUTH_SECRET",

@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Meta, StoryFn } from '@storybook/react';
-import { screen, userEvent, within } from '@storybook/testing-library';
+import { screen, userEvent, within } from '@storybook/test';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import { ConfirmationDialog } from '@mediature/main/src/components/ConfirmationDialog';

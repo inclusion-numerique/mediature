@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { within } from '@storybook/testing-library';
+import { within } from '@storybook/test';
 
 import { StoryHelperFactory } from '@mediature/docs/.storybook/helpers';
 import agent1 from '@mediature/main/public/assets/dashboard/quick-access/agent_1.png';

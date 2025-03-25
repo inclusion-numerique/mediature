@@ -1,4 +1,4 @@
-import { ArgsTable, Description, PRIMARY_STORY, Primary, Stories, Subtitle, Title } from '@storybook/addon-docs';
+import { ArgTypes, Controls, Description, PRIMARY_STORY, Primary, Stories, Subtitle, Title } from '@storybook/addon-docs';
 import { Meta, StoryFn } from '@storybook/react';
 
 // Helper to get props type of a component
@@ -70,7 +70,8 @@ export function generateMetaDefault<ComponentType>(initialMeta: Meta<ComponentTy
               <Subtitle />
               <Description />
               <Primary />
-              <ArgsTable story={PRIMARY_STORY} />
+              <ArgTypes of={PRIMARY_STORY} />
+              <Controls of={PRIMARY_STORY} />
               <Stories />
             </>
           );
@@ -106,6 +107,8 @@ export function prepareStory<ComponentType, ContextValueType extends MatchingCon
 
   if (!story.decorators) {
     story.decorators = [];
+  } else if (!Array.isArray(story.decorators)) {
+    throw new Error('invalid property');
   }
 
   if (!story.parameters.docs) {
