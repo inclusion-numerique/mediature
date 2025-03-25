@@ -16,6 +16,10 @@ export function getListeningPort() {
   return process.env.PORT ?? 3000;
 }
 
+export function getLocalHostname() {
+  return process.env.HOSTNAME ?? 'localhost';
+}
+
 export function hasPathnameThisRoot(pathname: string | null, rootPathname: string): boolean {
   if (!pathname) {
     return false;

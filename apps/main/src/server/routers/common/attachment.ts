@@ -12,7 +12,7 @@ import { AttachmentKindRequirementsSchemaType, AttachmentKindSchemaType } from '
 import { fileUploadError, tooManyUploadedFilesError } from '@mediature/main/src/models/entities/errors';
 import { getFileIdFromUrl } from '@mediature/main/src/utils/attachment';
 import { bitsFor } from '@mediature/main/src/utils/bits';
-import { getListeningPort } from '@mediature/main/src/utils/url';
+import { getListeningPort, getLocalHostname } from '@mediature/main/src/utils/url';
 import { getBaseUrl } from '@mediature/main/src/utils/url';
 
 // We use a symetric key since the encode/decode is done in the same program
@@ -176,7 +176,7 @@ export async function uploadFile(options: UploadFileOptions): Promise<string> {
     const chunkSize = 5 * bitsFor.MiB;
 
     const upload = new tus.Upload(file, {
-      endpoint: `http://localhost:${getListeningPort()}/api/upload`, // Use the local address to prevent sending the file over the external network
+      endpoint: `http://${getLocalHostname()}:${getListeningPort()}/api/upload`, // Use the local address to prevent sending the file over the external network
       chunkSize: chunkSize,
       uploadSize: options.fileSize,
       metadata: {
