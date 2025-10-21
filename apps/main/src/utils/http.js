@@ -10,7 +10,12 @@ connectSrcValues.push('https://api-adresse.data.gouv.fr/');
 // Crisp settings
 {
   scriptSrcValues.push('https://client.crisp.chat/');
-  connectSrcValues.push('wss://client.relay.crisp.chat/', 'https://client.crisp.chat/static/', 'https://storage.crisp.chat/users/upload/');
+  connectSrcValues.push(
+    'wss://client.relay.crisp.chat/',
+    'https://client.crisp.chat/static/',
+    'https://client.crisp.chat/settings/',
+    'https://storage.crisp.chat/users/upload/'
+  );
   styleSrcValues.push('https://client.crisp.chat/');
   imgSrcValues.push('https://*.crisp.chat/');
   fontSrcValues.push('https://client.crisp.chat/static/');
