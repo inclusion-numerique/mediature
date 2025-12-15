@@ -1,9 +1,11 @@
 import path from 'path';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
-import { StartedGenericContainer } from 'testcontainers/dist/src/generic-container/started-generic-container';
+import { StartedGenericContainer } from 'testcontainers/build/generic-container/started-generic-container';
 
 import { EmailServerSettings } from '@mediature/main/src/emails/mailer';
 import { bindContainerLogs, defaultEnvironment, formatContainerNameWithSuffix } from '@mediature/main/src/utils/testcontainers';
+
+const __root_dirname = process.cwd();
 
 export interface MailcatcherContainer {
   container: StartedGenericContainer;
@@ -21,7 +23,7 @@ export async function setupMailcatcher(): Promise<MailcatcherContainer> {
     process.env.TESTCONTAINERS_RYUK_DISABLED = 'true';
   }
 
-  const composeFilePath = path.resolve(__dirname, '../../../../');
+  const composeFilePath = path.resolve(__root_dirname, '../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'mailcatcher';
   const containerName = formatContainerNameWithSuffix('mediature_mailcatcher_container');
@@ -29,6 +31,8 @@ export async function setupMailcatcher(): Promise<MailcatcherContainer> {
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
       ...defaultEnvironment,
+      DOCKER_COMPOSE_MAILCATCHER_UI_PORT_BINDING: '1080', // To use a random port from the host
+      DOCKER_COMPOSE_MAILCATCHER_EMAIL_PORT_BINDING: '1025', // To use a random port from the host
       EMAIL_HOST: dummyHost,
       EMAIL_HOST_USER: dummyUser,
       EMAIL_HOST_PASSWORD: dummyPassword,

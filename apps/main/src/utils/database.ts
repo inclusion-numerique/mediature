@@ -1,8 +1,10 @@
 import path from 'path';
 import { DockerComposeEnvironment, Wait } from 'testcontainers';
-import { StartedGenericContainer } from 'testcontainers/dist/src/generic-container/started-generic-container';
+import type { StartedGenericContainer } from 'testcontainers/build/generic-container/started-generic-container';
 
 import { bindContainerLogs, defaultEnvironment, formatContainerNameWithSuffix } from '@mediature/main/src/utils/testcontainers';
+
+const __root_dirname = process.cwd();
 
 export interface PostgresContainer {
   container: StartedGenericContainer;
@@ -19,7 +21,7 @@ export async function setupPostgres(): Promise<PostgresContainer> {
     process.env.TESTCONTAINERS_RYUK_DISABLED = 'true';
   }
 
-  const composeFilePath = path.resolve(__dirname, '../../../../');
+  const composeFilePath = path.resolve(__root_dirname, '../../');
   const composeFile = 'docker-compose.yaml';
   const serviceName = 'postgres';
   const containerName = formatContainerNameWithSuffix('mediature_postgres_container');
@@ -27,6 +29,7 @@ export async function setupPostgres(): Promise<PostgresContainer> {
   const environment = await new DockerComposeEnvironment(composeFilePath, composeFile)
     .withEnvironment({
       ...defaultEnvironment,
+      DOCKER_COMPOSE_POSTGRES_PORT_BINDING: '5432', // To use a random port from the host
       POSTGRES_USER: dummyUser,
       POSTGRES_PASSWORD: dummyPassword,
       POSTGRES_DB: dummyDatabase,

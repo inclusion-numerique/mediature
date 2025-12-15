@@ -1,3 +1,5 @@
+'use client';
+
 // The `generated-statement.html` file has been generated on https://betagouv.github.io/a11y-generateur-declaration/
 import Alert from '@mui/material/Alert';
 import Container from '@mui/material/Container';

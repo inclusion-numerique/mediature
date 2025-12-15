@@ -1,6 +1,6 @@
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { nextAuthOptions } from '@mediature/main/src/pages/api/auth/[...nextauth]';
 import { User, getUser } from '@mediature/main/src/server-rsc/getUser';
@@ -33,7 +33,7 @@ export async function createContext(
   }
 
   // Not RSC
-  const session = await unstable_getServerSession(opts.req, opts.res, nextAuthOptions);
+  const session = await getServerSession(opts.req, opts.res, nextAuthOptions);
   return {
     type: opts.type,
     user: session?.user,

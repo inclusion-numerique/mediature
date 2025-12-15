@@ -327,7 +327,7 @@ export interface Rewrite {
   destination: string;
 }
 
-export function generateRewrites(technicalLang: Lang, routes: { [key in keyof typeof localizedRoutes]: typeof localizedRoutes[key] }): Rewrite[] {
+export function generateRewrites(technicalLang: Lang, routes: { [key in keyof typeof localizedRoutes]: (typeof localizedRoutes)[key] }): Rewrite[] {
   // TODO: find a way to type correctly the routes... :s
 
   const rewrites: Rewrite[] = [];

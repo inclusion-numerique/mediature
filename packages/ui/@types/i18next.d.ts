@@ -6,6 +6,6 @@ import { defaultNamespace, resources } from '@mediature/main/src/i18n';
 declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: typeof defaultNamespace;
-    resources: typeof resources['fr'];
+    resources: (typeof resources)['fr'];
   }
 }
