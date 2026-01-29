@@ -8,8 +8,8 @@ on:
 env:
   APP_NAME: mediature
   NODE_OPTIONS: --max_old_space_size=4096
-  NODE_VERSION: 16.15.0
-  PNPM_VERSION: 7.27.1
+  NODE_VERSION: 18.20.8
+  PNPM_VERSION: 7.33.7
   JEST_CACHE_FOLDER_SUFFIX: .cache/jest
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
   PLAYWRIGHT_BROWSERS_CACHE_FOLDER_SUFFIX: .cache/ms-playwright

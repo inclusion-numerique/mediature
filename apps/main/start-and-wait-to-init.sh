@@ -29,7 +29,7 @@ check_server_and_init() {
 
   while true; do
     response=$(curl --write-out %{http_code} --silent --output /dev/null "$healthcheck_url")
-    if [ "$response" = "200" ]; then
+    if [ "$response" = "200" ] || [ "$response" = "301" ] || [ "$response" = "302" ] || [ "$response" = "307" ]; then # Looking for redirections since the root became another page
       break
     fi
 

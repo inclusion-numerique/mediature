@@ -9,9 +9,9 @@ export interface GetOptions {
 
 // To simplify the definition we provide an object even when no parameter is needed
 // we juste set the type to "undefined" to explicitly say no object is expected
-export type Params<RouteName extends keyof typeof routes['en']> = Parameters<typeof routes['en'][RouteName]>[0] extends undefined
+export type Params<RouteName extends keyof (typeof routes)['en']> = Parameters<(typeof routes)['en'][RouteName]>[0] extends undefined
   ? undefined
-  : Parameters<typeof routes['en'][RouteName]>[0];
+  : Parameters<(typeof routes)['en'][RouteName]>[0];
 
 export class LinkRegistry {
   protected defaultLang: Lang;
@@ -25,7 +25,7 @@ export class LinkRegistry {
     this.defaultAbsoluteLinks = false;
   }
 
-  public get<RouteName extends keyof typeof routes['en']>(key: RouteName, params: Params<RouteName>, options?: GetOptions): string {
+  public get<RouteName extends keyof (typeof routes)['en']>(key: RouteName, params: Params<RouteName>, options?: GetOptions): string {
     let lang: Lang = this.defaultLang;
     let absoluteLink: boolean = false;
     if (options) {

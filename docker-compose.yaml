@@ -14,9 +14,9 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-5432:}5432'
+      - '${DOCKER_COMPOSE_POSTGRES_PORT_BINDING:-5432:5432}'
     networks:
-      - postgres
+      - mediature
     restart: unless-stopped
     healthcheck:
       # Note: at start we tried `pg_isready` but it's not efficient since the postgres container restarts the server at startup (to init some scripts) so we ended with broken connections...
@@ -26,33 +26,19 @@ services:
       timeout: 3s
       retries: 5
 
-  pgadmin:
-    container_name: mediature_pgadmin_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-
-    ports:
-      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-5050:}80'
-    networks:
-      - postgres
-    restart: unless-stopped
-
   mailcatcher:
     container_name: mediature_mailcatcher_container_${DOCKER_COMPOSE_CONTAINER_NAME_SUFFIX:-default}
-    image: aerzas/mailcatcher:2.0.1
+    image: aerzas/mailcatcher:2.3.0
     environment:
       EMAIL_HOST: ${EMAIL_HOST:-127.0.0.1}
       EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
       EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
       EMAIL_PORT: ${EMAIL_PORT:-1025}
+    networks:
+      - mediature
     ports:
-      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-1080:}1080'
-      - '127.0.0.1:${DOCKER_COMPOSE_HOST_PORTS:-11025:}1025' # We set `11025` on the host because we had the case where a local email software had taken this port already and Docker didn't warn us (it was really tricky to find the cause...)
+      - '${DOCKER_COMPOSE_MAILCATCHER_UI_PORT_BINDING:-1080:1080}'
+      - '${DOCKER_COMPOSE_MAILCATCHER_EMAIL_PORT_BINDING:-11025:1025}'
     restart: unless-stopped
     healthcheck:
       test: ['CMD', '/scripts/docker-healthcheck.sh']
@@ -61,9 +47,8 @@ services:
       retries: 5
 
 networks:
-  postgres:
+  mediature:
     driver: bridge
 
 volumes:
   postgres:
-  pgadmin:

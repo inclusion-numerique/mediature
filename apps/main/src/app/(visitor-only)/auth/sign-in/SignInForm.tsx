@@ -27,16 +27,19 @@ import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { SignInPrefillSchemaType, SignInSchema, SignInSchemaType } from '@mediature/main/src/models/actions/auth';
 import {
   BusinessError,
+  UnexpectedError,
   authCredentialsRequiredError,
   authFatalError,
   authNoCredentialsMatchError,
   authRetriableError,
+  internalServerErrorError,
+  userNotConfirmedError,
 } from '@mediature/main/src/models/entities/errors';
 import { signIn } from '@mediature/main/src/proxies/next-auth/react';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
 
-function errorCodeToError(errorCode: string): BusinessError | null {
-  let error: BusinessError | null;
+function errorCodeToError(errorCode: string): BusinessError | UnexpectedError {
+  let error: BusinessError | UnexpectedError;
 
   switch (errorCode) {
     case authCredentialsRequiredError.code:
@@ -45,8 +48,12 @@ function errorCodeToError(errorCode: string): BusinessError | null {
     case authNoCredentialsMatchError.code:
       error = authNoCredentialsMatchError;
       break;
+    case userNotConfirmedError.code:
+      error = userNotConfirmedError;
+      break;
     case 'undefined':
-      error = null;
+      // Probably the server has thrown something that is not a basic `Error` object
+      error = internalServerErrorError;
       break;
     default:
       error = authRetriableError;
@@ -70,7 +77,7 @@ export function SignInForm({ prefill }: { prefill?: SignInPrefillSchemaType }) {
   const [showSessionEndBlock, setShowSessionEndBlock] = useState<boolean>(sessionEnd);
   const [showRegisteredBlock, setShowRegisteredBlock] = useState<boolean>(registered);
 
-  const [error, setError] = useState<BusinessError | null>(() => {
+  const [error, setError] = useState<BusinessError | UnexpectedError | null>(() => {
     return attemptErrorCode ? errorCodeToError(attemptErrorCode) : null;
   });
   const [mutex] = useState<Mutex>(new Mutex());

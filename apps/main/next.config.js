@@ -21,23 +21,23 @@ const { withSentryConfig } = require('@sentry/nextjs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const gitRevision = require('git-rev-sync');
 const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/utils/app-version.js');
-const { convertHeadersForNextjs, securityHeaders, assetsSecurityHeaders } = require('./src/utils/http.js');
 const { i18n } = require('./next-i18next.config');
 
 const mode = process.env.APP_MODE || 'test';
 
-const nextjsSecurityHeaders = convertHeadersForNextjs(securityHeaders);
-const nextjsAssetsSecurityHeaders = convertHeadersForNextjs(assetsSecurityHeaders);
 const baseUrl = new URL(getBaseUrl());
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
   const appHumanVersion = await getHumanVersion();
 
+  /**
+   * @type {import('next').NextConfig}
+   */
   let standardModuleExports = {
     reactStrictMode: true,
     swcMinify: true,
-    output: 'standalone', // To debug locally the `next start` it's easier to comment this line (it will avoid using `prepare-standalone.sh` + `node`)
+    output: process.env.NEXTJS_BUILD_OUTPUT_MODE || 'standalone', // To debug locally the `next start` comment this line (it will avoid trying to mess with the assembling folders logic of standalone mode)
     env: {
       // Those will replace `process.env.*` with hardcoded values (useful when the value is calculated during the build time)
       SENTRY_RELEASE_TAG: appHumanVersion,
@@ -57,6 +57,16 @@ const moduleExports = async () => {
     transpilePackages: commonPackages,
     experimental: {
       outputFileTracingRoot: path.join(__dirname, '../../'),
+      outputFileTracingIncludes: {
+        '*': ['./src/prisma/migrations/**/*', './src/prisma/schema.prisma', './start-and-wait-to-init.sh'], // Migration and start files are required when doing automatic migration before starting the application
+      },
+      // It should have been the new `outputFileTracingExcludes` property but it's messing with the Next.js core (ref: https://github.com/vercel/next.js/issues/62331)
+      outputFileTracingExcludes: {
+        '*': [
+          // // The global exclusion of `data` should have worked but it's not so listing one by one (ref: https://github.com/vercel/next.js/issues/62331)
+          './scripts/**/*',
+        ], // Note that folders starting with a dot are already ignored after verification
+      },
       swcPlugins: [['next-superjson-plugin', { excluded: [] }]],
     },
     async rewrites() {
@@ -69,19 +79,6 @@ const moduleExports = async () => {
         {
           source: '/robots.txt',
           destination: '/api/robots',
-        },
-      ];
-    },
-    async headers() {
-      // Order matters, less precise to more precise (it's weird since the opposite of others... but fine)
-      return [
-        {
-          source: '/:path*', // All routes
-          headers: nextjsSecurityHeaders,
-        },
-        {
-          source: '/assets/:path*', // Assets routes
-          headers: nextjsAssetsSecurityHeaders,
         },
       ];
     },
@@ -189,6 +186,9 @@ const moduleExports = async () => {
 
   const uploadToSentry = process.env.SENTRY_RELEASE_UPLOAD === 'true' && process.env.NODE_ENV === 'production';
 
+  /**
+   * @type {import('@sentry/nextjs').SentryBuildOptions}
+   */
   const sentryWebpackPluginOptions = {
     dryRun: !uploadToSentry,
     debug: false,

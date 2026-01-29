@@ -88,6 +88,7 @@
       "noBoundCaseToDeleteCaseDomain": "aucun dossier ne doit être lié à ce domaine pour pouvoir être supprimé",
       "noBoundChildCaseCompetentThirdPartyToDeleteCaseCompetentThirdParty": "aucune \"entité tierce enfant\" ne doit être liée à cette entité pour pouvoir être supprimée",
       "noBoundChildCaseDomainToDeleteCaseDomain": "aucun \"domaine enfant\" ne doit être lié à ce domaine pour pouvoir être supprimé",
+      "userNotConfirmed": "votre inscription doit être confirmée en cliquant sur le lien de l'email avant de pouvoir vous authentifier",
       "userNotFound": "cet utilisateur n'existe pas",
       "tooManyUploadedFiles": "vous ne pouvez pas transmettre plus de fichiers que le nombre autorisé",
       "unauthorizedError": "vous devez être connecté pour effectuer cette action",

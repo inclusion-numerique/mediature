@@ -17,7 +17,7 @@
     "module": "esnext",
     "noEmit": true,
     "strict": true,
-    "types": [],
+    "types": ["jest", "node"],
     "target": "es6"
   }
 }

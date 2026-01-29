@@ -1,3 +1,5 @@
+'use client';
+
 import Container from '@mui/material/Container';
 
 import statementContent from '@mediature/main/src/app/(public)/(compliance)/privacy-policy/content.transformed.html';
