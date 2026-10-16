@@ -9,7 +9,7 @@
 
 .Placeholder__root {
   font-size: 15px;
-  color: #999;
+  color: var(--text-mention-grey); /* DSFR variable having enough contrast in both light and dark modes (#999 was not accessible) */
   overflow: hidden;
   position: absolute;
   text-overflow: ellipsis;
