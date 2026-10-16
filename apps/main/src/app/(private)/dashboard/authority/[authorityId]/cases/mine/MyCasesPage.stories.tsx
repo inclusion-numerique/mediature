@@ -25,6 +25,7 @@ const mswListCasesParameters = {
   path: ['listCases'] as ['listCases'],
   response: {
     casesWrappers: [casesWrappers[0], casesWrappers[1], casesWrappers[2]],
+    totalCount: 3,
   },
 };
 

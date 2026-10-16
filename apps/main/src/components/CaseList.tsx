@@ -22,6 +22,7 @@ import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseAssignmentDialog } from '@mediature/main/src/components/CaseAssignmentDialog';
 import { CaseCard } from '@mediature/main/src/components/CaseCard';
 import { CaseStatusChip } from '@mediature/main/src/components/CaseStatusChip';
+import { maxPageSize } from '@mediature/main/src/components/ListPagination';
 import { useSingletonConfirmationDialog, useSingletonModal } from '@mediature/main/src/components/modal/useModal';
 import { AgentSchemaType } from '@mediature/main/src/models/entities/agent';
 import { CaseSchemaType, CaseWrapperSchemaType } from '@mediature/main/src/models/entities/case';
@@ -201,8 +202,9 @@ export function CaseList(props: CaseListProps) {
           rows={props.casesWrappers}
           getRowId={(row) => row.case.id}
           columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10]}
+          pageSize={maxPageSize} // Pagination is managed by the server, so making sure all received rows are displayed
+          rowsPerPageOptions={[maxPageSize]}
+          hideFooter={true}
           autoHeight
           experimentalFeatures={{ newEditingApi: false }}
           disableColumnFilter

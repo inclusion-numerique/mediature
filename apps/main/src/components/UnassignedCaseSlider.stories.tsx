@@ -55,6 +55,7 @@ NormalStory.parameters = {
               return deepCopyC;
             }),
           ],
+          totalCount: 9,
         },
       }),
     ],
@@ -79,6 +80,7 @@ NoCaseStory.parameters = {
         path: ['listCases'],
         response: {
           casesWrappers: [],
+          totalCount: 0,
         },
       }),
     ],

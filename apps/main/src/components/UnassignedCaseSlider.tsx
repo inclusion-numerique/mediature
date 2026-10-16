@@ -13,6 +13,7 @@ import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
 import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import styles from '@mediature/main/src/components/UnassignedCaseSlider.module.scss';
 import { UnassignedCaseSliderCard } from '@mediature/main/src/components/UnassignedCaseSliderCard';
+import { PaginationSize } from '@mediature/main/src/models/actions/common';
 import { centeredAlertContainerGridProps } from '@mediature/main/src/utils/grid';
 import { wideContainerGridProps } from '@mediature/main/src/utils/grid';
 import { linkRegistry } from '@mediature/main/src/utils/routes/registry';
@@ -28,12 +29,15 @@ export function UnassignedCaseSlider({ authorityId, assignAction }: UnassignedCa
   const [isEnd, setIsEnd] = useState<boolean>(false);
 
   const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
+    page: 1,
+    pageSize: PaginationSize.size50, // Unassigned cases are not supposed to pile up, and the slider is not adapted to paginate
     orderBy: {},
     filterBy: {
       authorityIds: [authorityId],
       assigned: false,
     },
     include: {
+      attachments: true,
       similarCases: true,
     },
   });

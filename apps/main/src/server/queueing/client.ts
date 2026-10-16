@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/nextjs';
 import PgBoss from 'pg-boss';
 
 import { BusinessError } from '@mediature/main/src/models/entities/errors';
+import { cleanExpiredCases, cleanExpiredCasesTopic } from '@mediature/main/src/server/queueing/workers/clean-expired-cases';
 import { cleanPendingUploads, cleanPendingUploadsTopic } from '@mediature/main/src/server/queueing/workers/clean-pending-uploads';
 import { createCaseInboundEmail, createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
 import { deleteCaseInboundEmail, deleteCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/delete-case-inbound-email';
@@ -52,6 +53,7 @@ export async function getBossClientInstance(): Promise<PgBoss> {
 
       // Bind listeners
       await bossClient.work(cleanPendingUploadsTopic, handlerWrapper(cleanPendingUploads));
+      await bossClient.work(cleanExpiredCasesTopic, handlerWrapper(cleanExpiredCases));
       await bossClient.work(sendAgentsActivitySumUpTopic, handlerWrapper(sendAgentsActivitySumUp));
       await bossClient.work(createCaseInboundEmailTopic, handlerWrapper(createCaseInboundEmail));
       await bossClient.work(deleteCaseInboundEmailTopic, handlerWrapper(deleteCaseInboundEmail));

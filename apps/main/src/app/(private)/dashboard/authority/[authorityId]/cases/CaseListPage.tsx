@@ -11,23 +11,18 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import debounce from 'lodash.debounce';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseList } from '@mediature/main/src/components/CaseList';
 import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { ListPagination } from '@mediature/main/src/components/ListPagination';
 import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
 import { useUserInterfaceAuthority } from '@mediature/main/src/components/user-interface-session/useUserInterfaceSession';
+import { ListFilter, useCaseListUrlState } from '@mediature/main/src/utils/case-list';
 import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
 import { AggregatedQueries } from '@mediature/main/src/utils/trpc';
-
-export enum ListFilter {
-  ALL = 1,
-  OPEN_ONLY,
-  CLOSE_ONLY,
-}
 
 export const CaseListPageContext = createContext({
   ContextualCaseList: CaseList,
@@ -41,19 +36,24 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
   const { ContextualCaseList } = useContext(CaseListPageContext);
   const { userInterfaceAuthority } = useUserInterfaceAuthority(authorityId);
 
-  const queryRef = React.createRef<HTMLInputElement>();
-  const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
-  const [searchQuery, setSearchQuery] = useState<string | null>(null);
-  const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
   const [listDisplay, setListDisplay] = useLocalStorageListDisplay();
+  const listState = useCaseListUrlState();
 
-  const listCases = trpc.listCases.useQuery({
-    orderBy: {},
-    filterBy: {
-      authorityIds: [authorityId],
-      query: searchQuery,
+  const listCases = trpc.listCases.useQuery(
+    {
+      page: listState.page,
+      pageSize: listState.pageSize,
+      orderBy: {},
+      filterBy: {
+        authorityIds: [authorityId],
+        query: listState.searchQuery,
+        closed: listState.closedFilter,
+      },
     },
-  });
+    {
+      keepPreviousData: true, // Keep the page header (search, filters) displayed while fetching another page, only the list area shows a loading state
+    }
+  );
 
   const listAssignableAgents = trpc.listAgents.useQuery({
     orderBy: {},
@@ -64,32 +64,14 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
 
   const aggregatedQueries = new AggregatedQueries(listCases, listAssignableAgents);
 
-  const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQueryManipulated(true);
-    setSearchQuery(event.target.value);
-    setListFilter(ListFilter.ALL);
-  };
-
-  const debounedHandleClearQuery = useMemo(() => debounce(handleSearchQueryChange, 500), []);
-  useEffect(() => {
-    return () => {
-      debounedHandleClearQuery.cancel();
-    };
-  }, [debounedHandleClearQuery]);
-
   const casesWrappers = useMemo(() => listCases.data?.casesWrappers || [], [listCases.data]);
-  const filteredCasesWrappers = useMemo(() => {
-    return casesWrappers.filter((caseWrapper) => {
-      switch (listFilter) {
-        case ListFilter.CLOSE_ONLY:
-          return !!caseWrapper.case.closedAt;
-        case ListFilter.OPEN_ONLY:
-          return !caseWrapper.case.closedAt;
-        default:
-          return true;
-      }
-    });
-  }, [listFilter, casesWrappers]);
+  const totalCount = listCases.data?.totalCount ?? 0;
+
+  const { setTotalCount } = listState;
+  useEffect(() => {
+    // Previous data (kept while loading) may come from other criteria so it must not be used to adjust the page
+    setTotalCount(listCases.data && !listCases.isPreviousData ? listCases.data.totalCount : null);
+  }, [listCases.data, listCases.isPreviousData, setTotalCount]);
 
   if (aggregatedQueries.hasError) {
     return (
@@ -97,21 +79,11 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
         <ErrorAlert errors={aggregatedQueries.errors} refetchs={aggregatedQueries.refetchs} />
       </Grid>
     );
-  } else if (aggregatedQueries.isLoading && !searchQueryManipulated) {
+  } else if (aggregatedQueries.isLoading && !listState.searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
 
   const assignableAgents = listAssignableAgents.data?.agentsWrappers.map((agentWrapper) => agentWrapper.agent);
-
-  const handleClearQuery = () => {
-    setSearchQuery(null);
-    setListFilter(ListFilter.ALL);
-
-    // We did not bind the TextField to "searchQuery" to allow delaying requests
-    if (queryRef.current) {
-      queryRef.current.value = '';
-    }
-  };
 
   return (
     <>
@@ -126,8 +98,9 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
             type="text"
             name="search"
             label="Rechercher..."
-            inputRef={queryRef}
-            onChange={debounedHandleClearQuery}
+            inputRef={listState.queryRef}
+            defaultValue={listState.rawSearchQuery}
+            onChange={listState.debouncedSearchChange}
             fullWidth
             InputProps={{
               startAdornment: (
@@ -137,8 +110,8 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  {searchQuery && searchQuery !== '' && (
-                    <IconButton aria-label="effacer la recherche" onClick={handleClearQuery}>
+                  {listState.hasSearchQuery && (
+                    <IconButton aria-label="effacer la recherche" onClick={listState.clearQuery}>
                       <ClearIcon />
                     </IconButton>
                   )}
@@ -147,18 +120,18 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
             }}
           />
         </Grid>
-        {!aggregatedQueries.isLoading ? (
+        {!aggregatedQueries.isLoading && !listCases.isPreviousData ? (
           <>
             <Grid item xs={12} sx={{ py: 1 }}>
               <Grid container spacing={1} alignContent="flex-start">
                 <Grid item>
                   <ToggleButtonGroup
                     color="primary"
-                    value={listFilter}
+                    value={listState.listFilter}
                     exclusive
                     onChange={(event, newValue) => {
                       if (newValue !== null) {
-                        setListFilter(newValue);
+                        listState.setListFilter(newValue);
                       }
                     }}
                     aria-label="filtre"
@@ -190,17 +163,29 @@ export function CaseListPage({ params: { authorityId } }: CaseListPageProps) {
                 </Grid>
               </Grid>
             </Grid>
-            {filteredCasesWrappers.length ? (
-              <ContextualCaseList
-                casesWrappers={filteredCasesWrappers}
-                assignableAgents={assignableAgents || []}
-                canTransfer={userInterfaceAuthority?.isMainAgent}
-                display={listDisplay}
-              />
+            {totalCount > 0 ? (
+              <>
+                <ContextualCaseList
+                  casesWrappers={casesWrappers}
+                  assignableAgents={assignableAgents || []}
+                  canTransfer={userInterfaceAuthority?.isMainAgent}
+                  display={listDisplay}
+                />
+                <ListPagination
+                  page={listState.page}
+                  pageSize={listState.pageSize}
+                  totalCount={totalCount}
+                  itemLabel={(count) => `${count} dossier${count > 1 ? 's' : ''}`}
+                  onPageChange={listState.setPage}
+                  onPageSizeChange={listState.setPageSize}
+                />
+              </>
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">
-                  {casesWrappers.length === 0 ? `Aucun dossier n'a été déposé pour le moment` : 'Aucun dossier trouvé avec le filtre choisi'}
+                  {listState.listFilter === ListFilter.ALL && !listState.hasSearchQuery
+                    ? `Aucun dossier n'a été déposé pour le moment`
+                    : 'Aucun dossier trouvé avec le filtre choisi'}
                 </Typography>
               </Grid>
             )}

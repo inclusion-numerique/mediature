@@ -13,7 +13,7 @@
 .editor-shell {
   border-radius: 0px;
   width: 100%;
-  color: #000;
+  color: var(--text-default-grey); // DSFR variable so it adapts to the dark mode (the background follows the theme too)
   position: relative;
   line-height: 1.7;
   font-weight: 400;
