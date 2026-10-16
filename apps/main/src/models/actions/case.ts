@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { GetterInputSchema } from '@mediature/main/src/models/actions/common';
+import { PaginatedGetterInputSchema } from '@mediature/main/src/models/actions/common';
 import { AddressInputSchema, emptyAddresstoNullPreprocessor } from '@mediature/main/src/models/entities/address';
 import { AgentSchema } from '@mediature/main/src/models/entities/agent';
 import { AttachmentInputSchema, AttachmentSchema } from '@mediature/main/src/models/entities/attachment';
@@ -228,16 +228,21 @@ export type DeleteCaseCompetentThirdPartyItemSchemaType = z.infer<typeof DeleteC
 export const DeleteCaseCompetentThirdPartyItemPrefillSchema = DeleteCaseCompetentThirdPartyItemSchema.deepPartial();
 export type DeleteCaseCompetentThirdPartyItemPrefillSchemaType = z.infer<typeof DeleteCaseCompetentThirdPartyItemPrefillSchema>;
 
-export const ListCasesSchema = GetterInputSchema.extend({
+export const ListCasesSchema = PaginatedGetterInputSchema.extend({
+  orderBy: z.object({
+    urgency: z.boolean().nullish(),
+  }),
   filterBy: z.object({
     query: z.string().nullish(),
     authorityIds: z.array(AuthoritySchema.shape.id).nullish(),
     agentIds: z.array(AgentSchema.shape.id).nullish(),
     assigned: z.boolean().nullish(),
     mine: z.boolean().nullish(),
+    closed: z.boolean().nullish(),
   }),
   include: z
     .object({
+      attachments: z.boolean().nullish(),
       similarCases: z.boolean().nullish(),
     })
     .nullish(),

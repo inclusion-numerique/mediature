@@ -131,6 +131,7 @@
     "next-superjson-plugin": "0.6.3",
     "node-mailjet": "^6.0.2",
     "nodemailer": "^6.9.1",
+    "nuqs": "~2.4.3",
     "pg-boss": "^9.0.1",
     "pretty-bytes": "^6.1.0",
     "prisma": "4.16.2",

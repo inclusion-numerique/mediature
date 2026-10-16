@@ -1,4 +1,4 @@
-import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, CaseStatus, Note } from '@prisma/client';
+import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, CaseStatus, Note, Prisma } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
 import addresscompiler from 'addresscompiler';
 
@@ -1066,108 +1066,180 @@ export const caseRouter = router({
       }
     }
 
-    const cases = await prisma.case.findMany({
-      where: {
-        authorityId: input.filterBy.authorityIds
+    const where: Prisma.CaseWhereInput = {
+      authorityId: input.filterBy.authorityIds
+        ? {
+            in: input.filterBy.authorityIds,
+          }
+        : undefined,
+      agentId: {
+        in: input.filterBy.agentIds || undefined,
+        equals: input.filterBy.assigned === false ? null : undefined,
+        not: input.filterBy.assigned === true ? null : undefined,
+      },
+      agent:
+        input.filterBy.mine === true
           ? {
-              in: input.filterBy.authorityIds,
+              userId: ctx.user.id,
             }
           : undefined,
-        agentId: {
-          in: input.filterBy.agentIds || undefined,
-          equals: input.filterBy.assigned === false ? null : undefined,
-          not: input.filterBy.assigned === true ? null : undefined,
-        },
-        agent:
-          input.filterBy.mine === true
-            ? {
-                userId: ctx.user.id,
-              }
-            : undefined,
-        AND: input.filterBy.query
-          ? [
-              {
-                OR: [
-                  {
-                    humanId: {
-                      equals: humandIdSearch,
-                    },
+      closedAt:
+        input.filterBy.closed === true
+          ? {
+              not: null,
+            }
+          : input.filterBy.closed === false
+          ? null
+          : undefined,
+      AND: input.filterBy.query
+        ? [
+            {
+              OR: [
+                {
+                  humanId: {
+                    equals: humandIdSearch,
                   },
-                  {
-                    description: {
+                },
+                {
+                  description: {
+                    search: formattedSearchQuery,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  citizen: {
+                    firstname: {
                       search: formattedSearchQuery,
                       mode: 'insensitive',
                     },
                   },
-                  {
-                    citizen: {
-                      firstname: {
-                        search: formattedSearchQuery,
-                        mode: 'insensitive',
-                      },
+                },
+                {
+                  citizen: {
+                    lastname: {
+                      search: formattedSearchQuery,
+                      mode: 'insensitive',
                     },
                   },
-                  {
-                    citizen: {
-                      lastname: {
-                        search: formattedSearchQuery,
-                        mode: 'insensitive',
-                      },
-                    },
-                  },
-                ],
-              },
-            ]
-          : undefined,
+                },
+              ],
+            },
+          ]
+        : undefined,
+    };
+
+    const include = Prisma.validator<Prisma.CaseInclude>()({
+      citizen: {
+        include: {
+          address: true,
+          phone: true,
+        },
       },
-      include: {
-        citizen: {
-          include: {
-            address: true,
-            phone: true,
+      agent: {
+        include: {
+          user: true,
+          AuthorityWhereMainAgent: {
+            select: { id: true },
           },
         },
-        agent: {
-          include: {
-            user: true,
-            AuthorityWhereMainAgent: {
-              select: { id: true },
-            },
-          },
+      },
+      domain: {
+        include: {
+          parentItem: true,
         },
-        domain: {
-          include: {
-            parentItem: true,
-          },
-        },
-        competentThirdParty: {
-          include: {
-            parentItem: true,
-          },
-        },
-        AttachmentsOnCases: {
-          include: {
-            attachment: {
-              select: {
-                id: true,
-                contentType: false,
-                name: true,
-                size: false,
-              },
-            },
-          },
+      },
+      competentThirdParty: {
+        include: {
+          parentItem: true,
         },
       },
     });
+
+    // [IMPORTANT] Lists are paginated on the server since loading all cases of an authority at once was exceeding the container memory
+    const skip = (input.page - 1) * input.pageSize;
+    let cases: Prisma.CaseGetPayload<{ include: typeof include }>[];
+    let totalCount: number;
+
+    if (input.orderBy.urgency === true) {
+      // Prisma cannot order by a filtered relation count, so we sort lightweight rows in memory and only fetch full data for the page
+      const [lightCases, unprocessedMessagesCountObjects] = await prisma.$transaction([
+        prisma.case.findMany({
+          where: where,
+          select: {
+            id: true,
+            termReminderAt: true,
+          },
+        }),
+        prisma.messagesOnCases.groupBy({
+          by: ['caseId'],
+          where: {
+            markedAsProcessed: false,
+            case: where,
+          },
+          orderBy: {
+            caseId: 'asc',
+          },
+        }),
+      ]);
+
+      const caseIdsWithUnprocessedMessages = new Set(unprocessedMessagesCountObjects.map((countObject) => countObject.caseId));
+
+      const sortedCaseIds = lightCases
+        .sort((a, b) => {
+          const aSimplifiedUM = caseIdsWithUnprocessedMessages.has(a.id) ? 1 : 0;
+          const bSimplifiedUM = caseIdsWithUnprocessedMessages.has(b.id) ? 1 : 0;
+
+          if (aSimplifiedUM !== bSimplifiedUM) {
+            return bSimplifiedUM - aSimplifiedUM;
+          }
+
+          return +(a.termReminderAt || 0) - +(b.termReminderAt || 0) || a.id.localeCompare(b.id);
+        })
+        .map((lightCase) => lightCase.id);
+
+      const pageCaseIds = sortedCaseIds.slice(skip, skip + input.pageSize);
+
+      totalCount = sortedCaseIds.length;
+      cases = await prisma.case.findMany({
+        where: {
+          id: {
+            in: pageCaseIds,
+          },
+        },
+        include: include,
+      });
+
+      cases.sort((a, b) => pageCaseIds.indexOf(a.id) - pageCaseIds.indexOf(b.id));
+    } else {
+      [cases, totalCount] = await prisma.$transaction([
+        prisma.case.findMany({
+          where: where,
+          include: include,
+          orderBy: [
+            {
+              createdAt: 'desc',
+            },
+            {
+              id: 'asc',
+            },
+          ],
+          skip: skip,
+          take: input.pageSize,
+        }),
+        prisma.case.count({
+          where: where,
+        }),
+      ]);
+    }
+
+    const caseIds = cases.map((iCase) => iCase.id);
 
     const unprocessedMessagesCountObjects = await prisma.messagesOnCases.groupBy({
       by: ['caseId'],
       where: {
         markedAsProcessed: false,
-        case: {
-          id: {
-            in: cases.map((iCase) => iCase.id),
-          },
+        caseId: {
+          in: caseIds,
         },
       },
       _count: {
@@ -1175,14 +1247,37 @@ export const caseRouter = router({
       },
     });
 
+    const attachmentsOnCases =
+      input.include?.attachments === true
+        ? await prisma.attachmentsOnCases.findMany({
+            where: {
+              caseId: {
+                in: caseIds,
+              },
+            },
+            include: {
+              attachment: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          })
+        : null;
+
     return {
       casesWrappers: await Promise.all(
         cases.map(async (iterationCase): Promise<CaseWrapperSchemaType> => {
-          const attachments = await Promise.all(
-            iterationCase.AttachmentsOnCases.map(async (attachmentOnCase) => {
-              return await attachmentPrismaToModel(attachmentOnCase.attachment);
-            })
-          );
+          const attachments = attachmentsOnCases
+            ? await Promise.all(
+                attachmentsOnCases
+                  .filter((attachmentOnCase) => attachmentOnCase.caseId === iterationCase.id)
+                  .map(async (attachmentOnCase) => {
+                    return await attachmentPrismaToModel(attachmentOnCase.attachment);
+                  })
+              )
+            : null;
 
           const unprocessedMessagesCountObject = unprocessedMessagesCountObjects.find((countObject) => countObject.caseId === iterationCase.id);
 
@@ -1225,6 +1320,7 @@ export const caseRouter = router({
           };
         })
       ),
+      totalCount: totalCount,
     };
   }),
   generatePdfFromCase: privateProcedure.input(GeneratePdfFromCaseSchema).mutation(async ({ ctx, input }) => {

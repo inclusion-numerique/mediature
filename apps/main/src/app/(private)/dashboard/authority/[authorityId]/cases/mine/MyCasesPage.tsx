@@ -11,21 +11,16 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
-import debounce from 'lodash.debounce';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 
 import { trpc } from '@mediature/main/src/client/trpcClient';
 import { CaseList } from '@mediature/main/src/components/CaseList';
 import { ErrorAlert } from '@mediature/main/src/components/ErrorAlert';
+import { ListPagination } from '@mediature/main/src/components/ListPagination';
 import { LoadingArea } from '@mediature/main/src/components/LoadingArea';
+import { ListFilter, useCaseListUrlState } from '@mediature/main/src/utils/case-list';
 import { ListDisplay, useLocalStorageListDisplay } from '@mediature/main/src/utils/display';
 import { centeredAlertContainerGridProps, centeredContainerGridProps } from '@mediature/main/src/utils/grid';
-
-export enum ListFilter {
-  ALL = 1,
-  OPEN_ONLY,
-  CLOSE_ONLY,
-}
 
 export const MyCasesPageContext = createContext({
   ContextualCaseList: CaseList,
@@ -38,61 +33,37 @@ export interface MyCasesPageProps {
 export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
   const { ContextualCaseList } = useContext(MyCasesPageContext);
 
-  const queryRef = React.createRef<HTMLInputElement>();
-  const [searchQueryManipulated, setSearchQueryManipulated] = useState(false);
-  const [searchQuery, setSearchQuery] = useState<string | null>(null);
-  const [listFilter, setListFilter] = useState<ListFilter>(ListFilter.ALL);
   const [listDisplay, setListDisplay] = useLocalStorageListDisplay();
+  const listState = useCaseListUrlState();
 
-  const { data, error, isInitialLoading, isLoading, refetch } = trpc.listCases.useQuery({
-    orderBy: {},
-    filterBy: {
-      authorityIds: [authorityId],
-      agentIds: null,
-      query: searchQuery,
-      mine: true,
+  const { data, error, isInitialLoading, isLoading, isPreviousData, refetch } = trpc.listCases.useQuery(
+    {
+      page: listState.page,
+      pageSize: listState.pageSize,
+      orderBy: {
+        urgency: true,
+      },
+      filterBy: {
+        authorityIds: [authorityId],
+        agentIds: null,
+        query: listState.searchQuery,
+        mine: true,
+        closed: listState.closedFilter,
+      },
     },
-  });
-
-  const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQueryManipulated(true);
-    setSearchQuery(event.target.value);
-    setListFilter(ListFilter.ALL);
-  };
-
-  const debounedHandleClearQuery = useMemo(() => debounce(handleSearchQueryChange, 500), []);
-  useEffect(() => {
-    return () => {
-      debounedHandleClearQuery.cancel();
-    };
-  }, [debounedHandleClearQuery]);
+    {
+      keepPreviousData: true, // Avoid flashing a loading area when switching pages
+    }
+  );
 
   const casesWrappers = useMemo(() => data?.casesWrappers || [], [data]);
-  const filteredCasesWrappers = useMemo(() => {
-    return casesWrappers
-      .filter((caseWrapper) => {
-        switch (listFilter) {
-          case ListFilter.CLOSE_ONLY:
-            return !!caseWrapper.case.closedAt;
-          case ListFilter.OPEN_ONLY:
-            return !caseWrapper.case.closedAt;
-          default:
-            return true;
-        }
-      })
-      .sort((a, b) => {
-        if (a.unprocessedMessages !== null && b.unprocessedMessages !== null) {
-          const aSimplifiedUM = a.unprocessedMessages > 0 ? 1 : 0;
-          const bSimplifiedUM = b.unprocessedMessages > 0 ? 1 : 0;
+  const totalCount = data?.totalCount ?? 0;
 
-          if (aSimplifiedUM !== bSimplifiedUM) {
-            return bSimplifiedUM - aSimplifiedUM;
-          }
-        }
-
-        return +(a.case.termReminderAt || 0) - +(b.case.termReminderAt || 0);
-      });
-  }, [listFilter, casesWrappers]);
+  const { setTotalCount } = listState;
+  useEffect(() => {
+    // Previous data (kept while loading) may come from other criteria so it must not be used to adjust the page
+    setTotalCount(data && !isPreviousData ? data.totalCount : null);
+  }, [data, isPreviousData, setTotalCount]);
 
   if (error) {
     return (
@@ -100,19 +71,9 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
         <ErrorAlert errors={[error]} refetchs={[refetch]} />
       </Grid>
     );
-  } else if (isInitialLoading && !searchQueryManipulated) {
+  } else if (isInitialLoading && !listState.searchQueryManipulated) {
     return <LoadingArea ariaLabelTarget="page" />;
   }
-
-  const handleClearQuery = () => {
-    setSearchQuery(null);
-    setListFilter(ListFilter.ALL);
-
-    // We did not bind the TextField to "searchQuery" to allow delaying requests
-    if (queryRef.current) {
-      queryRef.current.value = '';
-    }
-  };
 
   return (
     <>
@@ -128,8 +89,9 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
             type="text"
             name="search"
             label="Rechercher..."
-            inputRef={queryRef}
-            onChange={debounedHandleClearQuery}
+            inputRef={listState.queryRef}
+            defaultValue={listState.rawSearchQuery}
+            onChange={listState.debouncedSearchChange}
             fullWidth
             InputProps={{
               startAdornment: (
@@ -139,8 +101,8 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  {searchQuery && searchQuery !== '' && (
-                    <IconButton aria-label="effacer la recherche" onClick={handleClearQuery}>
+                  {listState.hasSearchQuery && (
+                    <IconButton aria-label="effacer la recherche" onClick={listState.clearQuery}>
                       <ClearIcon />
                     </IconButton>
                   )}
@@ -156,11 +118,11 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                 <Grid item>
                   <ToggleButtonGroup
                     color="primary"
-                    value={listFilter}
+                    value={listState.listFilter}
                     exclusive
                     onChange={(event, newValue) => {
                       if (newValue !== null) {
-                        setListFilter(newValue);
+                        listState.setListFilter(newValue);
                       }
                     }}
                     aria-label="filtre"
@@ -192,12 +154,24 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
                 </Grid>
               </Grid>
             </Grid>
-            {filteredCasesWrappers.length ? (
-              <ContextualCaseList casesWrappers={filteredCasesWrappers} assignableAgents={[]} canUnassign canDelete display={listDisplay} />
+            {totalCount > 0 ? (
+              <>
+                <ContextualCaseList casesWrappers={casesWrappers} assignableAgents={[]} canUnassign canDelete display={listDisplay} />
+                <ListPagination
+                  page={listState.page}
+                  pageSize={listState.pageSize}
+                  totalCount={totalCount}
+                  itemLabel={(count) => `${count} dossier${count > 1 ? 's' : ''}`}
+                  onPageChange={listState.setPage}
+                  onPageSizeChange={listState.setPageSize}
+                />
+              </>
             ) : (
               <Grid item xs={12} sx={{ py: 2 }}>
                 <Typography variant="body2">
-                  {casesWrappers.length === 0 ? 'Vous ne traitez actuellement aucun dossier' : 'Aucun dossier trouvé avec le filtre choisi'}
+                  {listState.listFilter === ListFilter.ALL && !listState.hasSearchQuery
+                    ? 'Vous ne traitez actuellement aucun dossier'
+                    : 'Aucun dossier trouvé avec le filtre choisi'}
                 </Typography>
               </Grid>
             )}
