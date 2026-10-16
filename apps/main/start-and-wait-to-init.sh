@@ -8,7 +8,7 @@
 #
 # Node.js 18 does not take the container memory quota into account to size its heap, so it can grow beyond it
 # and the container gets killed (on Scalingo: "memory quota exceeded"). We cap the heap to a ratio of the container quota
-# (not of the host memory), leaving room for the non-heap memory and the `npm`/`pnpm` wrapper processes
+# (not of the host memory), leaving room for the non-heap memory (buffers, compiled code...)
 #
 
 heap_ratio_percent=65
@@ -56,8 +56,9 @@ stop_server() {
   exit 0
 }
 
-# Bind the callback to the SIGINT signal to shut down the background process properly
-trap stop_server INT
+# Bind the callback to the stop signals to shut down the background process properly
+# (the platform sends SIGTERM when stopping/restarting the container, SIGINT is for local usage)
+trap stop_server INT TERM
 
 check_server_and_init() {
   timeout=15
