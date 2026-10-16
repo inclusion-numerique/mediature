@@ -52,7 +52,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
       },
     },
     {
-      keepPreviousData: true, // Avoid flashing a loading area when switching pages
+      keepPreviousData: true, // Keep the page header (search, filters) displayed while fetching another page, only the list area shows a loading state
     }
   );
 
@@ -111,7 +111,7 @@ export function MyCasesPage({ params: { authorityId } }: MyCasesPageProps) {
             }}
           />
         </Grid>
-        {!isLoading ? (
+        {!isLoading && !isPreviousData ? (
           <>
             <Grid item xs={12} sx={{ py: 1 }}>
               <Grid container spacing={1} alignContent="flex-start">
