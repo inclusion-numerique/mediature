@@ -79,13 +79,13 @@ import {
   noBoundChildCaseDomainToDeleteCaseDomainError,
 } from '@mediature/main/src/models/entities/errors';
 import { PhoneTypeSchema } from '@mediature/main/src/models/entities/phone';
-import { CreateCaseInboundEmailDataSchema, DeleteCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
+import { CreateCaseInboundEmailDataSchema } from '@mediature/main/src/models/jobs/case';
 import { getBossClientInstance } from '@mediature/main/src/server/queueing/client';
 import { createCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/create-case-inbound-email';
-import { deleteCaseInboundEmailTopic } from '@mediature/main/src/server/queueing/workers/delete-case-inbound-email';
 import { isUserAnAdmin } from '@mediature/main/src/server/routers/authority';
 import { isUserMainAgentOfAuthority } from '@mediature/main/src/server/routers/common/agent';
 import { formatSafeAttachmentsToProcess, uploadPdfFile, uploadXlsxFile } from '@mediature/main/src/server/routers/common/attachment';
+import { deleteCasesWithRelatedData } from '@mediature/main/src/server/routers/common/case';
 import {
   agentPrismaToModel,
   attachmentIdPrismaToModel,
@@ -558,30 +558,7 @@ export const caseRouter = router({
   deleteCase: privateProcedure.input(DeleteCaseSchema).mutation(async ({ ctx, input }) => {
     await assertUserCanManageThisCase(ctx.user.id, input.caseId);
 
-    // It will delete all relations thanks to the `onDelete` hook
-    // except for attachments that would require complex manual steps (since they can be linked to multiple entities)
-    //
-    // We let a cron job to properly unused attachments after some time
-    const deletedCase = await prisma.case.delete({
-      where: {
-        id: input.caseId,
-      },
-    });
-
-    // Delete the virtual email address so people sending emails to it would receive a normal error from the provider
-    // (without it, it would silently end nowhere since no existing case while passing the inbound endpoint)
-    const bossClient = await getBossClientInstance();
-    await bossClient.send(
-      deleteCaseInboundEmailTopic,
-      DeleteCaseInboundEmailDataSchema.parse({
-        caseId: deletedCase.id,
-        caseHumanId: deletedCase.humanId,
-      }),
-      {
-        retryLimit: 50,
-        retryBackoff: true,
-      }
-    );
+    await deleteCasesWithRelatedData([input.caseId]);
 
     return;
   }),
