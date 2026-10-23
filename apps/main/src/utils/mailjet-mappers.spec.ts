@@ -9,6 +9,7 @@ import path from 'path';
 import { imageB64Data } from '@mediature/main/src/fixtures/image';
 import { parseApiWebhookPayload } from '@mediature/main/src/fixtures/mailjet/mailjet';
 import {
+  ReceivedMessage,
   convertHeadersToCaseInsensitiveHeaders,
   decodeParseApiWebhookPayload,
   deprecated_getUtf8PartContent,
@@ -18,11 +19,25 @@ import {
   removeQuotedReplyFromHtmlEmail,
 } from '@mediature/main/src/utils/mailjet-mappers';
 
+// Attachments contents are lazy, so we take them to compare the whole structure
+function takeAttachmentsContents(receivedMessage: ReceivedMessage) {
+  return {
+    ...receivedMessage,
+    attachments: receivedMessage.attachments.map(({ takeContent, ...attachment }) => ({
+      ...attachment,
+      content: takeContent(),
+    })),
+  };
+}
+
 describe('decodeParseApiWebhookPayload()', () => {
   it('should return values with documentation example', async () => {
-    const decodedPayload = await decodeParseApiWebhookPayload(parseApiWebhookPayload);
+    // Taking attachments contents modifies the payload so we use a copy of the shared fixture
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(JSON.stringify(parseApiWebhookPayload));
 
-    expect(decodedPayload).toStrictEqual({
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(takeAttachmentsContents(decodedPayload)).toStrictEqual({
       webhookTargetEmail: 'passenger1@mailjet.com',
       from: {
         email: 'pilot@mailjet.com',
@@ -76,7 +91,7 @@ describe('decodeParseApiWebhookPayload()', () => {
     const redImageContent = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/red_image.jpg'));
     const dummyPdfContent = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/dummy.pdf'));
 
-    expect(decodedPayload).toStrictEqual({
+    expect(takeAttachmentsContents(decodedPayload)).toStrictEqual({
       webhookTargetEmail: 'dossier-61@mediature.incubateur.net',
       from: {
         email: 'thomas.rame@beta.gouv.fr',
@@ -107,6 +122,26 @@ describe('decodeParseApiWebhookPayload()', () => {
         },
       ],
     });
+  });
+
+  it('should release the base64 content from the original payload once taken', async () => {
+    const payloadString = await fs.readFile(path.resolve(__dirname, '../fixtures/mailjet/mailjet-real-payload.json'), 'utf-8');
+    const deepCopyPayload: typeof parseApiWebhookPayload = JSON.parse(payloadString);
+    const contentRefs = Object.keys(deepCopyPayload).filter((key) => /Attachment[0-9]+$/.test(key));
+
+    const decodedPayload = await decodeParseApiWebhookPayload(deepCopyPayload);
+
+    expect(contentRefs.length).toBe(decodedPayload.attachments.length);
+    expect(contentRefs.every((contentRef) => typeof (deepCopyPayload as Record<string, unknown>)[contentRef] === 'string')).toBe(true);
+
+    const [firstAttachment, secondAttachment] = decodedPayload.attachments;
+
+    expect(firstAttachment.takeContent().length).toBeGreaterThan(0);
+    expect(Object.keys(deepCopyPayload).filter((key) => /Attachment[0-9]+$/.test(key)).length).toBe(contentRefs.length - 1);
+    expect(() => firstAttachment.takeContent()).toThrow('has already been taken');
+
+    expect(secondAttachment.takeContent().length).toBeGreaterThan(0);
+    expect(Object.keys(deepCopyPayload).filter((key) => /Attachment[0-9]+$/.test(key)).length).toBe(0);
   });
 
   it('should return values with real payload containing multiple html parts', async () => {

@@ -82,7 +82,7 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
         filename: attachment.filename || uuidv4(),
         contentType: attachment.contentType,
         kind: attachmentKindList[AttachmentKindSchema.Values.MESSAGE_DOCUMENT],
-        file: attachment.content as Buffer, // TODO: casting here string it's always base64 to Buffer with Mailjet
+        file: attachment.takeContent(), // Decoded only now so a single attachment content is in memory at a time
       });
 
       uploadedFiles.push({
