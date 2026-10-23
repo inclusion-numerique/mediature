@@ -226,13 +226,11 @@ export const authorityRouter = router({
         name: input.filterBy.query
           ? {
               search: formattedSearchQuery,
-              mode: 'insensitive',
             }
           : undefined,
         slug: input.filterBy.query
           ? {
               search: formattedSearchQuery,
-              mode: 'insensitive',
             }
           : undefined,
         // TODO: pagination

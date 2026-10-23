@@ -1088,14 +1088,12 @@ export const caseRouter = router({
                 {
                   description: {
                     search: formattedSearchQuery,
-                    mode: 'insensitive',
                   },
                 },
                 {
                   citizen: {
                     firstname: {
                       search: formattedSearchQuery,
-                      mode: 'insensitive',
                     },
                   },
                 },
@@ -1103,7 +1101,6 @@ export const caseRouter = router({
                   citizen: {
                     lastname: {
                       search: formattedSearchQuery,
-                      mode: 'insensitive',
                     },
                   },
                 },
@@ -1278,11 +1275,9 @@ export const caseRouter = router({
                 citizen: {
                   firstname: {
                     search: formatSearchQuery(iterationCase.citizen.firstname),
-                    mode: 'insensitive',
                   },
                   lastname: {
                     search: formatSearchQuery(iterationCase.citizen.lastname),
-                    mode: 'insensitive',
                   },
                 },
               },

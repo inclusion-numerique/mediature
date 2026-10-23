@@ -242,19 +242,16 @@ export const adminRouter = router({
         firstname: input.filterBy.query
           ? {
               search: formattedSearchQuery,
-              mode: 'insensitive',
             }
           : undefined,
         lastname: input.filterBy.query
           ? {
               search: formattedSearchQuery,
-              mode: 'insensitive',
             }
           : undefined,
         email: input.filterBy.query
           ? {
               search: formattedSearchQuery,
-              mode: 'insensitive',
             }
           : undefined,
         Agent:
