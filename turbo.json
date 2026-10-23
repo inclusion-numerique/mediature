@@ -5,7 +5,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
-    "heroku-postbuild": {
+    "scalingo-postbuild": {
       "cache": false
     },
     "test:prepare": {

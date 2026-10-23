@@ -17,7 +17,7 @@
     "test:unit": "turbo run test:unit",
     "test:unit:watch": "turbo run test:unit:watch",
     "test:e2e:headless": "turbo run test:e2e:headless",
-    "heroku-postbuild": "turbo run heroku-postbuild --filter=\"${BUILD_APP_NAME}\"...",
+    "scalingo-postbuild": "turbo run scalingo-postbuild --filter=\"${BUILD_APP_NAME}\"...",
     "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run heroku-start",
     "chromatic": "turbo run chromatic",
     "accessibility": "turbo run accessibility",

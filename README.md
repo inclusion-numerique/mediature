@@ -182,6 +182,7 @@ For each build and runtime (since they are shared), you should have set some env
 ##### For the "main" app
 
 - `BUILD_APP_NAME`: `main` _(it would be `docs` if you wanted to deploy the other app)_
+- `PNPM_SKIP_PRUNING`: `true` _(pruning development dependencies is useless since all `node_modules` folders are removed by the `.slugignore` file, the application being built as standalone)_
 - `APP_MODE`: `prod` or `dev` _(depending on the instance you deploy)_
 - `NODE_OPTIONS`: [OPTIONAL] _(Node.js 18 does not take the container memory quota into account, so its heap can grow beyond it and Scalingo kills the container with "memory quota exceeded". By default `start-and-wait-to-init.sh` caps the heap to 65% of the container quota, but if it cannot detect it (a warning is logged at startup) or if you want another value, set `--max-old-space-size=<megabytes>` (for example `332` for a 512MB container) and it will be used instead)_
 - `GITHUB_TOKEN`: [SECRET] \_(limited GitHub fine-grained personal access tokens scoped to this repository, see the `Scalingo` section)
