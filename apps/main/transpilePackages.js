@@ -1,6 +1,8 @@
 module.exports = {
   commonPackages: ['@codegouvfr/react-dsfr', '@mediature/ui', '@mui/x-data-grid', '@mui/x-date-pickers', 'pretty-bytes', 'tss-react'],
-  additionalJestPackages: [],
+  additionalJestPackages: [
+    '@prisma/client', // Its runtime dynamically imports ESM files (`.mjs`) to load the query compiler, they must be transformed to be loaded by Jest
+  ],
   formatTransformIgnorePatterns(packagesToTranspile, previousPatterns) {
     // Inspired from `next.js/packages/next/src/build/jest/jest.ts`
 

@@ -1,7 +1,6 @@
-import { CaseAnalytics } from '@prisma/client';
-
 import { agents } from '@mediature/main/src/fixtures/agent';
 import { citizens } from '@mediature/main/src/fixtures/citizen';
+import type { CaseAnalytics } from '@mediature/main/src/generated/prisma/client';
 import {
   CaseCompetentThirdPartyItemSchemaType,
   CaseDomainItemSchemaType,

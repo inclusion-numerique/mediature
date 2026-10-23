@@ -1,10 +1,10 @@
-import { Attachment } from '@prisma/client';
 import contentDisposition from 'content-disposition';
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Readable } from 'stream';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { Attachment } from '@mediature/main/src/generated/prisma/client';
 import {
   fileAccessLinkHasExpiredError,
   fileAccessNotAuthorizedError,

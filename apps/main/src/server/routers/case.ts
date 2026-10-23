@@ -1,9 +1,17 @@
-import { AttachmentKind, AttachmentStatus, CaseAttachmentType, CaseDomainItem, CaseStatus, Note, Prisma } from '@prisma/client';
 import { renderToStream } from '@react-pdf/renderer';
 import addresscompiler from 'addresscompiler';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import {
+  AttachmentKind,
+  AttachmentStatus,
+  CaseAttachmentType,
+  CaseDomainItem,
+  CaseStatus,
+  Note,
+  Prisma,
+} from '@mediature/main/src/generated/prisma/client';
 import { useServerTranslation } from '@mediature/main/src/i18n';
 import {
   AddAttachmentToCaseSchema,
@@ -1105,7 +1113,7 @@ export const caseRouter = router({
         : undefined,
     };
 
-    const include = Prisma.validator<Prisma.CaseInclude>()({
+    const include = {
       citizen: {
         include: {
           address: true,
@@ -1130,7 +1138,7 @@ export const caseRouter = router({
           parentItem: true,
         },
       },
-    });
+    } satisfies Prisma.CaseInclude;
 
     // [IMPORTANT] Lists are paginated on the server since loading all cases of an authority at once was exceeding the container memory
     const skip = (input.page - 1) * input.pageSize;

@@ -1,12 +1,12 @@
 generator client {
-  provider        = "prisma-client-js"
-  engineType      = "client"
-  previewFeatures = ["fullTextSearchPostgres", "views"]
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  importFileExtension = "ts"
+  previewFeatures     = ["fullTextSearchPostgres", "views"]
 }
 
 datasource db {
   provider     = "postgresql"
-  url          = env("DATABASE_URL")
   relationMode = "foreignKeys"
 }
 

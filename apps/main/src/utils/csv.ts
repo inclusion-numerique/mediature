@@ -1,9 +1,9 @@
-import type { CaseAnalytics } from '@prisma/client';
 import {
   // See Webpack aliases into `@mediature/docs/.storybook/main.js` to understand why we use the browser version at the end even if not optimal
   stringify,
 } from 'csv-stringify/browser/esm/sync';
 
+import type { CaseAnalytics } from '@mediature/main/src/generated/prisma/client';
 import { getServerTranslation } from '@mediature/main/src/i18n';
 import { AuthorityTypeSchemaType } from '@mediature/main/src/models/entities/authority';
 import {

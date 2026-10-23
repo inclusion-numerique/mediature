@@ -8,7 +8,7 @@ on:
 env:
   APP_NAME: mediature
   NODE_OPTIONS: --max_old_space_size=4096
-  NODE_VERSION: 18.20.8
+  NODE_VERSION: 22.22.3
   PNPM_VERSION: 7.33.7
   JEST_CACHE_FOLDER_SUFFIX: .cache/jest
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress

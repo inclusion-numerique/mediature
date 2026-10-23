@@ -3,4 +3,4 @@
 web: cd apps/main && ./start-and-wait-to-init.sh
 # We use `npx` to avoid using `pnpm db:migration:deploy:unsecure`
 # like that we can throw away all the dependencies at once without complicating things by reinstalling prisma
-postdeploy: cd apps/main && npx prisma@6.19.3 migrate deploy
+postdeploy: cd apps/main && npx prisma@7.10.1 migrate deploy

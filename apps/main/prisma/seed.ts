@@ -1,8 +1,8 @@
-import { CaseStatus, CitizenGenderIdentity, MessageStatus, PhoneType, PrismaClient } from '@prisma/client';
 import { promises as fs } from 'fs';
 import path from 'path';
 
 import { seedProductionDataIntoDatabase } from '@mediature/main/prisma/production-seed';
+import { CaseStatus, CitizenGenderIdentity, MessageStatus, PhoneType, PrismaClient } from '@mediature/main/src/generated/prisma/client';
 import { AuthorityTypeSchema } from '@mediature/main/src/models/entities/authority';
 
 export async function truncateDatabase(prismaClient: PrismaClient) {

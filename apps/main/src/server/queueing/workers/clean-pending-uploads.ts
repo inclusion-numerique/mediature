@@ -1,8 +1,8 @@
-import { AttachmentStatus } from '@prisma/client';
 import subDays from 'date-fns/subDays';
 import PgBoss from 'pg-boss';
 
 import { prisma } from '@mediature/main/prisma';
+import { AttachmentStatus } from '@mediature/main/src/generated/prisma/client';
 
 export const cleanPendingUploadsTopic = 'clean-pending-uploads';
 

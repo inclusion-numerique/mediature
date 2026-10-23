@@ -1,5 +1,4 @@
 import { streamToBuffer } from '@jorgeferrero/stream-to-buffer';
-import { AttachmentStatus } from '@prisma/client';
 import getUnixTime from 'date-fns/getUnixTime';
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { diff } from 'fast-array-diff';
@@ -8,6 +7,7 @@ import isJwtTokenExpired from 'jwt-check-expiry';
 import * as tus from 'tus-js-client';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { AttachmentStatus } from '@mediature/main/src/generated/prisma/client';
 import { AttachmentKindRequirementsSchemaType, AttachmentKindSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { fileUploadError, tooManyUploadedFilesError } from '@mediature/main/src/models/entities/errors';
 import { getFileIdFromUrl } from '@mediature/main/src/utils/attachment';

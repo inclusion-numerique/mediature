@@ -3,10 +3,10 @@
  */
 // Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` and `lint:prepare` steps
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';
 
 import { seedDatabase } from '@mediature/main/prisma/seed';
+import { PrismaClient } from '@mediature/main/src/generated/prisma/client';
 import { PostgresContainer, setupPostgres } from '@mediature/main/src/utils/database';
 
 describe('database', () => {

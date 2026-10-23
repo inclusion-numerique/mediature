@@ -1,9 +1,9 @@
-import { MessageError, MessageStatus } from '@prisma/client';
 import PgBoss from 'pg-boss';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import { MessageError, MessageStatus } from '@mediature/main/src/generated/prisma/client';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { ProcessInboundMessageDataSchema, ProcessInboundMessageDataSchemaType } from '@mediature/main/src/models/jobs/case';

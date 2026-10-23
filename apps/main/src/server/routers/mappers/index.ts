@@ -13,8 +13,7 @@ import {
   Note,
   Phone,
   User,
-} from '@prisma/client';
-
+} from '@mediature/main/src/generated/prisma/client';
 import { UiAttachmentSchemaType } from '@mediature/main/src/models/entities/attachment';
 import { AuthoritySchemaType } from '@mediature/main/src/models/entities/authority';
 import {

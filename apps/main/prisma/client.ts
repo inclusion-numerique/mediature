@@ -1,7 +1,7 @@
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
 
 import { dbPool } from '@mediature/main/prisma/pool';
+import { PrismaClient } from '@mediature/main/src/generated/prisma/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
