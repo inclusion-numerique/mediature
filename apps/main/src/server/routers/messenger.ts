@@ -150,7 +150,7 @@ export const messengerRouter = router({
         return {
           contentType: aOM.attachment.contentType,
           filename: aOM.attachment.name || undefined,
-          content: aOM.attachment.value,
+          content: Buffer.from(aOM.attachment.value.buffer, aOM.attachment.value.byteOffset, aOM.attachment.value.byteLength),
           inline: aOM.inline,
         };
       });

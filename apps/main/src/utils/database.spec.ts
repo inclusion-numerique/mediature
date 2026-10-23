@@ -2,6 +2,7 @@
  * @jest-environment node
  */
 // Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` and `lint:prepare` steps
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
 import concurrently from 'concurrently';
 
@@ -16,7 +17,7 @@ describe('database', () => {
     postgres = await setupPostgres();
 
     process.env.DATABASE_URL = postgres.url;
-    prisma = new PrismaClient();
+    prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: postgres.url }) });
   }, 30 * 1000);
 
   afterAll(async () => {

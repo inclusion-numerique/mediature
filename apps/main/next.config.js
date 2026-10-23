@@ -58,7 +58,12 @@ const moduleExports = async () => {
     experimental: {
       outputFileTracingRoot: path.join(__dirname, '../../'),
       outputFileTracingIncludes: {
-        '*': ['./src/prisma/migrations/**/*', './src/prisma/schema.prisma', './start-and-wait-to-init.sh'], // Migration and start files are required when doing automatic migration before starting the application
+        '*': [
+          './src/prisma/migrations/**/*',
+          './src/prisma/schema.prisma',
+          './start-and-wait-to-init.sh', // Migration and start files are required when doing automatic migration before starting the application
+          '../../node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client/query_compiler_bg.wasm', // The Prisma query compiler is read from the disk at runtime so it cannot be traced automatically
+        ],
       },
       // It should have been the new `outputFileTracingExcludes` property but it's messing with the Next.js core (ref: https://github.com/vercel/next.js/issues/62331)
       outputFileTracingExcludes: {
