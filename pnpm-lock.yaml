@@ -578,9 +578,6 @@ importers:
       rrweb:
         specifier: ^1.1.3
         version: 1.1.3
-      sharp:
-        specifier: ^0.32.1
-        version: 0.32.6
       superjson:
         specifier: ^1.12.0
         version: 1.12.0
