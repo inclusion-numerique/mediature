@@ -52,9 +52,11 @@ export async function requiresThereIsNoSimilarAuthority(
     where: {
       name: authorityName,
       OR: authoritySlug
-        ? {
-            slug: authoritySlug,
-          }
+        ? [
+            {
+              slug: authoritySlug,
+            },
+          ]
         : undefined,
     },
   });

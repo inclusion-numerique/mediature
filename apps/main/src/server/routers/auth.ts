@@ -1,10 +1,10 @@
-import { AgentInvitation } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import addMinutes from 'date-fns/addMinutes';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import { AgentInvitation } from '@mediature/main/src/generated/prisma/client';
 import { ChangePasswordSchema, RequestNewPasswordSchema, ResetPasswordSchema, SignUpSchema } from '@mediature/main/src/models/actions/auth';
 import {
   accountAlreadyWithThisEmailError,

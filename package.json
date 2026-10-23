@@ -17,19 +17,19 @@
     "test:unit": "turbo run test:unit",
     "test:unit:watch": "turbo run test:unit:watch",
     "test:e2e:headless": "turbo run test:e2e:headless",
-    "heroku-postbuild": "turbo run heroku-postbuild --filter=\"${BUILD_APP_NAME}\"...",
+    "scalingo-postbuild": "turbo run scalingo-postbuild --filter=\"${BUILD_APP_NAME}\"...",
     "start": "cd \"apps/${BUILD_APP_NAME}\" && pnpm run heroku-start",
     "chromatic": "turbo run chromatic",
     "accessibility": "turbo run accessibility",
     "accessibility:open": "turbo run accessibility:open"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "eslint": "7.32.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.8.8",
     "turbo": "1.9.3",
-    "typescript": "^4.9.3"
+    "typescript": "~5.6.3"
   },
   "pnpm": {
     "overrides": {
@@ -75,9 +75,9 @@
       "start-server-and-test": "^1.14.0",
       "testcontainers": "^10.16.0",
       "ts-jest": "^29.0.3",
-      "ts-node": "^10.9.1",
+      "ts-node": "^10.9.2",
       "tsconfig-paths-webpack-plugin": "^4.0.0",
-      "typescript": "^4.9.3",
+      "typescript": "~5.6.3",
       "typescript-plugin-css-modules": "^4.1.1",
       "usehooks-ts": "^2.9.1",
       "yaml-loader": "^0.8.0"
@@ -85,6 +85,6 @@
   },
   "packageManager": "pnpm@7.33.7",
   "engines": {
-    "node": "18.20.8"
+    "node": "22.22.3"
   }
 }

@@ -17,13 +17,20 @@ import { inlineEditorStateFromHtml } from '@mediature/ui/src/utils/lexical';
 
 const serverJsdom = new JSDOM();
 
+export interface ReceivedAttachment extends Omit<EmailAttachment, 'content'> {
+  // The content is decoded only when taken, so attachments of a big email are not all decoded in memory at the same time.
+  // Taking it also removes its base64 version from the original payload (for example kept by the job) so it can be garbage collected,
+  // as a consequence it can only be taken once
+  takeContent: () => Buffer;
+}
+
 export interface ReceivedMessage {
   webhookTargetEmail: string;
   from: ContactInputSchemaType;
   to: ContactInputSchemaType[];
   subject: string;
   content: EditorStateSchemaType;
-  attachments: EmailAttachment[];
+  attachments: ReceivedAttachment[];
 }
 
 export const HeadersSchema = z.record(
@@ -141,6 +148,24 @@ export function isHtmlContentRef(contentRef: PartSchemaType['ContentRef']): bool
 
 export function isTextContentRef(contentRef: PartSchemaType['ContentRef']): boolean {
   return !!contentRef && contentRef.startsWith('Text-part');
+}
+
+// Defined outside `decodeParseApiWebhookPayload()` on purpose: a closure keeps alive the variables of the scope it is created in,
+// and we do not want it to retain the parsed payload copy (and its base64 strings) while attachments are processed
+function createAttachmentContentTaker(jsonPayload: object, contentRef: string): ReceivedAttachment['takeContent'] {
+  return () => {
+    // We use the original payload since it is the one kept by the caller (the parsed one is a copy)
+    const originalPayload = jsonPayload as Record<string, unknown>;
+    const base64Content = originalPayload[contentRef];
+
+    if (typeof base64Content !== 'string') {
+      throw new Error(`the content of the attachment "${contentRef}" has already been taken`);
+    }
+
+    delete originalPayload[contentRef];
+
+    return Buffer.from(base64Content, 'base64');
+  };
 }
 
 export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise<ReceivedMessage> {
@@ -275,7 +300,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
   }
 
   // Look for attachments
-  const attachments: EmailAttachment[] = [];
+  const attachments: ReceivedAttachment[] = [];
   for (const part of decodedPayload.Parts) {
     // Mailjet will always forward attachments in the base64 format
     const partHeaders = convertToCompatibleHeaders(part.Headers);
@@ -300,7 +325,7 @@ export async function decodeParseApiWebhookPayload(jsonPayload: object): Promise
         attachments.push({
           contentType: contentTypeObject.type,
           filename: filename,
-          content: Buffer.from(decodedPayload[part.ContentRef] as string, 'base64'),
+          takeContent: createAttachmentContentTaker(jsonPayload, part.ContentRef),
           inline: contentDispositionObject.type === 'inline' && !!cleanedContentId,
           inlineId: cleanedContentId,
         });

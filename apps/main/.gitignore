@@ -8,3 +8,6 @@
 
 # Legal documents to transform to HTML (with `format-legal-documents.sh`)
 /src/**/*.docx
+
+# prisma generated client
+/src/generated/

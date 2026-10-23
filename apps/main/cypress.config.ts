@@ -31,10 +31,10 @@ export default defineConfig({
         // TODO: the above is supposed to work... but it's not, so hardcoding paths for now (we could use the same than we did with Jest + Array.map)
         extensions: ['.ts', '.tsx', '.js', '.jsx'],
         alias: {
-          '@mediature/docs': path.resolve(__dirname, '../../apps/docs/'),
-          '@mediature/main': path.resolve(__dirname, '../../apps/main/'),
-          '@mediature/ui': path.resolve(__dirname, '../../apps/ui/'),
-          '@trpc/next-layout': path.resolve(__dirname, '../../apps/trpc-next-layout/'),
+          '@mediature/docs': path.resolve(config.projectRoot, '../../apps/docs/'),
+          '@mediature/main': path.resolve(config.projectRoot, '../../apps/main/'),
+          '@mediature/ui': path.resolve(config.projectRoot, '../../apps/ui/'),
+          '@trpc/next-layout': path.resolve(config.projectRoot, '../../apps/trpc-next-layout/'),
         },
       };
 

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@mediature/main/src/generated/prisma/client';
 
 // This represents platform domains shared across all authorities
 // (no reason to populate authority specifics)

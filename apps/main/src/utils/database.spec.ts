@@ -2,10 +2,11 @@
  * @jest-environment node
  */
 // Note: the Prisma schema must be compiled when importing, that's why we added the `test:prepare` and `lint:prepare` steps
-import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import concurrently from 'concurrently';
 
 import { seedDatabase } from '@mediature/main/prisma/seed';
+import { PrismaClient } from '@mediature/main/src/generated/prisma/client';
 import { PostgresContainer, setupPostgres } from '@mediature/main/src/utils/database';
 
 describe('database', () => {
@@ -16,7 +17,7 @@ describe('database', () => {
     postgres = await setupPostgres();
 
     process.env.DATABASE_URL = postgres.url;
-    prisma = new PrismaClient();
+    prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: postgres.url }) });
   }, 30 * 1000);
 
   afterAll(async () => {

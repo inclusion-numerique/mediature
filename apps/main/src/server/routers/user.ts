@@ -1,7 +1,7 @@
-import { LiveChatSettings } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { LiveChatSettings } from '@mediature/main/src/generated/prisma/client';
 import {
   CancelInvitationSchema,
   GetInterfaceSessionSchema,

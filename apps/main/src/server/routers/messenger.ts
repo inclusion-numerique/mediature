@@ -1,9 +1,9 @@
-import { MessageStatus } from '@prisma/client';
 import addresscompiler from 'addresscompiler';
 import { JSDOM } from 'jsdom';
 
 import { prisma } from '@mediature/main/prisma/client';
 import { Attachment as EmailAttachment, mailer } from '@mediature/main/src/emails/mailer';
+import { MessageStatus } from '@mediature/main/src/generated/prisma/client';
 import { useServerTranslation } from '@mediature/main/src/i18n';
 import {
   GetMessageRecipientsSuggestionsSchema,
@@ -150,7 +150,7 @@ export const messengerRouter = router({
         return {
           contentType: aOM.attachment.contentType,
           filename: aOM.attachment.name || undefined,
-          content: aOM.attachment.value,
+          content: Buffer.from(aOM.attachment.value.buffer, aOM.attachment.value.byteOffset, aOM.attachment.value.byteLength),
           inline: aOM.inline,
         };
       });

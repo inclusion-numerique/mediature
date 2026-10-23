@@ -1,10 +1,10 @@
-import { Attachment } from '@prisma/client';
 import contentDisposition from 'content-disposition';
 import minutesToSeconds from 'date-fns/minutesToSeconds';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Readable } from 'stream';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { Attachment } from '@mediature/main/src/generated/prisma/client';
 import {
   fileAccessLinkHasExpiredError,
   fileAccessNotAuthorizedError,
@@ -49,7 +49,7 @@ export async function handler(req: NextApiRequest, res: NextApiResponse) {
   // [IMPORTANT] Since we manage only tiny files we chose to use our database instead of S3 to keep complexity lite.
   // Postgres cannot manage `bytea` with streams, so it's a full fetch, but we keep using the logic of a stream below
   // in case we switch over Postgres Large Object or S3 in the future (the following helps not blocking other requests)
-  const fileContentBuffer = Readable.from(attachment.value);
+  const fileContentBuffer = Readable.from(Buffer.from(attachment.value.buffer, attachment.value.byteOffset, attachment.value.byteLength));
 
   await new Promise<void>(async function (resolve, reject) {
     // We set file headers only if we are sure the user is able to display it (otherwise sensitive information could leak)

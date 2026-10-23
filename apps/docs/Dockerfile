@@ -1,7 +1,7 @@
 # [IMPORTANT] Must be built from the root of the project for the COPY/paths to work
 
 ARG APP_NAME=docs
-ARG NODE_VERSION=18.20.8
+ARG NODE_VERSION=22.22.3
 ARG NGINX_VERSION=1.23.2
 ARG PNPM_VERSION=7
 

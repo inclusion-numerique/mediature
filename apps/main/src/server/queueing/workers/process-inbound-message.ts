@@ -1,9 +1,9 @@
-import { MessageError, MessageStatus } from '@prisma/client';
 import PgBoss from 'pg-boss';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma';
 import { mailer } from '@mediature/main/src/emails/mailer';
+import { MessageError, MessageStatus } from '@mediature/main/src/generated/prisma/client';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { BusinessError } from '@mediature/main/src/models/entities/errors';
 import { ProcessInboundMessageDataSchema, ProcessInboundMessageDataSchemaType } from '@mediature/main/src/models/jobs/case';
@@ -82,7 +82,7 @@ export async function processInboundMessage(job: PgBoss.Job<ProcessInboundMessag
         filename: attachment.filename || uuidv4(),
         contentType: attachment.contentType,
         kind: attachmentKindList[AttachmentKindSchema.Values.MESSAGE_DOCUMENT],
-        file: attachment.content as Buffer, // TODO: casting here string it's always base64 to Buffer with Mailjet
+        file: attachment.takeContent(), // Decoded only now so a single attachment content is in memory at a time
       });
 
       uploadedFiles.push({

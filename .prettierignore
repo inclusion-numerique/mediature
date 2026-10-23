@@ -7,6 +7,7 @@
 /apps/main/.next/
 /apps/main/dist/
 /apps/main/prisma/generated-for-inspiration/
+/apps/main/src/generated/
 /apps/main/src/**/*.docx
 /apps/main/src/**/*.transformed.html
 **/.dockerignore

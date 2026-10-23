@@ -1,4 +1,3 @@
-import { AttachmentStatus } from '@prisma/client';
 import { FileStore } from '@tus/file-store';
 import { Server } from '@tus/server';
 import fs from 'fs';
@@ -11,6 +10,7 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { prisma } from '@mediature/main/prisma/client';
+import { AttachmentStatus } from '@mediature/main/src/generated/prisma/client';
 import { AttachmentKindSchema } from '@mediature/main/src/models/entities/attachment';
 import { nextAuthOptions } from '@mediature/main/src/pages/api/auth/[...nextauth]';
 import { apiHandlerWrapper } from '@mediature/main/src/utils/api';

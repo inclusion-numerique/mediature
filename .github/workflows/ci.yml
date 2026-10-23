@@ -8,7 +8,7 @@ on:
 env:
   APP_NAME: mediature
   NODE_OPTIONS: --max_old_space_size=4096
-  NODE_VERSION: 18.20.8
+  NODE_VERSION: 22.22.3
   PNPM_VERSION: 7.33.7
   JEST_CACHE_FOLDER_SUFFIX: .cache/jest
   CYPRESS_CACHE_FOLDER_SUFFIX: .cache/Cypress
@@ -20,14 +20,14 @@ concurrency:
 jobs:
   requirements:
     name: Continuous Integration
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # Pinned to avoid unexpected changes when `ubuntu-latest` moves to a new major version
     permissions:
       contents: write
       issues: write
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -42,23 +42,19 @@ jobs:
           fi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
+      - name: Install pnpm
+        run: npm install -g pnpm@${{ env.PNPM_VERSION }}
 
       - name: Export pnpm store directory as an environment variable
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v6
         name: Setup pnpm cache
         with:
           path: ${{ env.STORE_PATH }}
@@ -66,7 +62,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v6
         name: Setup Next.js build cache
         with:
           path: ${{ github.workspace }}/apps/main/.next/cache
@@ -105,7 +101,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y xvfb && npx playwright install-deps chromium
 
       - name: Get number of CPU cores for the following test step
-        uses: SimenB/github-actions-cpu-cores@v2
+        uses: SimenB/github-actions-cpu-cores@v3
         id: cpu-cores
 
       - name: Test unit

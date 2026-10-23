@@ -15,7 +15,6 @@ const tsImportLoadOptions = {
 };
 
 const { generateRewrites, localizedRoutes } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/routes/list.ts`), tsImportLoadOptions);
-const { getBaseUrl } = tsImport.loadSync(path.resolve(__dirname, `./src/utils/url.ts`), tsImportLoadOptions);
 
 const { withSentryConfig } = require('@sentry/nextjs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -24,8 +23,6 @@ const { getCommitSha, getHumanVersion, getTechnicalVersion } = require('./src/ut
 const { i18n } = require('./next-i18next.config');
 
 const mode = process.env.APP_MODE || 'test';
-
-const baseUrl = new URL(getBaseUrl());
 
 // TODO: once Next supports `next.config.js` we can set types like `ServerRuntimeConfig` and `PublicRuntimeConfig` below
 const moduleExports = async () => {
@@ -83,16 +80,11 @@ const moduleExports = async () => {
       ];
     },
     images: {
-      remotePatterns: [
-        {
-          protocol: baseUrl.protocol.slice(0, -1),
-          hostname: baseUrl.hostname,
-        },
-        {
-          protocol: 'https',
-          hostname: 'via.placeholder.com',
-        },
-      ],
+      // Images are served as they are, without the on-the-fly optimization done by `sharp` on the `/_next/image` route (it then returns 404)
+      // because its native memory is not covered by our Node.js heap cap and the container was being killed for exceeding its memory quota.
+      // It also mitigates CVE-2026-44577 (unbounded memory when optimizing local images) that is not patched for Next.js v14.
+      // Static assets must be compressed before being committed, and uploaded logos are already limited in size
+      unoptimized: true,
     },
     webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
       // Expose all DSFR fonts as static at the root so emails and PDFs can download them when needed
