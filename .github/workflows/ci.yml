@@ -46,12 +46,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
+      - name: Install pnpm
+        run: npm install -g pnpm@${{ env.PNPM_VERSION }}
 
       - name: Export pnpm store directory as an environment variable
         shell: bash
