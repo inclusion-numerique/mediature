@@ -1,7 +1,7 @@
 # [IMPORTANT] Must be built from the root of the project for the COPY/paths to work
 
 ARG APP_NAME=main
-ARG NODE_VERSION=22.22.3
+ARG NODE_VERSION=22.23.4
 ARG PNPM_VERSION=7
 ARG PORT=3000
 
